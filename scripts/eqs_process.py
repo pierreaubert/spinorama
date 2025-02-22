@@ -8,7 +8,7 @@ import os
 import shutil
 
 from generate_common import find_metadata_file
-from spinorama.auto_save import get_previous_score
+from autoeq.auto_save import get_previous_score
 
 
 def update_eq(speaker_name, from_dir, to_dir):

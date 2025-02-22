@@ -28,8 +28,8 @@ from spinorama.constant_paths import MIDRANGE_MAX_FREQ
 from spinorama.ltype import Vector, DataSpeaker
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl, peq_print
-from spinorama.auto_misc import get3db
-from spinorama.auto_loss import score_loss
+from autoeq.auto_misc import get3db
+from autoeq.auto_loss import score_loss
 
 FREQ_NB_POINTS = 200
 CONVERGENCE_TOLERANCE = 0.001

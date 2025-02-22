@@ -110,7 +110,7 @@ function cleanupCache(url) {
     });
 }
 
-function updateCache(url) {
+function updateCache() {
     const urlMeta = '/js/meta-v3.min.js';
     cleanupCache(urlMeta);
     const request = new Request(urlMeta, { cache: 'reload' });
@@ -141,7 +141,7 @@ function fetchDataAndMap(url, encoding, state) {
                 return null;
             }
             if (state === 1 && response.status === 404) {
-                const newUrl = updateCache(url);
+                const newUrl = updateCache();
                 return fetchDataAndMap(newUrl, encoding, 2);
             }
             return response.json();

@@ -139,7 +139,7 @@ from generate_common import (
     cache_load,
     cache_load_seq,
 )
-from spinorama.auto_save import optim_save_peq, optim_save_peq_seq
+from autoeq.auto_save import optim_save_peq, optim_save_peq_seq
 
 
 VERSION = "0.26"

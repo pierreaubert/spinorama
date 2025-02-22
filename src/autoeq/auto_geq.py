@@ -28,9 +28,9 @@ from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl
-from spinorama.auto_loss import score_loss
-from spinorama.auto_target import optim_compute_auto_target
-from spinorama.auto_preflight import optim_preflight
+from autoeq.auto_loss import score_loss
+from autoeq.auto_target import optim_compute_auto_target
+from autoeq.auto_preflight import optim_preflight
 
 
 def optim_grapheq(
