@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
-note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
-note2_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled"
+note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled. Meyer Sound EASE files are calibrated differently than other loudspeaker manufacturers to show AVG SPL and will be comparable to MAPP AVG SPL. Linear Peak SPL will be 12.5dB SPL above the AVG SPL shown in EASE. Therefore, if you read 90dB in EASE, Linear Peak SPL will be 102.5dB with peaks a few dB above that. Each product will achieve a few more dB when using standard playback material (music or speech rather than pink noise) than what is shown. Since EASE does not predict below 100Hz, we do not have EASE files for subwoofer or LFC products. We recommend using MAPP 3D for accurate low-frequency predictions. For more information, see Headroom Predictions Using B-Noise in MAPP XT."
 
 speakers_info_m: SpeakerDatabase = {
     "M-Audio BX3 D3": {
@@ -1012,6 +1011,64 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Meyer Sound MM-4XP": {
+        "brand": "Meyer Sound",
+        "model": "MM-4XP",
+        "type": "active",
+        "price": "1180",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/meyer-mm-4xp-micro-speaker-review.61033/",
+                },
+                "review_published": "20250223",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "peak": 111,
+                        "m_noise": 111.5,
+                        "pink_noise": 109,
+                        "b_noise": 111,
+                    },
+                    "size": {
+                        "height": 102.5,
+                        "width": 102.5,
+                        "depth": 145.4,
+                    },
+                    "weight": 1.9,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,  # m
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "notes": "",
+                    "min_valid_freq": 120,
+                    "max_valid_freq": 18000,
+                },
+                "review_published": "20250223",
+                "quality": "medium",
+                "notes": "{}".format(note_meyersound_gll),
+                "parameters": {
+                    "mean_min": 200,
+                    "mean_max": 1000,
+                },
+            },
+        },
+    },
     #    "Meyer Sound Ultra 22": {
     #        "skip": True,
     #        "brand": "Meyer Sound",
@@ -1103,7 +1160,7 @@ speakers_info_m: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230107",
                 "quality": "medium",
-                "notes": "{}".format(note2_meyersound_gll),
+                "notes": "{}".format(note_meyersound_gll),
                 "specifications": {
                     "dispersion": {
                         "horizontal": 110,
@@ -1154,6 +1211,51 @@ speakers_info_m: SpeakerDatabase = {
                     "air_absorbtion": True,
                     "resolution": 10,
                 },
+            },
+        },
+    },
+    "Meyer Sound UPQ-D1": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D1",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,  # m
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                        "m_noise": 135,
+                        "pink_noise": 132,
+                        "b_noise": 135,
+                    },
+                    "size": {
+                        "height": 715,
+                        "width": 483,
+                        "depth": 462,
+                    },
+                    "weight": 43,
+                },
+                "review_published": "20250223",
+                "quality": "medium",
+                "notes": "{}".format(note_meyersound_gll),
             },
         },
     },
