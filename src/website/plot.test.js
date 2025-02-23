@@ -43,9 +43,11 @@ const screens = {
     '16:9 4k': { width: 3840, height: 2160 },
 };
 
+/*
 function swap(model) {
     return { width: model.height, height: model.width };
 }
+*/
 
 describe('computeDims', () => {
     const ratioMin = 0.9;

@@ -617,6 +617,34 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "PMC Result6": {
+        "brand": "PMC",
+        "model": "Result6",
+        "type": "active",
+        "price": "2400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-result6-monitor-review.60937/#post-2232268",
+                "review_published": "20250220",
+                "specifications": {
+                    "SPL": {
+                        "peak": 112,
+                    },
+                    "size": {
+                        "height": 380,
+                        "width": 199,
+                        "depth": 360,
+                    },
+                    "weight": 8,
+                },
+            },
+        },
+    },
     "PMC Twenty 21": {
         "brand": "PMC",
         "model": "Twenty 21",

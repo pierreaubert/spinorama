@@ -23,16 +23,16 @@ from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq
-from spinorama.auto_loss import loss, score_loss
-from spinorama.auto_range import (
+from autoeq.auto_loss import loss, score_loss
+from autoeq.auto_range import (
     propose_range_freq,
     propose_range_q,
     propose_range_db_gain,
     propose_range_biquad,
 )
-from spinorama.auto_biquad import find_best_biquad, find_best_peak
-from spinorama.auto_target import optim_compute_auto_target
-from spinorama.auto_preflight import optim_preflight
+from autoeq.auto_biquad import find_best_biquad, find_best_peak
+from autoeq.auto_target import optim_compute_auto_target
+from autoeq.auto_preflight import optim_preflight
 
 
 def optim_greedy(

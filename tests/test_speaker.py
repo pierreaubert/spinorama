@@ -22,10 +22,9 @@ import unittest
 import warnings
 
 import pandas as pd
-import pytest
 
-from spinorama.load import parse_graphs_speaker, parse_eq_speaker
-from tests.test_common import EXPECTED_FULL_SET, EXPECTED_LIMITED_SET, EXPECTED_PARTIAL_SET
+from spinorama.load import parse_graphs_speaker  # , parse_eq_speaker
+from tests.test_common import EXPECTED_FULL_SET, EXPECTED_LIMITED_SET  # , EXPECTED_PARTIAL_SET
 
 from spinorama.speaker import (
     display_spinorama,

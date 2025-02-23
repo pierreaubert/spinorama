@@ -16,7 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*
 import { flags_Screen } from './meta.js';
+*/
 
 window.onload = () => {
     const navbarBurger = document.querySelector('#navbar-burger');
@@ -62,7 +64,7 @@ window.onload = () => {
             console.log('error dropdown trigger+menu not found!');
         }
         trigger.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
+            filters.classList.toggle('is-active');
         });
     }
 

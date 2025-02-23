@@ -28,9 +28,9 @@ from spinorama.filter_peq import Peq
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_print
 from spinorama.filter_scores import scores_apply_filter
-from spinorama.auto_misc import get3db, have_full_measurements
-from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_msteps import optim_multi_steps
+from autoeq.auto_misc import get3db, have_full_measurements
+from autoeq.auto_target import get_freq, get_target
+from autoeq.auto_msteps import optim_multi_steps
 
 
 TRACE = False

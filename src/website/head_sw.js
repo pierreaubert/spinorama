@@ -26,9 +26,9 @@ function cleanupCache() {
 if ('serviceWorker' in navigator) {
     const wb = new Workbox('/sw.js');
 
-    wb.addEventListener('install', (event) => {
+    wb.addEventListener('install', () => {
         console.log('sw install');
-        const promise = self.skipWaiting();
+        self.skipWaiting();
         cleanupCache();
     });
 
@@ -45,7 +45,6 @@ if ('serviceWorker' in navigator) {
             });
         if (!event.isUpdate) {
             console.log('Service worker activated for the first time!');
-        } else {
         }
     });
 

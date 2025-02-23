@@ -36,9 +36,9 @@ from spinorama.filter_scores import (
     scores_print,
 )
 from spinorama.speaker import write_multiformat
-from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_plot import graph_results as auto_graph_results
-from spinorama.auto_strategy import optim_strategy
+from autoeq.auto_target import get_freq, get_target
+from autoeq.auto_plot import graph_results as auto_graph_results
+from autoeq.auto_strategy import optim_strategy
 
 
 def get_previous_score(eq_name: str) -> None | float:
