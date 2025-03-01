@@ -511,8 +511,31 @@ speakers_info_k: SpeakerDatabase = {
         "price": "2500",
         "amount": "each",
         "shape": "inwall",
-        "default_measurement": "vendor",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ci250rrm-thx-in-ceiling-speaker-review.61115/",
+                "review_published": "20250228",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 120,
+                    },
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 175,
+                        "width": 346,
+                        "depth": 346,
+                    },
+                    "weight": 6.0,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "gll_hv_txt",
@@ -1884,6 +1907,42 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Ventura 6": {
+        "brand": "KEF",
+        "model": "Ventura 6",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "outdoor",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+		"quality": "low",
+                "review_published": "20250228",
+		"data_acquisition": {
+	            "via": "",
+		    "distance": 10.0, # m
+		    "air_absorbtion": False,
+		    "resolution": 10.0, # deg
+		    "min_valid_freq": 20,
+		    "max_valid_freq": 20000,
+		},
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "size": {
+                        "height": 300,
+                        "width": 226,
+                        "depth": 264,
+                    },
+                    "weight": 3.8,
+                },
+            },
+        },
+    },
+
     "King's Audio KingSound KS 3001": {
         "brand": "King's Audio",
         "model": "KingSound KS 3001",
