@@ -1038,10 +1038,7 @@ def plot_contour(spl, params, valid_freq_range):
 
     fig = go.Figure()
 
-    print("debug in plot contour: {}".format(df_spl.keys()))
     af, am, az = compute_contour(df_spl.loc[df_spl.Freq >= min_freq])
-    print(af[0])
-    print(am.T[0])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(

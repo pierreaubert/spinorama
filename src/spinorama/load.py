@@ -721,9 +721,6 @@ def parse_graphs_speaker(
                 measurement_path, speaker_name, mversion
             )
 
-        print(h_spl.keys())
-        print(v_spl.keys())
-
         if not status:
             logger.debug("Failed to load %s from measurement %s", speaker_name, mversion)
             if h_spl is not None and "Freq" not in h_spl:
@@ -742,6 +739,9 @@ def parse_graphs_speaker(
         df_graph = filter_graphs(
             speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
         )
+
+        # print('debug: after filter_graph {}'.format(df_graph['SPL Horizontal_unmelted'].keys()))
+        # print('debug: after filter_graph {}'.format(df_graph['SPL Vertical_unmelted'].keys()))
     elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
         df_uneven = None

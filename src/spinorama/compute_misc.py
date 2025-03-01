@@ -156,7 +156,7 @@ def compute_contour(dfm_in):
 
     vrange = list(sorted(vrange))
     hrange = dfm_in.Freq
-    print("debug: vrange={}".format(vrange))
+    # print("debug: vrange={}".format(vrange))
     af, am = np.meshgrid(hrange, vrange)
     # suppress the warning down since it is working in this case
     dfm.drop("Freq", axis=1, inplace=True)  # noqa: PD002

@@ -462,6 +462,11 @@ def print_graphs(
     ):
         logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
         try:
+            # print(
+            #     "debug before {} : {}".format(
+            #         op_title, df_speaker["SPL Horizontal_unmelted"].keys()
+            #     )
+            # )
             graph = op_call(df_speaker, graph_params, valid_freq_range)
             if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
@@ -489,6 +494,11 @@ def print_graphs(
         ):
             logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
             try:
+                # print(
+                #     "debug before {} : {}".format(
+                #         op_title, df_speaker["SPL Horizontal_unmelted"].keys()
+                #     )
+                # )
                 graph = op_call(df_speaker, graph_params, valid_freq_range)
                 if graph is None:
                     logger.info(
