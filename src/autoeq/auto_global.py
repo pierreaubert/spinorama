@@ -141,6 +141,7 @@ class GlobalOptimizer(object):
         self.max_peq = self.config["MAX_NUMBER_PEQ"]
         self.max_iter = self.config["MAX_ITER"]
         self.current_score = None
+        self.current_score_speaker = None
 
     def _freq2index(self, f: float):
         return bisect.bisect_left(self.freq_space, f)
@@ -187,7 +188,7 @@ class GlobalOptimizer(object):
         # take a list of encoded filters and return the magnitude of the filter across the freq range
         return peq_spl(self.freq_space, self._x2peq(x))
 
-    def _opt_peq_score(self, x: Encoded) -> float:
+    def _opt_peq_score(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
@@ -210,7 +211,7 @@ class GlobalOptimizer(object):
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
+        return score, score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
@@ -233,9 +234,11 @@ class GlobalOptimizer(object):
 
     def _opt_peq(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function
-        self.current_score = (
-            self._opt_peq_score(x) if self.config["loss"] == "score_loss" else self._opt_peq_flat(x)
-        )
+        if self.config["loss"] == "score_loss":
+            self.current_score_speaker, self.current_score = self._opt_peq_score(x)
+        else:
+            self.current_score = self._opt_peq_flat(x)
+
         return self.current_score
 
     def _opt_bounds_all(self, n: int) -> list[list[int | float]]:
@@ -409,8 +412,11 @@ class GlobalOptimizer(object):
         score_status = (
             "{:3.1f}".format(self.current_score) if self.current_score is not None else "?"
         )
+        tonality_status = (
+            "{:3.1f}".format(self.current_score) if self.current_score_speaker is not None else "?"
+        )
         print(
-            f"[f={1 - convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} score={score_status}"
+            f"[f={1 - convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} funct score={score_status} tonality score={tonality_status}"
         )
         peq_print(self._x2peq(xk))
 
