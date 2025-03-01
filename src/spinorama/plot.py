@@ -1038,7 +1038,10 @@ def plot_contour(spl, params, valid_freq_range):
 
     fig = go.Figure()
 
+    print("debug in plot contour: {}".format(df_spl.keys()))
     af, am, az = compute_contour(df_spl.loc[df_spl.Freq >= min_freq])
+    print(af[0])
+    print(am.T[0])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
@@ -1128,7 +1131,7 @@ def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> 
 def plot_radar(spl, params, valid_plot_range):
     layout = params.get("layout", "")
 
-    anglelist = list(range(-180, 180, 10))
+    anglelist = list(range(-180, 190, 10))
 
     def projection(anglelist, grid_z, hz):
         dbs_r = [db for _, db in zip(anglelist, grid_z, strict=False)]
@@ -1197,7 +1200,7 @@ def plot_radar(spl, params, valid_plot_range):
         tickvals=list(range(0, 360, 10)),
         ticktext=[
             f"{x}°" if abs(x) < 60 or not x % 30 else " "
-            for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+            for x in (list(range(0, 190, 10)) + list(range(-180, 0, 10)))
         ],
         tickfont=FONT_H6,
     )
