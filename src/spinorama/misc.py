@@ -219,6 +219,8 @@ def write_multiformat(chart, filename, force):
 def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
     complete_spl = False
     expected = set(["{}°".format(i) for i in range(-170, 190, 10)])
+    if (h_spl is not None and "5°" in h_spl) or (v_spl is not None and "5°" in v_spl):
+        expected = set(["{}°".format(i) for i in range(-175, 185, 5)])
     expected.remove("0°")
     expected.add("On Axis")
     if (
@@ -252,6 +254,8 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
 
 def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
     expected = set(["{}°".format(i) for i in range(-170, 190, 10)])
+    if (h_spl is not None and "5°" in h_spl) or (v_spl is not None and "5°" in v_spl):
+        expected = set(["{}°".format(i) for i in range(-175, 185, 5)])
     expected.remove("0°")
     expected.add("On Axis")
     found_h = set(h_spl.keys())
