@@ -105,67 +105,42 @@ def get_speaker_list(speakerpath: str) -> set[str]:
 def queue_measurement(
     brand: str,
     speaker: str,
-    mformat: str,
-    morigin: str,
-    mversion: str,
-    msymmetry: Symmetry | None,
-    mparameters: Parameters | None,
-    level: int,
-    distance: float,
+    parameters: dict,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        f"{data_dir}/datas/measurements",
-        brand,
-        speaker,
-        mformat,
-        morigin,
-        mversion,
-        msymmetry,
-        mparameters,
-        level,
-        distance,
+        speaker_path=f"{data_dir}/datas/measurements",
+        speaker_brand=brand,
+        speaker_name=speaker,
+        speaker_parameters=parameters,
     )
     id_eq = parse_eq_speaker.remote(
-        f"{data_dir}/datas",
-        speaker,
-        mformat,
-        id_df,
-        mparameters,
-        level,
-        distance,
+        speaker_path=f"{data_dir}/datas",
+        speaker_name=speaker,
+        df_ref=id_df,
+        speaker_parameters=parameters,
     )
-    width = int(plot_params_default["width"])
-    height = int(plot_params_default["height"])
+    parameters["width"] = int(plot_params_default["width"])
+    parameters["height"] = int(plot_params_default["height"])
     tracing("calling print_graph remote for {} {}".format(speaker, mversion))
     id_g1 = print_graphs.remote(
         id_df,
         speaker,
-        mformat,
-        mversion,
-        morigin,
+        parameters,
         metadata.origins_info,
-        mversion,
-        width,
-        height,
         force,
-        level,
     )
     tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
+    parameters_eq = parameters.copy()
+    parameters_eq["mversion"] = parameters["mversion"] + "_eq"
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
-        mformat,
-        mversion,
-        morigin,
+        parameters_eq,
         metadata.origins_info,
-        mversion + "_eq",
-        width,
-        height,
         force,
-        level,
     )
-    tracing("print_graph done for {} {}".format(speaker, mversion))
+    tracing("print_graph done for {} {}".format(speaker, parameters["mversion"]))
     return id_df, id_eq, id_g1, id_g2
 
 
@@ -200,13 +175,22 @@ def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) 
                 continue
             # TODO(add filter on brand)
             brand = metadata.speakers_info[speaker]["brand"]
+            shape = metadata.speakers_info[speaker]["shape"]
             logger.debug("queing %s/%s/%s/%s", speaker, morigin, mformat, mversion)
             msymmetry = measurement.get("symmetry", None)
             mparameters = measurement.get("parameters", None)
             distance = measurement2distance(speaker, measurement)
-            ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters, level, distance
-            )
+            parameters = {
+                "mformat": mformat,
+                "morigin": morigin,
+                "mversion": mversion,
+                "msymmetry": msymmetry,
+                "mparameters": mparameters,
+                "level": level,
+                "distance": distance,
+                "shape": shape,
+            }
+            ray_ids[speaker][mversion] = queue_measurement(brand, speaker, parameters)
             count += 1
     print("Queued {} speakers {} measurements".format(len(speakerlist), count))
     return ray_ids

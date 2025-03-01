@@ -93,7 +93,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertIsNotNone(genelec)
 
         with self.assertRaises(NoSuchElementException):
-            gene = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+            self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
 
     def test_filters_brand(self):
         self.driver.get("{}?{}".format(DEV, "page=1&count=100&brand=Elac"))

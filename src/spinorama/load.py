@@ -609,12 +609,13 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
 def parse_eq_speaker(
     speaker_path: str,
     speaker_name: str,
-    mformat: str,
     df_ref: dict,
-    mparameters: Parameters | None,
-    level: int,
-    distance: float,
+    speaker_parameters: dict,
 ) -> tuple[Peq, DataSpeaker]:
+    mformat = speaker_parameters["mformat"]
+    mparameters = speaker_parameters["mparameters"]
+    level = speaker_parameters["level"]
+    distance = speaker_parameters["distance"]
     ray_setup_logger(level)
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
@@ -684,14 +685,15 @@ def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
     speaker_name: str,
-    mformat: str,
-    morigin: str,
-    mversion: str,
-    msymmetry: Symmetry,
-    mparameters: Parameters | None,
-    level: int,
-    distance: float,
+    speaker_parameters: dict,
 ) -> dict:
+    mformat = speaker_parameters["mformat"]
+    morigin = speaker_parameters["morigin"]
+    mversion = speaker_parameters["mversion"]
+    msymmetry = speaker_parameters["msymmetry"]
+    mparameters = speaker_parameters["mparameters"]
+    level = speaker_parameters["level"]
+    distance = speaker_parameters["distance"]
     ray_setup_logger(level)
     df_graph = None
     measurement_path = f"{speaker_path}"
@@ -717,6 +719,9 @@ def parse_graphs_speaker(
             status, (h_spl, v_spl) = parse_graphs_speaker_gll_hv_txt(
                 measurement_path, speaker_name, mversion
             )
+
+        print(h_spl.keys())
+        print(v_spl.keys())
 
         if not status:
             logger.debug("Failed to load %s from measurement %s", speaker_name, mversion)

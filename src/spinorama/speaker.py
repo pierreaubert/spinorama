@@ -403,16 +403,16 @@ def print_a_graph(filename, chart, ext, force) -> int:
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
-    mformat: str,
-    version: str,
-    origin: str,
-    origins_info: dict,
-    version_key: str,
-    width: int,
-    height: int,
+    parameters: dict,
     force_print: bool,
-    level: int,
 ) -> int:
+    mformat = parameters["mformat"]
+    version = parameters["version"]
+    origin = parameters["origin"]
+    version_key = parameters["mversion"]
+    width = parameters["width"]
+    height = parameters["height"]
+    level = parameters["level"]
     ray_setup_logger(level)
     #
     df_speaker = {}

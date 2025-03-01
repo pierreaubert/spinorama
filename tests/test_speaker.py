@@ -70,108 +70,129 @@ class SpinoramaDisplayTests(unittest.TestCase):
                 warnings.simplefilter("ignore", ResourceWarning)
                 ray.init(num_cpus=1, include_dashboard=False)
 
+        parameters = {
+            "mformat": "klippel",
+            "morigin": "ErinsAudioCorner",
+            "mversion": "eac",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 1.0,
+        }
         self.dfs_full["klippel_eac"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="Neumann",
                 speaker_name="Neumann KH 80",
-                mformat="klippel",
-                morigin="ErinsAudioCorner",
-                mversion="eac",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=1.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "klippel",
+            "morigin": "ASR",
+            "mversion": "asr-vertical",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 1.0,
+        }
         self.dfs_full["klippel_asr"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="Genelec",
                 speaker_name="Genelec 8341A",
-                mformat="klippel",
-                morigin="ASR",
-                mversion="asr-vertical",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=1.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "princeton",
+            "morigin": "princeton",
+            "mversion": "princeton",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 1.0,
+        }
         self.dfs_limited["princeton"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="Genelec",
                 speaker_name="Genelec 8351A",
-                mformat="princeton",
-                morigin="princeton",
-                mversion="princeton",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=1.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "spl_hv_txt",
+            "morigin": "Misc",
+            "mversion": "misc-ageve",
+            "msymmetry": "vertical",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 1.0,
+        }
         self.dfs_full["spl_hv_txt"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="Andersson",
                 speaker_name="Andersson HIS 2.1",
-                mformat="spl_hv_txt",
-                morigin="Misc",
-                mversion="misc-ageve",
-                msymmetry="vertical",
-                mparameters=None,
-                level=logging.INFO,
-                distance=1.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "gll_hv_txt",
+            "morigin": "Vendors-RCF",
+            "mversion": "vendor-pattern-90x70",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 10.0,
+        }
         self.dfs_full["gll_hv_txt"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="RCF",
                 speaker_name="RCF ART 708-A MK4",
-                mformat="gll_hv_txt",
-                morigin="Vendors-RCF",
-                mversion="vendor-pattern-90x70",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=10.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "rew_text_dump",
+            "morigin": "Vendors-BIC America",
+            "mversion": "vendor",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 10.0,
+        }
         self.dfs_partial["rew_text_dump"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="BIC America",
                 speaker_name="BIC America Venturi DV62si",
-                mformat="rew_text_dump",
-                morigin="Vendors-BIC America",
-                mversion="vendor",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=10.0,
+                speaker_parameters=parameters,
             )
         )
 
+        parameters = {
+            "mformat": "webplotdigitizer",
+            "morigin": "Vendors-Revel",
+            "mversion": "vendor",
+            "msymmetry": "None",
+            "mparameters": None,
+            "level": logging.INFO,
+            "distance": 10.0,
+        }
         self.dfs_partial["webplotdigitizer"] = ray.get(
             parse_graphs_speaker.remote(
                 speaker_path="datas/measurements",
                 speaker_brand="Revel",
                 speaker_name="Revel F208",
-                mformat="webplotdigitizer",
-                morigin="Vendors-Revel",
-                mversion="vendor",
-                msymmetry="None",
-                mparameters=None,
-                level=logging.INFO,
-                distance=10.0,
+                speaker_parameters=parameters,
             )
         )
 
