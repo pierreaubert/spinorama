@@ -432,7 +432,6 @@ def main():
     try:
         for item in (
             "compare",
-            "help",
             "scores",
             "similar",
             "statistics",

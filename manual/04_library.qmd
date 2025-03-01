@@ -138,14 +138,26 @@ import spinorama.plot as plot
 
 ### CEA2034 plot (aka spinorama plot)
 ```{python}
-plot_spin = plot.plot_spinorama(spin, plot.plot_params_default, None, False, DEFAULT_FREQ_RANGE)
+plot_spin = plot.plot_spinorama(
+    spin=spin,
+    params=plot.plot_params_default, 
+    minmax_slopes=None,
+    is_normalized=False, 
+    valid_freq_range=DEFAULT_FREQ_RANGE
+)
 plot_spin.update_layout(my_layout)
 plot_spin
 ```
 
 ### Normalized CEA2034 plot
 ```{python}
-plot_spin = plot.plot_spinorama(spin, plot.plot_params_default, True, DEFAULT_FREQ_RANGE)
+plot_spin = plot.plot_spinorama(
+    spin=spin, 
+    params=plot.plot_params_default, 
+    minmax_slopes=None,
+    is_normalized=True,
+    valid_freq_range=DEFAULT_FREQ_RANGE
+)
 plot_spin.update_layout(my_layout)
 plot_spin
 ```
@@ -173,10 +185,12 @@ plot_er
 ### Predicted In-Room Response (aka PIR) plot
 ```{python}
 plot_pir = plot.plot_graph_regression(
-  df['Estimated In-Room Response_unmelted'],
-  'Estimated In-Room Response',
-  plot.plot_params_default,
-  DEFAULT_FREQ_RANGE
+  df=df['Estimated In-Room Response_unmelted'],
+  measurement='Estimated In-Room Response',
+  params=plot.plot_params_default,
+  minmax_slopes=None,
+  is_normalized=False,
+  valid_freq_range=DEFAULT_FREQ_RANGE
 )
 plot_pir.update_layout(my_layout)
 plot_pir

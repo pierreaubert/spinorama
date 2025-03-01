@@ -178,6 +178,21 @@ else
     echo "OK after generate HTML!"
 fi
 
+command=$(type -P quarto)
+status=$?
+if [ $status -ne 0 ]; then
+    command=$(quarto render manual/*.qmd --to html)
+    qstatus=$?
+    if [ $qstatus -ne 0 ]; then
+	echo "KO after generate HTML manual!"
+	# does not work lauched from the script but does work in the shell
+    else
+	echo "OK after generate HTML manual!"
+    fi
+else
+    echo "Quarto is not available, skipping HTML manual!"
+fi
+
 command=$(workbox generateSW workbox-config.js)
 status=$?
 if [ $status -ne 0 ]; then
