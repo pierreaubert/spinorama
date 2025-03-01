@@ -1919,16 +1919,16 @@ speakers_info_k: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "gll_hv_txt",
-		"quality": "low",
+                "quality": "low",
                 "review_published": "20250228",
-		"data_acquisition": {
-	            "via": "",
-		    "distance": 10.0, # m
-		    "air_absorbtion": False,
-		    "resolution": 10.0, # deg
-		    "min_valid_freq": 20,
-		    "max_valid_freq": 20000,
-		},
+                "data_acquisition": {
+                    "via": "",
+                    "distance": 10.0,  # m
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 20000,
+                },
                 "specifications": {
                     "sensitivity": 90,
                     "impedance": 6,
@@ -1942,7 +1942,6 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
-
     "King's Audio KingSound KS 3001": {
         "brand": "King's Audio",
         "model": "KingSound KS 3001",
