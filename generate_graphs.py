@@ -108,6 +108,7 @@ def queue_measurement(
     parameters: dict,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
+    mversion = parameters["mversion"]
     id_df = parse_graphs_speaker.remote(
         speaker_path=f"{data_dir}/datas/measurements",
         speaker_brand=brand,
@@ -132,7 +133,7 @@ def queue_measurement(
     )
     tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
     parameters_eq = parameters.copy()
-    parameters_eq["mversion"] = parameters["mversion"] + "_eq"
+    parameters_eq["mversion_eq"] = mversion + "_eq"
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,

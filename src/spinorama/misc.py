@@ -202,6 +202,7 @@ def write_multiformat(chart, filename, force):
     logger.info("Saving %s", filename)
 
     try:
+        print("wim {}".format(filename))
         with Wim(filename=filename) as pict:
             filename = filename.replace("_large", "")
             webp = "{}.webp".format(filename[:-4])

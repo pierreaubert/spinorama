@@ -694,6 +694,7 @@ def parse_graphs_speaker(
     mparameters = speaker_parameters["mparameters"]
     level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
+    shape = speaker_parameters["shape"]
     ray_setup_logger(level)
     df_graph = None
     measurement_path = f"{speaker_path}"
@@ -705,7 +706,7 @@ def parse_graphs_speaker(
     if mformat in ("klippel", "princeton", "spl_hv_txt", "gll_hv_txt"):
         if mformat == "klippel":
             status, (h_spl, v_spl) = parse_graphs_speaker_klippel(
-                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
+                measurement_path, speaker_brand, speaker_name, mversion, shape
             )
         elif mformat == "princeton":
             status, (h_spl, v_spl) = parse_graphs_speaker_princeton(

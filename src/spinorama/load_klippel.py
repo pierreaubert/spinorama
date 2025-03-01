@@ -81,8 +81,17 @@ def find_data_klippel(
     return False, ""
 
 
+def inwall_cleanup(spl):
+    for key in spl:
+        if key[-1] == "°":
+            angle = int(key[:-1])
+            if angle <= -90 or angle >= 90:
+                spl[key] = 0
+    return spl
+
+
 def parse_graphs_speaker_klippel(
-    speaker_path, speaker_brand, speaker_name, mversion, symmetry
+    speaker_path, speaker_brand, speaker_name, mversion, shape
 ) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     mandatory_csvfiles = [
         "SPL Horizontal",
@@ -117,6 +126,10 @@ def parse_graphs_speaker_klippel(
     if not h_status or not v_status:
         logger.info("Parse error")
         return False, (pd.DataFrame(), pd.DataFrame())
+
+    if shape == "inwall":
+        h_spl = inwall_cleanup(h_spl)
+        v_spl = inwall_cleanup(v_spl)
 
     logger.debug("Speaker: %s (Klippel) loaded", speaker_name)
 

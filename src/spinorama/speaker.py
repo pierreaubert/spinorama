@@ -404,12 +404,13 @@ def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
     parameters: dict,
+    origins_info: dict,
     force_print: bool,
 ) -> int:
     mformat = parameters["mformat"]
-    version = parameters["version"]
-    origin = parameters["origin"]
-    version_key = parameters["mversion"]
+    version = parameters["mversion"]
+    origin = parameters["morigin"]
+    version_key = parameters.get("mversion_key", version)
     width = parameters["width"]
     height = parameters["height"]
     level = parameters["level"]
