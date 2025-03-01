@@ -518,6 +518,37 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF CI130.2CR": {
+        "brand": "KEF",
+        "model": "CI130.2CR",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 15000,
+                },
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 194,
+                        "width": 194,
+                        "depth": 83,
+                    },
+                    "weight": 1.3,
+                },
+            },
+        },
+    },
     "KEF CI200RR-THX": {
         "brand": "KEF",
         "model": "CI200RR-THX",
