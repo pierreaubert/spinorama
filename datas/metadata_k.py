@@ -487,6 +487,67 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF CI50R": {
+        "brand": "KEF",
+        "model": "CI50R",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 15000,
+                },
+                "specifications": {
+                    "sensitivity": 82,
+                    "impedance": 6,
+                    "size": {
+                        "height": 80,
+                        "width": 80,
+                        "depth": 55,
+                    },
+                    "weight": 1.0,
+                },
+            },
+        },
+    },
+    "KEF CI200RR-THX": {
+        "brand": "KEF",
+        "model": "CI200RR-THX",
+        "type": "passive",
+        "price": "600",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 290,
+                        "width": 290,
+                        "depth": 132,
+                    },
+                    "weight": 3.6,
+                },
+            },
+        },
+    },
     "KEF Ci3160RL-THX": {
         "brand": "KEF",
         "model": "Ci3160RL-THX",

@@ -1259,6 +1259,96 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Meyer Sound UPQ-D2": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D2",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,  # m
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 50,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                        "m_noise": 138,
+                        "pink_noise": 134,
+                        "b_noise": 137,
+                    },
+                    "size": {
+                        "height": 715,
+                        "width": 483,
+                        "depth": 462,
+                    },
+                    "weight": 43,
+                },
+                "review_published": "20250301",
+                "quality": "medium",
+                "notes": "{}".format(note_meyersound_gll),
+            },
+        },
+    },
+    "Meyer Sound UPQ-D3": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D3",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,  # m
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                        "m_noise": 135,
+                        "pink_noise": 132,
+                        "b_noise": 134,
+                    },
+                    "size": {
+                        "height": 715,
+                        "width": 483,
+                        "depth": 462,
+                    },
+                    "weight": 43,
+                },
+                "review_published": "20250301",
+                "quality": "medium",
+                "notes": "{}".format(note_meyersound_gll),
+            },
+        },
+    },
     "Micca MB42X Mark III": {
         "brand": "Micca",
         "model": "MB42X Mark III",
