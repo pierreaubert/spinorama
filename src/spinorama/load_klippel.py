@@ -85,7 +85,7 @@ def inwall_cleanup(spl):
     for key in spl:
         if key[-1] == "°":
             angle = int(key[:-1])
-            if angle <= -90 or angle >= 90:
+            if angle < -90 or angle > 90:
                 spl[key] = 0
     return spl
 
