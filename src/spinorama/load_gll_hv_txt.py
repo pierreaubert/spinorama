@@ -77,7 +77,7 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
             lines = fd.readlines()
             for l in lines[6:]:
                 words = l[:-1].split()
-                if len(words) == 2:
+                if len(words) >= 2:
                     current_freq = float(words[0])
                     current_spl = float(words[1])
                     if current_freq > 20 and current_freq < 20000:
@@ -107,7 +107,9 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                 already_loaded_v.add(angle)
 
     logger.debug("found %d horizontal and %d vertical measurements", len(spl_h), len(spl_v))
-    return True, (sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1)))
+    sorted_h = sort_angles(pd.concat(spl_h, axis=1))
+    sorted_v = sort_angles(pd.concat(spl_v, axis=1))
+    return True, (sorted_h, sorted_v)
 
 
 def parse_graphs_speaker_gll_hv_txt(
@@ -139,7 +141,7 @@ def parse_graphs_speaker_gll_hv_txt(
             for file in gll.namelist():
                 with gll.open(file) as fd:
                     base = os.path.basename(file)
-                    if base[-4:] != ".txt":
+                    if base[-4:] not in (".txt", ".png"):
                         continue
                     data = fd.read()
                     filename = "{}/{}".format(tmp_dirname, base)
