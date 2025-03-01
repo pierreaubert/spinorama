@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -89,6 +89,10 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
             return -1000
         if angle in ("On Axis", "On-Axis"):
             return 0
+        if angle == "Phase On Axis":
+            return 1000
+        if angle[0:5] == 'Phase':
+            return 1000 + int(angle[6:-1])
         return int(angle[:-1])
 
     dfu = dfi.reindex(columns=sorted(set(dfi.columns), key=a2v))
@@ -202,7 +206,7 @@ def write_multiformat(chart, filename, force):
     logger.info("Saving %s", filename)
 
     try:
-        print("wim {}".format(filename))
+        # print("wim {}".format(filename))
         with Wim(filename=filename) as pict:
             filename = filename.replace("_large", "")
             webp = "{}.webp".format(filename[:-4])

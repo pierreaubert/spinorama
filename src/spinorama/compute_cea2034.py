@@ -143,7 +143,7 @@ def column_valid(col: str) -> bool:
     """True is a column is valid false otherwise"""
     if col[0:4] in ("On A", "Ceil", "Rear", "Fron", "Side", "Floo"):
         return True
-    if col == "Freq":
+    if col == "Freq" or col[0:5] == "Phase":
         return False
     return int(column_trim(col)[:-1]) % 10 == 0
 

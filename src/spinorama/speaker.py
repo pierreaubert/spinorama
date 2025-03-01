@@ -40,6 +40,7 @@ from spinorama.plot import (
     plot_graph,
     plot_graph_spl,
     plot_graph_regression,
+    plot_graph_onaxis,
     plot_contour,
     plot_radar,
     plot_contour_3d,
@@ -178,7 +179,7 @@ def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAUL
         return None
 
     _, slopes = get_minmax_slopes(df, False)
-    fig = plot_graph_regression(df, "On Axis", graph_params, slopes, False, valid_freq_range)
+    fig = plot_graph_onaxis(df, graph_params, slopes, False, valid_freq_range)
     return fig
 
 

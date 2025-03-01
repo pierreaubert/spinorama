@@ -148,6 +148,8 @@ def compute_contour(dfm_in):
     # get a list of columns
     vrange = []
     for c in dfm.columns:
+        if c[0:5] == 'Phase':
+            continue
         if c not in ("Freq", "On Axis"):
             angle = int(c[:-1])
             vrange.append(angle)
