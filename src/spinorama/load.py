@@ -550,7 +550,7 @@ def symmetrise_speaker_measurements(
         min_angle = 180
         max_angle = -180
         for col in cols:
-            if col == "Freq":
+            if col == "Freq" or col[0:5] == "Phase":
                 continue
             angle = 0 if col == "On Axis" else int(col[:-1])
             min_angle = min(min_angle, angle)
@@ -560,7 +560,7 @@ def symmetrise_speaker_measurements(
         # extend 0-90  to -90 to 90
         new_spl = spl.copy()
         for col in cols:
-            if col not in ("Freq", "On Axis", "180°"):
+            if col not in ("Freq", "On Axis", "180°") and "Phase" not in col:
                 m_angle = "{}".format(col[1:]) if col[0] == "-" else "-{}".format(col)
                 if m_angle not in spl.columns:
                     new_spl[m_angle] = spl[col]

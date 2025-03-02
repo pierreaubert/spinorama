@@ -1074,26 +1074,27 @@ def plot_graph_onaxis(df, params, minmax_slopes, is_normalized, valid_freq_range
     fig_onaxis.update_layout(common_layout(params))
     fig_onaxis.update_traces(mode="lines")
 
-    spl_h = df["SPL Horizontal_unmelted"]
-    if "Phase On Axis" in spl_h:
-        freq = spl_h.Freq
-        phase = spl_h["Phase On Axis"]
-        phase_min = np.min(phase)
-        phase_max = np.max(phase)
-        if phase_max - phase_min <= 2 * math.pi + 1:
-            phase = np.rad2deg(phase)
-        phase = np.array(phase) - 180 - phase_min
-        # print('debug: phase min={} max={}'.format(np.min(phase), np.max(phase)))
-        fig_onaxis.add_trace(
-            go.Scatter(
-                x=freq,
-                y=phase.tolist(),
-                name="Phase (deg)",
-            ),
-            secondary_y=True,
-        )
-        fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
-        fig_onaxis.update_layout(margin_r=50)
+    if "SPL Horizontal_unmelted" in df:
+        spl_h = df["SPL Horizontal_unmelted"]
+        if "Phase On Axis" in spl_h:
+            freq = spl_h.Freq
+            phase = spl_h["Phase On Axis"]
+            phase_min = np.min(phase)
+            phase_max = np.max(phase)
+            if phase_max - phase_min <= 2 * math.pi + 1:
+                phase = np.rad2deg(phase)
+            phase = np.array(phase) - 180 - phase_min
+            # print('debug: phase min={} max={}'.format(np.min(phase), np.max(phase)))
+            fig_onaxis.add_trace(
+                go.Scatter(
+                    x=freq,
+                    y=phase.tolist(),
+                    name="Phase (deg)",
+                ),
+                secondary_y=True,
+            )
+            fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
+            fig_onaxis.update_layout(margin_r=50)
 
     fig_onaxis.add_traces(
         plot_valid_freq_ranges(fig_onaxis, valid_freq_range, (params["ymin"], params["ymax"]))
@@ -1104,6 +1105,9 @@ def plot_graph_onaxis(df, params, minmax_slopes, is_normalized, valid_freq_range
 
 def plot_graph_group_delay(df, params, valid_freq_range):
     fig_group_delay = go.Figure()
+
+    if "SPL Horizontal_unmelted" not in df:
+        return None
 
     spl_h = df["SPL Horizontal_unmelted"]
     if "Phase On Axis" not in spl_h:

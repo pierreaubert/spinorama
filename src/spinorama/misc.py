@@ -84,16 +84,20 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
         DataFrame with columns sorted by angle values
     """
 
-    def a2v(angle):
-        if angle == "Freq":
-            return -1000
-        if angle in ("On Axis", "On-Axis"):
-            return 0
-        if angle == "Phase On Axis":
-            return 1000
-        if angle[0:5] == "Phase":
-            return 1000 + int(angle[6:-1])
-        return int(angle[:-1])
+    def a2v(angle: str) -> int:
+        try:
+            if angle == "Freq":
+                return -1000
+            if angle in ("On Axis", "On-Axis"):
+                return 0
+            if angle == "Phase On Axis":
+                return 1000
+            if angle[0:5] == "Phase":
+                return 1000 + int(angle[6:-1])
+            return int(angle[:-1])
+        except ValueError as ve:
+            logger.error("Parsing error for =={}== {}".format(angle, ve))
+            raise ve
 
     dfu = dfi.reindex(columns=sorted(set(dfi.columns), key=a2v))
     dfu = dfu.rename(columns={"On-Axis": "On Axis"})

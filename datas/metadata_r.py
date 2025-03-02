@@ -2,8 +2,8 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 rcf_data_acquisition = gll_data_acquisition_std.copy()
-rcf_data_acquisition['min_valid_freq'] = 100
-rcf_data_acquisition['max_valid_freq'] = 16000
+rcf_data_acquisition["min_valid_freq"] = 100
+rcf_data_acquisition["max_valid_freq"] = 16000
 
 speakers_info_r: SpeakerDatabase = {
     "Radiant Acoustics Clarity 6.2": {
@@ -713,12 +713,12 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x30": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-		"quality": "low",
+                "quality": "low",
                 "review_published": "20250302",
                 "extras": {
                     "is_equed": True,
                 },
-		"data_acquisition": rcf_data_acquisition,
+                "data_acquisition": rcf_data_acquisition,
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
