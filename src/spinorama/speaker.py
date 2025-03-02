@@ -41,6 +41,7 @@ from spinorama.plot import (
     plot_graph_spl,
     plot_graph_regression,
     plot_graph_onaxis,
+    plot_graph_group_delay,
     plot_contour,
     plot_radar,
     plot_contour_3d,
@@ -180,6 +181,23 @@ def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAUL
 
     _, slopes = get_minmax_slopes(df, False)
     fig = plot_graph_onaxis(df, graph_params, slopes, False, valid_freq_range)
+    return fig
+
+
+def display_group_delay(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+    onaxis = df.get("CEA2034_unmelted")
+    if onaxis is None:
+        onaxis = df.get("On Axis_unmelted")
+
+    if onaxis is None:
+        logger.debug("Display On Axis failed")
+        return None
+
+    if "On Axis" not in onaxis:
+        logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
+        return None
+
+    fig = plot_graph_group_delay(df, graph_params, valid_freq_range)
     return fig
 
 
@@ -482,6 +500,20 @@ def print_graphs(
                 version,
                 origin,
             )
+
+    logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+    try:
+        graph = display_group_delay(df_speaker, graph_params, valid_freq_range)
+        if graph is not None:
+            graphs["Group Delay"] = graph
+    except KeyError as ke:
+        logger.error(
+            "display Group Delay failed with a key error (%s) for %s %s %s",
+            str(ke),
+            speaker,
+            version,
+            origin,
+        )
 
     if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
         for op_title, op_call in (

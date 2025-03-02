@@ -91,7 +91,7 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
             return 0
         if angle == "Phase On Axis":
             return 1000
-        if angle[0:5] == 'Phase':
+        if angle[0:5] == "Phase":
             return 1000 + int(angle[6:-1])
         return int(angle[:-1])
 

@@ -100,14 +100,18 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                     if len(phases) == 0:
                         spl_h.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                     else:
-                        spl_h.append(pd.DataFrame({"Freq": freqs, angle: dbs, 'Phase On Axis': phases}))
+                        spl_h.append(
+                            pd.DataFrame({"Freq": freqs, angle: dbs, "Phase On Axis": phases})
+                        )
                 already_loaded_h.add(angle)
             elif orientation == "V":
                 if angle not in already_loaded_v:
                     if len(phases) == 0:
                         spl_v.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                     else:
-                        spl_v.append(pd.DataFrame({"Freq": freqs, angle: dbs, 'Phase On Axis': phases}))
+                        spl_v.append(
+                            pd.DataFrame({"Freq": freqs, angle: dbs, "Phase On Axis": phases})
+                        )
                 already_loaded_v.add(angle)
 
         if angle != "-180°":
