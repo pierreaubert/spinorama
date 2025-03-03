@@ -78,6 +78,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 1.0,
+            "shape": "bookshelves",
         }
         self.dfs_full["klippel_eac"] = ray.get(
             parse_graphs_speaker.remote(
@@ -96,6 +97,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 1.0,
+            "shape": "bookshelves",
         }
         self.dfs_full["klippel_asr"] = ray.get(
             parse_graphs_speaker.remote(
@@ -114,6 +116,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 1.0,
+            "shape": "bookshelves",
         }
         self.dfs_limited["princeton"] = ray.get(
             parse_graphs_speaker.remote(
@@ -132,6 +135,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 1.0,
+            "shape": "bookshelves",
         }
         self.dfs_full["spl_hv_txt"] = ray.get(
             parse_graphs_speaker.remote(
@@ -150,6 +154,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 10.0,
+            "shape": "liveportable",
         }
         self.dfs_full["gll_hv_txt"] = ray.get(
             parse_graphs_speaker.remote(
@@ -168,6 +173,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 10.0,
+            "shape": "floorstanders",
         }
         self.dfs_partial["rew_text_dump"] = ray.get(
             parse_graphs_speaker.remote(
@@ -186,6 +192,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mparameters": None,
             "level": logging.INFO,
             "distance": 10.0,
+            "shape": "floorstanders",
         }
         self.dfs_partial["webplotdigitizer"] = ray.get(
             parse_graphs_speaker.remote(
