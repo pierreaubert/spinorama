@@ -441,15 +441,17 @@ def print_graphs(
         df_speaker = data
     else:
         iir, df_speaker = data
+
     # may happens at development time or for partial measurements
     # or when the cache is confused (typically when you change the metadata)
     if df_speaker is None:
-        logger.debug("df_speaker is None for %s %s %s", speaker, version, origin)
+        logger.info("df_speaker is None for %s %s %s", speaker, version, origin)
         return 0
 
     if len(df_speaker.keys()) == 0:
         # if print_a_graph is called before df_speaker is ready
         # fix: ray call above
+        logger.info("df_speaker is Empty for %s %s %s", speaker, version, origin)
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -481,11 +483,6 @@ def print_graphs(
     ):
         logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
         try:
-            # print(
-            #     "debug before {} : {}".format(
-            #         op_title, df_speaker["SPL Horizontal_unmelted"].keys()
-            #     )
-            # )
             graph = op_call(df_speaker, graph_params, valid_freq_range)
             if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
@@ -527,22 +524,11 @@ def print_graphs(
         ):
             logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
             try:
-                # print(
-                #     "debug before {} : {}".format(
-                #         op_title, df_speaker["SPL Horizontal_unmelted"].keys()
-                #     )
-                # )
                 graph = op_call(df_speaker, graph_params, valid_freq_range)
                 if graph is None:
                     logger.info(
                         "display %s failed for %s %s %s", op_title, speaker, version, origin
                     )
-                    if "CEA2034" in op_title or "Estimated" in op_title:
-                        print(
-                            "display {} failed for {} {} {}".format(
-                                op_title, speaker, version, origin
-                            )
-                        )
                     continue
                 graphs[op_title] = graph
             except KeyError as ke:
@@ -627,5 +613,6 @@ def print_graphs(
         force_update = False
         for ext in ("png", "json"):
             filename = build_filename(speaker, origin, version_key, key, ext)
+            logger.debug("debug printing %s version_key=%s key=%s", filename, version_key, key)
             updated += print_a_graph(filename, graph, ext, force_print or force_update)
     return updated

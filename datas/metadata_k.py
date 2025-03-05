@@ -2000,6 +2000,7 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF Ventura 6": {
+        "skip": True,
         "brand": "KEF",
         "model": "Ventura 6",
         "type": "passive",

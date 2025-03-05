@@ -27,7 +27,7 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from datas import Symmetry, Parameters
+from datas import Parameters
 
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker
@@ -606,81 +606,6 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
 
 
 @ray.remote(num_cpus=1)
-def parse_eq_speaker(
-    speaker_path: str,
-    speaker_name: str,
-    df_ref: dict,
-    speaker_parameters: dict,
-) -> tuple[Peq, DataSpeaker]:
-    mformat = speaker_parameters["mformat"]
-    mparameters = speaker_parameters["mparameters"]
-    level = speaker_parameters["level"]
-    distance = speaker_parameters["distance"]
-    ray_setup_logger(level)
-
-    iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
-    mean_min, mean_max = get_mean_min_max(mparameters)
-    if df_ref is None or not isinstance(df_ref, dict) or not os.path.isfile(iirname):
-        return [], {}
-
-    srate = 48000
-    logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
-    iir = parse_eq_iir_rews(iirname, srate)
-
-    df_eq = {}
-
-    # full measurement
-    if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
-        h_spl = df_ref["SPL Horizontal_unmelted"]
-        v_spl = df_ref["SPL Vertical_unmelted"]
-        eq_h_spl = peq_apply_measurements(h_spl, iir)
-        eq_v_spl = peq_apply_measurements(v_spl, iir)
-        df_eq = filter_graphs(
-            speaker_name,
-            eq_h_spl,
-            eq_v_spl,
-            mean_min,
-            mean_max,
-            mformat,
-            distance,
-        )
-        return iir, df_eq
-
-    # partial_measurements
-    if "CEA2034" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
-        if spin_eq is not None:
-            df_eq["CEA2034"] = spin_eq
-            df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
-
-        if eir_eq is not None:
-            df_eq["Estimated In-Room Response"] = eir_eq
-            df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
-
-        if on_eq is not None:
-            df_eq["On Axis"] = on_eq
-            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
-
-        df_eq["eq"] = iir
-
-    if "CEA2034 Normalized" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, True)
-        if spin_eq is not None:
-            df_eq["CEA2034 Normalized"] = spin_eq
-            df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
-
-        if eir_eq is not None:
-            df_eq["Estimated In-Room Response Normalized"] = eir_eq
-            df_eq["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(eir_eq)
-
-        if on_eq is not None:
-            df_eq["On Axis"] = on_eq
-            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
-
-    return iir, df_eq
-
-
-@ray.remote(num_cpus=1)
 def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
@@ -816,3 +741,78 @@ def parse_graphs_speaker(
         return {}
 
     return df_graph
+
+
+@ray.remote(num_cpus=1)
+def parse_eq_speaker(
+    speaker_path: str,
+    speaker_name: str,
+    df_ref: dict,
+    speaker_parameters: dict,
+) -> tuple[Peq, DataSpeaker]:
+    mformat = speaker_parameters["mformat"]
+    mparameters = speaker_parameters["mparameters"]
+    level = speaker_parameters["level"]
+    distance = speaker_parameters["distance"]
+    ray_setup_logger(level)
+
+    iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
+    mean_min, mean_max = get_mean_min_max(mparameters)
+    if df_ref is None or not isinstance(df_ref, dict) or not os.path.isfile(iirname):
+        return [], {}
+
+    srate = 48000
+    logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
+    iir = parse_eq_iir_rews(iirname, srate)
+
+    df_eq = {}
+
+    # full measurement
+    if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
+        h_spl = df_ref["SPL Horizontal_unmelted"]
+        v_spl = df_ref["SPL Vertical_unmelted"]
+        eq_h_spl = peq_apply_measurements(h_spl, iir)
+        eq_v_spl = peq_apply_measurements(v_spl, iir)
+        df_eq = filter_graphs(
+            speaker_name,
+            eq_h_spl,
+            eq_v_spl,
+            mean_min,
+            mean_max,
+            mformat,
+            distance,
+        )
+        return iir, df_eq
+
+    # partial_measurements
+    if "CEA2034" in df_ref:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
+        if spin_eq is not None:
+            df_eq["CEA2034"] = spin_eq
+            df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
+
+        if eir_eq is not None:
+            df_eq["Estimated In-Room Response"] = eir_eq
+            df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
+
+        if on_eq is not None:
+            df_eq["On Axis"] = on_eq
+            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+
+        df_eq["eq"] = iir
+
+    if "CEA2034 Normalized" in df_ref:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, True)
+        if spin_eq is not None:
+            df_eq["CEA2034 Normalized"] = spin_eq
+            df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
+
+        if eir_eq is not None:
+            df_eq["Estimated In-Room Response Normalized"] = eir_eq
+            df_eq["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(eir_eq)
+
+        if on_eq is not None:
+            df_eq["On Axis"] = on_eq
+            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+
+    return iir, df_eq

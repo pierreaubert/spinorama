@@ -97,7 +97,7 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
             return int(angle[:-1])
         except ValueError as ve:
             logger.error("Parsing error for =={}== {}".format(angle, ve))
-            raise ve
+            raise
 
     dfu = dfi.reindex(columns=sorted(set(dfi.columns), key=a2v))
     dfu = dfu.rename(columns={"On-Axis": "On Axis"})

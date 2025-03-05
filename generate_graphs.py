@@ -76,7 +76,7 @@ from spinorama.plot import plot_params_default
 
 VERSION = "2.06"
 
-ACTIVATE_TRACING: bool = False
+ACTIVATE_TRACING: bool = True
 
 
 def tracing(msg: str):
@@ -133,7 +133,7 @@ def queue_measurement(
     )
     tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
     parameters_eq = parameters.copy()
-    parameters_eq["mversion_eq"] = mversion + "_eq"
+    parameters_eq["mversion_key"] = mversion + "_eq"
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
