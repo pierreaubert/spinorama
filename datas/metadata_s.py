@@ -470,7 +470,6 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
-    # Sonus faber Sonetto II G2
     "Sonus Faber Sonetto II": {
         "brand": "Sonus Faber",
         "model": "Sonetto II",
@@ -491,7 +490,6 @@ speakers_info_s: SpeakerDatabase = {
         },
     },
     "Sonus Faber Sonetto II G2": {
-        "skip": True,
         "brand": "Sonus Faber",
         "model": "Sonetto II G2",
         "type": "passive",
@@ -505,9 +503,9 @@ speakers_info_s: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "",
-                    "yt": "",
+                    "yt": "https://youtu.be/EBQQtr9qIso",
                 },
-                "review_published": "202404xx",
+                "review_published": "20250320",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4,

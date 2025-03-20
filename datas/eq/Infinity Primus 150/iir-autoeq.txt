@@ -1,0 +1,14 @@
+EQ for Infinity Primus 150 computed from Misc data
+Preference Score 4.19 with EQ 4.95
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-03-20-14:17:04
+
+Preamp: -1.7 dB
+
+Filter  1: ON PK Fc    98 Hz Gain -1.71 dB Q 2.29
+Filter  2: ON PK Fc   139 Hz Gain -2.88 dB Q 1.15
+Filter  3: ON PK Fc   155 Hz Gain +1.92 dB Q 0.26
+Filter  4: ON PK Fc   409 Hz Gain -2.23 dB Q 0.87
+Filter  5: ON PK Fc   504 Hz Gain +1.45 dB Q 2.95
+Filter  6: ON PK Fc   792 Hz Gain +3.00 dB Q 1.12
+Filter  7: ON PK Fc   879 Hz Gain -4.10 dB Q 2.99

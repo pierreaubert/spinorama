@@ -2088,6 +2088,35 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Audio Craftsmen Victoria": {
+        "brand": "Audio Craftsmen",
+        "model": "Victoria",
+        "type": "passive",
+        "price": "3999",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/Oujx5LziiZA?si=n7KHvAtXeQm7LZnc",
+                },
+                "review_published": "20250319",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 8,
+                    "size": {
+                        "height": 405,
+                        "width": 230,
+                        "depth": 355,
+                    },
+                    "weight": 16,
+                },
+            },
+        },
+    },
     "Audio Engine A2": {
         "brand": "Audio Engine",
         "model": "A2",

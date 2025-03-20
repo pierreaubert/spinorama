@@ -507,6 +507,36 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Phase Tech PC 3.1": {
+        "brand": "Phase Tech",
+        "model": "PC 3.1",
+        "type": "passive",
+        "price": "600",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/phase-tech-pc-3-1-speaker-measurements.61603/",
+                },
+                "review_published": "20250320",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 6,
+                    "size": {
+                        "height": 559,
+                        "width": 209,
+                        "depth": 300,
+                    },
+                    "weight": 20,
+                },
+            },
+        },
+    },
+
     "Pioneer DJ VM-50": {
         "brand": "Pioneer",
         "model": "DJ VM-50",

@@ -194,6 +194,33 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Magnepan LRS+": {
+        "brand": "Magnepan",
+        "model": "LRS+",
+        "type": "passive",
+        "shape": "panel",
+        "price": "995",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/PQemV-W48b8",
+                },
+                "review_published": "20250319",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1219,
+                        "width": 330,
+                        "depth": 25,
+                    },
+                },
+            },
+        },
+    },
     "Magico A3": {
         "brand": "Magico",
         "model": "A3",
