@@ -57,7 +57,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         if int(angle) < 0:
             symmetry = False
 
-    logger.debug("Symmetrie is %s", symmetry)
+    logger.debug("Symmetry is %s", symmetry)
 
     dfs = []
     already_loaded = set()
@@ -164,7 +164,7 @@ def parse_graphs_speaker_spl_hv_txt(
         and (speaker_name, version) not in known_incomplete_measurements
     ):
         logger.warning("We have only partial data in %s", dirname)
-        logger.debug(
+        logger.info(
             "We have only partial data in %s len(H)=%i len(V)=%i missing measurements %s",
             dirname,
             len(h_spl),

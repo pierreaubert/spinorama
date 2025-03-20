@@ -224,25 +224,28 @@ def write_multiformat(chart, filename, force):
         logger.exception("Saving picture %s failed with %s", filename, ce)
 
 
-def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
-    complete_spl = False
+def expected_measurements(spl: pd.DataFrame) -> bool:
     expected = set(["{}°".format(i) for i in range(-170, 190, 10)])
-    if (h_spl is not None and "5°" in h_spl) or (v_spl is not None and "5°" in v_spl):
+    if spl is not None and "5°" in spl:
         expected = set(["{}°".format(i) for i in range(-175, 185, 5)])
     expected.remove("0°")
     expected.add("On Axis")
+    return expected.issubset(spl)
+
+
+def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
+    complete_spl = False
     if (
         h_spl is not None
         and v_spl is not None
-        and expected.issubset(set(h_spl.keys()))
-        and expected.issubset(set(v_spl.keys()))
+        and expected_measurements(h_spl)
+        and expected_measurements(v_spl)
     ):
         complete_spl = True
-    # print('check spl : {} H {} V {}'.format(
-    #    complete_spl,
-    #    expected.issubset(set(h_spl.keys())),
-    #    expected.issubset(set(v_spl.keys())),
-    # ))
+    if not complete_spl:
+        print("check spl : {}".format(complete_spl))
+        if h_spl is not None and v_spl is not None:
+            print(measurements_missing_angles(h_spl, v_spl))
     return complete_spl
 
 
@@ -255,9 +258,11 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
                 complete_freq = True
         return complete_freq
 
-    # print('check freq H: {}'.format(check(h_spl)))
-    # print('check freq V: {}'.format(check(v_spl)))
-    return check(h_spl) and check(v_spl)
+    complete = check(h_spl) and check(v_spl)
+    if not complete:
+        print("check freq H: {}".format(check(h_spl)))
+        print("check freq V: {}".format(check(v_spl)))
+    return complete
 
 
 def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
