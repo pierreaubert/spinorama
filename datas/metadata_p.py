@@ -536,7 +536,6 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
-
     "Pioneer DJ VM-50": {
         "brand": "Pioneer",
         "model": "DJ VM-50",

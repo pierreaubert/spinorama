@@ -464,14 +464,14 @@ speakers_info_e: SpeakerDatabase = {
                     "weight": 3.85,
                 },
             },
-# TODO: what happens to the data?
-#            "misc-audiolabinsight": {
-#                "origin": "Misc",
-#                "format": "klippel",
-#                "quality": "high",
-#                "review": "https://audiolabinsight.com/t/edifier-mr3bt-mesearment-and-review/342",
-#                "review_published": "20241214",
-#            },
+            # TODO: what happens to the data?
+            #            "misc-audiolabinsight": {
+            #                "origin": "Misc",
+            #                "format": "klippel",
+            #                "quality": "high",
+            #                "review": "https://audiolabinsight.com/t/edifier-mr3bt-mesearment-and-review/342",
+            #                "review_published": "20241214",
+            #            },
         },
     },
     "Edifier MR4": {

@@ -30,4 +30,3 @@ Some papers related to finding the optimal IIR filters: I used a different algor
 - Vairetti, Giacomo & Sena, Enzo & Catrysse, Michael & Jensen, Søren & Moonen, Marc & Waterschoot, Toon. (2018). An Automatic Design Procedure for Low-order IIR Parametric Equalizers. Journal of the Audio Engineering Society. 66. 935-952. 10.17743/jaes.2018.0049.
 
 - Equalization of loudspeaker response using balanced model truncation, Xiansheng Li, Zhibo Cai, Chengshi Zheng, et al.
-

@@ -71,5 +71,3 @@ PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s
 
 # install 3rd parties
 ./scripts/update_3rdparties.sh
-
-
