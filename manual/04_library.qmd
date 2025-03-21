@@ -140,9 +140,9 @@ import spinorama.plot as plot
 ```{python}
 plot_spin = plot.plot_spinorama(
     spin=spin,
-    params=plot.plot_params_default, 
+    params=plot.plot_params_default,
     minmax_slopes=None,
-    is_normalized=False, 
+    is_normalized=False,
     valid_freq_range=DEFAULT_FREQ_RANGE
 )
 plot_spin.update_layout(my_layout)
@@ -152,8 +152,8 @@ plot_spin
 ### Normalized CEA2034 plot
 ```{python}
 plot_spin = plot.plot_spinorama(
-    spin=spin, 
-    params=plot.plot_params_default, 
+    spin=spin,
+    params=plot.plot_params_default,
     minmax_slopes=None,
     is_normalized=True,
     valid_freq_range=DEFAULT_FREQ_RANGE

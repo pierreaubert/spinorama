@@ -13,4 +13,3 @@ This library provides an easy way to view, compare or analyse speakers data. Thi
 ## Jump to [spinorama.org](https://spinorama.org) of all (1000+) speakers measurements.
 
 ## Jump to the [documentation](https://spinorama.org/docs) to learn more about what it can do and how to use it.
-
