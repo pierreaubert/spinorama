@@ -1,0 +1,14 @@
+EQ for Sonus Faber Sonetto II G2 computed from ErinsAudioCorner data
+Preference Score 3.96 with EQ 5.58
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-03-20-16:43:11
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +2.87 dB Q 1.16
+Filter  2: ON PK Fc   424 Hz Gain +1.57 dB Q 0.36
+Filter  3: ON PK Fc   470 Hz Gain -1.33 dB Q 3.00
+Filter  4: ON PK Fc   560 Hz Gain +2.99 dB Q 2.98
+Filter  5: ON PK Fc   689 Hz Gain -5.76 dB Q 3.00
+Filter  6: ON PK Fc  1202 Hz Gain -2.28 dB Q 2.99
+Filter  7: ON PK Fc  1244 Hz Gain +0.96 dB Q 0.71

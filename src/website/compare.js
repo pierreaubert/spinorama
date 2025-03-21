@@ -77,7 +77,6 @@ getMetadata()
         const urlParams = new URLSearchParams(queryString);
 
         const plotContainers = document.querySelector('[data-num="0"');
-        const plotContainer = plotContainers.querySelector('#plotZone');
         const plotContainerError = plotContainers.querySelector('#plotError');
         const plot0Container = plotContainers.querySelector('#plot0');
         const plot1Container = plotContainers.querySelector('#plot1');

@@ -153,8 +153,8 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
 
     def test_spin(self):
         # vertical symmetry
-        self.assertEqual(self.h.shape, (479, 37))
-        self.assertEqual(self.v.shape, (479, 20))
+        self.assertEqual(self.h.shape, (479, 38))
+        self.assertEqual(self.v.shape, (479, 21))
         self.assertTrue(measurements_complete_freq(self.h, self.v))
         self.assertFalse(measurements_complete_spl(self.h, self.v))
 
@@ -164,9 +164,9 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
         self.assertIsNotNone(h2)
         self.assertIsNotNone(v2)
         if h2 is not None:
-            self.assertEqual(h2.shape, (479, 37))
+            self.assertEqual(h2.shape, (479, 38))
         if v2 is not None:
-            self.assertEqual(v2.shape, (479, 37))
+            self.assertEqual(v2.shape, (479, 38))
         if h2 is not None and v2 is not None:
             self.assertTrue(measurements_complete_spl(h2, v2))
 

@@ -507,6 +507,36 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Phase Tech PC 3.1": {
+        "brand": "Phase Tech",
+        "model": "PC 3.1",
+        "type": "passive",
+        "price": "600",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/phase-tech-pc-3-1-speaker-measurements.61603/",
+                },
+                "review_published": "20250320",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 6,
+                    "size": {
+                        "height": 559,
+                        "width": 209,
+                        "depth": 300,
+                    },
+                    "weight": 20,
+                },
+            },
+        },
+    },
+
     "Pioneer DJ VM-50": {
         "brand": "Pioneer",
         "model": "DJ VM-50",
@@ -614,6 +644,34 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-elite-sp-ec73-center-speaker-review.12197/",
                 "review_published": "20200323",
+            },
+        },
+    },
+    "PMC Result6": {
+        "brand": "PMC",
+        "model": "Result6",
+        "type": "active",
+        "price": "2400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-result6-monitor-review.60937/#post-2232268",
+                "review_published": "20250220",
+                "specifications": {
+                    "SPL": {
+                        "peak": 112,
+                    },
+                    "size": {
+                        "height": 380,
+                        "width": 199,
+                        "depth": 360,
+                    },
+                    "weight": 8,
+                },
             },
         },
     },

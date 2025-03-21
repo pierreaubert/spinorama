@@ -40,6 +40,8 @@ from spinorama.plot import (
     plot_graph,
     plot_graph_spl,
     plot_graph_regression,
+    plot_graph_onaxis,
+    plot_graph_group_delay,
     plot_contour,
     plot_radar,
     plot_contour_3d,
@@ -178,7 +180,24 @@ def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAUL
         return None
 
     _, slopes = get_minmax_slopes(df, False)
-    fig = plot_graph_regression(df, "On Axis", graph_params, slopes, False, valid_freq_range)
+    fig = plot_graph_onaxis(df, graph_params, slopes, False, valid_freq_range)
+    return fig
+
+
+def display_group_delay(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+    onaxis = df.get("CEA2034_unmelted")
+    if onaxis is None:
+        onaxis = df.get("On Axis_unmelted")
+
+    if onaxis is None:
+        logger.debug("Display On Axis failed")
+        return None
+
+    if "On Axis" not in onaxis:
+        logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
+        return None
+
+    fig = plot_graph_group_delay(df, graph_params, valid_freq_range)
     return fig
 
 
@@ -403,16 +422,17 @@ def print_a_graph(filename, chart, ext, force) -> int:
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
-    mformat: str,
-    version: str,
-    origin: str,
+    parameters: dict,
     origins_info: dict,
-    version_key: str,
-    width: int,
-    height: int,
     force_print: bool,
-    level: int,
 ) -> int:
+    mformat = parameters["mformat"]
+    version = parameters["mversion"]
+    origin = parameters["morigin"]
+    version_key = parameters.get("mversion_key", version)
+    width = parameters["width"]
+    height = parameters["height"]
+    level = parameters["level"]
     ray_setup_logger(level)
     #
     df_speaker = {}
@@ -421,15 +441,17 @@ def print_graphs(
         df_speaker = data
     else:
         iir, df_speaker = data
+
     # may happens at development time or for partial measurements
     # or when the cache is confused (typically when you change the metadata)
     if df_speaker is None:
-        logger.debug("df_speaker is None for %s %s %s", speaker, version, origin)
+        logger.info("df_speaker is None for %s %s %s", speaker, version, origin)
         return 0
 
     if len(df_speaker.keys()) == 0:
         # if print_a_graph is called before df_speaker is ready
         # fix: ray call above
+        logger.info("df_speaker is Empty for %s %s %s", speaker, version, origin)
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -476,6 +498,20 @@ def print_graphs(
                 origin,
             )
 
+    logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+    try:
+        graph = display_group_delay(df_speaker, graph_params, valid_freq_range)
+        if graph is not None:
+            graphs["Group Delay"] = graph
+    except KeyError as ke:
+        logger.error(
+            "display Group Delay failed with a key error (%s) for %s %s %s",
+            str(ke),
+            speaker,
+            version,
+            origin,
+        )
+
     if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
         for op_title, op_call in (
             ("Early Reflections", display_reflection_early),
@@ -493,12 +529,6 @@ def print_graphs(
                     logger.info(
                         "display %s failed for %s %s %s", op_title, speaker, version, origin
                     )
-                    if "CEA2034" in op_title or "Estimated" in op_title:
-                        print(
-                            "display {} failed for {} {} {}".format(
-                                op_title, speaker, version, origin
-                            )
-                        )
                     continue
                 graphs[op_title] = graph
             except KeyError as ke:
@@ -583,5 +613,6 @@ def print_graphs(
         force_update = False
         for ext in ("png", "json"):
             filename = build_filename(speaker, origin, version_key, key, ext)
+            logger.debug("debug printing %s version_key=%s key=%s", filename, version_key, key)
             updated += print_a_graph(filename, graph, ext, force_print or force_update)
     return updated

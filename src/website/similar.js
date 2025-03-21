@@ -21,7 +21,7 @@
 import Plotly from 'plotly-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
-import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot.js';
+import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -62,7 +62,7 @@ getMetadata()
                         let graphOptions = [null];
                         const currentGraphs = [graphs[0], graphs[i + 1]];
                         const currentNames = [speakersName[0] + ' v.s. ' + speakersName[i + 1], speakersName[i + 1]];
-                        if (measurement === 'CEA2034') {
+                        if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
                             graphOptions = setCEA2034(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'On Axis' ||
@@ -91,7 +91,7 @@ getMetadata()
                             measurement === 'SPL Horizontal 3D Normalized' ||
                             measurement === 'SPL Vertical 3D Normalized'
                         ) {
-                            graphOptions = setSurface(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setContour3D(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Globe' ||
                             measurement === 'SPL Vertical Globe' ||

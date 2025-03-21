@@ -11,12 +11,14 @@
     "workbox-window": "^7.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "^2.1.8",
-    "eslint": "^9.17.0",
+    "eslint": "^9.20.1",
     "eslint-config-prettier": "^9.1.0",
     "flow-bin": "^0.257.1",
     "flow-remove-types": "^2.257.1",
+    "globals": "^15.15.0",
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",
     "oxlint": "latest",

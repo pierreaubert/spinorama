@@ -33,7 +33,7 @@ from spinorama.compute_cea2034 import (
     horizontal_reflections,
     estimated_inroom_hv,
 )
-from spinorama.auto_loss import score_loss
+from autoeq.auto_loss import score_loss
 
 
 pd.set_option("display.max_rows", 202)

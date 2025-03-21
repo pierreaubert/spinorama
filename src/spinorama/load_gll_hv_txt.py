@@ -45,8 +45,8 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
         try:
             meridian = int(file_format[-2][1:])
             parallel = int(file_format[-1][1:])
-        except ValueError as e:
-            # for files like sensitibity etc
+        except ValueError:
+            # for files like sensitivity etc
             continue
         angle = None
         orientation = None
@@ -73,13 +73,17 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
 
         freqs = []
         dbs = []
+        phases = []
         with open(file, "r") as fd:
             lines = fd.readlines()
             for l in lines[6:]:
                 words = l[:-1].split()
-                if len(words) == 2:
+                if len(words) >= 2:
                     current_freq = float(words[0])
                     current_spl = float(words[1])
+                    current_phase = None
+                    if len(words) >= 3:
+                        current_phase = float(words[2])
                     if current_freq > 20 and current_freq < 20000:
                         freqs.append(current_freq)
                         # GLL files are measured at 10m spl is usually reported at 1m
@@ -87,15 +91,27 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                         # TODO: compute it more precisely by taking into account the speaker dispersion
                         # Keep it as measured
                         dbs.append(current_spl)
+                        if current_phase is not None:
+                            phases.append(current_phase)
 
         if angle == "On Axis":
             if orientation == "H":
                 if angle not in already_loaded_h:
-                    spl_h.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+                    if len(phases) == 0:
+                        spl_h.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+                    else:
+                        spl_h.append(
+                            pd.DataFrame({"Freq": freqs, angle: dbs, "Phase On Axis": phases})
+                        )
                 already_loaded_h.add(angle)
             elif orientation == "V":
                 if angle not in already_loaded_v:
-                    spl_v.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+                    if len(phases) == 0:
+                        spl_v.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+                    else:
+                        spl_v.append(
+                            pd.DataFrame({"Freq": freqs, angle: dbs, "Phase On Axis": phases})
+                        )
                 already_loaded_v.add(angle)
 
         if angle != "-180°":
@@ -107,7 +123,9 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                 already_loaded_v.add(angle)
 
     logger.debug("found %d horizontal and %d vertical measurements", len(spl_h), len(spl_v))
-    return True, (sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1)))
+    sorted_h = sort_angles(pd.concat(spl_h, axis=1))
+    sorted_v = sort_angles(pd.concat(spl_v, axis=1))
+    return True, (sorted_h, sorted_v)
 
 
 def parse_graphs_speaker_gll_hv_txt(
@@ -139,7 +157,7 @@ def parse_graphs_speaker_gll_hv_txt(
             for file in gll.namelist():
                 with gll.open(file) as fd:
                     base = os.path.basename(file)
-                    if base[-4:] != ".txt":
+                    if base[-4:] not in (".txt", ".png"):
                         continue
                     data = fd.read()
                     filename = "{}/{}".format(tmp_dirname, base)

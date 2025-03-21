@@ -1,0 +1,14 @@
+EQ for Edifier MR3BT computed from ErinsAudioCorner data
+Preference Score 3.91 with EQ 5.00
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-03-20-16:12:42
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +1.82 dB Q 0.91
+Filter  2: ON PK Fc   102 Hz Gain +2.93 dB Q 1.10
+Filter  3: ON PK Fc   134 Hz Gain -2.49 dB Q 2.07
+Filter  4: ON PK Fc   454 Hz Gain +1.51 dB Q 3.00
+Filter  5: ON PK Fc  1083 Hz Gain +2.96 dB Q 3.00
+Filter  6: ON PK Fc  1244 Hz Gain -2.08 dB Q 2.99
+Filter  7: ON PK Fc  7834 Hz Gain -0.97 dB Q 0.25

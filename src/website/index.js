@@ -165,7 +165,9 @@ function scoreHtml(shape, score) {
                  </span>
                  <span>Tonality: <b>${score.score}</b></span>
                </span>
+<!--
                ${help}
+-->
     `;
     } else {
         return `
@@ -177,7 +179,9 @@ function scoreHtml(shape, score) {
                  </span>
                  <span>Tonality: <b>***</b></span>
                </span>
+<!--
                ${help}
+-->
     `;
     }
 }
@@ -214,11 +218,13 @@ function contextHtml(context) {
                  <span class="icon">${dollar}</span>
                  <span>Price: <b>${price}</b></span>
                </span>
+<!--
                <span class="icon is-pulled-right">
                   <a href="/help.html#priceDefinition">
                      <svg width="20px" height="20px"><use href="#icon-circle-question"/></svg>
                   </a>
                </span>
+-->
                <br/>
                ${html_score}
                <br/>
@@ -226,12 +232,17 @@ function contextHtml(context) {
                  <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
                  <span>Bass extension: <b>${score.lfx}</b>Hz</span>
                </span>
-               <span class="icon is-pulled-right"><a href="/help.html#bassExtensionDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a></span>
+<!--
+               <span class="icon is-pulled-right">
+                 <a href="/help.html#bassExtensionDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a>
+               </span>
+-->
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-success"><svg width="20px" height="20px" alt="rating"><use href="${iconFlatness}"/></svg></span>
                  <span>Flatness: <b>&plusmn;${score.flatness}</b>dB</span>
                </span>
+<!--
                <span class="icon is-pulled-right">
                   <a href="/help.html#flatnessDefinition">
                      <svg width="20px" height="20px">
@@ -239,6 +250,7 @@ function contextHtml(context) {
                      </svg>
                   </a>
                </span>
+-->
              </div>
            </div>
            <footer class="card-footer">

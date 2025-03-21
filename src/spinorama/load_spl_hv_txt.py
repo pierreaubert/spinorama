@@ -57,13 +57,14 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         if int(angle) < 0:
             symmetry = False
 
-    logger.debug("Symmetrie is %s", symmetry)
+    logger.debug("Symmetry is %s", symmetry)
 
     dfs = []
     already_loaded = set()
     for file in files:
         freqs = []
         dbs = []
+        phases = []
 
         # 3 possible formats:
         # 1. angle_H or angle_V.txt
@@ -101,13 +102,23 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
 
                 # freq db phase
                 words = l.split()
-                if len(words) == 2 or len(words) == 3:
+                if len(words) == 2:
                     freq = words[0]
                     db = words[1]
                     # skip first line
                     if freq[0] != "F" and float(freq) >= 20 and float(freq) <= 20000:
                         freqs.append(float(freq))
                         dbs.append(float(db))
+                    continue
+                elif len(words) == 3:
+                    freq = words[0]
+                    db = words[1]
+                    phase = words[2]
+                    # skip first line
+                    if freq[0] != "F" and float(freq) >= 20 and float(freq) <= 20000:
+                        freqs.append(float(freq))
+                        dbs.append(float(db))
+                        phases.append(float(phase))
                     continue
 
                 logger.warning("unkown file format len words %d for line %s", len(words), l)
@@ -116,6 +127,8 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
             if angle not in already_loaded:
                 dfs.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                 already_loaded.add(angle)
+                if len(phases) > 0:
+                    dfs.append(pd.DataFrame({"Phase On Axis": phases}))
             else:
                 logger.warning("angle %s already loaded (dirpath=%s)", angle, dirpath)
         else:
@@ -151,7 +164,7 @@ def parse_graphs_speaker_spl_hv_txt(
         and (speaker_name, version) not in known_incomplete_measurements
     ):
         logger.warning("We have only partial data in %s", dirname)
-        logger.debug(
+        logger.info(
             "We have only partial data in %s len(H)=%i len(V)=%i missing measurements %s",
             dirname,
             len(h_spl),

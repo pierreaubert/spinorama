@@ -1,0 +1,14 @@
+EQ for Meyer Sound UPQ-D1 computed from Vendors-Meyer Sound data
+Preference Score 3.22 with EQ 4.46
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-24-11:34:30
+
+Preamp: -2.2 dB
+
+Filter  1: ON PK Fc    51 Hz Gain +2.20 dB Q 2.96
+Filter  2: ON PK Fc   454 Hz Gain +2.98 dB Q 2.99
+Filter  3: ON PK Fc   522 Hz Gain -4.17 dB Q 1.78
+Filter  4: ON PK Fc   621 Hz Gain +2.98 dB Q 2.98
+Filter  5: ON PK Fc  1333 Hz Gain -1.53 dB Q 2.99
+Filter  6: ON PK Fc  1429 Hz Gain +1.42 dB Q 0.98
+Filter  7: ON PK Fc  9319 Hz Gain -3.82 dB Q 0.49

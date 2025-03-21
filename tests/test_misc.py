@@ -90,13 +90,13 @@ class SpinoramaMeasurementsQualitySPLTest(unittest.TestCase):
             angle = "{}°".format(iangle)
             self.df_10[angle] = [iangle, iangle, iangle]
         self.df_5 = self.df_10.copy()
-        for iangle in range(-165, 185, 10):
+        for iangle in range(-175, 185, 10):
             if iangle == 0:
                 continue
             angle = "{}°".format(iangle)
             self.df_5[angle] = [iangle, iangle, iangle]
         self.df_e1 = pd.DataFrame({"Freq": [1, 2, 3], "On Axis": [0, 0, 0]})
-        for iangle in range(-170, 180, 10):
+        for iangle in range(-175, 185, 10):
             if iangle == 0:
                 continue
             angle = "{}°".format(iangle)

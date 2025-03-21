@@ -432,7 +432,6 @@ def main():
     try:
         for item in (
             "compare",
-            "help",
             "scores",
             "similar",
             "statistics",
@@ -557,6 +556,8 @@ def main():
             # pipeline
             item_name = "{}.js".format(item)
             item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
+            # if item == "misc":
+            #     item_original = "{}/{}.js.tmpl".format(cpaths.CPATH_WEBSITE, item)
             item_mako_tmpl = "{}-0-flow.js".format(item)
             item_post_flow = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)

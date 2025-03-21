@@ -136,6 +136,41 @@ speakers_info_i: SpeakerDatabase = {
             },
         },
     },
+    "Infinity Primus 150": {
+        "brand": "Infinity",
+        "model": "Primus 150",
+        "type": "passive",
+        "price": "200",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/infinity-primus-150-spinorama-measurements-cta-2034.61510/",
+                },
+                "symmetry": "horizontal",
+                "data_acquisition": {
+                    "distance": 1,
+                    "resolution": 5,
+                },
+                "review_published": "20250319",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 8,
+                    "size": {
+                        "height": 322,
+                        "width": 187,
+                        "depth": 252,
+                    },
+                    "weight": 6,
+                },
+            },
+        },
+    },
     "Infinity Primus 360": {
         "brand": "Infinity",
         "model": "Primus 360",

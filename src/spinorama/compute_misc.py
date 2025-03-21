@@ -148,6 +148,8 @@ def compute_contour(dfm_in):
     # get a list of columns
     vrange = []
     for c in dfm.columns:
+        if c[0:5] == "Phase":
+            continue
         if c not in ("Freq", "On Axis"):
             angle = int(c[:-1])
             vrange.append(angle)
@@ -155,9 +157,8 @@ def compute_contour(dfm_in):
             vrange.append(0)
 
     vrange = list(sorted(vrange))
-
-    # print("nf={:d} vrange={}".format(len(vrange), vrange))
     hrange = dfm_in.Freq
+    # print("debug: vrange={}".format(vrange))
     af, am = np.meshgrid(hrange, vrange)
     # suppress the warning down since it is working in this case
     dfm.drop("Freq", axis=1, inplace=True)  # noqa: PD002

@@ -24,7 +24,7 @@ import numpy as np
 
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_spl
-from spinorama.auto_range import find_largest_area
+from autoeq.auto_range import find_largest_area
 
 
 class FreqRangeTests(unittest.TestCase):

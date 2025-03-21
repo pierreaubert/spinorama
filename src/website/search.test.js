@@ -207,6 +207,7 @@ describe('test full text search and filtering', () => {
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
+        expect(maxResults).toBeDefined();
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
         expect(results.length).toBe(162);
@@ -227,6 +228,7 @@ describe('test full text search and filtering', () => {
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
+        expect(maxResults).toBeDefined();
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
         expect(results.length).toBe(643);
@@ -246,6 +248,7 @@ describe('test full text search and filtering', () => {
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
+        expect(maxResults).toBeDefined();
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
         expect(results.length).toBe(211);
@@ -281,6 +284,8 @@ describe('test full text search and filtering', () => {
         }
         const [maxResults1, results1] = getResults(100, 200);
         const [maxResults2, results2] = getResults(300, 1000);
+        expect(maxResults1).toBeDefined();
+        expect(maxResults2).toBeDefined();
         const set1 = new Set(results1);
         const set2 = new Set(results2);
         expect(set1.isDisjointFrom(set2)).toBeTruthy();
@@ -291,6 +296,7 @@ describe('test full text search and filtering', () => {
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
+        expect(maxResults).toBeDefined();
         expect(results[0]).toBe('KEF-Blade-1-Meta');
         expect(results[1]).toBe('JBL-Synthesis-SCL-1');
     });
@@ -363,7 +369,7 @@ describe('non regression for bug discussions/279', () => {
     let kef_by_date = null;
 
     function getDate(item) {
-        const [id, spk] = item;
+        const spk = item[1];
         let date = 19700101;
         // comparing ints (works because 20210101 is bigger than 20201010)
         for (const reviewer in spk.measurements) {
@@ -440,7 +446,7 @@ describe('non regression for bug discussions/288', () => {
     it('search for JBL 306 and check that the results are sane', () => {
         const url1 = new URL(TEST_URL + '?search=JBL+306');
         const params1 = urlParameters2Sort(url1);
-        const [maxResults1, results1] = search(metadata, params1);
+        const results1 = search(metadata, params1)[1];
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(results1[0]).toBe('JBL-306P-Mark-ii');
@@ -449,7 +455,7 @@ describe('non regression for bug discussions/288', () => {
     it('search for JBL 306p and check that the results are sane', () => {
         const url1 = new URL(TEST_URL + '?search=JBL+306p');
         const params1 = urlParameters2Sort(url1);
-        const [maxResults1, results1] = search(metadata, params1);
+        const results1 = search(metadata, params1)[1];
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(results1[0]).toBe('JBL-306P-Mark-ii');

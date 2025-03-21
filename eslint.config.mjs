@@ -1,22 +1,9 @@
-import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from "globals";
+import pluginJs from "@eslint/js";
 
-import globals from 'globals';
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-    js.configs.recommended,
-    {
-        rules: {
-            'no-unused-vars': 'error',
-            'no-undef': 'warn',
-        },
-        languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
-            globals: {
-                ...globals.browser,
-            },
-        },
-    },
-    eslintConfigPrettier,
+  {languageOptions: { globals: globals.browser }},
+  pluginJs.configs.recommended,
 ];

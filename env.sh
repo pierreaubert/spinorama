@@ -66,7 +66,7 @@ source .venv/bin/activate
 
 ## ray configuration
 ## ---------------------------------------------------------------------
-if test "$(hostname)" = "horn"; then
+if test "$(hostname)" = "horn.home"; then
     # remove a warning from Ray since horn has 128 threads
     export NUMEXPR_MAX_THREADS=96
 fi

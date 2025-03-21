@@ -20,7 +20,8 @@ import bisect
 import itertools
 import math
 from typing import TypeVar
-import pprint
+
+# import pprint
 import warnings
 
 import numpy as np
@@ -299,6 +300,25 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
     )
 
 
+def generate_yaxis_gd(range_min=-2, range_max=10, range_step=2):
+    return dict(
+        title=dict(
+            text="Group Delay (ms)",
+            font=FONT_H3,
+        ),
+        range=[range_min, range_max],
+        dtick=range_step,
+        tickvals=list(range(range_min, range_max + range_step, range_step)),
+        ticktext=[
+            "{}".format(i) if not i % 5 else " "
+            for i in range(range_min, range_max + range_step, range_step)
+        ],
+        tickfont=FONT_H3,
+        ticks="inside",
+        showline=True,
+    )
+
+
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     tickvals = list(range(range_min, range_max, range_step))
     ticktext = [
@@ -323,7 +343,7 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
 def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     return dict(
         title=dict(
-            text="Angle",
+            text="Angle (deg)",
             font=FONT_H3,
         ),
         range=[angle_min, angle_max],
@@ -331,6 +351,24 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
         ticktext=[""]
         + ["{}°".format(v) for v in range(angle_min + angle_step, angle_max, angle_step)]
+        + [""],
+        tickfont=FONT_H3,
+        ticks="inside",
+        showline=True,
+    )
+
+
+def generate_yaxis_phases(phase_min=-180, phase_max=180, phase_step=30):
+    return dict(
+        title=dict(
+            text="Phase (deg)",
+            font=FONT_H3,
+        ),
+        range=[phase_min, phase_max],
+        dtick=phase_step,
+        tickvals=list(range(phase_min, phase_max + phase_step, phase_step)),
+        ticktext=[""]
+        + ["{}°".format(v) for v in range(phase_min + phase_step, phase_max, phase_step)]
         + [""],
         tickfont=FONT_H3,
         ticks="inside",
@@ -1022,6 +1060,81 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
     return fig
 
 
+def plot_graph_onaxis(df, params, minmax_slopes, is_normalized, valid_freq_range):
+    fig_onaxis = make_subplots(specs=[[{"secondary_y": True}]])
+
+    curve = df["On Axis_unmelted"]
+    traces = plot_graph_regression_traces(curve, "On Axis", params, valid_freq_range)
+    for trace in traces:
+        fig_onaxis.add_trace(trace, secondary_y=False)
+
+    fig_onaxis.update_xaxes(generate_xaxis())
+    fig_onaxis.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
+
+    fig_onaxis.update_layout(common_layout(params))
+    fig_onaxis.update_traces(mode="lines")
+
+    if "SPL Horizontal_unmelted" in df:
+        spl_h = df["SPL Horizontal_unmelted"]
+        if "Phase On Axis" in spl_h:
+            freq = spl_h.Freq
+            phase = spl_h["Phase On Axis"]
+            phase_min = np.min(phase)
+            phase_max = np.max(phase)
+            if phase_max - phase_min <= 2 * math.pi + 1:
+                phase = np.rad2deg(phase)
+            phase = np.array(phase) - 180 - phase_min
+            # print('debug: phase min={} max={}'.format(np.min(phase), np.max(phase)))
+            fig_onaxis.add_trace(
+                go.Scatter(
+                    x=freq,
+                    y=phase.tolist(),
+                    name="Phase (deg)",
+                ),
+                secondary_y=True,
+            )
+            fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
+            fig_onaxis.update_layout(margin_r=50)
+
+    fig_onaxis.add_traces(
+        plot_valid_freq_ranges(fig_onaxis, valid_freq_range, (params["ymin"], params["ymax"]))
+    )
+
+    return fig_onaxis
+
+
+def plot_graph_group_delay(df, params, valid_freq_range):
+    fig_group_delay = go.Figure()
+
+    if "SPL Horizontal_unmelted" not in df:
+        return None
+
+    spl_h = df["SPL Horizontal_unmelted"]
+    if "Phase On Axis" not in spl_h:
+        return None
+
+    freq = spl_h.Freq
+    phase = spl_h["Phase On Axis"]
+    unphase = np.unwrap(np.deg2rad(phase))
+    group_delay = -1000 * np.gradient(unphase, freq)
+    fig_group_delay.add_trace(
+        go.Scatter(
+            x=freq,
+            y=group_delay,
+            name="Group Delay (ms)",
+        )
+    )
+    gd_max = int(np.max(group_delay)) // 10 * 10
+    fig_group_delay.update_xaxes(generate_xaxis())
+    fig_group_delay.update_yaxes(generate_yaxis_gd(-5, gd_max, 5))
+    fig_group_delay.update_layout(common_layout(params))
+    fig_group_delay.update_traces(mode="lines")
+    fig_group_delay.add_traces(
+        plot_valid_freq_ranges(fig_group_delay, valid_freq_range, (params["ymin"], params["ymax"]))
+    )
+    return fig_group_delay
+
+
 T = TypeVar("T")
 
 
@@ -1030,7 +1143,7 @@ def flatten(the_list: list[list[T | None]]) -> list[T | None]:
 
 
 def plot_contour(spl, params, valid_freq_range):
-    df_spl = spl.copy()
+    df_spl = spl.copy().filter(regex=r"^(?:(?!Phase).)*$", axis=1)
     min_freq = params.get("contour_min_freq", 100)
 
     contour_start = -30
@@ -1128,7 +1241,11 @@ def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> 
 def plot_radar(spl, params, valid_plot_range):
     layout = params.get("layout", "")
 
-    anglelist = list(range(-180, 180, 10))
+    anglestep = 10
+    if "5°" in spl and "25°" in spl:
+        anglestep = 5
+
+    anglelist = list(range(-180, 180, anglestep))
 
     def projection(anglelist, grid_z, hz):
         dbs_r = [db for _, db in zip(anglelist, grid_z, strict=False)]
@@ -1197,7 +1314,7 @@ def plot_radar(spl, params, valid_plot_range):
         tickvals=list(range(0, 360, 10)),
         ticktext=[
             f"{x}°" if abs(x) < 60 or not x % 30 else " "
-            for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+            for x in (list(range(0, 180, 10)) + list(range(-180, 0, 10)))
         ],
         tickfont=FONT_H6,
     )
@@ -1301,7 +1418,7 @@ def plot_eqs(freq, peqs, names):
     return fig
 
 
-def plot_contour_3d(spl, params, valid_freq_range):
+def plot_contour_3d(spl_phase, params, valid_freq_range):
     params.get("layout", "")
     min_freq = max(20, params.get("contour_min_freq", 100))
 
@@ -1338,6 +1455,7 @@ def plot_contour_3d(spl, params, valid_freq_range):
         color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)
         return freq, angle, spl, color
 
+    spl = spl_phase.filter(regex=r"^(?:(?!Phase).)*$", axis=1)
     db_max = spl["On Axis"].max()
 
     freqs, angles, spls, surface_colors = transform(spl, db_max, contour_start, contour_end)

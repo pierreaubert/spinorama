@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
+rcf_data_acquisition = gll_data_acquisition_std.copy()
+rcf_data_acquisition["min_valid_freq"] = 100
+rcf_data_acquisition["max_valid_freq"] = 16000
+
 speakers_info_r: SpeakerDatabase = {
     "Radiant Acoustics Clarity 6.2": {
         "brand": "Radiant Acoustics",
@@ -101,14 +105,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": {
-                    "via": "gll",
-                    "distance": 10,
-                    "signal": "aes 20Hz-20kHz",
-                    "resolution": 2.5,
-                    "min_valid_freq": 100,
-                    "max_valid_freq": 16000,
-                },
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -129,10 +126,42 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
-    "RCF ART 710-A MK4": {
-        "skip": True,  # missing gll file on website
+    "RCF ART 708-A MK5": {
         "brand": "RCF",
-        "model": "ART 710-A MK4",
+        "model": "ART 708-A MK5",
+        "type": "active",
+        "price": "383",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x70",
+        "measurements": {
+            "vendor-pattern-90x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "low",
+                "review_published": "20250302",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 480,
+                        "width": 291,
+                        "depth": 276,
+                    },
+                    "weight": 10.4,
+                },
+            },
+        },
+    },
+    "RCF ART 710-A MK5": {
+        "brand": "RCF",
+        "model": "ART 710-A MK5",
         "type": "active",
         "price": "469",
         "amount": "each",
@@ -142,9 +171,9 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
-                "review_published": "20230114",
+                "review_published": "20240203",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 100,
@@ -175,9 +204,42 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 387,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
+    "RCF ART 712-A MK5": {
+        "brand": "RCF",
+        "model": "ART 712-A MK5",
+        "type": "active",
+        "price": "500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "low",
+                "review_published": "20250302",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 100,
@@ -208,12 +270,45 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20221107",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "RCF ART 715-A MK5": {
+        "brand": "RCF",
+        "model": "ART 715-A MK5",
+        "type": "active",
+        "price": "500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "low",
+                "review_published": "20250302",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
                         "vertical": 60,
                     },
                     "SPL": {
@@ -241,7 +336,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -274,12 +369,45 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 384,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
+    "RCF ART 732-A MK5": {
+        "brand": "RCF",
+        "model": "ART 732-A MK5",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "low",
+                "review_published": "20250302",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
                         "vertical": 60,
                     },
                     "SPL": {
@@ -307,7 +435,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -340,12 +468,45 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 18.8,
+                },
+            },
+        },
+    },
+    "RCF ART 745-A MK5": {
+        "brand": "RCF",
+        "model": "ART 745-A MK5",
+        "type": "active",
+        "price": "1245",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "low",
+                "review_published": "20250302",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
                         "vertical": 60,
                     },
                     "SPL": {
@@ -373,7 +534,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -406,7 +567,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -439,7 +600,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -472,7 +633,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -512,7 +673,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review": "https://www.production-partner.de/test/test-rcf-art-945-a/",
                 "review_published": "20221107",
@@ -540,6 +701,42 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "RCF EVOX 12": {
+        "brand": "RCF",
+        "model": "EVOX 12",
+        "type": "active",
+        "price": "1900",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x30",
+        "measurements": {
+            "vendor-pattern-90x30": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "quality": "low",
+                "review_published": "20250302",
+                "extras": {
+                    "is_equed": True,
+                },
+                "data_acquisition": rcf_data_acquisition,
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 30,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 2200,
+                        "width": 410,
+                        "depth": 560,
+                    },
+                    "weight": 36.4,
+                },
+            },
+        },
+    },
     "RCF H1315 WP": {
         "brand": "RCF",
         "model": "H1315 WP",
@@ -552,7 +749,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "low",
                 "review_published": "20221107",
                 "specifications": {
@@ -586,7 +783,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
@@ -619,7 +816,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
@@ -652,7 +849,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -685,7 +882,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -718,7 +915,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -751,7 +948,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20250109",
                 "specifications": {
@@ -784,7 +981,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20250109",
                 "specifications": {
@@ -817,7 +1014,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -850,7 +1047,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20241105",
                 "specifications": {
@@ -883,7 +1080,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x30": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20250109",
                 "specifications": {
@@ -916,7 +1113,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x25": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20250109",
                 "specifications": {
@@ -949,7 +1146,7 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-100x50": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": rcf_data_acquisition,
                 "quality": "medium",
                 "review_published": "20250109",
                 "specifications": {
@@ -966,6 +1163,39 @@ speakers_info_r: SpeakerDatabase = {
                         "depth": 373,
                     },
                     "weight": 31.55,
+                },
+            },
+        },
+    },
+    "RCF TT 515-A": {
+        "brand": "RCF",
+        "model": "TT 515-A",
+        "type": "active",
+        "price": "2000",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": rcf_data_acquisition,
+                "quality": "medium",
+                "review_published": "20250302",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 456,
+                        "width": 154,
+                        "depth": 237,
+                    },
+                    "weight": 9.8,
                 },
             },
         },

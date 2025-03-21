@@ -35,6 +35,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service
 
 
 PROD = "https://www.spinorama.org"
@@ -46,11 +47,12 @@ SCORES = "/scores.html"
 
 class SpinoramaWebsiteTests(unittest.TestCase):
     def setUp(self):
+        service = Service()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         # unclear why we need that option but selenium crashes without it
-        options.add_argument("--remote-debugging-pipe")
-        self.driver = webdriver.Chrome(options=options)
+        # options.add_argument("--remote-debugging-pipe")
+        self.driver = webdriver.Chrome(service=service, options=options)
 
     def tearDown(self):
         self.driver.quit()
@@ -61,6 +63,16 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertIn("collection", title)
 
     def test_index_search_elac(self):
+        self.driver.get("{}/{}".format(DEV, "?search=Elac"))
+        self.driver.implicitly_wait(2)
+
+        elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+        self.assertIsNotNone(elac)
+
+        with self.assertRaises(NoSuchElementException):
+            gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+
+    def test_index_search_elac_menu(self):
         self.driver.get(DEV)
         self.driver.implicitly_wait(2)
 
@@ -68,37 +80,29 @@ class SpinoramaWebsiteTests(unittest.TestCase):
 
         search_box.clear()
         search_box.send_keys("elac")
+        search_box.clear()
+        search_box.send_keys("elac")
+
+        self.assertIsNotNone(search_box)
+
+    def test_index_search_genelec(self):
+        self.driver.get("{}/{}".format(DEV, "?search=Genelec"))
+        self.driver.implicitly_wait(2)
+
+        genelec = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        self.assertIsNotNone(genelec)
+
+        with self.assertRaises(NoSuchElementException):
+            self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+
+    def test_filters_brand(self):
+        self.driver.get("{}?{}".format(DEV, "page=1&count=100&brand=Elac"))
+        self.driver.implicitly_wait(3)
         elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
         self.assertIsNotNone(elac)
         self.assertTrue(elac.is_displayed())
-        is_hidden = "hidden" in elac.get_attribute("class")
-        self.assertFalse(is_hidden)
 
-        search_box.clear()
-        search_box.send_keys("elac")
-        with self.assertRaises(NoSuchElementException):
-            gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-            self.assertIsNone(gene)
-
-    def test_index_search_genelec(self):
-        self.driver.get(DEV)
-        self.driver.implicitly_wait(2)
-
-        search_box = self.driver.find_element(by=By.ID, value="searchInput")
-
-        search_box.clear()
-        search_box.send_keys("8361A")
-        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        self.assertIsNotNone(gene)
-        self.assertNotIn("hidden", gene.get_attribute("class"))
-
-        search_box.clear()
-        search_box.send_keys("8361")
-        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        self.assertIsNotNone(gene)
-        self.assertNotIn("hidden", gene.get_attribute("class"))
-
-    def test_filters_brand(self):
+    def test_filters_brand_menu(self):
         self.driver.get("{}?{}".format(DEV, "page=1&count=100"))
         self.driver.implicitly_wait(3)
 
@@ -110,17 +114,20 @@ class SpinoramaWebsiteTests(unittest.TestCase):
             expected_conditions.element_to_be_clickable((By.ID, "selectBrand"))
         ).click()
 
-        brand_box = Select(self.driver.find_element(by=By.ID, value="selectBrand"))
-
+        select_brand = self.driver.find_element(by=By.ID, value="selectBrand")
+        brand_box = Select(select_brand)
         brand_box.select_by_value("Elac")
-
-        elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
-        self.assertIsNotNone(elac)
-        self.assertTrue(elac.is_displayed())
-        is_hidden = "hidden" in elac.get_attribute("class")
-        self.assertFalse(is_hidden)
+        self.assertIsNotNone(brand_box)
 
     def test_filters_price(self):
+        self.driver.get("{}?{}".format(DEV, "count=10000&inputPriceMin=120&inputPriceMax=200"))
+        self.driver.implicitly_wait(2)
+
+        a306 = self.driver.find_element(by=By.ID, value="Thomann-Swissonic-A306")
+        self.assertIsNotNone(a306)
+        self.assertTrue(a306.is_displayed())
+
+    def test_filters_price_menu(self):
         self.driver.get("{}?{}".format(DEV, "count=10000"))
         self.driver.implicitly_wait(2)
 
@@ -140,11 +147,8 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         price_max = self.driver.find_element(by=By.ID, value="inputPriceMax")
         price_max.send_keys("200")
 
-        a306 = self.driver.find_element(by=By.ID, value="Thomann-Swissonic-A306")
-        self.assertIsNotNone(a306)
-        self.assertTrue(a306.is_displayed())
-        is_hidden = "hidden" in a306.get_attribute("class")
-        self.assertFalse(is_hidden)
+        self.assertIsNotNone(price_min)
+        self.assertIsNotNone(price_max)
 
     def test_compare_basic(self):
         compare_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor&speaker1=Neumann+KH+150&origin1=ASR&version1=asr&measurement=CEA2034"

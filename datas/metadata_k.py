@@ -487,6 +487,98 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF CI50R": {
+        "brand": "KEF",
+        "model": "CI50R",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 15000,
+                },
+                "specifications": {
+                    "sensitivity": 82,
+                    "impedance": 6,
+                    "size": {
+                        "height": 80,
+                        "width": 80,
+                        "depth": 55,
+                    },
+                    "weight": 1.0,
+                },
+            },
+        },
+    },
+    "KEF CI130.2CR": {
+        "brand": "KEF",
+        "model": "CI130.2CR",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 15000,
+                },
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 194,
+                        "width": 194,
+                        "depth": 83,
+                    },
+                    "weight": 1.3,
+                },
+            },
+        },
+    },
+    "KEF CI200RR-THX": {
+        "brand": "KEF",
+        "model": "CI200RR-THX",
+        "type": "passive",
+        "price": "600",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 290,
+                        "width": 290,
+                        "depth": 132,
+                    },
+                    "weight": 3.6,
+                },
+            },
+        },
+    },
     "KEF Ci3160RL-THX": {
         "brand": "KEF",
         "model": "Ci3160RL-THX",
@@ -511,8 +603,31 @@ speakers_info_k: SpeakerDatabase = {
         "price": "2500",
         "amount": "each",
         "shape": "inwall",
-        "default_measurement": "vendor",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ci250rrm-thx-in-ceiling-speaker-review.61115/",
+                "review_published": "20250228",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 120,
+                    },
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 175,
+                        "width": 346,
+                        "depth": 346,
+                    },
+                    "weight": 6.0,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "gll_hv_txt",
@@ -1881,6 +1996,42 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t301c-review-ultra-thin-speaker.28743/",
                 "review_published": "20211205",
+            },
+        },
+    },
+    "KEF Ventura 6": {
+        "skip": True,
+        "brand": "KEF",
+        "model": "Ventura 6",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "outdoor",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "low",
+                "review_published": "20250228",
+                "data_acquisition": {
+                    "via": "",
+                    "distance": 10.0,  # m
+                    "air_absorbtion": False,
+                    "resolution": 10.0,  # deg
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 20000,
+                },
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "size": {
+                        "height": 300,
+                        "width": 226,
+                        "depth": 264,
+                    },
+                    "weight": 3.8,
+                },
             },
         },
     },
