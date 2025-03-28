@@ -767,11 +767,11 @@ def add_near(dataframe, parse_max: int, filters: dict):
             deltas.append((delta, speaker_name2))
             distribution.append(delta)
 
-        closest = sorted(deltas, key=lambda x: x[0])[:3]
+        closest = sorted(deltas, key=lambda x: x[0])[:10]
         metadata.speakers_info[speaker_name1]["nearest"] = closest
 
     # print some stats
-    print_stats = False
+    print_stats = True
     if print_stats:
         height = 20
         bins = 80
