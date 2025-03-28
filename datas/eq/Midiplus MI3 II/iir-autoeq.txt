@@ -1,0 +1,14 @@
+EQ for Midiplus MI3 II computed from Misc data
+Preference Score 0.90 with EQ 4.51
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-03-28-21:41:50
+
+Preamp: -1.8 dB
+
+Filter  1: ON PK Fc    95 Hz Gain -3.31 dB Q 1.82
+Filter  2: ON PK Fc   149 Hz Gain -7.53 dB Q 1.18
+Filter  3: ON PK Fc   560 Hz Gain +1.94 dB Q 0.25
+Filter  4: ON PK Fc   579 Hz Gain -2.02 dB Q 2.28
+Filter  5: ON PK Fc  1381 Hz Gain +2.98 dB Q 0.52
+Filter  6: ON PK Fc  1429 Hz Gain -7.21 dB Q 2.41
+Filter  7: ON PK Fc  5732 Hz Gain -7.32 dB Q 0.47

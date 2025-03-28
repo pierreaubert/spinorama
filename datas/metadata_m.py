@@ -1471,6 +1471,62 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Midiplus MI3 II": {
+        "brand": "Midiplus",
+        "model": "MI3 II",
+        "type": "active",
+        "price": "139",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-anonymous",
+        "measurements": {
+            "misc-anonymous": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review_published": "20250328",
+                "specifications": {
+                    "SPL": {
+                        "peak": 98,
+                    },
+                    "size": {
+                        "height": 152,
+                        "width": 119,
+                        "depth": 165,
+                    },
+                    "weight": 1.77,
+                },
+            },
+        },
+    },
+    "Midiplus MI5 II": {
+        "brand": "Midiplus",
+        "model": "MI5 II",
+        "type": "active",
+        "price": "169",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-anonymous",
+        "measurements": {
+            "misc-anonymous": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review_published": "20250328",
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 239,
+                        "width": 171,
+                        "depth": 256,
+                    },
+                    "weight": 4.14,
+                },
+            },
+        },
+    },
     "Miller & Kreisel IW150": {
         "brand": "Miller & Kreisel",
         "model": "IW150",
