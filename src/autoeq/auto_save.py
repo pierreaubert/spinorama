@@ -29,6 +29,7 @@ import ray
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
+from spinorama.misc import measurements_complete_spl, measurements_complete_freq
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
@@ -231,11 +232,14 @@ def optim_save_peq_seq(
         return smoke_test, smoke_empty
 
     # do we have the full data?
-    use_score = True
-    # EXPERIMENT
-    # if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
-    #    use_score = False
-    # EXPERIMENT
+    use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker
+    if use_score:
+        if not measurements_complete_spl(
+            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+        ) or not measurements_complete_freq(
+            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+        ):
+            use_score = False
 
     # don't optimise below the minimum freq found in measurements
     if current_speaker_origin == "Princeton":
@@ -317,7 +321,10 @@ def optim_save_peq_seq(
 
         auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
         if score is not None:
-            scores = [score.get("pref_score", -1000), auto_score.get("pref_score", -1000)]
+            scores = [
+                score.get("pref_score", -1000),
+                auto_score.get("pref_score", -1000) if auto_score else -1000,
+            ]
         if (
             previous_score is not None
             and auto_score is not None
