@@ -42,4 +42,4 @@ fi
 echo "Sync"
 rsync -arvz --exclude '*.png' --delete ./dist/* "$TARGET"
 rsync -arvz --include '*.png' --delete ./dist/pictures/* "$TARGET/pictures"
-rsync -arvz --include '*.png' --delete ./dist/help_pictures/* "$TARGET/help_pictures"
+
