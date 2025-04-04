@@ -3,7 +3,7 @@
 OS=$(uname)
 
 if test "$(hostname)" = "horn.home"; then
-    export NUMEXPR_MAX_THREADS=96
+    export NUMEXPR_MAX_THREADS=8
 fi
 
 # local by default
