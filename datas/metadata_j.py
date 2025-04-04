@@ -1578,9 +1578,9 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
-    "JBL 100 Classic": {
+    "JBL L100 Classic": {
         "brand": "JBL",
-        "model": "100 Classic",
+        "model": "L100 Classic",
         "type": "passive",
         "price": "",
         "shape": "bookshelves",
@@ -1592,6 +1592,43 @@ speakers_info_j: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/jbl-l100/conclusion",
                 "quality": "low",
+            },
+        },
+    },
+    "JBL L100 Classic MKII": {
+        "brand": "JBL",
+        "model": "L100 Classic MKII",
+        "type": "passive",
+        "price": "2799",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/ZBBqxHku5sA",
+                },
+                "review_published": "20250404",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 636,
+                        "width": 399,
+                        "depth": 371,
+                    },
+                    "weight": 26.7,
+                },
+            },
+            "eac-maxed-out": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/ZBBqxHku5sA",
+                },
+                "review_published": "20250404",
             },
         },
     },

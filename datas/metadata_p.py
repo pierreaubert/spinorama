@@ -37,6 +37,46 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Paradigm Founder 40B": {
+        "brand": "Paradigm",
+        "model": "Founder 40B",
+        "type": "passive",
+        "price": "1660",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac-30-deg",
+        "measurements": {
+            "eac-30-deg": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/_qkaCInpQlU",
+                },
+                "review_published": "20250404",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 8,
+                    "size": {
+                        "height": 368,
+                        "width": 197,
+                        "depth": 320,
+                    },
+                    "weight": 11.3,
+                },
+                "notes": "The speaker is designed to be listen to at 30 degrees off axis",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/_qkaCInpQlU",
+                },
+                "review_published": "20250404",
+            },
+        },
+    },
     "Paradigm Founder 70LCR": {
         "brand": "Paradigm",
         "model": "Founder 70LCR",
@@ -55,6 +95,36 @@ speakers_info_p: SpeakerDatabase = {
                     "paradigm": "https://www.paradigm.com/en/center/founder-70lcr",
                 },
                 "review_published": "20220109",
+            },
+        },
+    },
+    "Paradigm Founder 90C": {
+        "brand": "Paradigm",
+        "model": "Founder 90C",
+        "type": "passive",
+        "price": "3000",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/_qkaCInpQlU",
+                },
+                "review_published": "20250404",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 8,
+                    "size": {
+                        "height": 226,
+                        "width": 908,
+                        "depth": 327,
+                    },
+                    "weight": 21.8,
+                },
             },
         },
     },
