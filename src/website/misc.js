@@ -230,7 +230,7 @@ export function getReviews(value) {
 
 	// eac-15-deg
         if (version.search('deg') !== -1) {
-           const first = version.search('-');
+           const first = version.search('[-]([0-9]+)[-]deg');
            const second = version.slice(first+1).search('-');
            if (first !== -1 && second !== -1 ) {
                const deg = version.slice(first+1, second+first+1)

@@ -787,9 +787,9 @@ speakers_info_g: SpeakerDatabase = {
         "price": "1525",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac-15-deg",
+        "default_measurement": "eac-15-degree",
         "measurements": {
-            "eac-15-deg": {
+            "eac-15-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -808,7 +808,7 @@ speakers_info_g: SpeakerDatabase = {
                     },
                 },
             },
-            "eac": {
+            "eac-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {

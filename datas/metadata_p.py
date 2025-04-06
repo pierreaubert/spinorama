@@ -44,9 +44,9 @@ speakers_info_p: SpeakerDatabase = {
         "price": "1660",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "eac-30-deg",
+        "default_measurement": "eac-30-degree",
         "measurements": {
-            "eac-30-deg": {
+            "eac-30-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -66,7 +66,7 @@ speakers_info_p: SpeakerDatabase = {
                 },
                 "notes": "The speaker is designed to be listen to at 30 degrees off axis",
             },
-            "eac": {
+            "eac-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {

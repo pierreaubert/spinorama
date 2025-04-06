@@ -1628,9 +1628,9 @@ speakers_info_m: SpeakerDatabase = {
         "price": "2750",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-v1",
+        "default_measurement": "eac-v1-0-degree",
         "measurements": {
-            "eac-v1": {
+            "eac-v1-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -1649,7 +1649,7 @@ speakers_info_m: SpeakerDatabase = {
                     "weight": 12.7,
                 },
             },
-            "eac-v1-15-degrees": {
+            "eac-v1-15-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -1707,9 +1707,9 @@ speakers_info_m: SpeakerDatabase = {
         "price": "3700",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-v1",
+        "default_measurement": "eac-v1-0-degree",
         "measurements": {
-            "eac-v1": {
+            "eac-v1-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -1728,7 +1728,7 @@ speakers_info_m: SpeakerDatabase = {
                     "weight": 21,
                 },
             },
-            "eac-v1-10-degrees": {
+            "eac-v1-10-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
