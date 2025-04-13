@@ -240,6 +240,10 @@ def optim_save_peq_seq(
             df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
         ):
             use_score = False
+    # maybe we only have partial data but enough to compute the Spin
+    if not use_score:
+        if "CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker:
+            use_score = True
 
     # don't optimise below the minimum freq found in measurements
     if current_speaker_origin == "Princeton":
