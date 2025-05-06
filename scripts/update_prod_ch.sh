@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
+# TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
 TARGET3=pierre@192.168.1.18:/var/www/html/spinorama-prod
 TARGET4=pierre@192.168.1.20:/var/www/html/spinorama-prod
 
@@ -38,8 +38,7 @@ fi
 
 # copy
 echo "Sync starts:"
-for target in "$TARGET1" "$TARGET3" "$TARGET4"; do
+for target in "$TARGET3" "$TARGET4"; do
     rsync -avrz --exclude '*.png' --delete ./dist/* "$target"
     rsync -arvz --include '*.png' --delete ./dist/pictures/* "$target/pictures"
-    rsync -arvz --include '*.png' --delete ./dist/help_pictures/* "$target/help_pictures"
 done

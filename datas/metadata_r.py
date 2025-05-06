@@ -1350,11 +1350,30 @@ speakers_info_r: SpeakerDatabase = {
         "brand": "Revel",
         "model": "C426Be",
         "type": "passive",
-        "price": "",
+        "price": "4950",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "20250404",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "size": {
+                        "height": 263,
+                        "width": 980,
+                        "depth": 358,
+                    },
+                    "weight": 27.7,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",

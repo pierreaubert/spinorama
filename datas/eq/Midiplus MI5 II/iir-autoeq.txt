@@ -1,0 +1,14 @@
+EQ for Midiplus MI5 II computed from Misc data
+Preference Score 2.20 with EQ 4.84
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-03-28-21:43:39
+
+Preamp: -2.2 dB
+
+Filter  1: ON PK Fc    47 Hz Gain +2.96 dB Q 1.64
+Filter  2: ON PK Fc   109 Hz Gain -4.28 dB Q 1.41
+Filter  3: ON PK Fc   130 Hz Gain -3.14 dB Q 1.43
+Filter  4: ON PK Fc   522 Hz Gain +2.31 dB Q 0.68
+Filter  5: ON PK Fc   910 Hz Gain -4.79 dB Q 2.99
+Filter  6: ON PK Fc  1010 Hz Gain +2.94 dB Q 3.00
+Filter  7: ON PK Fc  6585 Hz Gain -6.48 dB Q 0.50

@@ -684,9 +684,9 @@ speakers_info_k: SpeakerDatabase = {
         "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac-v1",
+        "default_measurement": "eac-v1-0-degree",
         "measurements": {
-            "eac-v1": {
+            "eac-v1-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -711,7 +711,7 @@ speakers_info_k: SpeakerDatabase = {
                     "weight": 7.8,
                 },
             },
-            "eac-v1-15-degrees": {
+            "eac-v1-15-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -804,9 +804,9 @@ speakers_info_k: SpeakerDatabase = {
         "price": "7000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "eac",
+        "default_measurement": "eac-0-degree",
         "measurements": {
-            "eac": {
+            "eac-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -829,7 +829,7 @@ speakers_info_k: SpeakerDatabase = {
                     "weight": 31.2,
                 },
             },
-            "eac-15-degrees": {
+            "eac-15-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -1412,9 +1412,9 @@ speakers_info_k: SpeakerDatabase = {
         "price": "2200",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac-v1-ported",
+        "default_measurement": "eac-v1-ported-0-degree",
         "measurements": {
-            "eac-v1-ported": {
+            "eac-v1-ported-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20230705",
@@ -1426,7 +1426,7 @@ speakers_info_k: SpeakerDatabase = {
                     "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
                 },
             },
-            "eac-v1-sealed": {
+            "eac-v1-sealed-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20230705",
@@ -1438,7 +1438,7 @@ speakers_info_k: SpeakerDatabase = {
                     "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
                 },
             },
-            "eac-v1-ported-10-degrees": {
+            "eac-v1-ported-10-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20230705",
@@ -1450,7 +1450,7 @@ speakers_info_k: SpeakerDatabase = {
                     "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
                 },
             },
-            "eac-v1-sealed-10-degrees": {
+            "eac-v1-sealed-10-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20230705",

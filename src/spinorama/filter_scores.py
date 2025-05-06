@@ -42,8 +42,7 @@ def scores_apply_filter(
         spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
         pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     else:
-        logger.error("error bad call to apply filter: %s", ",".join(list(df_speaker.keys())))
-        return None, None, None
+        spin_filtered, pir_filtered, _ = noscore_apply_filter(df_speaker, peq, False)
 
     score_filtered = speaker_pref_rating(cea2034=spin_filtered, pir=pir_filtered, rounded=False)
     if score_filtered is None:

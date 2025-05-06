@@ -432,7 +432,6 @@ speakers_info_t: SpeakerDatabase = {
         },
     },
     "Totem Acoustic Kin One": {
-        "skip": True,
         "brand": "Totem Acoustic",
         "model": "Kin One",
         "type": "passive",
@@ -448,7 +447,7 @@ speakers_info_t: SpeakerDatabase = {
                     "eac": "",
                     "yt": "https://youtu.be/37Nd7Uz_zlk",
                 },
-                "review_published": "202404xx",
+                "review_published": "20240404",
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 6,

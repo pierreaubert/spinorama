@@ -340,7 +340,8 @@ def main():
     with open(eqdata_json_filename, "r") as f:
         meta_eqs = json.load(f)
         for k, v in meta_eqs.items():
-            meta[k]["eqs"] = v["eqs"]
+            if "eqs" in v:
+                meta[k]["eqs"] = v["eqs"]
 
     # load versions for various css and js files
     versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
