@@ -1,6 +1,6 @@
 ---
 title: "Spinorama manual"
-date: 2025-02-04
+date: 2025-05-07
 abstract: >
   How to use the library step by step!
 ---
@@ -44,6 +44,55 @@ _, spl_V = parse_graph_spl_hv_txt(dir, 'V')
 # put them in a convenient dictionnary of dataframe
 df = filter_graphs(speaker, spl_H, spl_V, MEAN_MIN, MEAN_MAX, mformat=mformat, mdistance=1)
 ```
+
+### How to load all the precomputed data in one call
+
+```{python}
+import logging
+import sys, os
+
+sys.path.append(os.path.expanduser("../src"))
+sys.path.append(os.path.expanduser(".."))
+
+from generate_common import cache_load_seq, get_custom_logger
+import datas.metadata as metadata
+```
+
+Set logging level:
+```
+level = logging.DEBUG
+logger = get_custom_logger(level=level, duplicate=True)
+```
+
+Load the data:
+```{python}
+datas = cache_load_seq(filters={}, smoke_test=True)
+```
+If you use smoke_test set to True, you only load a few speakers. If set to False, you load all of them, it can take one or two minutes to load the files.
+It returs a dictionnary organised by speaker, then by origin then by version of the measurement.
+
+List of speakers:
+```{python}
+print(datas.keys())
+```
+
+List of graphs for a speaker:
+```{python}
+print(datas['DIYSG HT-10'].keys())
+print(datas['DIYSG HT-10']['Misc'].keys())
+print(datas['DIYSG HT-10']['Misc']['misc-mtg90'].keys())
+```
+
+CEA2034 for the same speaker:
+```{python}
+print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034'])
+```
+
+CEA2034 for the same speaker in a different format:
+```{python}
+print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034_unmelted'])
+```
+
 
 ## Computing with the data
 
@@ -140,9 +189,9 @@ import spinorama.plot as plot
 ```{python}
 plot_spin = plot.plot_spinorama(
     spin=spin,
-    params=plot.plot_params_default, 
+    params=plot.plot_params_default,
     minmax_slopes=None,
-    is_normalized=False, 
+    is_normalized=False,
     valid_freq_range=DEFAULT_FREQ_RANGE
 )
 plot_spin.update_layout(my_layout)
@@ -152,8 +201,8 @@ plot_spin
 ### Normalized CEA2034 plot
 ```{python}
 plot_spin = plot.plot_spinorama(
-    spin=spin, 
-    params=plot.plot_params_default, 
+    spin=spin,
+    params=plot.plot_params_default,
     minmax_slopes=None,
     is_normalized=True,
     valid_freq_range=DEFAULT_FREQ_RANGE
