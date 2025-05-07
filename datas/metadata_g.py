@@ -797,7 +797,7 @@ speakers_info_g: SpeakerDatabase = {
                     "yt": "https://youtu.be/g9MsYUONNhg",
                 },
                 "review_published": "20250404",
-		"notes": "Speaker is designed to be listen at a 15 degrees angle.",
+                "notes": "Speaker is designed to be listen at a 15 degrees angle.",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4.7,
@@ -816,11 +816,10 @@ speakers_info_g: SpeakerDatabase = {
                     "yt": "https://youtu.be/g9MsYUONNhg",
                 },
                 "review_published": "20250404",
-		"notes": "Speaker is designed to be listen at a 15 degrees angle. This measurement is on-axis.",
+                "notes": "Speaker is designed to be listen at a 15 degrees angle. This measurement is on-axis.",
             },
         },
     },
-
     "GR Research Klipsch RP-600M Upgrade": {
         "brand": "GR Research",
         "model": "Klipsch RP-600M Upgrade",
