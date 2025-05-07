@@ -264,6 +264,11 @@ def is_filtered(speaker: str, filters: dict):
 def cache_load_seq(filters, smoke_test):
     df_all = defaultdict()
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    if len(cache_files) == 0:
+        cache_files = glob("../{}/*.h5".format(CACHE_DIR))
+    if len(cache_files) == 0:
+        print('Cannot find cache directory or files! Did you run ./generate_graphs.py ?')
+        return df_all
     count = 0
     logging.debug("found %d cache files", len(cache_files))
     for cache in cache_files:

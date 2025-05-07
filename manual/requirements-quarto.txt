@@ -9,4 +9,4 @@ notebook>=7.0
 anywidget>=0.9.13
 wand
 kaleido
-
+flammkuchen
