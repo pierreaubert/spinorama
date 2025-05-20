@@ -1,0 +1,16 @@
+EQ for Wharfedale EVO 4.1 computed from ASR data
+Preference Score 4.70 with EQ 4.91
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-04-13-18:41:28
+
+Preamp: -0.5 dB
+
+Filter  1: ON PK Fc    63 Hz Gain +0.25 dB Q 1.41
+Filter  2: ON PK Fc   125 Hz Gain +0.25 dB Q 1.41
+Filter  3: ON PK Fc   250 Hz Gain +0.00 dB Q 1.41
+Filter  4: ON PK Fc   500 Hz Gain +0.00 dB Q 1.41
+Filter  5: ON PK Fc  1000 Hz Gain +0.00 dB Q 1.41
+Filter  6: ON PK Fc  2000 Hz Gain +0.00 dB Q 1.41
+Filter  7: ON PK Fc  4000 Hz Gain -0.25 dB Q 1.41
+Filter  8: ON PK Fc  8000 Hz Gain +0.25 dB Q 1.41
+Filter  9: ON PK Fc 16000 Hz Gain +0.50 dB Q 1.41

@@ -1,0 +1,11 @@
+EQ for Paradigm Founder 90C computed from ErinsAudioCorner data
+Preference Score 1.91 with EQ 2.35
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-04-04-20:31:15
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    52 Hz Gain +2.88 dB Q 3.00
+Filter  2: ON PK Fc   211 Hz Gain +1.63 dB Q 2.91
+Filter  3: ON PK Fc  1161 Hz Gain -1.90 dB Q 1.08
+Filter  4: ON PK Fc  2406 Hz Gain +3.00 dB Q 0.85

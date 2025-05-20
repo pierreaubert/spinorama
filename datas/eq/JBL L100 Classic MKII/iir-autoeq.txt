@@ -1,0 +1,10 @@
+EQ for JBL L100 Classic MKII computed from ErinsAudioCorner data
+Preference Score 4.82 with EQ 5.86
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-04-04-20:31:25
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 0.84
+Filter  2: ON PK Fc   121 Hz Gain -2.61 dB Q 0.79
+Filter  3: ON PK Fc  4495 Hz Gain -3.30 dB Q 0.49

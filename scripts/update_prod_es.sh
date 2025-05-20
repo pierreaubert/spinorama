@@ -39,5 +39,4 @@ echo "Sync starts:"
 for target in "$TARGET2"; do
     rsync -avrz --exclude '*.png' --delete ./dist/* "$target"
     rsync -arvz --include '*.png' --delete ./dist/pictures/* "$target/pictures"
-    rsync -arvz --include '*.png' --delete ./dist/help_pictures/* "$target/help_pictures"
 done

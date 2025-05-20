@@ -943,4 +943,33 @@ speakers_info_g: SpeakerDatabase = {
             },
         },
     },
+    "Grimm LS1c+SB1": {
+        "brand": "Grimm",
+        "model": "LS1c+SB1",
+        "type": "active",
+        "price": "39250",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/grimm-audio-ls1c-sb1-dsp-speaker-review.63015/",
+                    "srp": "https://www.stereophile.com/content/grimm-audio-ls1c-active-loudspeaker-system",
+                },
+                "review_published": "20250520",
+                "specifications": {
+                    "size": {
+                        "height": 1150,
+                        "width": 520,
+                        "depth": 160,
+                    },
+                    "weight": 54,
+                },
+            },
+        },
+    },
+
 }
