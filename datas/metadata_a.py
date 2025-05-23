@@ -38,6 +38,62 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Aalto Speakers Aalto 3 Active Pro": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 3 Active Pro",
+        "type": "active",
+        "price": "5490",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "20250523",
+                "specifications": {
+                    "size": {
+                        "height": 400,
+                        "width": 240,
+                        "depth": 250,
+                    },
+                    "weight": 9,
+                },
+            },
+        },
+    },
+    "Aalto Speakers Aalto 3 Passive": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 3 Passive",
+        "type": "active",
+        "price": "3500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "20250523",
+                "specifications": {
+                    "size": {
+                        "height": 400,
+                        "width": 240,
+                        "depth": 250,
+                    },
+                    "weight": 9,
+                },
+            },
+        },
+    },
     "Aalto Speakers Aalto 9": {
         "brand": "Aalto Speakers",
         "model": "Aalto 9",
