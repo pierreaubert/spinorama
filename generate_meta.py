@@ -51,14 +51,12 @@ import os
 import sys
 import time
 import zipfile
+import argparse
 
 import numpy as np
+import pandas as pd
 
-from docopt import docopt
-
-from spinorama import ray_setup_logger
-from spinorama.constant_paths import flags_ADD_HASH
-
+# Ray import with fallback
 try:
     import ray
 except ModuleNotFoundError:
@@ -68,21 +66,31 @@ except ModuleNotFoundError:
         print("Did you run env.sh?")
         sys.exit(-1)
 
+# Spinorama specific imports
 from generate_common import (
-    get_custom_logger,
-    args2level,
-    cache_load,
-    custom_ray_init,
-    sort_metadata_per_date,
-    #    find_metadata_file,
+    get_custom_logger,  # Added previously
+    args2level,  # Added previously
+    cache_load,  # Added previously
+    custom_ray_init,  # Added previously
+    sort_metadata_per_date,  # Added previously
 )
+from spinorama.compute_scores import (
+    speaker_pref_rating,  # General import from scores
+)
+from spinorama import ray_setup_logger
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
-from spinorama.compute_scores import speaker_pref_rating
-from spinorama.filter_peq import peq_preamp_gain
-from spinorama.load_rew_eq import parse_eq_iir_rews
 
+# Aliased imports to avoid name collisions for specific usages
+from spinorama.compute_scores import speaker_pref_rating as compute_speaker_pref_rating
+from spinorama.filter_peq import peq_preamp_gain as filter_peq_preamp_gain
+from spinorama.load_rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
+
+# Local application imports
 from datas import metadata
+
+# Typing imports
+from typing import Any, cast, Optional, TypedDict
 
 # activate some tracing
 ACTIVATE_TRACING: bool = False
@@ -95,6 +103,16 @@ KEY_LENGTH = 5
 
 # size of years (2024 -> 4)
 YEAR_LENGTH = 4
+
+
+class ScaledPrefRating(TypedDict, total=False):
+    scaled_pref_score: float
+    scaled_pref_score_wsub: float
+    scaled_nbd_on_axis: float
+    scaled_sm_sound_power: float
+    scaled_sm_pred_in_room: float
+    scaled_lfx_hz: float
+    scaled_flatness: float
 
 
 def tracing(msg: str):
@@ -248,13 +266,14 @@ def queue_score(speaker_name, speaker_data):
 
                 inroom = dfs["Estimated In-Room Response"]
                 if inroom is not None:
-                    pref_rating = speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
+                    pref_rating = compute_speaker_pref_rating(
+                        cea2034=spin, pir=inroom, rounded=True
+                    )
                     score_penalty = 0.0
-                    current = metadata.speakers_info[speaker_name]["measurements"].get(key)
-                    if current is not None and current.get("extras") is not None:
-                        score_penalty = current["extras"].get("score_penalty", 0.0)
-                        pref_rating["pref_score"] += score_penalty
-                        pref_rating["pref_score_wsub"] += score_penalty
+                    extras_dict = dfs.get("extras")
+                    score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
+                    pref_rating["pref_score"] += score_penalty
+                    pref_rating["pref_score_wsub"] += score_penalty
 
                     if pref_rating is not None:
                         result["pref_rating"] = pref_rating
@@ -282,7 +301,7 @@ def add_scores(dataframe, parse_max, filters):
     """Compute some values per speaker and add them to metadata"""
     refs = queue_scores(dataframe, parse_max, filters)
     while 1:
-        done_refs, remain_refs = ray.wait(refs, num_returns=min(len(refs), 64))
+        done_refs, remain_refs = ray.wait(refs, num_returns=min(len(refs), 64))  # type: ignore[arg-type]
 
         for ids in done_refs:
             results = ray.get(ids)
@@ -304,30 +323,43 @@ def add_scores(dataframe, parse_max, filters):
 
                 if is_eq:
                     version_neq = version[:-3]
-                    if computed_estimates is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
-                            "estimates_eq"
-                        ] = computed_estimates
-                    if pref_rating is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
-                            "pref_rating_eq"
-                        ] = pref_rating
+                    # Ensure the path to the measurement entry exists and get it
+                    speaker_measurements = metadata.speakers_info.get(speaker_name, {}).get(
+                        "measurements", {}
+                    )
+                    measurement_entry = speaker_measurements.get(version_neq)
+
+                    if measurement_entry is not None:  # Should always be true if data is consistent
+                        if computed_estimates is not None:
+                            # measurement_entry is a Measurement TypedDict
+                            measurement_entry["estimates_eq"] = computed_estimates
+                        if pref_rating is not None:
+                            measurement_entry["pref_rating_eq"] = pref_rating
+                    else:
+                        logger.warning(
+                            f"Could not find measurement entry for {speaker_name} - {version_neq} when assigning _eq data."
+                        )
                     continue
 
-                if computed_estimates is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = (
-                        computed_estimates
-                    )
-                if (
-                    sensitivity is not None
-                    and metadata.speakers_info[speaker_name].get("type") == "passive"
-                ):
-                    metadata.speakers_info[speaker_name]["measurements"][version]["sensitivity"] = (
-                        sensitivity
-                    )
-                if pref_rating is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = (
-                        pref_rating
+                # Ensure the path to the measurement entry exists and get it
+                speaker_measurements = metadata.speakers_info.get(speaker_name, {}).get(
+                    "measurements", {}
+                )
+                measurement_entry = speaker_measurements.get(version)
+
+                if measurement_entry is not None:  # Should always be true
+                    if computed_estimates is not None:
+                        measurement_entry["estimates"] = computed_estimates
+                    if (
+                        sensitivity is not None
+                        and metadata.speakers_info.get(speaker_name, {}).get("type") == "passive"
+                    ):
+                        measurement_entry["sensitivity"] = sensitivity
+                    if pref_rating is not None:
+                        measurement_entry["pref_rating"] = pref_rating
+                else:
+                    logger.warning(
+                        f"Could not find measurement entry for {speaker_name} - {version} when assigning non-eq data."
                     )
 
         if len(remain_refs) == 0:
@@ -354,196 +386,120 @@ def add_scores(dataframe, parse_max, filters):
     min_spl_continuous = 1000
     max_spl_continuous = 0
 
-    for speaker_name, speaker_data in dataframe.items():
-        for _, measurements in speaker_data.items():
-            for version in measurements:
-                if speaker_name not in metadata.speakers_info:
-                    # should not happen. If you mess up with names of speakers
-                    # and change them, then you can have inconsistent data.
-                    continue
-                if version[-3:] == "_eq":
-                    continue
-                current = metadata.speakers_info[speaker_name]["measurements"][version]
-                if "specifications" in current and "SPL" in current["specifications"]:
-                    current_peak = current["specifications"]["SPL"].get("peak", None)
-                    current_continuous = current["specifications"]["SPL"].get("continuous", None)
-                    if current_peak:
-                        min_spl_peak = min(min_spl_peak, current_peak)
-                        max_spl_peak = max(max_spl_peak, current_peak)
-                    if current_continuous:
-                        min_spl_continuous = min(min_spl_continuous, current_continuous)
-                        max_spl_continuous = max(max_spl_continuous, current_continuous)
-                if "pref_rating" not in current:
-                    continue
-                pref_rating = current.get("pref_rating", {})
-                # pref score
-                pref_score = pref_rating.get("pref_score")
-                if pref_score and not math.isnan(pref_score):
-                    min_pref_score = min(min_pref_score, pref_score)
-                    max_pref_score = max(max_pref_score, pref_score)
-                # pref lfx_hz
-                pref_lfx_hz = pref_rating.get("pref_lfx_hz")
-                if pref_lfx_hz is not None and not math.isnan(pref_lfx_hz):
-                    min_lfx_hz = min(min_lfx_hz, pref_lfx_hz)
-                    max_lfx_hz = max(max_lfx_hz, pref_lfx_hz)
-                # pref nbd_on
-                pref_nbd_on = pref_rating.get("pref_nbd_on")
-                if pref_nbd_on is not None and not math.isnan(pref_nbd_on):
-                    min_nbd_on = min(min_nbd_on, pref_nbd_on)
-                    max_nbd_on = max(max_nbd_on, pref_nbd_on)
-                # pref sm_pir
-                pref_sm_pir = pref_rating.get("pref_sm_pir")
-                if pref_sm_pir is not None and not math.isnan(pref_sm_pir):
-                    min_sm_pir = min(min_sm_pir, pref_sm_pir)
-                    max_sm_pir = max(max_sm_pir, pref_sm_pir)
-                # pref sm_sp
-                pref_sm_sp = pref_rating.get("pref_sm_sp")
-                if pref_sm_sp is not None and not math.isnan(pref_sm_sp):
-                    min_sm_sp = min(min_sm_sp, pref_sm_sp)
-                    max_sm_sp = max(max_sm_sp, pref_sm_sp)
-                # pref score w/sub
-                pref_score_wsub = pref_rating.get("pref_score_wsub")
-                if pref_score_wsub is not None and not math.isnan(pref_score_wsub):
-                    min_pref_score_wsub = min(min_pref_score_wsub, pref_score_wsub)
-                    max_pref_score_wsub = max(max_pref_score_wsub, pref_score_wsub)
-                # flatness
-                if "estimates" not in current:
-                    continue
-                flatness = current["estimates"].get("ref_band")
-                if flatness is not None and not math.isnan(flatness):
-                    min_flatness = min(min_flatness, flatness)
-                    max_flatness = max(max_flatness, flatness)
+    def percent(val, vmin, vmax):
+        if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
+            logger.debug("data is NaN")
+            return 0.0
+        if vmax == vmin:
+            logger.debug("max == min, returning 50.0 as neutral")
+            return 50.0
+        p = math.floor(100 * (val - vmin) / (vmax - vmin))
+        return float(min(max(0, p), 100))
 
-    # print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
-    # print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
+    speakers = dataframe
+    for speaker_name, versions in speakers.items():
+        for version in versions:
+            current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
+            if not current_measurement:
+                logger.warning(
+                    f"Skipping scaling for {speaker_name} {version} as measurement data is missing."
+                )
+                continue
 
-    # if we are looking only after 1 speaker, return
-    if len(dataframe.items()) == 1:
-        logger.info("skipping normalization with only one speaker")
-        return
+            pref_rating_value = current_measurement.get("pref_rating")
+            estimates_dict = current_measurement.get("estimates")
+            flatness = estimates_dict.get("ref_band") if estimates_dict else None
 
-    # add normalized value to metadata
-    parsed = 0
-    for speaker_name, speaker_data in dataframe.items():
-        if parse_max is not None and parsed > parse_max:
-            break
-        parsed = parsed + 1
-        logger.info("Normalize data for %s", speaker_name)
-        if speaker_name not in metadata.speakers_info:
-            # should not happen. If you mess up with names of speakers
-            # and change them, then you can have inconsistent data.
-            continue
-        for _, measurements in speaker_data.items():
-            for version, measurement in measurements.items():
-                if version not in metadata.speakers_info[speaker_name]["measurements"]:
-                    if len(version) > 4 and version[-3:] != "_eq":
-                        logger.error(
-                            "Confusion in metadata, did you edit a speaker recently? %s should be in metadata for %s",
-                            version,
-                            speaker_name,
-                        )
-                    continue
+            pref_score = -1
+            lfx_hz = -1
+            pref_score_wsub = -1
+            nbd_on = -1.0  # Default to a float, will be updated if pref_rating_value exists
+            sm_sp = -1.0
+            sm_pir = -1.0
 
-                if measurement is None or "CEA2034" not in measurement:
-                    logger.debug("skipping normalization no spinorama for %s", speaker_name)
-                    continue
+            if pref_rating_value:
+                pref_score = pref_rating_value.get("pref_score", -1)
+                lfx_hz = pref_rating_value.get("lfx_hz", -1)
+                pref_score_wsub = pref_rating_value.get("pref_score_wsub", -1)
+                nbd_on = pref_rating_value.get("nbd_on_axis", -1.0)
+                sm_sp = pref_rating_value.get("sm_sound_power", -1.0)
+                sm_pir = pref_rating_value.get("sm_pred_in_room", -1.0)
 
-                spin = measurement["CEA2034"]
-                if spin is None:
-                    logger.debug("skipping normalization no spinorama for %s", speaker_name)
-                    continue
-                if version[-3:] == "_eq":
-                    logger.debug("skipping normalization for eq for %s", speaker_name)
-                    continue
-                if "estimates" not in metadata.speakers_info[speaker_name]["measurements"][version]:
-                    logger.debug(
-                        "skipping normalization no estimates in %s for %s",
-                        version,
-                        speaker_name,
-                    )
-                    continue
-                logger.debug("Compute relative score for speaker %s", speaker_name)
-                if (
-                    "pref_rating"
-                    not in metadata.speakers_info[speaker_name]["measurements"][version]
-                ):
-                    logger.debug(
-                        "skipping normalization no pref_rating in %s for %s",
-                        version,
-                        speaker_name,
-                    )
-                    continue
-                # get values
-                pref_rating = metadata.speakers_info[speaker_name]["measurements"][version][
-                    "pref_rating"
-                ]
-                pref_score_wsub = pref_rating["pref_score_wsub"]
-                nbd_on = pref_rating["nbd_on_axis"]
-                sm_sp = pref_rating["sm_sound_power"]
-                sm_pir = pref_rating["sm_pred_in_room"]
-                flatness = metadata.speakers_info[speaker_name]["measurements"][version][
-                    "estimates"
-                ]["ref_band"]
-                pref_score = -1
-                lfx_hz = -1
-                if "pref_score" in pref_rating:
-                    pref_score = pref_rating["pref_score"]
-                if "lfx_hz" in pref_rating:
-                    lfx_hz = pref_rating["lfx_hz"]
+            scaled_pref_score = None
+            if pref_score != -1 and min_pref_score != max_pref_score:
+                scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
 
-                # normalize min and max
-                def percent(val, vmin, vmax):
-                    if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
-                        logger.debug("data is NaN")
-                        return 0
-                    if vmax == vmin:
-                        logger.debug("max == min")
-                        return 0
-                    p = math.floor(100 * (val - vmin) / (vmax - vmin))
-                    return min(max(0, p), 100)
+            scaled_lfx_hz = None
+            if lfx_hz != -1 and min_lfx_hz != max_lfx_hz:
+                scaled_lfx_hz = 100 - percent(lfx_hz, min_lfx_hz, max_lfx_hz)
 
-                scaled_pref_score = None
+            scaled_pref_score_wsub = None
+            if pref_score_wsub != -1 and min_pref_score_wsub != max_pref_score_wsub:
                 scaled_pref_score_wsub = percent(
                     pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
                 )
-                scaled_pref_score = None
-                scaled_lfx_hz = None
-                if "pref_score" in pref_rating:
-                    scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
-                    scaled_lfx_hz = 100 - percent(lfx_hz, min_lfx_hz, max_lfx_hz)
-                scaled_nbd_on = 100 - percent(nbd_on, min_nbd_on, max_nbd_on)
-                scaled_sm_sp = percent(sm_sp, min_sm_sp, max_sm_sp)
-                scaled_sm_pir = percent(sm_pir, min_sm_pir, max_sm_pir)
-                scaled_flatness = 100 - percent(flatness, min_flatness, max_flatness)
-                # bucket score instead of a linear scale
-                if scaled_pref_score is not None:
-                    scaled_pref_score = compute_scaled_pref_score(pref_score)
-                # bucket flatness instead of a linear scale
-                scaled_flatness = compute_scaled_flatness(flatness)
-                # bucked lfx too
-                if scaled_lfx_hz is not None:
-                    scaled_lfx_hz = compute_scaled_lfx_hz(lfx_hz)
-                # bucket sm_pir too
+
+            scaled_nbd_on = (
+                100 - percent(nbd_on, min_nbd_on, max_nbd_on)
+                if min_nbd_on != max_nbd_on
+                else (50.0 if nbd_on != -1.0 else None)
+            )  # Handle division by zero and missing value
+            scaled_sm_sp = (
+                percent(sm_sp, min_sm_sp, max_sm_sp)
+                if min_sm_sp != max_sm_sp
+                else (50.0 if sm_sp != -1.0 else None)
+            )
+            scaled_sm_pir = (
+                percent(sm_pir, min_sm_pir, max_sm_pir)
+                if min_sm_pir != max_sm_pir
+                else (50.0 if sm_pir != -1.0 else None)
+            )
+
+            scaled_flatness_val = None
+            if flatness is not None and not math.isnan(flatness) and min_flatness != max_flatness:
+                # scaled_flatness_intermediate = 100 - percent(flatness, min_flatness, max_flatness)
+                scaled_flatness_val = compute_scaled_flatness(flatness)  # Pass original float
+            elif flatness is not None and not math.isnan(
+                flatness
+            ):  # Case for min_flatness == max_flatness but flatness exists
+                scaled_flatness_val = 50.0  # Or some other default scaled value
+
+            # bucket score instead of a linear scale
+            if scaled_pref_score is not None and pref_score != -1:  # ensure pref_score was found
+                scaled_pref_score = compute_scaled_pref_score(pref_score)
+            # bucked lfx too
+            if scaled_lfx_hz is not None and lfx_hz != -1:
+                scaled_lfx_hz = compute_scaled_lfx_hz(lfx_hz)
+            # bucked sm_pir too
+            if scaled_sm_pir is not None and sm_pir != -1.0:
                 scaled_sm_pir = compute_scaled_sm_pir(sm_pir)
-                # add normalized values
-                scaled_pref_rating: dict[str, float] = {
-                    "scaled_pref_score_wsub": scaled_pref_score_wsub,
-                    "scaled_nbd_on_axis": scaled_nbd_on,
-                    "scaled_flatness": scaled_flatness,
-                    "scaled_sm_sound_power": scaled_sm_sp,
-                    "scaled_sm_pred_in_room": scaled_sm_pir,
-                }
-                if "pref_score" in pref_rating and scaled_pref_score is not None:
-                    scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
-                if "lfx_hz" in pref_rating and scaled_lfx_hz is not None:
-                    scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
-                logger.info("Adding %s", scaled_pref_rating)
+
+            # add normalized values
+            scaled_pref_rating: dict[str, Any] = {}
+            if scaled_pref_score_wsub is not None:
+                scaled_pref_rating["scaled_pref_score_wsub"] = scaled_pref_score_wsub
+            if scaled_nbd_on is not None:
+                scaled_pref_rating["scaled_nbd_on_axis"] = scaled_nbd_on
+            if scaled_sm_sp is not None:
+                scaled_pref_rating["scaled_sm_sound_power"] = scaled_sm_sp
+            if scaled_sm_pir is not None:
+                scaled_pref_rating["scaled_sm_pred_in_room"] = scaled_sm_pir
+
+            if scaled_pref_score is not None:
+                scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
+            if scaled_lfx_hz is not None:
+                scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
+            if scaled_flatness_val is not None:
+                scaled_pref_rating["scaled_flatness"] = scaled_flatness_val
+
+            logger.info("Adding %s", scaled_pref_rating)
+            if scaled_pref_rating:  # Only add if not empty
                 metadata.speakers_info[speaker_name]["measurements"][version][
                     "scaled_pref_rating"
-                ] = scaled_pref_rating
+                ] = cast(ScaledPrefRating, scaled_pref_rating)
 
 
-def add_quality(parse_max: int, filters: dict):
+def add_quality(parse_max: Optional[int], filters: dict):
     """Compute quality of data and add it to metadata
     Rules:
     - Independant measurements from ASR or EAC : high quality
@@ -620,33 +576,34 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
             ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
         ):
             eq_filename = "{}/eq/{}/iir-{}.txt".format(speaker_path, speaker_name, suffix)
-            iir = parse_eq_iir_rews(eq_filename, 48000)
+            iir = load_parse_eq_iir_rews(eq_filename, 48000)
             if iir is not None and len(iir) > 0:
                 if suffix == "autoeq":
                     metadata.speakers_info[speaker_name]["default_eq"] = "autoeq"
                 eq_key = f"{suffix}".replace("-", "_")
-                metadata.speakers_info[speaker_name]["eqs"][eq_key] = {}
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["display_name"] = display
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["filename"] = eq_filename
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["preamp_gain"] = round(
-                    peq_preamp_gain(iir), 1
+
+                peq_list: list[Peq] = []
+                for iir_weight, iir_filter in iir:
+                    if iir_weight != 0.0:
+                        peq_list.append(
+                            Peq(  # Explicitly create Peq TypedDict
+                                type=iir_filter.biquad_type,
+                                freq=iir_filter.freq,
+                                srate=iir_filter.srate,
+                                Q=iir_filter.q,
+                                dbGain=iir_filter.db_gain,
+                            )
+                        )
+
+                current_eq_data: EQ = EQ(
+                    display_name=display,
+                    filename=eq_filename,
+                    preamp_gain=round(filter_peq_preamp_gain(iir), 1),
+                    type="peq",
+                    peq=peq_list,
                 )
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["type"] = "peq"
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"] = []
-                for iir_weigth, iir_filter in iir:
-                    if iir_weigth != 0.0:
-                        metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"].append(
-                            {
-                                "type": iir_filter.biquad_type,
-                                "freq": iir_filter.freq,
-                                "srate": iir_filter.srate,
-                                "Q": iir_filter.q,
-                                "dbGain": iir_filter.db_gain,
-                            }
-                        )
-                        logger.debug(
-                            "adding eq: %s", metadata.speakers_info[speaker_name]["eqs"][eq_key]
-                        )
+                metadata.speakers_info[speaker_name]["eqs"][eq_key] = current_eq_data
+                logger.debug("adding eq: %s", metadata.speakers_info[speaker_name]["eqs"][eq_key])
 
 
 def interpolate(speaker_name, freq, freq1, data1):
@@ -802,7 +759,7 @@ def dump_metadata(meta):
             "metadata" in hashed_filename
             and len(hashed_filename.split("-")) == 2
             and "head" not in hashed_filename
-            and flags_ADD_HASH
+            and cpaths.flags_ADD_HASH
         ):
             try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
@@ -818,7 +775,7 @@ def dump_metadata(meta):
         js = json.dumps(d)
         key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:KEY_LENGTH]
         hashed_filename = filename
-        if flags_ADD_HASH:
+        if cpaths.flags_ADD_HASH:
             hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
         if (
             os.path.exists(hashed_filename)
@@ -830,7 +787,7 @@ def dump_metadata(meta):
             return
 
         # hash changed, remove old files
-        if flags_ADD_HASH:
+        if cpaths.flags_ADD_HASH:
             old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
             old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
             old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
@@ -860,7 +817,7 @@ def dump_metadata(meta):
                 current_compressed.writestr(hashed_filename, js)
                 logger.debug("generated %s and %s version", hashed_filename, ext)
 
-        if flags_ADD_HASH:
+        if cpaths.flags_ADD_HASH:
             check_link(hashed_filename)
 
     # split eq data v.s. others as they are not required on the front page
@@ -920,17 +877,14 @@ def dump_metadata(meta):
 
 
 def main():
+    global args, level, logger
     main_df = None
-    speaker = args["--speaker"]
-    mversion = args["--mversion"]
-    morigin = args["--morigin"]
-    mformat = args["--mformat"]
-    parse_max = args["--parse-max"]
-    if parse_max is not None:
-        parse_max = int(parse_max)
-    smoke_test = False
-    if args["--smoke-test"] is not None:
-        smoke_test = True
+    speaker = args.speaker
+    mversion = args.mversion
+    morigin = args.morigin
+    mformat = args.mformat
+    parse_max = args.parse_max
+    smoke_test_is_active = args.smoke_test is not None
 
     steps: list[tuple[str, float]] = [("start", time.perf_counter())]
     custom_ray_init(args)
@@ -942,7 +896,7 @@ def main():
         "format": mformat,
         "version": mversion,
     }
-    main_df = cache_load(filters=filters, smoke_test=smoke_test, level=level)
+    main_df = cache_load(filters=filters, smoke_test=smoke_test_is_active, level=level)
     steps.append(("loaded", time.perf_counter()))
 
     if main_df is None:
@@ -978,7 +932,43 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.6", options_first=True)
+    parser = argparse.ArgumentParser(description="Generate metadata for spinorama speakers.")
+    parser.add_argument("--version", action="version", version="generate_meta.py version 1.6")
+    parser.add_argument(
+        "--log-level",
+        default="WARNING",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Set the logging level (default: WARNING).",
+    )
+    parser.add_argument(
+        "--metadata",
+        default="./datas/metadata.py",
+        help="Metadata file to use (default: ./datas/metadata.py).",
+    )
+    parser.add_argument(
+        "--parse-max", type=int, help="For debugging, set a max number of speakers to look at."
+    )
+    parser.add_argument("--morigin", help="Restrict to a specific origin (for debugging).")
+    parser.add_argument("--speaker", help="Restrict to a specific speaker (for debugging).")
+    parser.add_argument(
+        "--mversion", help="Restrict to a specific measurement version (for debugging)."
+    )
+    parser.add_argument(
+        "--mformat", help="Restrict to a specific format (e.g., klippel, webplotdigitizer)."
+    )
+    parser.add_argument("--dash-ip", help="IP for the Ray dashboard.")
+    parser.add_argument("--dash-port", type=int, help="Port for the Ray dashboard.")
+    parser.add_argument("--ray-local", action="store_true", help="Run Ray locally.")
+    parser.add_argument(
+        "--smoke-test",
+        choices=["random", "default"],
+        nargs="?",
+        const="default",
+        help='Run with a few speakers only. Choices: random, default. If option is present without value, "default" is used.',
+    )
+    # --use-cache is in docopt string but not used from args, so omitted.
+
+    args = parser.parse_args()
     level = args2level(args)
     logger = get_custom_logger(level=level, duplicate=True)
     main()

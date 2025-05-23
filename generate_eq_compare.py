@@ -34,7 +34,7 @@ import sys
 import glob
 import math
 
-from docopt import docopt
+import argparse
 import numpy as np
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
@@ -90,14 +90,24 @@ def main(force):
 
 
 if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version=f"generate_radar.py version {VERSION:1.1f}",
-        options_first=True,
+    parser = argparse.ArgumentParser(description="Generate EQ comparison plots.")
+    parser.add_argument(
+        "--version", action="version", version=f"generate_eq_compare.py version {VERSION:.1f}"
     )
+    parser.add_argument(
+        "--force", action="store_true", help="Regenerate pictures even if they already exist."
+    )
+    parser.add_argument(
+        "--log-level",
+        default="WARNING",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Set the logging level (default: WARNING).",
+    )
+
+    args = parser.parse_args()
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)
 
-    FORCE = args["--force"]
+    FORCE = args.force
 
     sys.exit(main(FORCE))

@@ -138,7 +138,7 @@ class Peq(TypedDict, total=False):
 class EQ(TypedDict, total=False):
     display_name: str
     filename: str
-    pream_gain: float
+    preamp_gain: float
     type: str
     peq: list[Peq]
 

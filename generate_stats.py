@@ -32,10 +32,8 @@ Options:
 import json
 import sys
 
-from docopt import docopt
-
+import argparse
 from generate_common import get_custom_logger, args2level, find_metadata_file
-
 
 VERSION = 0.7
 DEBUG_TYPE = False
@@ -305,8 +303,8 @@ def print_eq(speakers, txt_format):
 
 def main():
     print_what = None
-    if args["--print"] is not None:
-        print_what = args["--print"]
+    if args.print is not None:
+        print_what = args.print
 
     # TODO: wanted to push directly to GCP but you need a project id and so one
     # I will just generate an Excel file
@@ -346,10 +344,27 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(
-        str(__doc__),
-        version="./generate_stats.py version {:1.1f}".format(VERSION),
-        options_first=True,
+    parser = argparse.ArgumentParser(description="Generate statistics from speaker data.")
+    parser.add_argument(
+        "--version", action="version", version=f"./generate_stats.py version {VERSION:.1f}"
     )
+    parser.add_argument(
+        "--print",
+        metavar="WHAT",
+        choices=["eq_txt", "eq_csv"],
+        help="print information. Options are 'eq_txt' or 'eq_csv'",
+    )
+    parser.add_argument(
+        "--push", metavar="KEY", help="push data to Google sheet (currently not implemented)"
+    )
+    parser.add_argument(
+        "--log-level",
+        metavar="LEVEL",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Default is WARNING, options are DEBUG INFO ERROR.",
+    )
+
+    args = parser.parse_args()
+
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

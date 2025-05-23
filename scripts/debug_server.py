@@ -15,7 +15,7 @@ Options:
 
 import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from docopt import docopt
+import argparse
 
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
@@ -37,16 +37,15 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="debug_servers.py version 1.1", options_first=True)
+    parser = argparse.ArgumentParser(description="A simple HTTP server with CORS headers.")
+    parser.add_argument("--version", action="version", version="debug_server.py version 1.1")
+    parser.add_argument("--ip", default="127.0.0.1", help="IP to bind, default is 127.0.0.1")
+    parser.add_argument("--port", type=int, default=8000, help="Port to listen to, default is 8000")
 
-    ip = "127.0.0.1"
-    port = 8000
+    args = parser.parse_args()
 
-    if args["--ip"] is not None:
-        ip = args["--ip"]
-
-    if args["--port"] is not None:
-        port = int(args["--port"])
+    ip = args.ip
+    port = args.port
 
     try:
         httpd = HTTPServer((ip, port), CORSRequestHandler)

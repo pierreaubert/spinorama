@@ -30,7 +30,6 @@ import warnings
 
 import flammkuchen as fl
 
-# from pandas.core.arrays.masked import to_numpy_dtype_inference
 import tables
 
 import datas.metadata as metadata
@@ -76,8 +75,8 @@ def get_custom_logger(level, duplicate):
 def args2level(args):
     """Transform an argument into a logger level"""
     level = logging.WARNING
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"].upper()
+    if hasattr(args, "log_level") and args.log_level is not None:
+        check_level = args.log_level.upper()
         if check_level in ("INFO", "DEBUG", "WARNING", "ERROR"):
             if check_level == "INFO":
                 level = logging.INFO
@@ -112,8 +111,8 @@ def custom_ray_init(args):
     # expose the dashboard on another ip if required
     dashboard_ip = "127.0.0.1"
     dashboard_port = 8265
-    if "--dash-ip" in args and args["--dash-ip"] is not None:
-        check_ip = args["--dash-ip"]
+    if hasattr(args, "dash_ip") and args.dash_ip is not None:
+        check_ip = args.dash_ip
         try:
             _ = ipaddress.ip_address(check_ip)
             dashboard_ip = check_ip
@@ -121,8 +120,8 @@ def custom_ray_init(args):
             print("ip {} is not valid {}!".format(check_ip, ave))
             sys.exit(1)
 
-    if "--dash-port" in args and args["--dash-port"] is not None:
-        check_port = args["--dash-port"]
+    if hasattr(args, "dash_port") and args.dash_port is not None:
+        check_port = args.dash_port
         try:
             dashboard_port = int(check_port)
             if dashboard_port < 0 or dashboard_port > 2**16 - 1:
@@ -134,14 +133,14 @@ def custom_ray_init(args):
 
     # this start ray in single process mode
     ray_local_mode = False
-    if "--ray-local" in args and args["--ray-local"] is True:
+    if hasattr(args, "ray_local") and args.ray_local is True:
         ray_local_mode = True
 
     level = args2level(args)
 
     ray_address = None
-    if "--ray-cluster" in args and args["--ray-cluster"] is not None:
-        check_address = args["--ray-cluster"]
+    if hasattr(args, "ray_cluster") and args.ray_cluster is not None:
+        check_address = args.ray_cluster
         check_ip, check_port = check_address.split(":")
         try:
             _ = ipaddress.ip_address(check_ip)
@@ -267,7 +266,7 @@ def cache_load_seq(filters, smoke_test):
     if len(cache_files) == 0:
         cache_files = glob("../{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
-        print('Cannot find cache directory or files! Did you run ./generate_graphs.py ?')
+        print("Cannot find cache directory or files! Did you run ./generate_graphs.py ?")
         return df_all
     count = 0
     logging.debug("found %d cache files", len(cache_files))
@@ -319,29 +318,49 @@ def cache_load_distributed_map(filters, smoke_test, level):
     return ids
 
 
-def cache_load_distributed_reduce(filters, smoke_test, ids):
+def cache_load_distributed_reduce(filters, smoke_test, ids: list):
     df_all = defaultdict()
     count = 0
+    current_ids_list = list(ids)  # Ensure it's a list for ray.wait
     while 1:
-        done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
+        if not current_ids_list:
+            break
+        done_ids, remaining_ids_list = ray.wait(
+            current_ids_list, num_returns=min(len(current_ids_list), 64)
+        )  # type: ignore[arg-type]
+
+        # get the results
         for zid in done_ids:
             df_read = ray.get(zid)
-            for speaker, data in df_read.items():
-                if speaker in df_all:
-                    print("error in cache: {} is already in keys".format(speaker))
-                if is_filtered(speaker, filters):
-                    continue
-                df_all[speaker] = data
-                count += 1
-                if smoke_test and count > 10:
-                    break
+            # Assuming df_read is expected to be a dictionary based on .items() usage
+            if isinstance(df_read, dict):
+                for speaker, data in df_read.items():
+                    if speaker in df_all:
+                        print("error in cache: {} is already in keys".format(speaker))
+                    if is_filtered(speaker, filters):
+                        continue
+                    df_all[speaker] = data
+                    count += 1
+                    if smoke_test and count > 10:
+                        # Need to break out of outer loop too if smoke test limit reached
+                        current_ids_list = []  # Signal to exit outer loop
+                        break
+            elif df_read is not None:  # Handle cases where df_read might not be a dict
+                print(
+                    f"Warning: Expected a dict from ray.get(zid), but got {type(df_read)}. zid: {zid}"
+                )
 
-        if len(remaining_ids) == 0:
+            if not current_ids_list:  # Check if inner loop decided to break outer
+                break
+
+        if not current_ids_list:  # Break from while if signaled by inner loop
             break
 
-        ids = remaining_ids
+        current_ids_list = list(remaining_ids_list)  # Update the list for the next iteration
 
-    print("(loaded {} speakers)".format(len(df_all)))
+        if len(current_ids_list) == 0:
+            break
+
     return df_all
 
 
