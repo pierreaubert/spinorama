@@ -31,11 +31,11 @@ Options:
 import json
 import sys
 import pathlib
+import argparse
 
 # from pprint import pprint
 
 
-from docopt import docopt
 import plotly.graph_objects as go
 
 from spinorama.speaker import write_multiformat
@@ -256,10 +256,31 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_radar.py version {:1.1f}".format(VERSION),
-        options_first=True,
+    parser = argparse.ArgumentParser(description="Generate radar plots for speaker data.")
+    parser.add_argument(
+        "--version", action="version", version=f"generate_radar.py version {VERSION:.1f}"
     )
+    parser.add_argument("--dev", action="store_true", help="Enable development mode.")
+    parser.add_argument(
+        "--print",
+        dest="print_what",
+        choices=["eq_txt", "eq_csv"],
+        help="Print information. Options are 'eq_txt' or 'eq_csv'.",
+    )
+    parser.add_argument("--sitedev", type=str, help="HTTP site for development.")
+    parser.add_argument(
+        "--log-level",
+        default="WARNING",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Set the logging level (default: WARNING).",
+    )
+    # Arguments for custom_ray_init if they were to be exposed directly:
+    # parser.add_argument('--dash-ip', type=str, help='IP address for the Ray dashboard.')
+    # parser.add_argument('--dash-port', type=int, help='Port for the Ray dashboard.')
+    # parser.add_argument('--ray-local', action='store_true', help='Run Ray in local mode.')
+    # parser.add_argument('--ray-cluster', type=str, help='Address of the Ray cluster (e.g., IP:PORT).')
+
+    args = parser.parse_args()
+
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main(args)

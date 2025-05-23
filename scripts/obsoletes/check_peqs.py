@@ -34,11 +34,11 @@ import sys
 import glob
 import math
 
-from docopt import docopt
+import argparse
 import numpy as np
 
 from generate_common import get_custom_logger, args2level
-from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DATAS_EQ
+from spinorama.constant_paths import CPATH_DIST_METADATA_JSON, CPATH_DATAS_EQ
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_spl
 
@@ -127,7 +127,7 @@ def createscript(speakers):
 
 def main(force):
     # load all metadata from generated json file
-    json_filename = CPATH_METADATA_JSON
+    json_filename = CPATH_DIST_METADATA_JSON
     if not os.path.exists(json_filename):
         logger.error("Cannot find %s", json_filename)
         sys.exit(1)
@@ -149,14 +149,25 @@ def main(force):
 
 
 if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version=f"generate_radar.py version {VERSION:1.1f}",
-        options_first=True,
+    parser = argparse.ArgumentParser(
+        description="Check PEQs and generate a script for recomputing problematic ones."
     )
+    parser.add_argument(
+        "--version", action="version", version=f"check_peqs.py version {VERSION:.1f}"
+    )
+    parser.add_argument(
+        "--force", action="store_true", help="Regenerate pictures even if they already exist."
+    )
+    parser.add_argument(
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Default is WARNING, options are DEBUG INFO ERROR.",
+    )
+
+    args = parser.parse_args()
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)
 
-    FORCE = args["--force"]
+    FORCE = args.force
 
     sys.exit(main(FORCE))

@@ -47,9 +47,7 @@ import os
 import random
 import sys
 
-
-from docopt import docopt
-
+import argparse
 
 try:
     import ray
@@ -329,8 +327,8 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
 def main(level):
     """Send all speakers in the queue to be processed"""
     speakerlist = get_speaker_list(f"{data_dir}/datas/measurements")
-    if args["--smoke-test"] is not None:
-        if args["--smoke-test"] == "random":
+    if args.smoke_test is not None:
+        if args.smoke_test == "random":
             speakerlist = set(random.sample(list(speakerlist), 15))
         else:
             speakerlist = {
@@ -341,26 +339,26 @@ def main(level):
             }
         print(speakerlist)
 
-    if args["--width"] is not None:
-        opt_width = int(args["--width"])
+    if args.width is not None:
+        opt_width = int(args.width)
         plot_params_default["width"] = opt_width
 
-    if args["--height"] is not None:
-        opt_height = int(args["--height"])
+    if args.height is not None:
+        opt_height = int(args.height)
         plot_params_default["height"] = opt_height
 
     update_cache = False
-    if args["--update-cache"] is True:
+    if args.update_cache is True:
         update_cache = True
 
     # start ray
-    custom_ray_init(args)
+    custom_ray_init(vars(args))
 
     filters = {}
-    for ifilter in ("speaker", "origin", "mversion"):
-        flag = "--{}".format(ifilter)
-        if args[flag] is not None:
-            filters[ifilter] = args[flag]
+    for ifilter_key in ("speaker", "origin", "mversion", "brand"):
+        value = getattr(args, ifilter_key, None)
+        if value is not None:
+            filters[ifilter_key] = value
 
     ray_ids = queue_speakers(speakerlist, filters, level)
     df_new = compute(speakerlist, filters, ray_ids, level)
@@ -375,11 +373,50 @@ def main(level):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True)
-    force = args["--force"]
+    parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument("--version", action="version", version=f"generate_graphs.py v{VERSION}")
+    parser.add_argument("--width", type=int, help="Width size in pixel for graphs")
+    parser.add_argument("--height", type=int, help="Height size in pixel for graphs")
+    parser.add_argument("--force", action="store_true", help="Force regeneration of all graphs")
+    parser.add_argument(
+        "--smoke-test",
+        choices=["random", "default"],
+        metavar="ALGO",
+        help="Run a few speakers only (choices: random, default)",
+    )
+    parser.add_argument(
+        "--type",
+        metavar="EXT",
+        help="Output graph file type (e.g., png, svg) - currently informational",
+    )
+    parser.add_argument(
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Set log level (DEBUG, INFO, WARNING, ERROR)",
+    )
+    parser.add_argument("--origin", help="Filter by origin")
+    parser.add_argument("--speaker", help="Filter by speaker")
+    parser.add_argument("--mversion", help="Filter by measurement version")
+    parser.add_argument("--brand", help="Filter by brand")
+    parser.add_argument("--dash-ip", help="IP of Ray dashboard (default: localhost/127.0.0.1)")
+    parser.add_argument("--dash-port", type=int, help="Port for Ray dashboard (default: 8265)")
+    parser.add_argument(
+        "--ray-local", action="store_true", help="Run Ray locally (useful for debugging)"
+    )
+    parser.add_argument("--update-cache", action="store_true", help="Force updating the cache")
+    parser.add_argument(
+        "--data-dir", default=".", help="Directory where data is stored (default: .)"
+    )
+    parser.add_argument(
+        "--ray-cluster", help="Ray cluster address (ip:port) to join an existing cluster"
+    )
+
+    args = parser.parse_args()
+
+    force = args.force
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
-    data_dir = "."
-    if args["--data-dir"] is not None:
-        data_dir = args["--data-dir"]
+    data_dir = args.data_dir
+
     main(level=LEVEL)
