@@ -17,67 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
-    [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
-    [--morigin=<morigin>] [--speaker=<speaker>] [--mversion=<mversion>]\
-    [--mformat=<mformat>]\
-    [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
-    [--smoke-test=<algo>]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-  --metadata=<metadata> metadata file to use (default is ./datas/metadata.py)
-  --smoke-test=<algo> run a few speakers only (choice are random or default)
-  --parse-max=<max> for debugging, set a max number of speakers to look at
-  --speaker=<speaker> restrict to a specific speaker, usefull for debugging
-  --morigin=<morigin> restrict to a specific origin, usefull for debugging
-  --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --mformat=<mformat> restrict to a specific format (klippel, webplotdigitizer, etc)
-  --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
-  --dash-port=<dash-port>  Port for the ray dashbboard
-"""
-
+import argparse
 import errno
+from functools import partial
+from glob import glob
+import hashlib
 from hashlib import md5
 from itertools import groupby
 import json
-from glob import glob
+import logging
 import math
-from pathlib import Path
+import multiprocessing
 import os
+from pathlib import Path
 import sys
 import time
 import zipfile
-import argparse
 
 import numpy as np
 import pandas as pd
 
-# Ray import with fallback
-try:
-    import ray
-except ModuleNotFoundError:
-    try:
-        import miniray as ray
-    except ModuleNotFoundError:
-        print("Did you run env.sh?")
-        sys.exit(-1)
+# Set up logging
+logger = logging.getLogger("spinorama")
 
 # Spinorama specific imports
-from generate_common import (
-    get_custom_logger,  # Added previously
-    args2level,  # Added previously
-    cache_load,  # Added previously
-    custom_ray_init,  # Added previously
-    sort_metadata_per_date,  # Added previously
-)
-from spinorama.compute_scores import (
-    speaker_pref_rating,  # General import from scores
-)
-from spinorama import ray_setup_logger
+from generate_common import get_custom_logger,  args2level,  cache_load,  sort_metadata_per_date
+from spinorama.compute_scores import  speaker_pref_rating
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 
@@ -87,13 +52,13 @@ from spinorama.filter_peq import peq_preamp_gain as filter_peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
 
 # Local application imports
-from datas import metadata
+from datas import metadata, Peq, EQ, PrefRating, Measurement, DataAcquisition, Extras, Parameters, Specifications, SPL, Size, Dispersion, Symmetry, MeasurementQuality
 
 # Typing imports
 from typing import Any, cast, Optional, TypedDict
 
 # activate some tracing
-ACTIVATE_TRACING: bool = False
+ACTIVATE_TRACING: bool = True
 
 # number of speakers to put in the head file
 METADATA_HEAD_SIZE = 20
@@ -103,17 +68,6 @@ KEY_LENGTH = 5
 
 # size of years (2024 -> 4)
 YEAR_LENGTH = 4
-
-
-class ScaledPrefRating(TypedDict, total=False):
-    scaled_pref_score: float
-    scaled_pref_score_wsub: float
-    scaled_nbd_on_axis: float
-    scaled_sm_sound_power: float
-    scaled_sm_pred_in_room: float
-    scaled_lfx_hz: float
-    scaled_flatness: float
-
 
 def tracing(msg: str):
     """debugging ray is sometimes painfull"""
@@ -210,293 +164,220 @@ def compute_scaled_sm_pir(sm_pir: float) -> float:
 def reject(filters: dict, speaker_name: str) -> bool:
     return filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name
 
+def version_is_eq(version: str) -> bool:
+    return version[-3:] == "_eq"
 
-@ray.remote(num_cpus=1)
-def queue_score(speaker_name, speaker_data):
-    ray_setup_logger(level)
-    logger.debug("Level of debug is %d", level)
+def update_metadata(speaker_name, version, target, data):
+    # this naming convention is a bad idea and should be change to something
+    # more sensible in the future
+    # changing it requires extensive change in generate_html and the js code
+    if data is None:
+        print('update metadata: nul')
+        return
+    key = version
+    value = target
+    if version_is_eq(version):
+        key = version [:-3]
+        value = target + "_eq"
+
+    if key not in metadata.speakers_info[speaker_name]["measurements"]:
+        print('update metadata: create new key {}'.format(key))
+        metadata.speakers_info[speaker_name]["measurements"][key] = Measurement({
+            'origin': 'unknown',
+            'format': 'klippel',
+        })
+
+    if value not in Measurement.__optional_keys__ and value not in Measurement.__required_keys__:
+        logger.exception("Got an unkown key %s for a measurement from %s", value, speaker_name)
+        return
+
+    print('update metadata: update key {} with value {}'.format(key, value))
+    metadata.speakers_info[speaker_name]["measurements"][key][value] = data
+
+def add_measurement(speaker_name, origin, key, dfs):
+    result = {
+        'speaker_name': speaker_name,
+        'origin': origin,
+        'version': key,
+    }
+    tracing("speaker_name={:30s} version={:30s} origin={:20s}".format(speaker_name, key, origin))
+
+    if dfs is None:
+        return result
+
+    default_key = metadata.speakers_info[speaker_name].get("default_measurement")
+    if default_key is None:
+        logger.exception(
+            "Got an key error exception for speaker_name %s default measurement",
+            speaker_name,
+        )
+        return result
+
+    sensitivity = dfs.get("sensitivity")
+    if (
+            sensitivity is not None
+            and metadata.speakers_info[speaker_name].get("type") == "passive"
+            and key == default_key
+    ):
+        result["computed_sensitivity"] = {
+            "computed": sensitivity,
+            "distance": dfs.get("sensitivity_distance", 1.0),
+            "sensitivity_1m": dfs.get("sensitivity_1m"),
+        }
+
+    spin = dfs.get("CEA2034")
+    if spin is None or "Estimated In-Room Response" not in dfs:
+        return result
+
+    spl_h = dfs.get("SPL Horizontal_unmelted", None)
+    spl_v = dfs.get("SPL Vertical_unmelted", None)
+    est = estimates(spin, spl_h, spl_v)
+    if est is not None:
+        result["estimates"] = est
+
+    inroom = dfs["Estimated In-Room Response"]
+    if inroom is not None:
+        pref_rating = compute_speaker_pref_rating(
+            cea2034=spin, pir=inroom, rounded=True
+        )
+        score_penalty = 0.0
+        extras_dict = dfs.get("extras")
+        score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
+        pref_rating["pref_score"] += score_penalty
+        pref_rating["pref_score_wsub"] += score_penalty
+
+        if pref_rating is None:
+            return result
+
+        result["pref_rating"] = pref_rating
+    return result
+
+def add_score(speaker_name, speaker_data, level=None):
+    """Process a single speaker's data to compute scores"""
+    if level is None:
+        # If level is not provided, try to get it from the global scope
+        level = globals().get('level', logging.WARNING)
+    """Process a single speaker's data to compute scores"""
     logger.info("Processing %s", speaker_name)
+
     results = []
     for origin, measurements in speaker_data.items():
-        default_key = None
-        try:
-            default_key = metadata.speakers_info[speaker_name]["default_measurement"]
-        except KeyError:
-            logger.exception(
-                "Got an key error exception for speaker_name %s default measurement",
-                speaker_name,
-            )
-            continue
-
         for key, dfs in measurements.items():
-            tracing("speaker_name={} version={} origin={}".format(speaker_name, key, origin))
-            result = {
-                "speaker": speaker_name,
-                "version": key,
-                "origin": origin,
-            }
             try:
-                if dfs is None or "CEA2034" not in dfs:
-                    continue
-
-                spin = dfs["CEA2034"]
-                if spin is None or "Estimated In-Room Response" not in dfs:
-                    continue
-
-                # sensitivity
-                sensitivity = dfs.get("sensitivity")
-                if (
-                    sensitivity is not None
-                    and metadata.speakers_info[speaker_name].get("type") == "passive"
-                    and key == default_key
-                ):
-                    result["sensitivity"] = {
-                        "computed": sensitivity,
-                        "distance": dfs.get("sensitivity_distance", 1.0),
-                        "sensitivity_1m": dfs.get("sensitivity_1m"),
-                    }
-
-                # basic math
-                logger.debug("Compute score for speaker %s key %s", speaker_name, key)
-                spl_h = dfs.get("SPL Horizontal_unmelted", None)
-                spl_v = dfs.get("SPL Vertical_unmelted", None)
-                est = estimates(spin, spl_h, spl_v)
-                if est is not None:
-                    result["estimates"] = est
-
-                inroom = dfs["Estimated In-Room Response"]
-                if inroom is not None:
-                    pref_rating = compute_speaker_pref_rating(
-                        cea2034=spin, pir=inroom, rounded=True
-                    )
-                    score_penalty = 0.0
-                    extras_dict = dfs.get("extras")
-                    score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
-                    pref_rating["pref_score"] += score_penalty
-                    pref_rating["pref_score_wsub"] += score_penalty
-
-                    if pref_rating is not None:
-                        result["pref_rating"] = pref_rating
-
-            except KeyError:
-                logger.exception("%s", speaker_name)
-
-            results.append(result)
+                result = add_measurement(speaker_name, origin, key, dfs)
+                results.append(result)
+            except KeyError as ke:
+                logger.exception("KeyError in processing %s", speaker_name)
+                continue
+            except Exception as e:
+                logger.exception("Error processing %s", speaker_name)
+                continue
     return results
 
-
-def queue_scores(dataframe, parse_max, filters):
-    parsed = 0
-    refs = []
-    for speaker_name, speaker_data in dataframe.items():
-        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
-            break
-        parsed = parsed + 1
-        ref = queue_score.remote(speaker_name, speaker_data)
-        refs.append(ref)
-    return refs
-
-
 def add_scores(dataframe, parse_max, filters):
-    """Compute some values per speaker and add them to metadata"""
-    refs = queue_scores(dataframe, parse_max, filters)
-    while 1:
-        done_refs, remain_refs = ray.wait(refs, num_returns=min(len(refs), 64))  # type: ignore[arg-type]
+    global level  # Ensure we have access to the global level
+    """Process speaker scores for processing using multiprocessing"""
+    # Prepare the arguments for parallel processing
+    args = []
 
-        for ids in done_refs:
-            results = ray.get(ids)
-            for result in results:
-                speaker_name = result["speaker"]
-                version = result["version"]
-                sensitivity = result.get("sensitivity")
-                computed_estimates = result.get("estimates")
-                pref_rating = result.get("pref_rating")
-                is_eq = version[-3:] == "_eq"
-
-                logger.debug(
-                    "%s (%s): is_eq=%s estimates=%s",
-                    speaker_name,
-                    version,
-                    "true" if is_eq else "false",
-                    "computed" if computed_estimates is not None else "failed",
-                )
-
-                if is_eq:
-                    version_neq = version[:-3]
-                    # Ensure the path to the measurement entry exists and get it
-                    speaker_measurements = metadata.speakers_info.get(speaker_name, {}).get(
-                        "measurements", {}
-                    )
-                    measurement_entry = speaker_measurements.get(version_neq)
-
-                    if measurement_entry is not None:  # Should always be true if data is consistent
-                        if computed_estimates is not None:
-                            # measurement_entry is a Measurement TypedDict
-                            measurement_entry["estimates_eq"] = computed_estimates
-                        if pref_rating is not None:
-                            measurement_entry["pref_rating_eq"] = pref_rating
-                    else:
-                        logger.warning(
-                            f"Could not find measurement entry for {speaker_name} - {version_neq} when assigning _eq data."
-                        )
-                    continue
-
-                # Ensure the path to the measurement entry exists and get it
-                speaker_measurements = metadata.speakers_info.get(speaker_name, {}).get(
-                    "measurements", {}
-                )
-                measurement_entry = speaker_measurements.get(version)
-
-                if measurement_entry is not None:  # Should always be true
-                    if computed_estimates is not None:
-                        measurement_entry["estimates"] = computed_estimates
-                    if (
-                        sensitivity is not None
-                        and metadata.speakers_info.get(speaker_name, {}).get("type") == "passive"
-                    ):
-                        measurement_entry["sensitivity"] = sensitivity
-                    if pref_rating is not None:
-                        measurement_entry["pref_rating"] = pref_rating
-                else:
-                    logger.warning(
-                        f"Could not find measurement entry for {speaker_name} - {version} when assigning non-eq data."
-                    )
-
-        if len(remain_refs) == 0:
+    for parsed, (speaker_name, speaker_data) in enumerate(dataframe.items()):
+        if reject(filters, speaker_name) or (parse_max is not None and parsed >= parse_max):
             break
-        refs = remain_refs
+        args.append((speaker_name, speaker_data))
 
-    # compute min and max
-    min_pref_score = +100
-    max_pref_score = -100
-    min_pref_score_wsub = +100
-    max_pref_score_wsub = -100
-    min_lfx_hz = 1000
-    max_lfx_hz = 0
-    min_nbd_on = 1
-    max_nbd_on = 0
-    min_flatness = 100
-    max_flatness = 1
-    min_sm_sp = 1
-    max_sm_sp = 0
-    min_sm_pir = 1
-    max_sm_pir = 0
-    min_spl_peak = 1000
-    max_spl_peak = 0
-    min_spl_continuous = 1000
-    max_spl_continuous = 0
+    # Determine number of processes to use (leave one CPU free)
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
 
-    def percent(val, vmin, vmax):
-        if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
-            logger.debug("data is NaN")
-            return 0.0
-        if vmax == vmin:
-            logger.debug("max == min, returning 50.0 as neutral")
-            return 50.0
-        p = math.floor(100 * (val - vmin) / (vmax - vmin))
-        return float(min(max(0, p), 100))
+    # Process in chunks to manage memory usage
+    chunk_size = 20
+    results = []
 
-    speakers = dataframe
+    for i in range(0, len(args), chunk_size):
+        chunk = args[i:i + chunk_size]
+        with multiprocessing.Pool(processes=num_processes) as pool:
+            # Use a partial function to pass the level parameter
+            process_func = partial(process_single_measurement, level=level)
+            chunk_results = pool.map(process_func, chunk)
+            results.append(chunk_results)
+
+    # save
+    for chunk in results:
+        for speaker in chunk:
+            for result in speaker:
+                for item in ('computed_sensitivity', 'estimates', 'pref_rating'):
+                    if item in result:
+                        update_metadata(
+                            result['speaker_name'],
+                            result['version'],
+                            item,
+                            result[item],
+                        )
+                    else:
+                        logger.debug("Skipping metadata update for %s %s as %s is missing", result['speaker_name'], result['version'], item)
+
+def percent(val: float, vmin:float, vmax:float) -> float:
+    if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
+        logger.debug("compute percent failed with data is NaN")
+        return 0.0
+    if vmax == vmin:
+        logger.debug("conpute percent failed with vmax == min, returning 50.0 as neutral")
+        return 50.0
+    p = math.floor(100 * (val - vmin) / (vmax - vmin))
+    return float(min(max(0, p), 100))
+
+
+def add_scaled_scores(speakers, parse_max, filters):
+    global level  # Ensure we have access to the global level
     for speaker_name, versions in speakers.items():
         for version in versions:
+            if version[:3] == "_eq":
+                continue
             current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
             if not current_measurement:
                 logger.warning(
-                    f"Skipping scaling for {speaker_name} {version} as measurement data is missing."
+                    "Skipping scaling for speaker %s / version %s as measurement data is missing.", speaker_name, version
                 )
                 continue
 
             pref_rating_value = current_measurement.get("pref_rating")
+            if not pref_rating_value:
+                continue
+
+            pref_score = pref_rating_value.get("pref_score", -100)
+            pref_score_wsub = pref_rating_value.get("pref_score_wsub", -100)
+            # lfx_hz = pref_rating_value.get("lfx_hz", 1000)
+            # nbd_on = pref_rating_value.get("nbd_on_axis", -1.0)
+            # sm_sp = pref_rating_value.get("sm_sound_power", -1.0)
+            # sm_pir = pref_rating_value.get("sm_pred_in_room", -1.0)
+
+            scaled_pref_rating = PrefRating({
+                'pref_score': compute_scaled_pref_score(pref_score),
+                'pref_score_wsub': compute_scaled_pref_score(pref_score_wsub),
+            })
+            logger.info("Adding %s", scaled_pref_rating)
+            update_metadata(speaker_name, version, "scaled_pref_rating", scaled_pref_rating)
+
+
+def add_scaled_flatness(speakers, parse_max, filters):
+    global level  # Ensure we have access to the global level
+    for speaker_name, versions in speakers.items():
+        for version in versions:
+            if version_is_eq(version):
+                continue
+            current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
+            if not current_measurement:
+                logger.warning(
+                    "Skipping scaling for %s %s as measurement data is missing.", speaker_name, version
+                )
+                continue
+
             estimates_dict = current_measurement.get("estimates")
             flatness = estimates_dict.get("ref_band") if estimates_dict else None
 
-            pref_score = -1
-            lfx_hz = -1
-            pref_score_wsub = -1
-            nbd_on = -1.0  # Default to a float, will be updated if pref_rating_value exists
-            sm_sp = -1.0
-            sm_pir = -1.0
-
-            if pref_rating_value:
-                pref_score = pref_rating_value.get("pref_score", -1)
-                lfx_hz = pref_rating_value.get("lfx_hz", -1)
-                pref_score_wsub = pref_rating_value.get("pref_score_wsub", -1)
-                nbd_on = pref_rating_value.get("nbd_on_axis", -1.0)
-                sm_sp = pref_rating_value.get("sm_sound_power", -1.0)
-                sm_pir = pref_rating_value.get("sm_pred_in_room", -1.0)
-
-            scaled_pref_score = None
-            if pref_score != -1 and min_pref_score != max_pref_score:
-                scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
-
-            scaled_lfx_hz = None
-            if lfx_hz != -1 and min_lfx_hz != max_lfx_hz:
-                scaled_lfx_hz = 100 - percent(lfx_hz, min_lfx_hz, max_lfx_hz)
-
-            scaled_pref_score_wsub = None
-            if pref_score_wsub != -1 and min_pref_score_wsub != max_pref_score_wsub:
-                scaled_pref_score_wsub = percent(
-                    pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
-                )
-
-            scaled_nbd_on = (
-                100 - percent(nbd_on, min_nbd_on, max_nbd_on)
-                if min_nbd_on != max_nbd_on
-                else (50.0 if nbd_on != -1.0 else None)
-            )  # Handle division by zero and missing value
-            scaled_sm_sp = (
-                percent(sm_sp, min_sm_sp, max_sm_sp)
-                if min_sm_sp != max_sm_sp
-                else (50.0 if sm_sp != -1.0 else None)
-            )
-            scaled_sm_pir = (
-                percent(sm_pir, min_sm_pir, max_sm_pir)
-                if min_sm_pir != max_sm_pir
-                else (50.0 if sm_pir != -1.0 else None)
-            )
-
             scaled_flatness_val = None
-            if flatness is not None and not math.isnan(flatness) and min_flatness != max_flatness:
-                # scaled_flatness_intermediate = 100 - percent(flatness, min_flatness, max_flatness)
-                scaled_flatness_val = compute_scaled_flatness(flatness)  # Pass original float
-            elif flatness is not None and not math.isnan(
-                flatness
-            ):  # Case for min_flatness == max_flatness but flatness exists
-                scaled_flatness_val = 50.0  # Or some other default scaled value
-
-            # bucket score instead of a linear scale
-            if scaled_pref_score is not None and pref_score != -1:  # ensure pref_score was found
-                scaled_pref_score = compute_scaled_pref_score(pref_score)
-            # bucked lfx too
-            if scaled_lfx_hz is not None and lfx_hz != -1:
-                scaled_lfx_hz = compute_scaled_lfx_hz(lfx_hz)
-            # bucked sm_pir too
-            if scaled_sm_pir is not None and sm_pir != -1.0:
-                scaled_sm_pir = compute_scaled_sm_pir(sm_pir)
-
-            # add normalized values
-            scaled_pref_rating: dict[str, Any] = {}
-            if scaled_pref_score_wsub is not None:
-                scaled_pref_rating["scaled_pref_score_wsub"] = scaled_pref_score_wsub
-            if scaled_nbd_on is not None:
-                scaled_pref_rating["scaled_nbd_on_axis"] = scaled_nbd_on
-            if scaled_sm_sp is not None:
-                scaled_pref_rating["scaled_sm_sound_power"] = scaled_sm_sp
-            if scaled_sm_pir is not None:
-                scaled_pref_rating["scaled_sm_pred_in_room"] = scaled_sm_pir
-
-            if scaled_pref_score is not None:
-                scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
-            if scaled_lfx_hz is not None:
-                scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
-            if scaled_flatness_val is not None:
-                scaled_pref_rating["scaled_flatness"] = scaled_flatness_val
-
-            logger.info("Adding %s", scaled_pref_rating)
-            if scaled_pref_rating:  # Only add if not empty
-                metadata.speakers_info[speaker_name]["measurements"][version][
-                    "scaled_pref_rating"
-                ] = cast(ScaledPrefRating, scaled_pref_rating)
+            if flatness is not None and not math.isnan(flatness):
+                scaled_flatness_val = compute_scaled_flatness(flatness)
+                update_metadata(speaker_name, version, "scaled_flatness", scaled_flatness_val)
 
 
 def add_quality(parse_max: Optional[int], filters: dict):
@@ -514,6 +395,8 @@ def add_quality(parse_max: Optional[int], filters: dict):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
         for version, m_data in speaker_data["measurements"].items():
+            if version_is_eq(version):
+                continue
             quality = m_data.get("quality", "unknown")
             if "quality" not in m_data:
                 origin = m_data.get("origin")
@@ -528,10 +411,12 @@ def add_quality(parse_max: Optional[int], filters: dict):
                 elif "Vendor" in origin:
                     brand = speaker_data["brand"]
                     # Harman group provides spin from an anechoic room
-                    if brand in ("JBL", "Revel", "Infinity"):
+                    if brand in ("JBL", "Revel", "Infinity", "Aalto Speakers"):
                         quality = "medium"
-                logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
-            metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
+                    elif brand in ("Ascend Acoustics",):
+                        quality = "high"
+            logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
+            update_metadata(speaker_name, version, "quality", quality)
 
 
 # def add_slopes(parse_max: int, filters: dict):
@@ -562,7 +447,10 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
             logger.info("Error: %s is not in metadata", speaker_name)
             continue
 
-        metadata.speakers_info[speaker_name]["eqs"] = {}
+        speaker_info = metadata.speakers_info[speaker_name]
+        if "eqs" not in speaker_info or not isinstance(speaker_info["eqs"], dict):
+            speaker_info["eqs"] = {}
+
         for suffix, display in (
             ("autoeq", "AutomaticEQ (IIR)"),
             ("autoeq-lw", "AutomaticEQ LW (IIR)"),
@@ -602,8 +490,9 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
                     type="peq",
                     peq=peq_list,
                 )
-                metadata.speakers_info[speaker_name]["eqs"][eq_key] = current_eq_data
-                logger.debug("adding eq: %s", metadata.speakers_info[speaker_name]["eqs"][eq_key])
+
+                speaker_info["eqs"][eq_key] = current_eq_data
+                logger.debug("adding eq: %s", speaker_info["eqs"][eq_key])
 
 
 def interpolate(speaker_name, freq, freq1, data1):
@@ -777,14 +666,6 @@ def dump_metadata(meta):
         hashed_filename = filename
         if cpaths.flags_ADD_HASH:
             hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
-        if (
-            os.path.exists(hashed_filename)
-            and os.path.exists(hashed_filename + ".zip")
-            and os.path.exists(hashed_filename + ".bz2")
-        ):
-            logger.debug("skipping %s", hashed_filename)
-            check_link(hashed_filename)
-            return
 
         # hash changed, remove old files
         if cpaths.flags_ADD_HASH:
@@ -877,7 +758,11 @@ def dump_metadata(meta):
 
 
 def main():
-    global args, level, logger
+    global level, metadata
+    # Make sure metadata is properly initialized
+    import datas.metadata as metadata_module
+    global metadata
+    metadata = metadata_module
     main_df = None
     speaker = args.speaker
     mversion = args.mversion
@@ -887,8 +772,7 @@ def main():
     smoke_test_is_active = args.smoke_test is not None
 
     steps: list[tuple[str, float]] = [("start", time.perf_counter())]
-    custom_ray_init(args)
-    steps.append(("ray init", time.perf_counter()))
+    steps.append(("init", time.perf_counter()))
 
     filters = {
         "speaker_name": speaker,
@@ -904,24 +788,34 @@ def main():
         sys.exit(1)
 
     # add computed data to metadata
-    logger.info("Compute scores per speaker")
+    logger.info("Compute data for all speakers")
+
     add_quality(parse_max, filters)
     steps.append(("quality", time.perf_counter()))
+
     add_scores(main_df, parse_max, filters)
     steps.append(("scores", time.perf_counter()))
+
+    add_scaled_flatness(main_df, parse_max, filters)
+    steps.append(("scaled flatness", time.perf_counter()))
+
+    add_scaled_scores(main_df, parse_max, filters)
+    steps.append(("scaled scores", time.perf_counter()))
+
     add_eq("./datas", main_df, parse_max, filters)
     steps.append(("eq", time.perf_counter()))
+
     add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
-    # add_slopes(parse_max, filters)
-    # steps.append(("slopes", time.perf_counter()))
+
+#   add_slopes(parse_max, filters)
+#   steps.append(("slopes", time.perf_counter()))
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")
     dump_metadata(metadata.speakers_info)
     steps.append(("dump", time.perf_counter()))
 
-    ray.shutdown()
     logger.info("Bye")
 
     for i in range(0, len(steps) - 1):
@@ -956,9 +850,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mformat", help="Restrict to a specific format (e.g., klippel, webplotdigitizer)."
     )
-    parser.add_argument("--dash-ip", help="IP for the Ray dashboard.")
-    parser.add_argument("--dash-port", type=int, help="Port for the Ray dashboard.")
-    parser.add_argument("--ray-local", action="store_true", help="Run Ray locally.")
     parser.add_argument(
         "--smoke-test",
         choices=["random", "default"],
@@ -966,7 +857,6 @@ if __name__ == "__main__":
         const="default",
         help='Run with a few speakers only. Choices: random, default. If option is present without value, "default" is used.',
     )
-    # --use-cache is in docopt string but not used from args, so omitted.
 
     args = parser.parse_args()
     level = args2level(args)

@@ -22,14 +22,9 @@ import sys
 import numpy as np
 import pandas as pd
 
-try:
-    import ray
-except ModuleNotFoundError:
-    import src.miniray as ray
-
 from datas import Parameters
 
-from spinorama import logger, ray_setup_logger
+from spinorama import logger
 from spinorama.ltype import DataSpeaker
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
@@ -605,7 +600,6 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
     return mean_min, mean_max
 
 
-@ray.remote(num_cpus=1)
 def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
@@ -620,7 +614,6 @@ def parse_graphs_speaker(
     level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
     shape = speaker_parameters["shape"]
-    ray_setup_logger(level)
     df_graph = None
     measurement_path = f"{speaker_path}"
     mean_min, mean_max = get_mean_min_max(mparameters)
@@ -743,7 +736,6 @@ def parse_graphs_speaker(
     return df_graph
 
 
-@ray.remote(num_cpus=1)
 def parse_eq_speaker(
     speaker_path: str,
     speaker_name: str,
@@ -754,7 +746,6 @@ def parse_eq_speaker(
     mparameters = speaker_parameters["mparameters"]
     level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
-    ray_setup_logger(level)
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)

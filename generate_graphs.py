@@ -16,53 +16,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Usage:
-generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
-  [--force] [--smoke-test=<algo>] [--type=<ext>] [--log-level=<level>]\
-  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>] [--brand=<brand>]\
-  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]\
-  [--data-dir=<data_dir>] [--ray-cluster=<ip_port>]
 
-Options:
- -h|--help           display usage()
-  --data-dir=<data_dir> directory where the datas are stores (. by default)
-  --height=<height>   height size in pixel
-  --force             force regeneration of all graphs, by default only generate new ones
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-  --origin=<origin>   filter by origin
-  --brand=<brand>     filter by brand
-  --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
-  --dash-port=<port>  port for the dashbboard, default to 8265
-  --mversion=<mversion> filter by measurement
-  --ray-local         if present, ray will run locally, it is usefull for debugging
-  --ray-cluster=<ip_port> set to ip:port if you want to join an existing cluster
-  --smoke-test=<algo> run a few speakers only (choice are random or default)
-  --speaker=<speaker> filter by speaker
-  --update-cache      force updating the cache
-  --width=<width>     width size in pixel
-"""
 
+import argparse
 import glob
 import os
 import random
 import sys
-
-import argparse
-
-try:
-    import ray
-except ModuleNotFoundError:
-    try:
-        import miniray as ray
-    except ModuleNotFoundError:
-        print("Did you run env.sh?")
-        sys.exit(-1)
+import logging
+from typing import Dict, List, Tuple, Any, Set, Optional
+from multiprocessing import Pool, cpu_count
+from functools import partial
 
 from generate_common import (
     args2level,
     cache_save,
     cache_update,
-    custom_ray_init,
     get_custom_logger,
 )
 from datas import metadata, Symmetry, Parameters
@@ -71,265 +40,200 @@ from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker import print_graphs
 from spinorama.plot import plot_params_default
 
-
-VERSION = "2.06"
-
+VERSION = "2.07"  # Updated version
 ACTIVATE_TRACING: bool = True
 
+# Global variables for parallel processing
+global logger, data_dir, force, args
+
+# Set up logger
+logger = logging.getLogger("spinorama")
 
 def tracing(msg: str):
-    """debugging ray is sometimes painfull"""
+    """Debugging utility for tracing execution"""
     if ACTIVATE_TRACING:
         print(f"---- TRACING ---- {msg} ----")
 
-
-def get_speaker_list(speakerpath: str) -> set[str]:
-    """return a list of speakers from data subdirectory"""
+def get_speaker_list(speakerpath: str) -> Set[str]:
+    """Return a list of speakers from data subdirectory"""
     speakers = []
     dirs = glob.glob(speakerpath + "/*")
     for current_dir in dirs:
         shortname = os.path.basename(current_dir)
         if os.path.isdir(current_dir) and shortname not in (
-            "assets",
-            "compare",
-            "stats",
-            "pictures",
-            "tmp",
+            "assets", "compare", "stats", "pictures", "tmp",
         ):
             speakers.append(shortname)
     return set(speakers)
 
+def process_single_measurement(
+    speaker_info: Tuple[str, str, Dict[str, Any], int, str, bool]
+) -> Tuple[bool, str, str, Dict[str, Any], Optional[Exception]]:
+    """Process a single measurement (worker function for parallel processing)"""
+    speaker, mversion, measurement, level, data_dir, force = speaker_info
+    
+    try:
+        # Extract parameters
+        mformat = measurement["format"]
+        morigin = measurement["origin"]
+        brand = metadata.speakers_info[speaker]["brand"]
+        shape = metadata.speakers_info[speaker]["shape"]
+        msymmetry = measurement.get("symmetry", None)
+        mparameters = measurement.get("parameters", None)
+        distance = measurement2distance(speaker, measurement)
+        
+        parameters = {
+            "mformat": mformat,
+            "morigin": morigin,
+            "mversion": mversion,
+            "msymmetry": msymmetry,
+            "mparameters": mparameters,
+            "level": level,
+            "distance": distance,
+            "shape": shape,
+            "width": int(plot_params_default["width"]),
+            "height": int(plot_params_default["height"]),
+        }
+        
+        # Process graphs
+        df = parse_graphs_speaker(
+            speaker_path=f"{data_dir}/datas/measurements",
+            speaker_brand=brand,
+            speaker_name=speaker,
+            speaker_parameters=parameters,
+        )
+        
+        # Process EQ
+        eq = parse_eq_speaker(
+            speaker_path=f"{data_dir}/datas",
+            speaker_name=speaker,
+            df_ref=df,
+            speaker_parameters=parameters,
+        )
+        
+        # Generate graphs
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug("Generating graphs for %s / %s", speaker, mversion)
+        
+        g1 = print_graphs(
+            df,
+            speaker,
+            parameters,
+            metadata.origins_info,
+            force,
+        )
+        
+        # Generate EQ graphs
+        parameters_eq = parameters.copy()
+        parameters_eq["mversion_key"] = mversion + "_eq"
+        
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug("Generating EQ graphs for %s / %s", speaker, parameters_eq["mversion_key"])
+        
+        g2 = print_graphs(
+            eq,
+            speaker,
+            parameters_eq,
+            metadata.origins_info,
+            force,
+        )
+        
+        return True, speaker, mversion, {"df": df, "eq": eq}, None
+        
+    except Exception as e:
+        logger.error("Error processing %s/%s: %s", speaker, mversion, str(e))
+        return False, speaker, mversion, {}, e
 
-def queue_measurement(
-    brand: str,
-    speaker: str,
-    parameters: dict,
-) -> tuple[int, int, int, int]:
-    """Add all measurements in the queue to be processed"""
-    mversion = parameters["mversion"]
-    id_df = parse_graphs_speaker.remote(
-        speaker_path=f"{data_dir}/datas/measurements",
-        speaker_brand=brand,
-        speaker_name=speaker,
-        speaker_parameters=parameters,
-    )
-    id_eq = parse_eq_speaker.remote(
-        speaker_path=f"{data_dir}/datas",
-        speaker_name=speaker,
-        df_ref=id_df,
-        speaker_parameters=parameters,
-    )
-    parameters["width"] = int(plot_params_default["width"])
-    parameters["height"] = int(plot_params_default["height"])
-    tracing("calling print_graph remote for {} {}".format(speaker, mversion))
-    id_g1 = print_graphs.remote(
-        id_df,
-        speaker,
-        parameters,
-        metadata.origins_info,
-        force,
-    )
-    tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
-    parameters_eq = parameters.copy()
-    parameters_eq["mversion_key"] = mversion + "_eq"
-    id_g2 = print_graphs.remote(
-        id_eq,
-        speaker,
-        parameters_eq,
-        metadata.origins_info,
-        force,
-    )
-    tracing("print_graph done for {} {}".format(speaker, parameters["mversion"]))
-    return id_df, id_eq, id_g1, id_g2
-
-
-def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) -> dict:
-    """Add all speakers in the queue to be processed"""
-    ray_ids = {}
-    count = 0
+def process_measurements_parallel(
+    speakerlist: Set[str], 
+    filters: Dict[str, str], 
+    level: int,
+    num_processes: Optional[int] = None
+) -> Dict[str, Any]:
+    """Process measurements in parallel using multiprocessing"""
+    if num_processes is None:
+        num_processes = max(1, cpu_count() - 1)
+    
+    # Prepare tasks
+    tasks = []
     for speaker in speakerlist:
         if "speaker" in filters and speaker != filters["speaker"]:
             logger.debug("skipping %s", speaker)
             continue
-        ray_ids[speaker] = {}
+            
         if speaker not in metadata.speakers_info:
             logger.error("Metadata error: %s", speaker)
             continue
+            
         for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
-            # mversion looks like asr and asr_eq
+            # Apply filters
             if "mversion" in filters and not (
                 mversion == filters["mversion"] or mversion == "{}_eq".format(filters["mversion"])
             ):
                 logger.debug("skipping %s/%s", speaker, mversion)
                 continue
-            # filter on format (klippel, princeton, ...)
+                
             mformat = measurement["format"]
             if "format" in filters and mformat != filters["format"]:
                 logger.debug("skipping %s/%s/%s", speaker, mformat, mversion)
                 continue
-            # filter on origin (ASR, princeton, ...)
+                
             morigin = measurement["origin"]
             if "origin" in filters and morigin != filters["origin"]:
                 logger.debug("skipping %s/%s/%s/%s", speaker, morigin, mformat, mversion)
                 continue
-            # TODO(add filter on brand)
-            brand = metadata.speakers_info[speaker]["brand"]
-            shape = metadata.speakers_info[speaker]["shape"]
-            logger.debug("queing %s/%s/%s/%s", speaker, morigin, mformat, mversion)
-            msymmetry = measurement.get("symmetry", None)
-            mparameters = measurement.get("parameters", None)
-            distance = measurement2distance(speaker, measurement)
-            parameters = {
-                "mformat": mformat,
-                "morigin": morigin,
-                "mversion": mversion,
-                "msymmetry": msymmetry,
-                "mparameters": mparameters,
-                "level": level,
-                "distance": distance,
-                "shape": shape,
-            }
-            ray_ids[speaker][mversion] = queue_measurement(brand, speaker, parameters)
-            count += 1
-    print("Queued {} speakers {} measurements".format(len(speakerlist), count))
-    return ray_ids
-
-
-def compute(speakerlist, filters, ray_ids: dict, level: int):
-    """Compute a series of measurements"""
+                
+            tasks.append((speaker, mversion, measurement, level, data_dir, force))
+    
+    logger.info("Processing %d measurements using %d processes", len(tasks), num_processes)
+    
+    # Process tasks in parallel
     data_frame = {}
-    done_ids = {}
-    while 1:
-        df_ids = [
-            ray_ids[s][v][0]
-            for s in ray_ids
-            for v in ray_ids[s]
-            if ray_ids[s][v][0] not in done_ids
-        ]
-        eq_ids = [
-            ray_ids[s][v][1]
-            for s in ray_ids
-            for v in ray_ids[s]
-            if ray_ids[s][v][1] not in done_ids
-        ]
-        g1_ids = [
-            ray_ids[s][v][2]
-            for s in ray_ids
-            for v in ray_ids[s]
-            if ray_ids[s][v][2] not in done_ids
-        ]
-        g2_ids = [
-            ray_ids[s][v][3]
-            for s in ray_ids
-            for v in ray_ids[s]
-            if ray_ids[s][v][3] not in done_ids
-        ]
-        ids = df_ids + eq_ids + g1_ids + g2_ids
-        if len(ids) == 0:
-            break
-        num_returns = min(len(ids), 16)
-        ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
-
-        logger.info(
-            "State: %d ready IDs %d remainings IDs %d Total IDs %d Done",
-            len(ready_ids),
-            len(remaining_ids),
-            len(ids),
-            len(done_ids),
-        )
-        tracing(
-            "State: {:4d} ready IDs {:4d} remainings IDs {:4d} Total IDs {:4d} Done".format(
-                len(ready_ids), len(remaining_ids), len(ids), len(done_ids)
-            )
-        )
-
-        for speaker in speakerlist:
-            speaker_key = speaker  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
-            if speaker not in data_frame:
-                data_frame[speaker_key] = {}
-            if speaker not in metadata.speakers_info:
-                logger.warning("Speaker %s in SpeakerList but not in Metadata", speaker)
-                continue
-            for m_version, measurement in metadata.speakers_info[speaker]["measurements"].items():
-                m_version_key = m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
-                # should not happen, usually it is an error in metadata that should be trapped by check_meta
-                if "origin" not in measurement:
-                    logger.error(
-                        "measurement's data are incorrect: speaker=%s m_version=%s keys are (%s)",
-                        speaker,
-                        m_version,
-                        ", ".join(measurement),
-                    )
-                m_origin = measurement["origin"]
-                if m_origin not in data_frame[speaker_key]:
-                    data_frame[speaker_key][m_origin] = {}
-
-                if speaker not in ray_ids:
-                    continue
-
-                if m_version not in ray_ids[speaker]:
-                    if "mversion" in filters and (
-                        m_version == filters["mversion"]
-                        or m_version == "{}_eq".format(filters["mversion"])
-                    ):
-                        logger.error("Speaker %s mversion %s not in keys", speaker, m_version)
-                    continue
-
-                current_id = ray_ids[speaker][m_version][0]
-                if current_id in ready_ids:
-                    data_frame[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                    logger.debug("Getting df done for %s / %s / %s", speaker, m_origin, m_version)
-                    done_ids[current_id] = True
-
-                m_version_eq = f"{m_version_key}_eq"
-                current_id = ray_ids[speaker][m_version][1]
-                if current_id in eq_ids:
-                    logger.debug(
-                        "Getting eq done for %s / %s / %s", speaker, m_version_eq, m_version
-                    )
-                    _, computed_eq = ray.get(current_id)
-                    if computed_eq is not None and len(computed_eq) > 0:
-                        data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
-                        logger.debug(
-                            "Getting preamp eq done for %s / %s / %s",
-                            speaker,
-                            m_version_eq,
-                            m_version,
-                        )
-                        if "preamp_gain" in computed_eq:
-                            data_frame[speaker_key][m_origin][m_version_eq]["preamp_gain"] = (
-                                computed_eq["preamp_gain"]
-                            )
-                    done_ids[current_id] = True
-
-                current_id = ray_ids[speaker][m_version][2]
-                if current_id in g1_ids:
-                    logger.debug(
-                        "Getting graph done for %s / %s / %s", speaker, m_version, m_origin
-                    )
-                    ray.get(current_id)
-                    done_ids[current_id] = True
-
-                current_id = ray_ids[speaker][m_version][3]
-                if current_id in g2_ids:
-                    logger.debug(
-                        "Getting graph done for %s / %s / %s", speaker, m_version_eq, m_origin
-                    )
-                    ray.get(current_id)
-                    done_ids[current_id] = True
-
-        if len(remaining_ids) == 0:
-            break
-
+    success_count = 0
+    error_count = 0
+    
+    with Pool(processes=num_processes) as pool:
+        for i, (success, speaker, mversion, result, error) in enumerate(
+            pool.imap_unordered(process_single_measurement, tasks, chunksize=1)
+        ):
+            if success:
+                if speaker not in data_frame:
+                    data_frame[speaker] = {}
+                
+                morigin = result["df"].get("morigin", "unknown")
+                if morigin not in data_frame[speaker]:
+                    data_frame[speaker][morigin] = {}
+                
+                data_frame[speaker][morigin][mversion] = result["df"]
+                data_frame[speaker][morigin][f"{mversion}_eq"] = result["eq"]
+                success_count += 1
+            else:
+                logger.error("Failed to process %s/%s: %s", speaker, mversion, str(error))
+                error_count += 1
+            
+            # Log progress
+            if (i + 1) % 10 == 0 or (i + 1) == len(tasks):
+                logger.info("Processed %d/%d measurements (%d errors)", 
+                           i + 1, len(tasks), error_count)
+    
+    logger.info("Completed processing: %d succeeded, %d failed", success_count, error_count)
     return data_frame
 
-
 def main(level):
-    """Send all speakers in the queue to be processed"""
+    """Main function to process speakers and generate graphs"""
+    global data_dir, force
+    
+    # Set global variables
+    data_dir = args.data_dir
+    force = args.force
+    
+    # Get speaker list
     speakerlist = get_speaker_list(f"{data_dir}/datas/measurements")
+    
+    # Handle smoke test
     if args.smoke_test is not None:
         if args.smoke_test == "random":
-            speakerlist = set(random.sample(list(speakerlist), 15))
+            speakerlist = set(random.sample(list(speakerlist), min(15, len(speakerlist))))
         else:
             speakerlist = {
                 "Genelec 8030C",
@@ -337,45 +241,37 @@ def main(level):
                 "KRK Systems Classic 5",
                 "Verdant Audio Bambusa MG 1",
             }
-        print(speakerlist)
+        logger.info("Running smoke test with speakers: %s", speakerlist)
 
+    # Update plot parameters if specified
     if args.width is not None:
-        opt_width = int(args.width)
-        plot_params_default["width"] = opt_width
-
+        plot_params_default["width"] = int(args.width)
     if args.height is not None:
-        opt_height = int(args.height)
-        plot_params_default["height"] = opt_height
+        plot_params_default["height"] = int(args.height)
 
-    update_cache = False
-    if args.update_cache is True:
-        update_cache = True
-
-    # start ray
-    custom_ray_init(vars(args))
-
+    # Set up filters
     filters = {}
     for ifilter_key in ("speaker", "origin", "mversion", "brand"):
         value = getattr(args, ifilter_key, None)
         if value is not None:
             filters[ifilter_key] = value
 
-    ray_ids = queue_speakers(speakerlist, filters, level)
-    df_new = compute(speakerlist, filters, ray_ids, level)
+    # Process measurements in parallel
+    df_new = process_measurements_parallel(speakerlist, filters, level)
 
-    if len(filters.keys()) == 0:
+    # Update cache if needed
+    if not filters:  # Only update cache if no filters are applied
         cache_save(df_new)
-    elif update_cache:
-        cache_update(df_new, filters, LEVEL)
-
-    ray.shutdown()
-    sys.exit(0)
-
+    elif args.update_cache:
+        cache_update(df_new, filters, level)
+    
+    logger.info("Graph generation completed successfully")
+    return 0
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    parser.add_argument("--version", action="version", version=f"generate_graphs.py v{VERSION}")
+    parser.add_argument("--version", action="version", version=f"generate_graphs_mp.py v{VERSION}")
     parser.add_argument("--width", type=int, help="Width size in pixel for graphs")
     parser.add_argument("--height", type=int, help="Height size in pixel for graphs")
     parser.add_argument("--force", action="store_true", help="Force regeneration of all graphs")
@@ -399,24 +295,15 @@ if __name__ == "__main__":
     parser.add_argument("--speaker", help="Filter by speaker")
     parser.add_argument("--mversion", help="Filter by measurement version")
     parser.add_argument("--brand", help="Filter by brand")
-    parser.add_argument("--dash-ip", help="IP of Ray dashboard (default: localhost/127.0.0.1)")
-    parser.add_argument("--dash-port", type=int, help="Port for Ray dashboard (default: 8265)")
-    parser.add_argument(
-        "--ray-local", action="store_true", help="Run Ray locally (useful for debugging)"
-    )
+    parser.add_argument("--data-dir", default=".", help="Directory where data is stored (default: .)")
     parser.add_argument("--update-cache", action="store_true", help="Force updating the cache")
-    parser.add_argument(
-        "--data-dir", default=".", help="Directory where data is stored (default: .)"
-    )
-    parser.add_argument(
-        "--ray-cluster", help="Ray cluster address (ip:port) to join an existing cluster"
-    )
+    parser.add_argument("--processes", type=int, help="Number of processes to use (default: CPU count - 1)")
 
     args = parser.parse_args()
-
-    force = args.force
+    
+    # Set up logging
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
-    data_dir = args.data_dir
-
-    main(level=LEVEL)
+    
+    # Run main function
+    sys.exit(main(LEVEL))

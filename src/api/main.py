@@ -70,11 +70,6 @@ app = FastAPI(
 )
 
 
-@app.get("/.well-known/ai-plugin.json")
-async def get_ai_plugin():
-    return FileResponse("/var/www/html/spinorama-api/ai-plugin.json")
-
-
 @app.get("/openapi.yaml", include_in_schema=False)
 def read_openapi_yaml() -> Response:
     openapi_json = app.openapi()

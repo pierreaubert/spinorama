@@ -57,18 +57,11 @@ from spinorama.plot import (
     radar_params_default,
 )
 
-import ray
-
-
 class SpinoramaDisplayTests(unittest.TestCase):
     def setUp(self):
         self.dfs_full = {}
         self.dfs_limited = {}
         self.dfs_partial = {}
-        if not ray.is_initialized():
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", ResourceWarning)
-                ray.init(num_cpus=1, include_dashboard=False)
 
         parameters = {
             "mformat": "klippel",
@@ -80,13 +73,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 1.0,
             "shape": "bookshelves",
         }
-        self.dfs_full["klippel_eac"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="Neumann",
-                speaker_name="Neumann KH 80",
-                speaker_parameters=parameters,
-            )
+        self.dfs_full["klippel_eac"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="Neumann",
+            speaker_name="Neumann KH 80",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -99,13 +90,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 1.0,
             "shape": "bookshelves",
         }
-        self.dfs_full["klippel_asr"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="Genelec",
-                speaker_name="Genelec 8341A",
-                speaker_parameters=parameters,
-            )
+        self.dfs_full["klippel_asr"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="Genelec",
+            speaker_name="Genelec 8341A",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -118,13 +107,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 1.0,
             "shape": "bookshelves",
         }
-        self.dfs_limited["princeton"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="Genelec",
-                speaker_name="Genelec 8351A",
-                speaker_parameters=parameters,
-            )
+        self.dfs_limited["princeton"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="Genelec",
+            speaker_name="Genelec 8351A",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -137,13 +124,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 1.0,
             "shape": "bookshelves",
         }
-        self.dfs_full["spl_hv_txt"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="Andersson",
-                speaker_name="Andersson HIS 2.1",
-                speaker_parameters=parameters,
-            )
+        self.dfs_full["spl_hv_txt"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="Andersson",
+            speaker_name="Andersson HIS 2.1",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -156,13 +141,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 10.0,
             "shape": "liveportable",
         }
-        self.dfs_full["gll_hv_txt"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="RCF",
-                speaker_name="RCF ART 708-A MK4",
-                speaker_parameters=parameters,
-            )
+        self.dfs_full["gll_hv_txt"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="RCF",
+            speaker_name="RCF ART 708-A MK4",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -175,13 +158,11 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 10.0,
             "shape": "floorstanders",
         }
-        self.dfs_partial["rew_text_dump"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="BIC America",
-                speaker_name="BIC America Venturi DV62si",
-                speaker_parameters=parameters,
-            )
+        self.dfs_partial["rew_text_dump"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="BIC America",
+            speaker_name="BIC America Venturi DV62si",
+            speaker_parameters=parameters,
         )
 
         parameters = {
@@ -194,25 +175,13 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 10.0,
             "shape": "floorstanders",
         }
-        self.dfs_partial["webplotdigitizer"] = ray.get(
-            parse_graphs_speaker.remote(
-                speaker_path="datas/measurements",
-                speaker_brand="Revel",
-                speaker_name="Revel F208",
-                speaker_parameters=parameters,
-            )
+        self.dfs_partial["webplotdigitizer"] = parse_graphs_speaker(
+            speaker_path="datas/measurements",
+            speaker_brand="Revel",
+            speaker_name="Revel F208",
+            speaker_parameters=parameters,
         )
 
-        # while True:
-        #     ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
-        #     if remaining_ids == 0:
-        #         break
-        #     time.sleep(1)
-
-        if ray.is_initialized():
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", ResourceWarning)
-                ray.shutdown()
 
     def test_dfs_full(self):
         for df in self.dfs_full.values():
