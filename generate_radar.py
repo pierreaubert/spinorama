@@ -44,7 +44,6 @@ from generate_common import (
     get_custom_logger,
     args2level,
     cache_load,
-    custom_ray_init,
     find_metadata_file,
 )
 
@@ -211,7 +210,6 @@ def print_radar(meta_data, scale, speaker_data):
 
 
 def main(args):
-    custom_ray_init(args)
     # load all speaker data
     df_speaker = cache_load(
         filters={
@@ -274,12 +272,6 @@ if __name__ == "__main__":
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
         help="Set the logging level (default: WARNING).",
     )
-    # Arguments for custom_ray_init if they were to be exposed directly:
-    # parser.add_argument('--dash-ip', type=str, help='IP address for the Ray dashboard.')
-    # parser.add_argument('--dash-port', type=int, help='Port for the Ray dashboard.')
-    # parser.add_argument('--ray-local', action='store_true', help='Run Ray in local mode.')
-    # parser.add_argument('--ray-cluster', type=str, help='Address of the Ray cluster (e.g., IP:PORT).')
-
     args = parser.parse_args()
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)

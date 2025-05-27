@@ -121,10 +121,13 @@ class Measurement(MeasurementRequired, total=False):
     parameters: Parameters
     estimates: dict[str, float]
     estimates_eq: dict[str, float]
+    scaled_flatness: float
     pref_rating: PrefRating
+    pref_rating_eq: PrefRating
+    scaled_flatness: float
     scaled_pref_rating: PrefRating
-    pref_rating_eq: dict[str, float]
     sensitivity: float
+    computed_sensitivity: dict[str, float]
 
 
 class Peq(TypedDict, total=False):
@@ -177,7 +180,6 @@ class Speaker(SpeakerRequired, total=False):
     price: str
     amount: str
     skip: bool
-    sensitivity: float
     default_eq: str
     eqs: dict[str, EQ]
     nearest: list[tuple[float, str]]

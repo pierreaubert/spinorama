@@ -21,12 +21,7 @@ import pathlib
 import copy
 import math
 
-try:
-    import ray
-except ModuleNotFoundError:
-    import src.miniray as ray
-
-from spinorama import logger, ray_setup_logger
+from spinorama import logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
 from spinorama.misc import measurements_valid_freq_range, write_multiformat
@@ -418,7 +413,6 @@ def print_a_graph(filename, chart, ext, force) -> int:
     return updated
 
 
-@ray.remote
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
@@ -433,7 +427,6 @@ def print_graphs(
     width = parameters["width"]
     height = parameters["height"]
     level = parameters["level"]
-    ray_setup_logger(level)
     #
     df_speaker = {}
     iir = []

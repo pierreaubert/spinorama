@@ -20,8 +20,6 @@
 usage: generate_peqs.py \
  [--curve-peak-only] \
  [--curves=<curve_name>] \
- [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
- [--disable-ray] \
  [--fitness=<function>] \
  [--force] \
  [--generate-images-only] \
@@ -42,8 +40,6 @@ usage: generate_peqs.py \
  [--optimisation=<options>] \
  [--origin=<origin>] \
  [--output-dir=<path>] \
- [--ray-local] \
- [--ray-cluster=<host_ip>] \
  [--slope-early-reflections=<s_er>] \
  [--slope-er=<s_lw>] \
  [--slope-estimated-inroom=<s_pir>] \
@@ -68,9 +64,7 @@ usage: generate_peqs.py \
 Options:
   --curve-peak-only        Optimise both for peaks and valleys on a curve
   --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
-  --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
-  --dash-port=<dash-port>  Port for the ray dashbboard
-  --disable-ray            Disable ray
+
   --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
   --force                  Force generation of eq even if already computed
   --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
@@ -91,8 +85,7 @@ Options:
   --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
   --origin=<origin>        Restrict to a specific origin
   --output-dir=<path>      If specified all the pictures and eq txt files will be generated there
-  --ray-cluster=<ip_port>  Set to ip:port if you want to join an existing cluster
-  --ray-local              If present, ray will run locally, it is usefull for debugging
+
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
@@ -119,23 +112,12 @@ import sys
 import argparse
 import pandas as pd
 
-try:
-    import ray
-except ModuleNotFoundError:
-    try:
-        import src.miniray as ray
-    except ModuleNotFoundError:
-        print("Did you run env.sh?")
-        sys.exit(-1)
-
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
 from generate_common import (
     get_custom_logger,
     args2level,
-    custom_ray_init,
-    cache_load,
     cache_load_seq,
 )
 from autoeq.auto_save import optim_save_peq, optim_save_peq_seq
@@ -185,14 +167,25 @@ def print_scores(aggregated_scores):
     df_scores.to_csv("build/results_scores.csv", index=False)
 
 
-def queue_speakers(df_all_speakers, optim_config, speaker_name):
-    """Add all speakers to the queue"""
-    ray_ids = {}
+def queue_speakers(df_all_speakers, optim_config, speaker_name=None, filters=None):
+    """Queue all speakers for EQ computation"""
+    if filters is None:
+        filters = {}
+
+    results = {}
     for current_speaker_name in df_all_speakers:
+        # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
-        default = None
-        default_origin = None
+
+        # Skip if speaker is filtered out by any filter criteria
+        skip = False
+        for key, value in filters.items():
+            if key == "speaker_name" and current_speaker_name != value:
+                skip = True
+                break
+        if skip:
+            continue
         if (
             current_speaker_name in metadata
             and "default_measurement" in metadata[current_speaker_name]
@@ -225,44 +218,39 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
             )
             continue
 
-        current_id = optim_save_peq.remote(
+        # Process EQ computation directly
+        result = optim_save_peq_seq(
             current_speaker_name,
             default_origin,
             df_speaker,
             optim_config,
         )
-        ray_ids[current_speaker_name] = current_id
+        results[current_speaker_name] = result
 
-    logger.info("Queing %d speakers for EQ computations", len(ray_ids))
-    return ray_ids
+    logger.info("Processed %d speakers for EQ computations", len(results))
+    return results
 
 
-def compute_peqs(ray_ids):
-    """Process EQ when it is available from the queue"""
-    done_ids = set()
+def compute_peqs(results):
+    """Process EQ results"""
     aggregated_results = {}
     aggregated_scores = {}
-    scores = None
-    while 1:
-        ids = [current_id for current_id in ray_ids.values() if current_id not in done_ids]
-        num_returns = min(len(ids), 16)
-        ready_ids, remaining_ids = ray.wait(ray_waitables=ids, num_returns=num_returns)
+    processed = 0
+    total = len(results)
 
-        for current_id in ready_ids:
-            get_results = ray.get(current_id)
-            if get_results is None:
-                continue
-            status, (current_speaker_name, results_iter, scores) = get_results
-            if status and results_iter is not None:
-                aggregated_results[current_speaker_name] = results_iter
-            if status and scores is not None:
-                aggregated_scores[current_speaker_name] = scores
-            done_ids.add(current_id)
+    for current_speaker_name, result in results.items():
+        if result is None:
+            continue
 
-        if len(remaining_ids) == 0:
-            break
+        status, (speaker_name, results_iter, scores) = result
+        if status and results_iter is not None:
+            aggregated_results[speaker_name] = results_iter
+        if status and scores is not None:
+            aggregated_scores[current_speaker_name] = scores
 
-        logger.info("State: %d ready IDs %d remainings IDs ", len(ready_ids), len(remaining_ids))
+        processed += 1
+        if processed % 10 == 0 or processed == total:
+            logger.info("Processed %d/%d speakers", processed, total)
 
     print_items(aggregated_results)
     print_scores(aggregated_scores)
@@ -270,51 +258,7 @@ def compute_peqs(ray_ids):
     return 0
 
 
-def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
-    for current_speaker_name in df_all_speakers:
-        if speaker_name is not None and current_speaker_name != speaker_name:
-            continue
-        default = None
-        default_origin = None
-        if (
-            current_speaker_name in metadata
-            and "default_measurement" in metadata[current_speaker_name]
-        ):
-            default = metadata[current_speaker_name]["default_measurement"]
-            default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
-        else:
-            logger.error("no default_measurement for %s", current_speaker_name)
-            continue
-        if default_origin not in df_all_speakers[current_speaker_name]:
-            logger.error("default origin %s not in %s", default_origin, current_speaker_name)
-            continue
-        if default not in df_all_speakers[current_speaker_name][default_origin]:
-            logger.error(
-                "default %s not in default origin %s for %s",
-                default,
-                default_origin,
-                current_speaker_name,
-            )
-            continue
-        df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
-        if not (
-            ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
-            or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
-        ):
-            logger.info(
-                "not enough data for %s known measurements are (%s)",
-                current_speaker_name,
-                ", ".join(df_speaker),
-            )
-            continue
-
-        logger.debug("starting optim for %s", current_speaker_name)
-        status, (_, results_iter, scores) = optim_save_peq_seq(
-            current_speaker_name,
-            default_origin,
-            df_speaker,
-            optim_config,
-        )
+# compute_peqs_sequential function has been removed as its functionality is now handled by queue_speakers
 
 
 def get_argument_parser():
@@ -329,21 +273,7 @@ def get_argument_parser():
         type=str,
         help="Curve name: must be one of 'ON', 'LW', 'PIR', 'ER' or 'SP' or a combination separated by a comma. Ex: 'PIR,LW' is valid",
     )
-    parser.add_argument(
-        "--dash-ip",
-        type=str,
-        help="IP for the ray dashboard to track execution",
-    )
-    parser.add_argument(
-        "--dash-port",
-        type=int,
-        help="Port for the ray dashboard",
-    )
-    parser.add_argument(
-        "--disable-ray",
-        action="store_true",
-        help="Disable ray",
-    )
+
     parser.add_argument(
         "--fitness",
         type=str,
@@ -439,16 +369,7 @@ def get_argument_parser():
         type=str,
         help="If specified all the pictures and eq txt files will be generated there",
     )
-    parser.add_argument(
-        "--ray-cluster",
-        type=str,
-        help="Set to ip:port if you want to join an existing cluster",
-    )
-    parser.add_argument(
-        "--ray-local",
-        action="store_true",
-        help="If present, ray will run locally, it is useful for debugging",
-    )
+
     parser.add_argument(
         "--slope-early-reflections",
         type=float,
@@ -936,12 +857,7 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        if args.disable_ray:
-            df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=args.smoke_test)
-        else:
-            df_all_speakers = cache_load(
-                filters=do_filters, smoke_test=args.smoke_test, level=level
-            )
+        df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=args.smoke_test)
     except ValueError as v_e:
         if speaker_name is not None:
             print(
@@ -953,10 +869,6 @@ def main():
             print(f"{v_e}")
         sys.exit(1)
 
-    # start ray
-    if not args.disable_ray:
-        custom_ray_init(args)
-
     # add global parameters into the config
     current_optim_config["verbose"] = args.verbose
     current_optim_config["smoke_test"] = args.smoke_test
@@ -966,11 +878,9 @@ def main():
     current_optim_config["generate_images_only"] = args.generate_images_only
     current_optim_config["output_dir"] = args.output_dir
 
-    if args.disable_ray:
-        compute_peqs_sequential(df_all_speakers, current_optim_config, speaker_name)
-    else:
-        ids = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
-        compute_peqs(ids)
+    # Process speakers sequentially
+    results = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
+    compute_peqs(results)
 
     sys.exit(0)
 
@@ -982,15 +892,8 @@ if __name__ == "__main__":
     level = args2level(args)
     logger = get_custom_logger(level=level, duplicate=True)
 
-    force = args.force
-    verbose = args.verbose
-    smoke_test = args.smoke_test
-    disable_ray = args.disable_ray
-    generate_images_only = args.generate_images_only
-    output_dir = args.output_dir
-
     if args.graphic_eq_list:
-        print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))
+        print("INFO: The list of known graphical EQ is: {}".format(list(grapheq_info.keys())))
         sys.exit(0)
 
     main()

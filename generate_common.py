@@ -18,14 +18,17 @@
 
 from collections import defaultdict
 import difflib
+from functools import partial
 from glob import glob
 from hashlib import md5
 import ipaddress
 import logging
+import multiprocessing
 import os
 import pathlib
 import re
 import sys
+from typing import Callable, Any
 import warnings
 
 import flammkuchen as fl
@@ -34,22 +37,10 @@ import tables
 
 import datas.metadata as metadata
 
-from spinorama import ray_setup_logger
 import spinorama.constant_paths as cpaths
 from spinorama.constant_paths import flags_ADD_HASH
 
-MINIRAY = None
-try:
-    import ray
-
-    MINIRAY = False
-except ModuleNotFoundError:
-    import src.miniray as ray
-
-    MINIRAY = True
-
 CACHE_DIR = ".cache"
-
 
 def get_similar_names(speakername):
     return difflib.get_close_matches(speakername, metadata.speakers_info.keys())
@@ -96,99 +87,10 @@ def create_default_directories():
         cpaths.CPATH_DIST_PICTURES,
         cpaths.CPATH_DIST_SPEAKERS,
         cpaths.CPATH_BUILD_EQ,
-        cpaths.CPATH_BUILD_RAY,
         cpaths.CPATH_BUILD_WEBSITE,
         cpaths.CPATH_BUILD_MAKO,
     ):
         pathlib.Path(d).mkdir(parents=True, exist_ok=True)
-
-
-def custom_ray_init(args):
-    """Customize ray initialisation with a few parameters"""
-    create_default_directories()
-    if MINIRAY:
-        return
-    # expose the dashboard on another ip if required
-    dashboard_ip = "127.0.0.1"
-    dashboard_port = 8265
-    if hasattr(args, "dash_ip") and args.dash_ip is not None:
-        check_ip = args.dash_ip
-        try:
-            _ = ipaddress.ip_address(check_ip)
-            dashboard_ip = check_ip
-        except ipaddress.AddressValueError as ave:
-            print("ip {} is not valid {}!".format(check_ip, ave))
-            sys.exit(1)
-
-    if hasattr(args, "dash_port") and args.dash_port is not None:
-        check_port = args.dash_port
-        try:
-            dashboard_port = int(check_port)
-            if dashboard_port < 0 or dashboard_port > 2**16 - 1:
-                print("--dash-port={} is out of bounds".format(check_port))
-                sys.exit(1)
-        except ValueError:
-            print("--dash-port={} is not an integer".format(check_port))
-            sys.exit(1)
-
-    # this start ray in single process mode
-    ray_local_mode = False
-    if hasattr(args, "ray_local") and args.ray_local is True:
-        ray_local_mode = True
-
-    level = args2level(args)
-
-    ray_address = None
-    if hasattr(args, "ray_cluster") and args.ray_cluster is not None:
-        check_address = args.ray_cluster
-        check_ip, check_port = check_address.split(":")
-        try:
-            _ = ipaddress.ip_address(check_ip)
-        except ipaddress.AddressValueError as ave:
-            print("ray ip {} is not valid {}!".format(check_ip, ave))
-            sys.exit(1)
-        try:
-            ray_port = int(check_port)
-            if ray_port < 0 or ray_port > 2**16 - 1:
-                print("ray port {} is out of bounds".format(check_port))
-                sys.exit(1)
-        except ValueError:
-            print("ray port {} is not an integer".format(check_port))
-            sys.exit(1)
-        ray_address = check_address
-
-    # tmp_dir = (pathlib.Path.cwd().absolute() / 'build/ray').as_posix()
-    if ray_address is not None:
-        print(
-            "Calling init with cluster at {} dashboard at {}:{}".format(
-                ray_address, dashboard_ip, dashboard_port
-            )
-        )
-        ray.init(
-            address=ray_address,
-            include_dashboard=True,
-            dashboard_host=dashboard_ip,
-            dashboard_port=dashboard_port,
-            local_mode=ray_local_mode,
-            configure_logging=True,
-            logging_level=level,
-            log_to_driver=True,
-            # _temp_dir=tmp_dir,
-        )
-    else:
-        print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
-        if ray.is_initialized:
-            ray.shutdown()
-        ray.init(
-            include_dashboard=True,
-            dashboard_host=dashboard_ip,
-            dashboard_port=dashboard_port,
-            local_mode=ray_local_mode,
-            configure_logging=True,
-            logging_level=level,
-            log_to_driver=True,
-            # _temp_dir=tmp_dir,
-        )
 
 
 def cache_key(name: str) -> str:
@@ -262,7 +164,7 @@ def is_filtered(speaker: str, filters: dict):
 
 def cache_load_seq(filters, smoke_test):
     df_all = defaultdict()
-    cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
         cache_files = glob("../{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
@@ -295,83 +197,83 @@ def cache_load_seq(filters, smoke_test):
     return df_all
 
 
-@ray.remote(num_cpus=1)
-def cache_fetch(cachepath: str, level):
+def _cache_fetch_worker(args):
+    """Worker function for loading cache files in parallel"""
+    cachepath, level = args
     logger = logging.getLogger("spinorama")
-    ray_setup_logger(level)
+    logger.setLevel(level)
     logger.debug("Level of debug is %d", level)
-    return fl.load(path=cachepath)
+    try:
+        return fl.load(path=cachepath)
+    except Exception as e:
+        logger.exception("Error loading cache file %s", cachepath)
+        return None
 
 
-def cache_load_distributed_map(filters, smoke_test, level):
+def cache_load_distributed(filters, smoke_test, level):
+    """Load cache files in parallel using multiprocessing"""
     cache_files = glob("./{}/*.h5".format(CACHE_DIR))
-    ids = []
-    # mapper read the cache and start 1 worker per file
-    for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
-            filters.get("speaker_name")
-        ):
-            continue
-        ids.append(cache_fetch.remote(cache, level))
 
-    print("(queued {} files)".format(len(cache_files)))
-    return ids
+    # Filter cache files based on speaker_name if provided
+    if filters.get("speaker_name") is not None:
+        speaker_key = cache_key(filters.get("speaker_name"))
+        cache_files = [f for f in cache_files if f[-5:-3] == speaker_key]
 
+    # Determine number of processes to use (leave one CPU free)
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
 
-def cache_load_distributed_reduce(filters, smoke_test, ids: list):
-    df_all = defaultdict()
+    print(f"(processing {len(cache_files)} files in parallel x{num_processes})")
+
+    df_all = {}
     count = 0
-    current_ids_list = list(ids)  # Ensure it's a list for ray.wait
-    while 1:
-        if not current_ids_list:
-            break
-        done_ids, remaining_ids_list = ray.wait(
-            current_ids_list, num_returns=min(len(current_ids_list), 64)
-        )  # type: ignore[arg-type]
 
-        # get the results
-        for zid in done_ids:
-            df_read = ray.get(zid)
-            # Assuming df_read is expected to be a dictionary based on .items() usage
-            if isinstance(df_read, dict):
-                for speaker, data in df_read.items():
-                    if speaker in df_all:
-                        print("error in cache: {} is already in keys".format(speaker))
-                    if is_filtered(speaker, filters):
-                        continue
-                    df_all[speaker] = data
-                    count += 1
-                    if smoke_test and count > 10:
-                        # Need to break out of outer loop too if smoke test limit reached
-                        current_ids_list = []  # Signal to exit outer loop
-                        break
-            elif df_read is not None:  # Handle cases where df_read might not be a dict
-                print(
-                    f"Warning: Expected a dict from ray.get(zid), but got {type(df_read)}. zid: {zid}"
-                )
+    # Process files in chunks to manage memory usage
+    chunk_size = 10  # Adjust based on your needs
+    for i in range(0, len(cache_files), chunk_size):
+        chunk = cache_files[i : i + chunk_size]
 
-            if not current_ids_list:  # Check if inner loop decided to break outer
-                break
+        # Create a pool of workers
+        with multiprocessing.Pool(processes=num_processes) as pool:
+            # Map the worker function to the chunk of files
+            results = pool.map(_cache_fetch_worker, [(cache, level) for cache in chunk])
 
-        if not current_ids_list:  # Break from while if signaled by inner loop
-            break
+            # Process results
+            for df_read in results:
+                if df_read is None:
+                    continue
 
-        current_ids_list = list(remaining_ids_list)  # Update the list for the next iteration
+                if isinstance(df_read, dict):
+                    for speaker, data in df_read.items():
+                        if is_filtered(speaker, filters):
+                            continue
 
-        if len(current_ids_list) == 0:
+                        if speaker in df_all:
+                            print(f"Warning: {speaker} already exists in cache, overwriting")
+
+                        df_all[speaker] = data
+                        count += 1
+
+                        if smoke_test and count > 10:
+                            break
+
+                if smoke_test and count > 10:
+                    break
+
+        if smoke_test and count > 10:
             break
 
     return df_all
 
 
-def cache_load_distributed(filters, smoke_test, level):
-    ids = cache_load_distributed_map(filters, smoke_test, level)
-    return cache_load_distributed_reduce(filters, smoke_test, ids)
-
-
 def cache_load(filters, smoke_test, level):
-    if ray.is_initialized and filters.get("speaker_name") is None:
-        return cache_load_distributed(filters, smoke_test, level)
+    """Load cache using parallel processing if no specific speaker is requested"""
+    if filters.get("speaker_name") is None:
+        try:
+            return cache_load_distributed(filters, smoke_test, level)
+        except Exception as e:
+            print(f"Parallel cache loading failed, falling back to sequential: {e}")
+
+    # Fall back to sequential loading
     return cache_load_seq(filters, smoke_test)
 
 
@@ -477,3 +379,43 @@ def find_metadata_chunks():
                 tokens = json_filename[span[0] : span[1]].split("-")
                 json_paths[tokens[1].split(".")[0]] = json_filename
     return json_paths
+
+
+def run_in_parallel(
+    func: Callable,
+    tasks: list[tuple[Any, ...]],
+    num_processes: int = -1,
+    chunk_size: int = 1
+) -> list[Any]:
+    """
+    Run a function in parallel on multiple processes.
+
+    Args:
+        func: The function to run in parallel
+        tasks: List of argument tuples to pass to the function
+        num_processes: Number of processes to use (default: cpu_count - 1)
+        chunk_size: Number of tasks to process in each process (default: 1)
+
+    Returns:
+        List of results in the same order as tasks
+    """
+    logger = logging.getLogger("spinorama")
+    if num_processes == -1:
+        num_processes = max(1, multiprocessing.cpu_count() - 1)
+
+    logger.info(f"Running {len(tasks)} tasks in parallel using {num_processes} processes")
+
+    results = []
+    try:
+        with multiprocessing.Pool(processes=num_processes) as pool:
+            # Use imap_unordered for better memory efficiency with large tasks
+            for i, result in enumerate(pool.starmap(func, tasks, chunksize=chunk_size)):
+                results.append(result)
+                if i > 0 and i % 10 == 0:  # Log progress every 10 tasks
+                    logger.info(f"Completed {i+1}/{len(tasks)} tasks")
+
+    except Exception as e:
+        logger.error(f"Error in parallel execution: {e}")
+        raise
+
+    return results
