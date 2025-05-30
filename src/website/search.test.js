@@ -471,3 +471,35 @@ describe('non regression for bug discussions/288', () => {
         expect(results1[0]).toBe('JBL-308P-Mark-ii');
     });
 });
+
+describe('non regression for bug discussions/343', () => {
+    let metadata = null;
+
+    beforeAll(() => {
+        const bytes = readFileSync(METADATA_TEST_FILE, 'utf-8');
+        const metajson = JSON.parse(bytes);
+        metadata = new Map(Object.values(metajson).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
+    });
+
+    it('search for KEF R3 and check that the results are sane', () => {
+        const url1 = new URL(TEST_URL + '?search=R3');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+        expect(maxResults1).toBe(31);
+        expect(results1[0]).toBe('KEF-R3');
+        expect(results1[1]).toBe('KEF-R3-Meta');
+    });
+
+    it('search for 4C Meta and check that the results are sane', () => {
+        const url1 = new URL(TEST_URL + '?search=4C+Meta');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+        expect(maxResults1).toBe(1);
+        expect(results1[0]).toBe('KEF-Reference-4C-Meta');
+    });
+
+});
