@@ -64,13 +64,6 @@ if ! test -d "$SPIN/.venv"; then
 fi
 source .venv/bin/activate
 
-## ray configuration
-## ---------------------------------------------------------------------
-if test "$(hostname)" = "horn.home"; then
-    # remove a warning from Ray since horn has 128 threads
-    export NUMEXPR_MAX_THREADS=96
-fi
-
 ## node install
 ## ----------------------------------------------------------------------
 if ! test -d "$SPIN/node_modules"; then
@@ -80,23 +73,23 @@ export PATH=$PATH:$SPIN/node_modules/.bin
 
 ## CUDA configuration
 ## ----------------------------------------------------------------------
-CUDA=""
-if test -x /usr/bin/nvidia-smi; then
-    CUDA="$(nvidia-smi  -L)"
-fi
-if test -d /usr/local/cuda/extras/CUPTI/lib64; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
-fi
+#CUDA=""
+#if test -x /usr/bin/nvidia-smi; then
+#    CUDA="$(nvidia-smi  -L)"
+#fi
+#if test -d /usr/local/cuda/extras/CUPTI/lib64; then
+#    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+#fi
 
 ## ROCM/HIP configuration
 ## ----------------------------------------------------------------------
-ROCM=""
-if test -x /usr/bin/rocminfo; then
-    ROCM="$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')"
-fi
-if test -d /usr/local/cuda/extras/CUPTI/lib64; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
-fi
+#ROCM=""
+#if test -x /usr/bin/rocminfo; then
+#    ROCM="$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')"
+#fi
+#if test -d /usr/local/cuda/extras/CUPTI/lib64; then
+#    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+#fi
 
 # for deepsource code coverage
 export DEEPSOURCE_DSN=https://sampledsn@deepsource.io
@@ -114,7 +107,7 @@ echo ' ' "$(pip3 -V) "
 echo '  jupyter-lab  ' "$(jupyter-lab --version) $(which jupyter-lab)"
 echo '  PYTHONPATH   ' "$PYTHONPATH"
 echo '  github key   ' "$github"
-echo '  CUDA (Nvidia)' "$CUDA"
-echo '  ROCM (AMD)   ' "$ROCM"
-echo '  RAY          ' "$(ray --version)"
+# echo '  CUDA (Nvidia)' "$CUDA"
+# echo '  ROCM (AMD)   ' "$ROCM"
+# echo '  RAY          ' "$(ray --version)"
 echo '  MAGIC        ' "$MAGICK_HOME"

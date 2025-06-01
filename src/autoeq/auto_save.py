@@ -24,8 +24,6 @@ import os
 import re
 import pathlib
 
-import ray
-
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
@@ -358,7 +356,6 @@ def optim_save_peq_seq(
     return True, (current_speaker_name, auto_results, scores)
 
 
-@ray.remote
 def optim_save_peq(
     current_speaker_name: str,
     current_speaker_origin: str,

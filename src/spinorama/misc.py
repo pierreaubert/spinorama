@@ -243,9 +243,9 @@ def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | 
     ):
         complete_spl = True
     if not complete_spl:
-        print("check spl : {}".format(complete_spl))
+        # print("check spl : {}".format(complete_spl))
         if h_spl is not None and v_spl is not None:
-            print(measurements_missing_angles(h_spl, v_spl))
+            logger.info('missing angles : %s', measurements_missing_angles(h_spl, v_spl))
     return complete_spl
 
 
