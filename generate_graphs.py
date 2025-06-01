@@ -43,16 +43,15 @@ from spinorama.plot import plot_params_default
 VERSION = "2.07"  # Updated version
 ACTIVATE_TRACING: bool = True
 
-# Global variables for parallel processing
-global logger, data_dir, force, args
-
 # Set up logger
 logger = logging.getLogger("spinorama")
+
 
 def tracing(msg: str):
     """Debugging utility for tracing execution"""
     if ACTIVATE_TRACING:
         print(f"---- TRACING ---- {msg} ----")
+
 
 def get_speaker_list(speakerpath: str) -> set[str]:
     """Return a list of speakers from data subdirectory"""
@@ -61,13 +60,18 @@ def get_speaker_list(speakerpath: str) -> set[str]:
     for current_dir in dirs:
         shortname = os.path.basename(current_dir)
         if os.path.isdir(current_dir) and shortname not in (
-            "assets", "compare", "stats", "pictures", "tmp",
+            "assets",
+            "compare",
+            "stats",
+            "pictures",
+            "tmp",
         ):
             speakers.append(shortname)
     return set(speakers)
 
+
 def process_single_measurement(
-    speaker_info: tuple[str, str, str, dict[str, Any], int, str, bool]
+    speaker_info: tuple[str, str, str, dict[str, Any], int, str, bool],
 ) -> tuple[bool, str, str, str, dict[str, Any], Optional[Exception]]:
     """Process a single measurement (worker function for parallel processing)"""
     speaker, origin, mversion, measurement, level, data_dir, force = speaker_info
@@ -96,7 +100,7 @@ def process_single_measurement(
         }
 
         # Process graphs
-        df = parse_graphs_speaker(
+        results = parse_graphs_speaker(
             speaker_path=f"{data_dir}/datas/measurements",
             speaker_brand=brand,
             speaker_name=speaker,
@@ -104,18 +108,18 @@ def process_single_measurement(
         )
 
         # Process EQ
-        eq = parse_eq_speaker(
+        results_eq = parse_eq_speaker(
             speaker_path=f"{data_dir}/datas",
             speaker_name=speaker,
-            df_ref=df,
+            df_ref=results,
             speaker_parameters=parameters,
         )
 
         logger.debug("Generating graphs for %s / %s", speaker, mversion)
 
         # Generate graphs
-        g1 = print_graphs(
-            df,
+        graphs = print_graphs(
+            results,
             speaker,
             parameters,
             metadata.origins_info,
@@ -128,18 +132,19 @@ def process_single_measurement(
 
         logger.debug("Generating EQ graphs for %s / %s", speaker, parameters_eq["mversion_key"])
 
-        g2 = print_graphs(
-            eq,
+        graphs_eq = print_graphs(
+            results_eq,
             speaker,
             parameters_eq,
             metadata.origins_info,
             force,
         )
 
-        return True, speaker, morigin, mversion, {"df": df, "eq": eq}, None
+        return True, speaker, morigin, mversion, {"df": results, "eq": results_eq}, None
 
     except Exception as e:
-        logger.error("Error processing %s/%s/%s: %s", speaker, origin, mversion, str(e))
+        logger.exception("Error processing %s/%s/%s", speaker, origin, mversion)
+    else:
         return False, speaker, origin, mversion, {}, e
 
 
@@ -147,13 +152,14 @@ def process_measurements_parallel(
     speakerlist: set[str],
     filters: dict[str, str],
     level: int,
-    num_processes: int
+    num_processes: int,
+    data_dir: str,
+    force: bool,
 ) -> dict[str, Any]:
     """Process measurements in parallel using multiprocessing"""
     # Prepare tasks
     tasks = []
     for speaker in speakerlist:
-
         if "speaker" in filters and speaker != filters["speaker"]:
             logger.debug("skipping %s", speaker)
             continue
@@ -163,7 +169,6 @@ def process_measurements_parallel(
             continue
 
         for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
-
             if "mversion" in filters and not (
                 mversion == filters["mversion"] or mversion == "{}_eq".format(filters["mversion"])
             ):
@@ -204,21 +209,23 @@ def process_measurements_parallel(
                 data_frame[speaker][origin][f"{mversion}_eq"] = result["eq"]
                 success_count += 1
             else:
-                logger.error("Failed to process %s/%s/%s: %s", speaker, origin, mversion, str(error))
+                logger.error(
+                    "Failed to process %s/%s/%s: %s", speaker, origin, mversion, str(error)
+                )
                 error_count += 1
 
             # Log progress
             if (i + 1) % 10 == 0 or (i + 1) == len(tasks):
-                logger.info("Processed %d/%d measurements (%d errors)",
-                           i + 1, len(tasks), error_count)
+                logger.info(
+                    "Processed %d/%d measurements (%d errors)", i + 1, len(tasks), error_count
+                )
 
     logger.info("Completed processing: %d succeeded, %d failed", success_count, error_count)
     return data_frame
 
-def main(level):
-    """Main function to process speakers and generate graphs"""
-    global data_dir, force
 
+def main(level, args):
+    """Main function to process speakers and generate graphs"""
     # Set global variables
     data_dir = args.data_dir
     force = args.force
@@ -253,14 +260,14 @@ def main(level):
             filters[ifilter_key] = value
 
     # num_procs
-    num_processes = cpu_count()-1
+    num_processes = cpu_count() - 1
     param_processes = num_processes
     if args.processes is not None:
         param_processes = int(args.processes)
     num_processes = max(1, min(param_processes, num_processes))
 
     # Process measurements in parallel
-    df_new = process_measurements_parallel(speakerlist, filters, level, num_processes)
+    df_new = process_measurements_parallel(speakerlist, filters, level, num_processes, data_dir, force)
 
     # Update cache if needed
     if not filters:  # Only update cache if no filters are applied
@@ -271,7 +278,9 @@ def main(level):
     logger.info("Graph generation completed successfully")
     return 0
 
+
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument("--version", action="version", version=f"generate_graphs_mp.py v{VERSION}")
@@ -298,9 +307,13 @@ if __name__ == "__main__":
     parser.add_argument("--speaker", help="Filter by speaker")
     parser.add_argument("--mversion", help="Filter by measurement version")
     parser.add_argument("--brand", help="Filter by brand")
-    parser.add_argument("--data-dir", default=".", help="Directory where data is stored (default: .)")
+    parser.add_argument(
+        "--data-dir", default=".", help="Directory where data is stored (default: .)"
+    )
     parser.add_argument("--update-cache", action="store_true", help="Force updating the cache")
-    parser.add_argument("--processes", type=int, help="Number of processes to use (default: CPU count - 1)")
+    parser.add_argument(
+        "--processes", type=int, help="Number of processes to use (default: CPU count - 1)"
+    )
 
     args = parser.parse_args()
 
@@ -309,4 +322,4 @@ if __name__ == "__main__":
     logger = get_custom_logger(level=LEVEL, duplicate=True)
 
     # Run main function
-    sys.exit(main(level=LEVEL))
+    sys.exit(main(level=LEVEL, args=args))

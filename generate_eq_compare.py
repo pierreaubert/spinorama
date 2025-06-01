@@ -17,17 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_stats.py [--help] [--version] [--dev] [--force]\
- [--log-level=<level>]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --force           regenerate pictures even if they already exist.
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-"""
-
 import json
 import os
 import sys
