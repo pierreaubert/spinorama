@@ -16,97 +16,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
-usage: generate_peqs.py \
- [--curve-peak-only] \
- [--curves=<curve_name>] \
- [--fitness=<function>] \
- [--force] \
- [--generate-images-only] \
- [--graphic-eq-list] \
- [--graphic-eq=<eq_name>] \
- [--help] \
- [--log-level=<level>] \
- [--max-Q=<maxQ>] \
- [--max-dB=<maxdB>] \
- [--max-freq=<maxFreq>] \
- [--max-iter=<maxiter>] \
- [--max-peq=<count>] \
- [--mformat=<mformat>] \
- [--min-Q=<minQ>] \
- [--min-dB=<mindB>] \
- [--min-freq=<minFreq>] \
- [--mversion=<mversion>] \
- [--optimisation=<options>] \
- [--origin=<origin>] \
- [--output-dir=<path>] \
- [--slope-early-reflections=<s_er>] \
- [--slope-er=<s_lw>] \
- [--slope-estimated-inroom=<s_pir>] \
- [--slope-listening-window=<s_lw>] \
- [--slope-lw=<s_lw>] \
- [--slope-on-axis=<s_on>] \
- [--slope-on=<s_on>] \
- [--slope-pir=<s_pir>] \
- [--slope-sound-power=<s_sp>] \
- [--slope-sp=<s_sp>] \
- [--smoke-test] \
- [--smooth-measurements=<window_size>] \
- [--smooth-order=<order>] \
- [--speaker=<speaker>] \
- [--target-max-freq=<tmaxf>] \
- [--target-min-freq=<tminf>] \
- [--use-all-biquad] \
- [--use-only-pk] \
- [--version] \
- [-v|--verbose]
-
-Options:
-  --curve-peak-only        Optimise both for peaks and valleys on a curve
-  --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
-
-  --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
-  --force                  Force generation of eq even if already computed
-  --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
-  --graphic-eq-list        List the known graphic eq and exit
-  --graphic-eq=<eq_name>   Result is tailored for graphic_eq "name".
-  --help                   Display usage()
-  --log-level=<level>      Default is WARNING, options are DEBUG or INFO or ERROR.
-  --max-Q=<maxQ>           Maximum value for Q
-  --max-dB=<maxdB>         Maximum value for dBGain
-  --max-freq=<maxFreq>     Optimisation will happen below max freq
-  --max-iter=<maxiter>     Maximum number of iterations
-  --max-peq=<count>        Maximum allowed number of Biquad
-  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
-  --min-Q=<minQ>           Minumum value for Q
-  --min-dB=<mindB>         Minumum value for dBGain
-  --min-freq=<minFreq>     Optimisation will happen above min freq
-  --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
-  --origin=<origin>        Restrict to a specific origin
-  --output-dir=<path>      If specified all the pictures and eq txt files will be generated there
-
-  --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
-  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
-  --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
-  --slope-lw=<s_lw>        Same as above (shortcut)
-  --slope-on-axis=<s_on>   Slope of the ideal target for On Axis, default is 0, as in flat anechoic
-  --slope-on=<s_lw>        Same as above (shortcut)
-  --slope-pir=<s_pir>      Same as above (shortcut)
-  --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
-  --slope-sp=<s_sp>        Same as above (shortcut)
-  --slopw-er=<s_er>        Same as above (shortcut)
-  --smoke-test             Test the optimiser with a small amount of variables
-  --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
-  --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
-  --target-max-freq=<tmaxf> targets will not be important after max freq
-  --target-min-freq=<tminf> targets will be flat up to min freq
-  --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
-  --use-only-pk            force PEQ to be only PK / Peak
-  --verbose                Print some informations
-  --version                Script version number
-"""
 
 import sys
 import argparse
@@ -118,12 +27,12 @@ from datas.grapheq import vendor_info as grapheq_info
 from generate_common import (
     get_custom_logger,
     args2level,
-    cache_load_seq,
+    cache_load_distributed,
 )
 from autoeq.auto_save import optim_save_peq, optim_save_peq_seq
 
 
-VERSION = "0.26"
+VERSION = "0.27"
 
 
 def print_items(aggregated_results):
@@ -167,13 +76,14 @@ def print_scores(aggregated_scores):
     df_scores.to_csv("build/results_scores.csv", index=False)
 
 
-def queue_speakers(df_all_speakers, optim_config, speaker_name=None, filters=None):
+def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
     """Queue all speakers for EQ computation"""
     if filters is None:
         filters = {}
 
     results = {}
     for current_speaker_name in df_all_speakers:
+
         # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
@@ -186,18 +96,27 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name=None, filters=Non
                 break
         if skip:
             continue
+
+        # skip
         if (
-            current_speaker_name in metadata
-            and "default_measurement" in metadata[current_speaker_name]
+            current_speaker_name not in metadata
+            or "default_measurement" not in metadata[current_speaker_name]
         ):
-            default = metadata[current_speaker_name]["default_measurement"]
-            default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
-        else:
             logger.error("no default_measurement for %s", current_speaker_name)
             continue
+
+        default = metadata[current_speaker_name]["default_measurement"]
+        default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
+
         if default_origin not in df_all_speakers[current_speaker_name]:
-            logger.error("default origin %s not in %s", default_origin, current_speaker_name)
+            logger.error(
+                "default origin %s not in %s (known origins are: %s)",
+                default_origin,
+                current_speaker_name,
+                ', '.join(df_all_speakers[current_speaker_name])
+            )
             continue
+
         if default not in df_all_speakers[current_speaker_name][default_origin]:
             logger.error(
                 "default %s not in default origin %s for %s",
@@ -206,7 +125,9 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name=None, filters=Non
                 current_speaker_name,
             )
             continue
+
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
+
         if not (
             ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
             or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
@@ -231,8 +152,8 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name=None, filters=Non
     return results
 
 
-def compute_peqs(results):
-    """Process EQ results"""
+def compute_stats(results):
+    """Process EQ results and generates some statistic"""
     aggregated_results = {}
     aggregated_scores = {}
     processed = 0
@@ -256,9 +177,6 @@ def compute_peqs(results):
     print_scores(aggregated_scores)
 
     return 0
-
-
-# compute_peqs_sequential function has been removed as its functionality is now handled by queue_speakers
 
 
 def get_argument_parser():
@@ -857,7 +775,10 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=args.smoke_test)
+        df_all_speakers = cache_load_distributed(filters=do_filters, smoke_test=args.smoke_test, level=level)
+        print(df_all_speakers.keys())
+        print(df_all_speakers[speaker_name].keys())
+        print(df_all_speakers[speaker_name]["unknown"].keys())
     except ValueError as v_e:
         if speaker_name is not None:
             print(
@@ -878,9 +799,8 @@ def main():
     current_optim_config["generate_images_only"] = args.generate_images_only
     current_optim_config["output_dir"] = args.output_dir
 
-    # Process speakers sequentially
-    results = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
-    compute_peqs(results)
+    results = compute_eqs(df_all_speakers, current_optim_config, speaker_name)
+    compute_stats(results)
 
     sys.exit(0)
 

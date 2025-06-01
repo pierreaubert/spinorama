@@ -24,7 +24,7 @@ import os
 import random
 import sys
 import logging
-from typing import Dict, List, Tuple, Any, Set, Optional
+from typing import Any, Optional
 from multiprocessing import Pool, cpu_count
 from functools import partial
 
@@ -54,7 +54,7 @@ def tracing(msg: str):
     if ACTIVATE_TRACING:
         print(f"---- TRACING ---- {msg} ----")
 
-def get_speaker_list(speakerpath: str) -> Set[str]:
+def get_speaker_list(speakerpath: str) -> set[str]:
     """Return a list of speakers from data subdirectory"""
     speakers = []
     dirs = glob.glob(speakerpath + "/*")
@@ -67,11 +67,11 @@ def get_speaker_list(speakerpath: str) -> Set[str]:
     return set(speakers)
 
 def process_single_measurement(
-    speaker_info: Tuple[str, str, Dict[str, Any], int, str, bool]
-) -> Tuple[bool, str, str, Dict[str, Any], Optional[Exception]]:
+    speaker_info: tuple[str, str, str, dict[str, Any], int, str, bool]
+) -> tuple[bool, str, str, str, dict[str, Any], Optional[Exception]]:
     """Process a single measurement (worker function for parallel processing)"""
-    speaker, mversion, measurement, level, data_dir, force = speaker_info
-    
+    speaker, origin, mversion, measurement, level, data_dir, force = speaker_info
+
     try:
         # Extract parameters
         mformat = measurement["format"]
@@ -81,7 +81,7 @@ def process_single_measurement(
         msymmetry = measurement.get("symmetry", None)
         mparameters = measurement.get("parameters", None)
         distance = measurement2distance(speaker, measurement)
-        
+
         parameters = {
             "mformat": mformat,
             "morigin": morigin,
@@ -94,7 +94,7 @@ def process_single_measurement(
             "width": int(plot_params_default["width"]),
             "height": int(plot_params_default["height"]),
         }
-        
+
         # Process graphs
         df = parse_graphs_speaker(
             speaker_path=f"{data_dir}/datas/measurements",
@@ -102,7 +102,7 @@ def process_single_measurement(
             speaker_name=speaker,
             speaker_parameters=parameters,
         )
-        
+
         # Process EQ
         eq = parse_eq_speaker(
             speaker_path=f"{data_dir}/datas",
@@ -110,11 +110,10 @@ def process_single_measurement(
             df_ref=df,
             speaker_parameters=parameters,
         )
-        
+
+        logger.debug("Generating graphs for %s / %s", speaker, mversion)
+
         # Generate graphs
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.debug("Generating graphs for %s / %s", speaker, mversion)
-        
         g1 = print_graphs(
             df,
             speaker,
@@ -122,14 +121,13 @@ def process_single_measurement(
             metadata.origins_info,
             force,
         )
-        
+
         # Generate EQ graphs
         parameters_eq = parameters.copy()
         parameters_eq["mversion_key"] = mversion + "_eq"
-        
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.debug("Generating EQ graphs for %s / %s", speaker, parameters_eq["mversion_key"])
-        
+
+        logger.debug("Generating EQ graphs for %s / %s", speaker, parameters_eq["mversion_key"])
+
         g2 = print_graphs(
             eq,
             speaker,
@@ -137,99 +135,97 @@ def process_single_measurement(
             metadata.origins_info,
             force,
         )
-        
-        return True, speaker, mversion, {"df": df, "eq": eq}, None
-        
+
+        return True, speaker, morigin, mversion, {"df": df, "eq": eq}, None
+
     except Exception as e:
-        logger.error("Error processing %s/%s: %s", speaker, mversion, str(e))
-        return False, speaker, mversion, {}, e
+        logger.error("Error processing %s/%s/%s: %s", speaker, origin, mversion, str(e))
+        return False, speaker, origin, mversion, {}, e
+
 
 def process_measurements_parallel(
-    speakerlist: Set[str], 
-    filters: Dict[str, str], 
+    speakerlist: set[str],
+    filters: dict[str, str],
     level: int,
-    num_processes: Optional[int] = None
-) -> Dict[str, Any]:
+    num_processes: int
+) -> dict[str, Any]:
     """Process measurements in parallel using multiprocessing"""
-    if num_processes is None:
-        num_processes = max(1, cpu_count() - 1)
-    
     # Prepare tasks
     tasks = []
     for speaker in speakerlist:
+
         if "speaker" in filters and speaker != filters["speaker"]:
             logger.debug("skipping %s", speaker)
             continue
-            
+
         if speaker not in metadata.speakers_info:
             logger.error("Metadata error: %s", speaker)
             continue
-            
+
         for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
-            # Apply filters
+
             if "mversion" in filters and not (
                 mversion == filters["mversion"] or mversion == "{}_eq".format(filters["mversion"])
             ):
                 logger.debug("skipping %s/%s", speaker, mversion)
                 continue
-                
+
             mformat = measurement["format"]
             if "format" in filters and mformat != filters["format"]:
                 logger.debug("skipping %s/%s/%s", speaker, mformat, mversion)
                 continue
-                
+
             morigin = measurement["origin"]
             if "origin" in filters and morigin != filters["origin"]:
                 logger.debug("skipping %s/%s/%s/%s", speaker, morigin, mformat, mversion)
                 continue
-                
-            tasks.append((speaker, mversion, measurement, level, data_dir, force))
-    
+
+            tasks.append((speaker, morigin, mversion, measurement, level, data_dir, force))
+
+    num_process = max(1, min(num_processes, len(tasks)))
     logger.info("Processing %d measurements using %d processes", len(tasks), num_processes)
-    
+
     # Process tasks in parallel
     data_frame = {}
     success_count = 0
     error_count = 0
-    
+
     with Pool(processes=num_processes) as pool:
-        for i, (success, speaker, mversion, result, error) in enumerate(
-            pool.imap_unordered(process_single_measurement, tasks, chunksize=1)
-        ):
+        results = pool.imap_unordered(process_single_measurement, tasks, chunksize=1)
+        for i, (success, speaker, origin, mversion, result, error) in enumerate(results):
             if success:
                 if speaker not in data_frame:
                     data_frame[speaker] = {}
-                
-                morigin = result["df"].get("morigin", "unknown")
-                if morigin not in data_frame[speaker]:
-                    data_frame[speaker][morigin] = {}
-                
-                data_frame[speaker][morigin][mversion] = result["df"]
-                data_frame[speaker][morigin][f"{mversion}_eq"] = result["eq"]
+
+                if origin not in data_frame[speaker]:
+                    data_frame[speaker][origin] = {}
+
+                data_frame[speaker][origin][mversion] = result["df"]
+                data_frame[speaker][origin][f"{mversion}_eq"] = result["eq"]
                 success_count += 1
             else:
-                logger.error("Failed to process %s/%s: %s", speaker, mversion, str(error))
+                logger.error("Failed to process %s/%s/%s: %s", speaker, origin, mversion, str(error))
                 error_count += 1
-            
+
             # Log progress
             if (i + 1) % 10 == 0 or (i + 1) == len(tasks):
-                logger.info("Processed %d/%d measurements (%d errors)", 
+                logger.info("Processed %d/%d measurements (%d errors)",
                            i + 1, len(tasks), error_count)
-    
+
     logger.info("Completed processing: %d succeeded, %d failed", success_count, error_count)
     return data_frame
 
 def main(level):
     """Main function to process speakers and generate graphs"""
     global data_dir, force
-    
+
     # Set global variables
     data_dir = args.data_dir
     force = args.force
-    
+
     # Get speaker list
     speakerlist = get_speaker_list(f"{data_dir}/datas/measurements")
-    
+
     # Handle smoke test
     if args.smoke_test is not None:
         if args.smoke_test == "random":
@@ -256,15 +252,22 @@ def main(level):
         if value is not None:
             filters[ifilter_key] = value
 
+    # num_procs
+    num_processes = cpu_count()-1
+    param_processes = num_processes
+    if args.processes is not None:
+        param_processes = int(args.processes)
+    num_processes = max(1, min(param_processes, num_processes))
+
     # Process measurements in parallel
-    df_new = process_measurements_parallel(speakerlist, filters, level)
+    df_new = process_measurements_parallel(speakerlist, filters, level, num_processes)
 
     # Update cache if needed
     if not filters:  # Only update cache if no filters are applied
         cache_save(df_new)
     elif args.update_cache:
         cache_update(df_new, filters, level)
-    
+
     logger.info("Graph generation completed successfully")
     return 0
 
@@ -300,10 +303,10 @@ if __name__ == "__main__":
     parser.add_argument("--processes", type=int, help="Number of processes to use (default: CPU count - 1)")
 
     args = parser.parse_args()
-    
+
     # Set up logging
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
-    
+
     # Run main function
-    sys.exit(main(LEVEL))
+    sys.exit(main(level=LEVEL))

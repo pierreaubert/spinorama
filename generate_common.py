@@ -214,21 +214,22 @@ def cache_load_distributed(filters, smoke_test, level):
     """Load cache files in parallel using multiprocessing"""
     cache_files = glob("./{}/*.h5".format(CACHE_DIR))
 
+    # Determine number of processes to use (leave one CPU free)
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
+
     # Filter cache files based on speaker_name if provided
     if filters.get("speaker_name") is not None:
         speaker_key = cache_key(filters.get("speaker_name"))
         cache_files = [f for f in cache_files if f[-5:-3] == speaker_key]
-
-    # Determine number of processes to use (leave one CPU free)
-    num_processes = max(1, multiprocessing.cpu_count() - 1)
+        num_processes = 1
 
     print(f"(processing {len(cache_files)} files in parallel x{num_processes})")
 
     df_all = {}
     count = 0
 
-    # Process files in chunks to manage memory usage
-    chunk_size = 10  # Adjust based on your needs
+    # Process files in chunks
+    chunk_size = 16
     for i in range(0, len(cache_files), chunk_size):
         chunk = cache_files[i : i + chunk_size]
 
@@ -281,6 +282,7 @@ def cache_update(df_new, filters, level):
     if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
         return
 
+    logger = logging.getLogger("spinorama")
     print("Updating cache ", end=" ", flush=True)
     count = 0
     for new_speaker, new_datas in df_new.items():
@@ -288,12 +290,16 @@ def cache_update(df_new, filters, level):
             continue
         df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False, level=level)
         for new_origin, new_measurements in new_datas.items():
+            logger.debug("Updating %s %s %d measurements", new_speaker, new_origin, len(new_measurements))
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old:
+                    logger.debug("Adding new origin %s %s %s", new_speaker, new_origin, new_measurement)
                     df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
                 elif new_origin not in df_old[new_speaker]:
+                    logger.debug("Adding first measurement %s %s %s", new_speaker, new_origin, new_measurement)
                     df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
+                    logger.debug("Adding new measurement %s %s %s", new_speaker, new_origin, new_measurement)
                     df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
         cache_save_key(cache_key(new_speaker), df_old)
