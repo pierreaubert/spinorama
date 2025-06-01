@@ -203,7 +203,7 @@ def smoke_test_cea2034(
     return True, ("", (0, 0, 0), [])
 
 
-def optim_save_peq_seq(
+def optim_save_peq(
     current_speaker_name: str,
     current_speaker_origin: str,
     df_speaker: DataSpeaker,
@@ -231,17 +231,16 @@ def optim_save_peq_seq(
 
     # do we have the full data?
     use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker
-    if use_score:
-        if not measurements_complete_spl(
-            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        ) or not measurements_complete_freq(
-            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        ):
-            use_score = False
+    if use_score and (
+            not measurements_complete_spl(
+                df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+            ) or not measurements_complete_freq(
+                df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+            )):
+        use_score = False
     # maybe we only have partial data but enough to compute the Spin
-    if not use_score:
-        if "CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker:
-            use_score = True
+    if not use_score and ("CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker):
+        use_score = True
 
     # don't optimise below the minimum freq found in measurements
     if current_speaker_origin == "Princeton":
@@ -356,14 +355,3 @@ def optim_save_peq_seq(
     return True, (current_speaker_name, auto_results, scores)
 
 
-def optim_save_peq(
-    current_speaker_name: str,
-    current_speaker_origin: str,
-    df_speaker: DataSpeaker,
-    optim_config: dict,
-) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
-    """Compute and then save PEQ for this speaker"""
-    ray_setup_logger(optim_config["level"])
-    return optim_save_peq_seq(
-        current_speaker_name, current_speaker_origin, df_speaker, optim_config
-    )

@@ -42,6 +42,7 @@ from spinorama.constant_paths import flags_ADD_HASH
 
 CACHE_DIR = ".cache"
 
+
 def get_similar_names(speakername):
     return difflib.get_close_matches(speakername, metadata.speakers_info.keys())
 
@@ -290,16 +291,27 @@ def cache_update(df_new, filters, level):
             continue
         df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False, level=level)
         for new_origin, new_measurements in new_datas.items():
-            logger.debug("Updating %s %s %d measurements", new_speaker, new_origin, len(new_measurements))
+            logger.debug(
+                "Updating %s %s %d measurements", new_speaker, new_origin, len(new_measurements)
+            )
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old:
-                    logger.debug("Adding new origin %s %s %s", new_speaker, new_origin, new_measurement)
+                    logger.debug(
+                        "Adding new origin %s %s %s", new_speaker, new_origin, new_measurement
+                    )
                     df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
                 elif new_origin not in df_old[new_speaker]:
-                    logger.debug("Adding first measurement %s %s %s", new_speaker, new_origin, new_measurement)
+                    logger.debug(
+                        "Adding first measurement %s %s %s",
+                        new_speaker,
+                        new_origin,
+                        new_measurement,
+                    )
                     df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
-                    logger.debug("Adding new measurement %s %s %s", new_speaker, new_origin, new_measurement)
+                    logger.debug(
+                        "Adding new measurement %s %s %s", new_speaker, new_origin, new_measurement
+                    )
                     df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
         cache_save_key(cache_key(new_speaker), df_old)
@@ -388,10 +400,7 @@ def find_metadata_chunks():
 
 
 def run_in_parallel(
-    func: Callable,
-    tasks: list[tuple[Any, ...]],
-    num_processes: int = -1,
-    chunk_size: int = 1
+    func: Callable, tasks: list[tuple[Any, ...]], num_processes: int = -1, chunk_size: int = 1
 ) -> list[Any]:
     """
     Run a function in parallel on multiple processes.
@@ -409,7 +418,7 @@ def run_in_parallel(
     if num_processes == -1:
         num_processes = max(1, multiprocessing.cpu_count() - 1)
 
-    logger.info(f"Running {len(tasks)} tasks in parallel using {num_processes} processes")
+    logger.info("Running %d tasks in parallel using {num_processes} processes", len(tasks))
 
     results = []
     try:
@@ -418,10 +427,10 @@ def run_in_parallel(
             for i, result in enumerate(pool.starmap(func, tasks, chunksize=chunk_size)):
                 results.append(result)
                 if i > 0 and i % 10 == 0:  # Log progress every 10 tasks
-                    logger.info(f"Completed {i+1}/{len(tasks)} tasks")
+                    logger.info("Completed %d/%d tasks", i+1, len(tasks))
 
     except Exception as e:
-        logger.error(f"Error in parallel execution: {e}")
+        logger.exception("Error in parallel execution")
         raise
 
     return results

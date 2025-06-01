@@ -41,8 +41,8 @@ import pandas as pd
 logger = logging.getLogger("spinorama")
 
 # Spinorama specific imports
-from generate_common import get_custom_logger,  args2level,  cache_load,  sort_metadata_per_date
-from spinorama.compute_scores import  speaker_pref_rating
+from generate_common import get_custom_logger, args2level, cache_load, sort_metadata_per_date
+from spinorama.compute_scores import speaker_pref_rating
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 
@@ -52,7 +52,22 @@ from spinorama.filter_peq import peq_preamp_gain as filter_peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
 
 # Local application imports
-from datas import metadata, Peq, EQ, PrefRating, Measurement, DataAcquisition, Extras, Parameters, Specifications, SPL, Size, Dispersion, Symmetry, MeasurementQuality
+from datas import (
+    metadata,
+    Peq,
+    EQ,
+    PrefRating,
+    Measurement,
+    DataAcquisition,
+    Extras,
+    Parameters,
+    Specifications,
+    SPL,
+    Size,
+    Dispersion,
+    Symmetry,
+    MeasurementQuality,
+)
 
 # Typing imports
 from typing import Any, cast, Optional, TypedDict
@@ -68,6 +83,7 @@ KEY_LENGTH = 5
 
 # size of years (2024 -> 4)
 YEAR_LENGTH = 4
+
 
 def tracing(msg: str):
     """debugging ray is sometimes painfull"""
@@ -164,41 +180,46 @@ def compute_scaled_sm_pir(sm_pir: float) -> float:
 def reject(filters: dict, speaker_name: str) -> bool:
     return filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name
 
+
 def version_is_eq(version: str) -> bool:
     return version[-3:] == "_eq"
+
 
 def update_metadata(speaker_name, version, target, data):
     # this naming convention is a bad idea and should be change to something
     # more sensible in the future
     # changing it requires extensive change in generate_html and the js code
     if data is None:
-        print('update metadata: nul')
+        print("update metadata: nul")
         return
     key = version
     value = target
     if version_is_eq(version):
-        key = version [:-3]
+        key = version[:-3]
         value = target + "_eq"
 
     if key not in metadata.speakers_info[speaker_name]["measurements"]:
-        print('update metadata: create new key {}'.format(key))
-        metadata.speakers_info[speaker_name]["measurements"][key] = Measurement({
-            'origin': 'unknown',
-            'format': 'klippel',
-        })
+        print("update metadata: create new key {}".format(key))
+        metadata.speakers_info[speaker_name]["measurements"][key] = Measurement(
+            {
+                "origin": "unknown",
+                "format": "klippel",
+            }
+        )
 
     if value not in Measurement.__optional_keys__ and value not in Measurement.__required_keys__:
         logger.exception("Got an unkown key %s for a measurement from %s", value, speaker_name)
         return
 
-    print('update metadata: update key {} with value {}'.format(key, value))
+    print("update metadata: update key {} with value {}".format(key, value))
     metadata.speakers_info[speaker_name]["measurements"][key][value] = data
+
 
 def add_measurement(speaker_name, origin, key, dfs):
     result = {
-        'speaker_name': speaker_name,
-        'origin': origin,
-        'version': key,
+        "speaker_name": speaker_name,
+        "origin": origin,
+        "version": key,
     }
     tracing("speaker_name={:30s} version={:30s} origin={:20s}".format(speaker_name, key, origin))
 
@@ -215,9 +236,9 @@ def add_measurement(speaker_name, origin, key, dfs):
 
     sensitivity = dfs.get("sensitivity")
     if (
-            sensitivity is not None
-            and metadata.speakers_info[speaker_name].get("type") == "passive"
-            and key == default_key
+        sensitivity is not None
+        and metadata.speakers_info[speaker_name].get("type") == "passive"
+        and key == default_key
     ):
         result["computed_sensitivity"] = {
             "computed": sensitivity,
@@ -237,9 +258,7 @@ def add_measurement(speaker_name, origin, key, dfs):
 
     inroom = dfs["Estimated In-Room Response"]
     if inroom is not None:
-        pref_rating = compute_speaker_pref_rating(
-            cea2034=spin, pir=inroom, rounded=True
-        )
+        pref_rating = compute_speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
         score_penalty = 0.0
         extras_dict = dfs.get("extras")
         score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
@@ -252,11 +271,8 @@ def add_measurement(speaker_name, origin, key, dfs):
         result["pref_rating"] = pref_rating
     return result
 
-def add_score(speaker_name, speaker_data, level=None):
-    """Process a single speaker's data to compute scores"""
-    if level is None:
-        # If level is not provided, try to get it from the global scope
-        level = globals().get('level', logging.WARNING)
+
+def add_score(speaker_name, speaker_data):
     """Process a single speaker's data to compute scores"""
     logger.info("Processing %s", speaker_name)
 
@@ -274,8 +290,8 @@ def add_score(speaker_name, speaker_data, level=None):
                 continue
     return results
 
+
 def add_scores(dataframe, parse_max, filters):
-    global level  # Ensure we have access to the global level
     """Process speaker scores for processing using multiprocessing"""
     # Prepare the arguments for parallel processing
     args = []
@@ -293,29 +309,33 @@ def add_scores(dataframe, parse_max, filters):
     results = []
 
     for i in range(0, len(args), chunk_size):
-        chunk = args[i:i + chunk_size]
+        chunk = args[i : i + chunk_size]
         with multiprocessing.Pool(processes=num_processes) as pool:
-            # Use a partial function to pass the level parameter
-            process_func = partial(process_single_measurement, level=level)
-            chunk_results = pool.map(process_func, chunk)
+            chunk_results = pool.map(add_measurement, chunk)
             results.append(chunk_results)
 
     # save
     for chunk in results:
         for speaker in chunk:
             for result in speaker:
-                for item in ('computed_sensitivity', 'estimates', 'pref_rating'):
+                for item in ("computed_sensitivity", "estimates", "pref_rating"):
                     if item in result:
                         update_metadata(
-                            result['speaker_name'],
-                            result['version'],
+                            result["speaker_name"],
+                            result["version"],
                             item,
                             result[item],
                         )
                     else:
-                        logger.debug("Skipping metadata update for %s %s as %s is missing", result['speaker_name'], result['version'], item)
+                        logger.debug(
+                            "Skipping metadata update for %s %s as %s is missing",
+                            result["speaker_name"],
+                            result["version"],
+                            item,
+                        )
 
-def percent(val: float, vmin:float, vmax:float) -> float:
+
+def percent(val: float, vmin: float, vmax: float) -> float:
     if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
         logger.debug("compute percent failed with data is NaN")
         return 0.0
@@ -327,7 +347,6 @@ def percent(val: float, vmin:float, vmax:float) -> float:
 
 
 def add_scaled_scores(speakers, parse_max, filters):
-    global level  # Ensure we have access to the global level
     for speaker_name, versions in speakers.items():
         for version in versions:
             if version[:3] == "_eq":
@@ -335,7 +354,9 @@ def add_scaled_scores(speakers, parse_max, filters):
             current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
             if not current_measurement:
                 logger.warning(
-                    "Skipping scaling for speaker %s / version %s as measurement data is missing.", speaker_name, version
+                    "Skipping scaling for speaker %s / version %s as measurement data is missing.",
+                    speaker_name,
+                    version,
                 )
                 continue
 
@@ -350,16 +371,17 @@ def add_scaled_scores(speakers, parse_max, filters):
             # sm_sp = pref_rating_value.get("sm_sound_power", -1.0)
             # sm_pir = pref_rating_value.get("sm_pred_in_room", -1.0)
 
-            scaled_pref_rating = PrefRating({
-                'pref_score': compute_scaled_pref_score(pref_score),
-                'pref_score_wsub': compute_scaled_pref_score(pref_score_wsub),
-            })
+            scaled_pref_rating = PrefRating(
+                {
+                    "pref_score": compute_scaled_pref_score(pref_score),
+                    "pref_score_wsub": compute_scaled_pref_score(pref_score_wsub),
+                }
+            )
             logger.info("Adding %s", scaled_pref_rating)
             update_metadata(speaker_name, version, "scaled_pref_rating", scaled_pref_rating)
 
 
 def add_scaled_flatness(speakers, parse_max, filters):
-    global level  # Ensure we have access to the global level
     for speaker_name, versions in speakers.items():
         for version in versions:
             if version_is_eq(version):
@@ -367,7 +389,9 @@ def add_scaled_flatness(speakers, parse_max, filters):
             current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
             if not current_measurement:
                 logger.warning(
-                    "Skipping scaling for %s %s as measurement data is missing.", speaker_name, version
+                    "Skipping scaling for %s %s as measurement data is missing.",
+                    speaker_name,
+                    version,
                 )
                 continue
 
@@ -758,11 +782,6 @@ def dump_metadata(meta):
 
 
 def main():
-    global level, metadata
-    # Make sure metadata is properly initialized
-    import datas.metadata as metadata_module
-    global metadata
-    metadata = metadata_module
     main_df = None
     speaker = args.speaker
     mversion = args.mversion
@@ -808,8 +827,8 @@ def main():
     add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
 
-#   add_slopes(parse_max, filters)
-#   steps.append(("slopes", time.perf_counter()))
+    #   add_slopes(parse_max, filters)
+    #   steps.append(("slopes", time.perf_counter()))
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")

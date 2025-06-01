@@ -17,17 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_stats.py [--help] [--version] [--dev] [--print=<what>]\
- [--sitedev=<http>]  [--log-level=<level>]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --print=<what>    print information. Options are 'eq_txt' or 'eq_csv'
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-"""
-
 import json
 import sys
 import pathlib

@@ -1,6 +1,4 @@
-# FROM ubuntu/python:3.12-24.04_stable as base
 FROM ubuntu:24.04_stable as base
-
 
 LABEL org.opencontainers.image.authors="pierre@spinorama.org"
 LABEL version="0.2"

@@ -57,6 +57,7 @@ from spinorama.plot import (
     radar_params_default,
 )
 
+
 class SpinoramaDisplayTests(unittest.TestCase):
     def setUp(self):
         self.dfs_full = {}
@@ -181,7 +182,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_name="Revel F208",
             speaker_parameters=parameters,
         )
-
 
     def test_dfs_full(self):
         for df in self.dfs_full.values():

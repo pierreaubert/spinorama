@@ -29,7 +29,7 @@ from generate_common import (
     args2level,
     cache_load_distributed,
 )
-from autoeq.auto_save import optim_save_peq, optim_save_peq_seq
+from autoeq.auto_save import optim_save_peq
 
 
 VERSION = "0.27"
@@ -83,7 +83,6 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
 
     results = {}
     for current_speaker_name in df_all_speakers:
-
         # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
@@ -113,7 +112,7 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 "default origin %s not in %s (known origins are: %s)",
                 default_origin,
                 current_speaker_name,
-                ', '.join(df_all_speakers[current_speaker_name])
+                ", ".join(df_all_speakers[current_speaker_name]),
             )
             continue
 
@@ -140,13 +139,12 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
             continue
 
         # Process EQ computation directly
-        result = optim_save_peq_seq(
+        results[current_speaker_name] = optim_save_peq(
             current_speaker_name,
             default_origin,
             df_speaker,
             optim_config,
         )
-        results[current_speaker_name] = result
 
     logger.info("Processed %d speakers for EQ computations", len(results))
     return results
@@ -617,18 +615,23 @@ def main():
                     try:
                         actual_slope_value = -float(slope_name[2:])  # e.g., "--0.5" -> -0.5
                     except ValueError:
-                        logger.error(f"Cannot parse slope from numeric flag name {slope_name}")
+                        logger.exception("Cannot parse slope from numeric flag name %s", slope_name)
                         sys.exit(1)
                 else:
                     logger.warning(
-                        f"Flag {slope_name} (dest: {slope_key}) resolved to True but is not a numeric-style flag. Check argparse definition. Skipping this slope argument."
+                        "Flag %s (dest: %s) resolved to True but is not a numeric-style flag. Check argparse definition. Skipping this slope argument.",
+                        slope_name,
+                        slope_key,
                     )
                     continue
             elif isinstance(arg_value, (float, int)):
                 actual_slope_value = float(arg_value)
             else:
                 logger.error(
-                    f"Unexpected type for argument {slope_key}: {type(arg_value)}. Value: {arg_value}. Check argparse definition."
+                    "Unexpected type for argument %s: %s. Value: %s. Check argparse definition.",
+                    slope_key,
+                    type(arg_value),
+                    arg_value,
                 )
                 sys.exit(1)
 
@@ -775,7 +778,9 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        df_all_speakers = cache_load_distributed(filters=do_filters, smoke_test=args.smoke_test, level=level)
+        df_all_speakers = cache_load_distributed(
+            filters=do_filters, smoke_test=args.smoke_test, level=level
+        )
         print(df_all_speakers.keys())
         print(df_all_speakers[speaker_name].keys())
         print(df_all_speakers[speaker_name]["unknown"].keys())

@@ -17,21 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
- [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --sitedev=<http>  default: http://localhost:8000/dist
-  --dev             if you want to generate the dev websites
-  --optim           if you want an optimised built
-  --sw              if you want a service worker to be generated
-  --skip-speakers   skip speaker html page generation (useful for debugging)
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-"""
-
 from glob import glob
 import json
 import os
