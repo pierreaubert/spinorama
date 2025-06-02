@@ -134,8 +134,8 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if "Measurements" in spin:
             spdi = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(drop=True)
             if spdi is not None:
-                est["dir_constant"] = spdi.dB.std()
-                logger.debug("Constant directivity %d", est["dir_constant"])
+                est["directivity_spdi_stddev"] = spdi.dB.std()
+                logger.debug("SPDI Constant directivity %f", est["directivity_spdi_stddev"])
 
     except TypeError:
         logger.exception("Estimates failed for %s", onaxis.shape)
@@ -158,9 +158,9 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
             if spl is not None and not spl.empty:
                 try:
                     dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg_v2(spl)
-                    est["dir_{}_p".format(orientation)] = dir_deg_p
-                    est["dir_{}_m".format(orientation)] = dir_deg_m
-                    est["dir_{}".format(orientation)] = dir_deg
+                    est["directivity_{}_pos".format(orientation)] = dir_deg_p
+                    est["directivity_{}_neg".format(orientation)] = dir_deg_m
+                    est["directivity_{}_avg".format(orientation)] = dir_deg
                 except KeyError as error:
                     # missing data
                     logger.debug("Computing %s directivity failed! %s", orientation, error)

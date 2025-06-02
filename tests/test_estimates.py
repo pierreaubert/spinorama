@@ -79,10 +79,12 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 50)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -50)
-        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
-        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -40)
+        self.assertAlmostEqual(self.estimates["directivity_horizontal_pos"], 50)
+        self.assertAlmostEqual(self.estimates["directivity_horizontal_neg"], -50)
+        self.assertAlmostEqual(self.estimates["directivity_horizontal_avg"], 50)
+        self.assertAlmostEqual(self.estimates["directivity_vertical_pos"], 40)
+        self.assertAlmostEqual(self.estimates["directivity_vertical_neg"], -40)
+        self.assertAlmostEqual(self.estimates["directivity_vertical_avg"], 40)
 
 
 class SpinoramaEstimatesNV4Tests(unittest.TestCase):
@@ -114,10 +116,10 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 3.0)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 50)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -50)
-        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
-        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -20)
+        self.assertAlmostEqual(self.estimates["directivity_horizontal_pos"], 50)
+        self.assertAlmostEqual(self.estimates["directivity_horizontal_neg"], -50)
+        self.assertAlmostEqual(self.estimates["directivity_vertical_pos"], 40)
+        self.assertAlmostEqual(self.estimates["directivity_vertical_neg"], -20)
 
 
 class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
