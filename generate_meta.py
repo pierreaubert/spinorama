@@ -30,6 +30,7 @@ import math
 import multiprocessing
 import os
 from pathlib import Path
+import pprint
 import sys
 import time
 import zipfile
@@ -72,9 +73,6 @@ from datas import (
 # Typing imports
 from typing import Any, cast, Optional, TypedDict
 
-# activate some tracing
-ACTIVATE_TRACING: bool = True
-
 # number of speakers to put in the head file
 METADATA_HEAD_SIZE = 20
 
@@ -85,10 +83,15 @@ KEY_LENGTH = 5
 YEAR_LENGTH = 4
 
 
-def tracing(msg: str):
-    """debugging ray is sometimes painfull"""
-    if ACTIVATE_TRACING:
-        print(f"---- TRACING ---- {msg} ----")
+def percent(val: float, vmin: float, vmax: float) -> float:
+    if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
+        logger.debug("compute percent failed with data is NaN")
+        return 0.0
+    if vmax == vmin:
+        logger.debug("conpute percent failed with vmax == min, returning 50.0 as neutral")
+        return 50.0
+    p = math.floor(100 * (val - vmin) / (vmax - vmin))
+    return float(min(max(0, p), 100))
 
 
 def compute_scaled_pref_score(pref_score: float) -> float:
@@ -188,15 +191,14 @@ def version_is_eq(version: str) -> bool:
 def update_metadata(speaker_name, version, target, data):
     # this naming convention is a bad idea and should be change to something
     # more sensible in the future
-    # changing it requires extensive change in generate_html and the js code
+    # changing it requires extensive changes in generate_html and the js code
     if data is None:
-        print("update metadata: nul")
+        print("ERROR update metadata: nil")
         return
+
     key = version
-    value = target
     if version_is_eq(version):
         key = version[:-3]
-        value = target + "_eq"
 
     if key not in metadata.speakers_info[speaker_name]["measurements"]:
         print("update metadata: create new key {}".format(key))
@@ -207,40 +209,42 @@ def update_metadata(speaker_name, version, target, data):
             }
         )
 
-    if value not in Measurement.__optional_keys__ and value not in Measurement.__required_keys__:
-        logger.exception("Got an unkown key %s for a measurement from %s", value, speaker_name)
+    if target not in Measurement.__optional_keys__ and target not in Measurement.__required_keys__:
+        logger.exception("Got an unkown key %s for a measurement from %s", target, speaker_name)
         return
 
-    print("update metadata: update key {} with value {}".format(key, value))
-    metadata.speakers_info[speaker_name]["measurements"][key][value] = data
+    print("update metadata: update key {} with target {}".format(key, target))
+    metadata.speakers_info[speaker_name]["measurements"][key][target] = data
 
 
-def add_measurement(speaker_name, origin, key, dfs):
+def add_measurement(speaker_name, origin, version, dfs):
     result = {
         "speaker_name": speaker_name,
         "origin": origin,
-        "version": key,
+        "version": version,
     }
-    tracing("speaker_name={:30s} version={:30s} origin={:20s}".format(speaker_name, key, origin))
-
     if dfs is None:
         return result
 
-    default_key = metadata.speakers_info[speaker_name].get("default_measurement")
-    if default_key is None:
+    default_version = metadata.speakers_info[speaker_name].get("default_measurement")
+    if default_version is None:
         logger.exception(
-            "Got an key error exception for speaker_name %s default measurement",
+            "Got an version error exception for speaker_name %s default measurement",
             speaker_name,
         )
         return result
 
-    sensitivity = dfs.get("sensitivity")
+    eq_tag = ""
+    if version_is_eq(version):
+        eq_tag = "_eq"
+
+    sensitivity = dfs.get("sensitivity{}".format(eq_tag), None)
     if (
         sensitivity is not None
         and metadata.speakers_info[speaker_name].get("type") == "passive"
-        and key == default_key
+        and version == default_version
     ):
-        result["computed_sensitivity"] = {
+        result["computed_sensitivity{}".format(eq_tag)] = {
             "computed": sensitivity,
             "distance": dfs.get("sensitivity_distance", 1.0),
             "sensitivity_1m": dfs.get("sensitivity_1m"),
@@ -253,8 +257,12 @@ def add_measurement(speaker_name, origin, key, dfs):
     spl_h = dfs.get("SPL Horizontal_unmelted", None)
     spl_v = dfs.get("SPL Vertical_unmelted", None)
     est = estimates(spin, spl_h, spl_v)
+    scaled_flatness_val = None
     if est is not None:
-        result["estimates"] = est
+        result["estimates{}".format(eq_tag)] = est
+        flatness = est.get("ref_band")
+        if flatness is not None and not math.isnan(flatness):
+            scaled_flatness_val = compute_scaled_flatness(flatness)
 
     inroom = dfs["Estimated In-Room Response"]
     if inroom is not None:
@@ -263,12 +271,18 @@ def add_measurement(speaker_name, origin, key, dfs):
         extras_dict = dfs.get("extras")
         score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
         pref_rating["pref_score"] += score_penalty
-        pref_rating["pref_score_wsub"] += score_penalty
 
         if pref_rating is None:
             return result
 
-        result["pref_rating"] = pref_rating
+        result["pref_rating{}".format(eq_tag)] = pref_rating
+        result["scaled_pref_rating{}".format(eq_tag)] = {
+            "scaled_flatness": scaled_flatness_val,
+            "scaled_pref_score": compute_scaled_pref_score(pref_rating["pref_score"]),
+            "scaled_pref_wsub": compute_scaled_pref_score(pref_rating["pref_score_wsub"]),
+            "scaled_lfx_hz": compute_scaled_lfx_hz(pref_rating["lfx_hz"]),
+            "scaled_sm_pred_in_room": compute_scaled_lfx_hz(pref_rating["sm_pred_in_room"]),
+        }
     return result
 
 
@@ -324,92 +338,38 @@ def add_scores(dataframe, parse_max, filters):
 
     # save
     for chunk in results:
-        for speaker in chunk:
-            for result in speaker:
-                for item in ("computed_sensitivity", "estimates", "pref_rating"):
-                    if item in result:
+        for speakers in chunk:
+            for speaker in speakers:
+                for item in (
+                    "computed_sensitivity",
+                    "estimates",
+                    "pref_rating",
+                    "scaled_pref_rating",
+                ):
+                    item_eq = "{}_eq".format(item)
+                    if item in speaker:
                         update_metadata(
-                            result["speaker_name"],
-                            result["version"],
+                            speaker["speaker_name"],
+                            speaker["version"],
                             item,
-                            result[item],
+                            speaker[item],
+                        )
+                    elif item_eq in speaker:
+                        update_metadata(
+                            speaker["speaker_name"],
+                            speaker["version"],
+                            item_eq,
+                            speaker[item_eq],
                         )
                     else:
                         logger.debug(
                             "Skipping metadata update for %s %s as %s is missing",
-                            result["speaker_name"],
-                            result["version"],
+                            speaker["speaker_name"],
+                            speaker["version"],
                             item,
                         )
-
-
-def percent(val: float, vmin: float, vmax: float) -> float:
-    if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
-        logger.debug("compute percent failed with data is NaN")
-        return 0.0
-    if vmax == vmin:
-        logger.debug("conpute percent failed with vmax == min, returning 50.0 as neutral")
-        return 50.0
-    p = math.floor(100 * (val - vmin) / (vmax - vmin))
-    return float(min(max(0, p), 100))
-
-
-def add_scaled_scores(speakers, parse_max, filters):
-    for speaker_name, versions in speakers.items():
-        for version in versions:
-            if version[:3] == "_eq":
-                continue
-            current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
-            if not current_measurement:
-                logger.warning(
-                    "Skipping scaling for speaker %s / version %s as measurement data is missing.",
-                    speaker_name,
-                    version,
-                )
-                continue
-
-            pref_rating_value = current_measurement.get("pref_rating")
-            if not pref_rating_value:
-                continue
-
-            pref_score = pref_rating_value.get("pref_score", -100)
-            pref_score_wsub = pref_rating_value.get("pref_score_wsub", -100)
-            # lfx_hz = pref_rating_value.get("lfx_hz", 1000)
-            # nbd_on = pref_rating_value.get("nbd_on_axis", -1.0)
-            # sm_sp = pref_rating_value.get("sm_sound_power", -1.0)
-            # sm_pir = pref_rating_value.get("sm_pred_in_room", -1.0)
-
-            scaled_pref_rating = PrefRating(
-                {
-                    "pref_score": compute_scaled_pref_score(pref_score),
-                    "pref_score_wsub": compute_scaled_pref_score(pref_score_wsub),
-                }
-            )
-            logger.info("Adding %s", scaled_pref_rating)
-            update_metadata(speaker_name, version, "scaled_pref_rating", scaled_pref_rating)
-
-
-def add_scaled_flatness(speakers, parse_max, filters):
-    for speaker_name, versions in speakers.items():
-        for version in versions:
-            if version_is_eq(version):
-                continue
-            current_measurement = metadata.speakers_info[speaker_name]["measurements"].get(version)
-            if not current_measurement:
-                logger.warning(
-                    "Skipping scaling for %s %s as measurement data is missing.",
-                    speaker_name,
-                    version,
-                )
-                continue
-
-            estimates_dict = current_measurement.get("estimates")
-            flatness = estimates_dict.get("ref_band") if estimates_dict else None
-
-            scaled_flatness_val = None
-            if flatness is not None and not math.isnan(flatness):
-                scaled_flatness_val = compute_scaled_flatness(flatness)
-                update_metadata(speaker_name, version, "scaled_flatness", scaled_flatness_val)
+                # print('--- DEBUG ---')
+                # pprint.pp(metadata.speakers_info[speaker['speaker_name']])
 
 
 def add_quality(parse_max: Optional[int], filters: dict):
@@ -449,21 +409,6 @@ def add_quality(parse_max: Optional[int], filters: dict):
                         quality = "high"
             logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
             update_metadata(speaker_name, version, "quality", quality)
-
-
-# def add_slopes(parse_max: int, filters: dict):
-#     """Add slopes in db/oct for each curves and smoothness if available"""
-#     parsed = 0
-#     for speaker_name, speaker_data in metadata.speakers_info.items():
-#         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
-#             break
-#         parsed = parsed + 1
-#         logger.info("Processing %s", speaker_name)
-#         for version, m_data in speaker_data["measurements"].items():
-#             for key, value in m_data.items():
-#                 if 'slope_' in key or 'smoothness_' in key:
-#                     print('accepted {}'.format(key))
-#                     metadata.speakers_info[speaker_name]["measurements"][version][key] = value
 
 
 def add_eq(speaker_path, dataframe, parse_max, filters):
@@ -581,7 +526,6 @@ def get_spin_data(freq, speaker_name, speaker_data):
     default_key = None
     try:
         default_key = metadata.speakers_info[speaker_name]["default_measurement"]
-        # default_origin = metadata.speakers_info[speaker_name]["measurements"][default_key]["origin"]
     except KeyError:
         return None
 
@@ -766,7 +710,8 @@ def dump_metadata(meta):
     # partitionning is per year, each file is hashed and the hash
     # is stored in the name.
 
-    # Warning: when reading the chunks you need to read them from recent to old and discard he keys you a#lready have seen,
+    # Warning: when reading the chunks you need to read them from recent to old
+    # and discard he keys you a#lready have seen,
     meta_sorted_date = list(sort_metadata_per_date(meta_full).items())
     meta_sorted_date_head = dict(meta_sorted_date[0:METADATA_HEAD_SIZE])
     meta_sorted_date_tail = dict(meta_sorted_date[METADATA_HEAD_SIZE:])
@@ -823,20 +768,14 @@ def main():
     add_scores(main_df, parse_max, filters)
     steps.append(("scores", time.perf_counter()))
 
-    add_scaled_flatness(main_df, parse_max, filters)
-    steps.append(("scaled flatness", time.perf_counter()))
-
-    add_scaled_scores(main_df, parse_max, filters)
-    steps.append(("scaled scores", time.perf_counter()))
+    print("DEBUG AFTER SCORES")
+    pprint.pp(metadata.speakers_info["Vandersteen 2c"])
 
     add_eq("./datas", main_df, parse_max, filters)
     steps.append(("eq", time.perf_counter()))
 
     add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
-
-    #   add_slopes(parse_max, filters)
-    #   steps.append(("slopes", time.perf_counter()))
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")
