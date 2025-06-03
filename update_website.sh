@@ -20,30 +20,6 @@ echo "Update starts"
 mkdir -p build/website
 export PYTHONPATH=src:src/website:src/spinorama:.
 
-IP="127.0.0.1"
-case $HOSTNAME in
-
-    "spin")
-        IP="192.168.1.20"
-        ;;
-    "7pi")
-        IP="192.168.1.17"
-        ;;
-    "web")
-        IP="192.168.1.20"
-        ;;
-    "web01")
-        IP="192.168.1.20"
-        ;;
-    "web02")
-        IP="192.168.1.22"
-        ;;
-    "horn")
-        IP="192.168.1.36"
-        ;;
-esac
-#echo $IP
-
 # check meta
 command=$(python3 ./scripts/check_meta.py)
 status=$?
@@ -58,9 +34,7 @@ fi
 ./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
-mkdir -p build/ray
-rm -fr /tmp/ray && ln -s ~/src/spinorama/build/ray /tmp
-command=$(python3 ./generate_graphs.py --dash-ip="$IP")
+command=$(python3 ./generate_graphs.py --update-cache)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate graph!"
@@ -73,7 +47,7 @@ fi
 rm -f dist/json/*
 
 # recompute metadata for all speakers
-command=$(python3 ./generate_meta.py  --dash-ip="$IP")
+command=$(python3 ./generate_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate meta!"
