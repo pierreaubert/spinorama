@@ -232,11 +232,13 @@ def optim_save_peq(
     # do we have the full data?
     use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker
     if use_score and (
-            not measurements_complete_spl(
-                df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-            ) or not measurements_complete_freq(
-                df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-            )):
+        not measurements_complete_spl(
+            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+        )
+        or not measurements_complete_freq(
+            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
+        )
+    ):
         use_score = False
     # maybe we only have partial data but enough to compute the Spin
     if not use_score and ("CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker):
@@ -353,5 +355,3 @@ def optim_save_peq(
         print_small_summary(current_speaker_name, score, auto_score)
 
     return True, (current_speaker_name, auto_results, scores)
-
-

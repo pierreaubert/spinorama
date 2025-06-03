@@ -267,7 +267,9 @@ def main(level, args):
     num_processes = max(1, min(param_processes, num_processes))
 
     # Process measurements in parallel
-    df_new = process_measurements_parallel(speakerlist, filters, level, num_processes, data_dir, force)
+    df_new = process_measurements_parallel(
+        speakerlist, filters, level, num_processes, data_dir, force
+    )
 
     # Update cache if needed
     if not filters:  # Only update cache if no filters are applied
@@ -280,7 +282,6 @@ def main(level, args):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument("--version", action="version", version=f"generate_graphs_mp.py v{VERSION}")

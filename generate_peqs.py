@@ -781,9 +781,9 @@ def main():
         df_all_speakers = cache_load_distributed(
             filters=do_filters, smoke_test=args.smoke_test, level=level
         )
-        print(df_all_speakers.keys())
-        print(df_all_speakers[speaker_name].keys())
-        print(df_all_speakers[speaker_name]["unknown"].keys())
+        # print(df_all_speakers.keys())
+        # print(df_all_speakers[speaker_name].keys())
+        # print(df_all_speakers[speaker_name]["unknown"].keys())
     except ValueError as v_e:
         if speaker_name is not None:
             print(

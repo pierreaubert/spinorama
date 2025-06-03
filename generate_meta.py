@@ -278,10 +278,18 @@ def add_score(speaker_name, speaker_data):
 
     results = []
     for origin, measurements in speaker_data.items():
-        for key, dfs in measurements.items():
+        for version, dfs in measurements.items():
             try:
-                result = add_measurement(speaker_name, origin, key, dfs)
-                results.append(result)
+                result = None
+                if isinstance(dfs, dict):
+                    result = add_measurement(speaker_name, origin, version, dfs)
+                elif isinstance(dfs, tuple):
+                    # could be other stuff like an EQ as a list
+                    for i in dfs:
+                        if isinstance(i, dict):
+                            result = add_measurement(speaker_name, origin, version, i)
+                if result:
+                    results.append(result)
             except KeyError as ke:
                 logger.exception("KeyError in processing %s", speaker_name)
                 continue
@@ -311,7 +319,7 @@ def add_scores(dataframe, parse_max, filters):
     for i in range(0, len(args), chunk_size):
         chunk = args[i : i + chunk_size]
         with multiprocessing.Pool(processes=num_processes) as pool:
-            chunk_results = pool.map(add_measurement, chunk)
+            chunk_results = pool.starmap(add_score, chunk)
             results.append(chunk_results)
 
     # save

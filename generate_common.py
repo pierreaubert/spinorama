@@ -427,7 +427,7 @@ def run_in_parallel(
             for i, result in enumerate(pool.starmap(func, tasks, chunksize=chunk_size)):
                 results.append(result)
                 if i > 0 and i % 10 == 0:  # Log progress every 10 tasks
-                    logger.info("Completed %d/%d tasks", i+1, len(tasks))
+                    logger.info("Completed %d/%d tasks", i + 1, len(tasks))
 
     except Exception as e:
         logger.exception("Error in parallel execution")
