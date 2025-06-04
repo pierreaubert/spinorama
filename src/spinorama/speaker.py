@@ -99,7 +99,7 @@ def _display_spinorama_common(
 ):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
-        logger.error(
+        logger.debug(
             "plot_spinorama failed, cannot get Spin with is_normalized=%s. Known keys are %s",
             str(is_normalized),
             ", ".join(df.keys()),
@@ -110,7 +110,7 @@ def _display_spinorama_common(
         spin, graph_params, slopes, is_normalized=is_normalized, valid_freq_range=valid_freq_range
     )
     if fig is None:
-        logger.error("plot_spinorama failed")
+        logger.info("plot_spinorama failed")
         return None
     return fig
 
@@ -136,7 +136,7 @@ def _display_inroom_common(
 ):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
-        logger.error("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
+        logger.debug("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
         return None
 
     if "Estimated In-Room Response_unmelted" not in df:
