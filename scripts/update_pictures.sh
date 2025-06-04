@@ -18,6 +18,9 @@
 
 CONVERT=convert
 
+OS=$(uname)
+ARCH=$(uname -a | awk '{print $NF}')
+
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
     CONVERT="magick convert"
 fi
