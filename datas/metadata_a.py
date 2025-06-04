@@ -2034,6 +2034,35 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "AsciLab F6Bs": {
+        "brand": "AsciLab",
+        "model": "F6Bs",
+        "type": "passive",
+        "price": "575",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-f6bs-speaker-review.63324/",
+                    "adk": "https://audiore.kr/ascilab-f6b-sealed-%EB%A6%AC%EB%B7%B0/",
+                },
+                "review_published": "20250604",
+                "specifications": {
+                    "size": {
+                        "height": 368,
+                        "width": 202,
+                        "depth": 154,
+                    },
+                    "weight": 5.7,
+                },
+            },
+        },
+    },
     "ASR Directiva Open Source Speaker": {
         "brand": "ASR",
         "model": "Directiva Open Source Speaker",
