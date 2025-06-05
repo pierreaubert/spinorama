@@ -96,7 +96,7 @@ const labelShort = {
 };
 
 const graphSmall = 550;
-const graphLarge = 800;
+const graphLarge = 1024;
 
 const graphRatio = 4.0 / 3.0;
 
@@ -181,7 +181,7 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
             height +
             ' ratio=' +
             ratio +
-            '#graphs=' +
+            ' #graphs=' +
             nbGraphs
     );
 
@@ -835,7 +835,7 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
             }
         }
     }
-    let option = setGraphOptions(speakerGraphs, width, height, 1, GraphProperties[measurement]);
+    let option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
     option.layout.height += 4 * 14;
 
     // move the legend2 such that they do not overlap
@@ -901,7 +901,7 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
             }
         }
     }
-    let option = setGraphOptions(speakerGraphs, width, height, 1, GraphProperties[measurement]);
+    let option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
     if (measurement === 'On Axis' || measurement === 'Vertical Reflections') {
         option.layout.height -= 3 * 14;
     } else if (measurement === 'SPL Horizontal' || measurement === 'SPL Vertical') {
@@ -928,7 +928,7 @@ export function setRadar(measurement, speakerNames, speakerGraphs, width, height
             }
         }
     }
-    const options = setGraphOptions(speakerGraphs, width, height, 1);
+    const options = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
     options.layout.height += 20 * 12;
     options.layout.margin.t += 40;
     return [options];
@@ -939,7 +939,12 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
-            let options = setGraphOptions([{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }], width, height, 2);
+            let options = setGraphOptions(
+		[{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }],
+		width, height,
+		GraphProperties[measurement],
+		2
+	    );
             // this shapes are not working in 3D thus removing them
             if (options.layout && options.layout?.shapes) {
                 options.layout.shapes = null;
@@ -957,8 +962,8 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         layout: structuredClone(graphsConfigs[0].layout),
         config: structuredClone(graphsConfigs[0].config),
     };
-    mergedConfig.layout.width = Math.min(600, window.innerWidth);
     if (isDisplayCompact()) {
+	mergedConfig.layout.width = window.innerWidth;
         mergedConfig.layout.height = mergedConfig.layout.width + 280;
         mergedConfig.layout.margin = {
             t: 160, // double lines title + axis
@@ -967,12 +972,23 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             b: 120,
         };
     } else {
-        mergedConfig.layout.height = mergedConfig.layout.width + 240;
-        mergedConfig.layout.margin = {
-            t: 160, // double lines title + axis
-            r: 100, // colorbar
-        };
+	if (isDisplayVertical()) {
+	    mergedConfig.layout.width = window.innerWidth-graphMarginRight;
+            mergedConfig.layout.height = mergedConfig.layout.width + 240;
+            mergedConfig.layout.margin = {
+		t: 160, // double lines title + axis
+		r: 100, // colorbar
+            };
+	} else {
+	    mergedConfig.layout.width = window.innerWidth;
+            mergedConfig.layout.margin = {
+		t: 60,  // title
+		b: 40, // axis
+		r: 40, // colorbar
+            };
+	}
     }
+    // customise title
     function split(title) {
         const pos_for = title.indexOf(' for ');
         const pos_measured = title.indexOf(' measured ');
@@ -983,11 +999,15 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     }
     const split0 = split(graphsConfigs[0].layout.title.text);
     const split1 = split(graphsConfigs[1].layout.title.text);
-    const title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+    let title = '(A) ' + split0[0] + ' ' + split0[1] + ' v.s. (B) ' + split1[0] + ' ' + split1[1];
+    if (isDisplayCompact() || isDisplayVertical()) {
+	title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+    }
     mergedConfig.layout.title = {
         text: title,
         font: { size: 14 },
     };
+    // merge axis
     for (const i in graphsConfigs) {
         const config = graphsConfigs[i];
         const offset = (parseInt(i) + 1).toString();
@@ -1014,7 +1034,10 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                         trace.colorbar.len = 1.0;
                     } else {
                         trace.colorbar.orientation = 'v';
-                        trace.colorbar.x = 1.25;
+                        trace.colorbar.x = 1.15;
+			if (isDisplayCompact()) {
+                            trace.colorbar.x = 1.25;
+			}
                         trace.colorbar.xanchor = 'right';
                         trace.colorbar.y = 0.5;
                         trace.colorbar.yanchor = 'center';
@@ -1033,30 +1056,60 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             mergedConfig.data.push(trace);
         }
     }
-    const range0 = graphsConfigs[0].layout.xaxis.range;
-    const range1 = graphsConfigs[1].layout.xaxis.range;
-    const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
 
-    mergedConfig.layout.xaxis.side = 'top';
-    mergedConfig.layout.xaxis.tick = 'outside';
-    mergedConfig.layout.xaxis.range = range;
+    if (isDisplayCompact() || isDisplayVertical()) {
+	mergedConfig.layout.xaxis.side = 'top';
+	mergedConfig.layout.xaxis.tick = 'outside';
 
-    mergedConfig.layout.xaxis2.side = 'bottom';
-    mergedConfig.layout.xaxis2.tick = 'outside';
-    mergedConfig.layout.xaxis2.range = range;
-    mergedConfig.layout.xaxis2['anchor'] = 'y2';
+	mergedConfig.layout.xaxis2.side = 'bottom';
+	mergedConfig.layout.xaxis2.tick = 'outside';
+	mergedConfig.layout.xaxis2['anchor'] = 'y2';
 
-    mergedConfig.layout.yaxis.tick = 'outside';
-    if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
-        mergedConfig.layout.yaxis.title.text = 'Angle (A)';
+	mergedConfig.layout.yaxis.tick = 'outside';
+	if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
+            mergedConfig.layout.yaxis.title.text = 'Angle (A)';
+	}
+
+	mergedConfig.layout.yaxis2.tick = 'outside';
+	if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+            mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+	}
+
+	const range0 = graphsConfigs[0].layout.xaxis.range;
+	const range1 = graphsConfigs[1].layout.xaxis.range;
+	const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+	mergedConfig.layout.xaxis.range = range;
+	mergedConfig.layout.xaxis2.range = range;
+	mergedConfig.layout.yaxis['domain'] = [0.51, 1];
+	mergedConfig.layout.yaxis2['domain'] = [0, 0.49];
+    } else {
+	mergedConfig.layout.xaxis.side = 'bottom';
+	mergedConfig.layout.xaxis.tick = 'outside';
+
+	mergedConfig.layout.xaxis2.side = 'bottom';
+	mergedConfig.layout.xaxis2.tick = 'outside';
+
+	mergedConfig.layout.yaxis.tick = 'outside';
+	if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
+            mergedConfig.layout.yaxis.title.text = 'Angle (A)';
+	}
+
+	mergedConfig.layout.yaxis2.side = 'right';
+	mergedConfig.layout.yaxis2.tick = 'outside';
+	mergedConfig.layout.yaxis2['anchor'] = 'x2';
+	if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+            mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+	}
+
+	const range0 = graphsConfigs[0].layout.yaxis.range;
+	const range1 = graphsConfigs[1].layout.yaxis.range;
+	const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+
+	mergedConfig.layout.xaxis['domain'] = [0, 0.49];
+	mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
+	mergedConfig.layout.yaxis.range=range;
+	mergedConfig.layout.yaxis2.range=range;
     }
-    mergedConfig.layout.yaxis['domain'] = [0.51, 1];
-
-    mergedConfig.layout.yaxis2.tick = 'outside';
-    if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
-        mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
-    }
-    mergedConfig.layout.yaxis2['domain'] = [0, 0.49];
 
     return [mergedConfig];
 }
@@ -1209,6 +1262,7 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
                 [{ data: polarData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
+		GraphProperties[measurement],
                 speakerGraphs.length
             );
             if (speakerGraphs.length > 1 && i === 0) {
@@ -1234,6 +1288,7 @@ export function setContour3D(measurement, speakerNames, speakerGraphs, width, he
                 [{ data: surfaceData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
+		GraphProperties[measurement],
                 speakerGraphs.length
             );
             // this shapes are not working in 3D thus removing them
