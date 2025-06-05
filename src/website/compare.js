@@ -352,7 +352,7 @@ getMetadata()
             if (!graphsConfigs) {
                 return;
             }
-            console.log('DEBUG: resize ' + event.name);
+            console.log('DEBUG: resize ' + window.innerWidth+'px '+window.innerHeight+'px');
             if (graphsConfigs.length === 1) {
                 Plotly.Plots.resize('plot0');
             } else if (graphsConfigs.length === 2) {
