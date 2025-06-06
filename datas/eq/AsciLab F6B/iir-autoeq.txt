@@ -1,0 +1,14 @@
+EQ for AsciLab F6B computed from ASR data
+Preference Score 6.53 with EQ 7.04
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-06-06-08:26:07
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc    37 Hz Gain +2.69 dB Q 2.40
+Filter  2: ON PK Fc    56 Hz Gain +2.72 dB Q 2.97
+Filter  3: ON PK Fc   102 Hz Gain -1.74 dB Q 1.04
+Filter  4: ON PK Fc   579 Hz Gain +2.41 dB Q 2.90
+Filter  5: ON PK Fc   643 Hz Gain -4.71 dB Q 1.38
+Filter  6: ON PK Fc   976 Hz Gain +2.99 dB Q 0.57
+Filter  7: ON PK Fc  1381 Hz Gain -2.01 dB Q 1.80

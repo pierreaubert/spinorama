@@ -2063,6 +2063,34 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "AsciLab F6B": {
+        "brand": "AsciLab",
+        "model": "F6B",
+        "type": "passive",
+        "price": "835",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-f6b-bookshelf-speaker-review.63387/#post-2323226",
+                },
+                "review_published": "20250606",
+                "specifications": {
+                    "size": {
+                        "height": 368,
+                        "width": 203,
+                        "depth": 154,
+                    },
+                    "weight": 5.6,
+                },
+            },
+        },
+    },
     "ASR Directiva Open Source Speaker": {
         "brand": "ASR",
         "model": "Directiva Open Source Speaker",
