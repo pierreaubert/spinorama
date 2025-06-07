@@ -1,0 +1,11 @@
+AscLab F6B APO EQ Score 96000Hz
+June062025-124902
+
+Preamp: -3.00 dB
+
+Filter 1: ON HPQ Fc 48.6 Hz Gain 0.00 dB Q 1.77
+Filter 2: ON PK Fc 81.7 Hz Gain -3.74 dB Q 0.81
+Filter 3: ON PK Fc 249.0 Hz Gain 0.66 dB Q 3.21
+Filter 4: ON PK Fc 696.2 Hz Gain -1.74 dB Q 5.99
+Filter 5: ON PK Fc 4618.9 Hz Gain -0.89 dB Q 0.94
+Filter 6: ON PK Fc 8537.9 Hz Gain 1.83 dB Q 0.15
