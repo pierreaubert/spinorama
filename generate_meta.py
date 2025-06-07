@@ -30,7 +30,8 @@ import math
 import multiprocessing
 import os
 from pathlib import Path
-import pprint
+
+# import pprint
 import sys
 import time
 import zipfile
@@ -193,7 +194,7 @@ def update_metadata(speaker_name, version, target, data):
     # more sensible in the future
     # changing it requires extensive changes in generate_html and the js code
     if data is None:
-        print("ERROR update metadata: nil")
+        logger.error("update metadata: nil")
         return
 
     key = version
@@ -201,7 +202,7 @@ def update_metadata(speaker_name, version, target, data):
         key = version[:-3]
 
     if key not in metadata.speakers_info[speaker_name]["measurements"]:
-        print("update metadata: create new key {}".format(key))
+        # print("update metadata: create new key {}".format(key))
         metadata.speakers_info[speaker_name]["measurements"][key] = Measurement(
             {
                 "origin": "unknown",
@@ -213,7 +214,7 @@ def update_metadata(speaker_name, version, target, data):
         logger.exception("Got an unkown key %s for a measurement from %s", target, speaker_name)
         return
 
-    print("update metadata: update key {} with target {}".format(key, target))
+    # print("update metadata: update key {} with target {}".format(key, target))
     metadata.speakers_info[speaker_name]["measurements"][key][target] = data
 
 
@@ -767,9 +768,6 @@ def main():
 
     add_scores(main_df, parse_max, filters)
     steps.append(("scores", time.perf_counter()))
-
-    print("DEBUG AFTER SCORES")
-    pprint.pp(metadata.speakers_info["Vandersteen 2c"])
 
     add_eq("./datas", main_df, parse_max, filters)
     steps.append(("eq", time.perf_counter()))
