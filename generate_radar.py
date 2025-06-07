@@ -22,7 +22,7 @@ import sys
 import pathlib
 import argparse
 
-# from pprint import pprint
+from pprint import pprint
 
 
 import plotly.graph_objects as go
@@ -81,6 +81,7 @@ def scale_lower_is_better(key, val, scale):
 
 
 def build_scatterplot(pref_rating, scale, name):
+    # print('DEBUG: adding a trace {}'.format(name))
     opacity = 0.5
     if name == "Reference":
         opacity = 1.0
@@ -113,6 +114,7 @@ def print_radar(meta_data, scale, speaker_data):
     measurement = meta_data["measurements"][def_measurement]
     mformat = measurement["format"]
     if "pref_rating" not in measurement or "estimates" not in measurement:
+        logger.debug("skipping measurement no pref_rating and no estimates")
         return
     filename = "{}/{} {}/spider_large.png".format(
         CPATH_DIST_SPEAKERS, meta_data["brand"], meta_data["model"]
@@ -124,8 +126,10 @@ def print_radar(meta_data, scale, speaker_data):
     pref_rating = measurement["pref_rating"]
     # pprint(pref_rating)
     graph_data.append(build_scatterplot(pref_rating, scale, "Reference"))
+    # print('DEBUG: meta_data["eqs"] = "{}"'.format(meta_data["eqs"]))
     for eq_key in meta_data["eqs"]:
-        if eq_key not in ("autoeq", "autoeq_lw", "autoeq_score"):
+        # print('debug: eq_key = "{}"'.format(eq_key))
+        if eq_key not in ("autoeq", "autoeq_lw", "autoeq_score", "maiky76_lw", "maiky76_score"):
             continue
         if (
             "autoeq" in meta_data["eqs"]
@@ -137,7 +141,7 @@ def print_radar(meta_data, scale, speaker_data):
         eq_filename = "{}/{} {}/iir-{}.txt".format(
             CPATH_DATAS_EQ, meta_data["brand"], meta_data["model"], eq_key.replace("_", "-")
         )
-        # print(eq_filename)
+        # print("loading eq {}".format(eq_filename))
         iir = parse_eq_iir_rews(eq_filename, 48000)
         # print(iir)
         # compute pref_rating and estimates
@@ -154,7 +158,10 @@ def print_radar(meta_data, scale, speaker_data):
         # add results to data
         pretty_name = {
             "autoeq_lw": "autoEQ LW",
+            "autoeq_score": "autoEQ Score",
             "autoeq": "autoEQ Score",
+            "maiky76_lw": "Maiky76 LW",
+            "maiky76_score": "Maiky76 Score",
         }
         if (
             pref_rating is not None
@@ -162,9 +169,12 @@ def print_radar(meta_data, scale, speaker_data):
             and "pref_score" in pref_rating
             and "pref_score" in pref_rating_eq
         ):
+            # print('DEBUG adding graph {}'.format(eq_key))
             graph_data.append(
                 build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key))
             )
+        # else:
+        #    print('DEBUG skipping graph')
 
     layout = {
         "width": 800,
@@ -189,21 +199,23 @@ def print_radar(meta_data, scale, speaker_data):
         },
     }
     if len(graph_data) == 0:
+        # print('DEBUG: nothing to plot')
         return
 
     fig = go.Figure()
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
         fig.update_layout(layout)
-        write_multiformat(chart=fig, filename=filename, force=False)
+        write_multiformat(chart=fig, filename=filename, force=True)
 
 
 def main(args):
     # load all speaker data
+    filters = {}
+    if args.speaker is not None:
+        filters["speaker_name"] = args.speaker
     df_speaker = cache_load(
-        filters={
-            #            "speaker_name": "Alcons Audio RR12",
-        },
+        filters=filters,
         smoke_test=False,
         level="INFO",
     )
@@ -228,7 +240,7 @@ def main(args):
                 else:
                     logger.info('"eqs" is not in eqmeta for %s', k)
 
-    logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
+    logger.info("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 
     scale = compute_scale(jsmeta)
 
@@ -247,20 +259,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--version", action="version", version=f"generate_radar.py version {VERSION:.1f}"
     )
-    parser.add_argument("--dev", action="store_true", help="Enable development mode.")
-    parser.add_argument(
-        "--print",
-        dest="print_what",
-        choices=["eq_txt", "eq_csv"],
-        help="Print information. Options are 'eq_txt' or 'eq_csv'.",
-    )
-    parser.add_argument("--sitedev", type=str, help="HTTP site for development.")
-    parser.add_argument(
-        "--log-level",
-        default="WARNING",
-        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
-        help="Set the logging level (default: WARNING).",
-    )
+    parser.add_argument("--origin", help="Filter by origin")
+    parser.add_argument("--speaker", help="Filter by speaker")
+    parser.add_argument("--mversion", help="Filter by measurement version")
+    parser.add_argument("--brand", help="Filter by brand")
     args = parser.parse_args()
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)
