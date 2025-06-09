@@ -1829,9 +1829,9 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
-    "Monitor Audio Silver 100": {
+    "Monitor Audio Silver 100 6g": {
         "brand": "Monitor Audio",
-        "model": "Silver 100",
+        "model": "Silver 100 6g",
         "type": "passive",
         "price": "800",
         "shape": "bookshelves",
