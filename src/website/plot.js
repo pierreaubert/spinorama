@@ -376,8 +376,14 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
         datas = inputGraphsData[0].data;
     } else if (inputGraphsData.length === 2) {
         if (inputGraphsData[0] != null && inputGraphsData[1] != null) {
-            layout = inputGraphsData[0].layout;
-            datas = inputGraphsData[0].data.concat(inputGraphsData[1].data);
+	    let best = 0;
+	    const len0 = inputGraphsData[0].data ? inputGraphsData[0].data.length : 0;
+	    const len1 = inputGraphsData[1].data ? inputGraphsData[1].data.length : 0;
+	    if (len1 > len0) {
+		best = 1;
+	    }
+            layout = inputGraphsData[best].layout;
+	    datas = inputGraphsData[0].data.concat(inputGraphsData[1].data);
         } else if (inputGraphsData[0] != null) {
             layout = inputGraphsData[0].layout;
             datas = inputGraphsData[0].data;
