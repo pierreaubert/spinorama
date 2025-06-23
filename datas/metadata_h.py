@@ -41,6 +41,34 @@ speakers_info_h: SpeakerDatabase = {
             },
         },
     },
+    "Hedd Type 05 A-CORE": {
+        "brand": "Hedd",
+        "model": "Type 05 A-CORE",
+        "type": "active",
+        "price": "700",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hedd-type-05-a-core-monitor-review.63693/",
+                "review_published": "20250622",
+                "specifications": {
+                    "SPL": {
+                        "peak": 106,
+                    },
+                    "size": {
+                        "height": 308,
+                        "width": 180,
+                        "depth": 235,
+                    },
+                    "weight": 6.2,
+                },
+            },
+        },
+    },
     "Hivi 3.1A DIY": {
         "brand": "Hivi",
         "model": "3.1A DIY",
