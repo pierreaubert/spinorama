@@ -11,7 +11,7 @@ COPY *.js .
 COPY *.mjs .
 COPY *.txt .
 
-RUN python3.12 -m venv venv && \
+RUN /usr/bin/python3.12 -m venv venv && \
     . venv/bin/activate && \
     pip3 install -U -r ./requirements.txt && \
     pip3 install -U -r ./requirements-test.txt && \
