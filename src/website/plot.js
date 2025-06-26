@@ -366,31 +366,51 @@ const GraphProperties = Object.freeze({
     },
 });
 
-function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraphProperties, outputNumberGraphs) {
+export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraphProperties, outputNumberGraphs) {
     let datas = null;
     let layout = null;
     let config = null;
+
+    if (!inputGraphsData || inputGraphsData.length === 0) {
+        return { data: null, layout: null, config: null };
+    }
+
     // console.log('layout and data: ' + inputGraphsData.length + ' w=' + windowWidth + ' h=' + windowHeight);
     if (inputGraphsData.length === 1) {
+        if (!inputGraphsData[0]) { // Handle if the single item itself is null/undefined
+            return { data: null, layout: null, config: null };
+        }
         layout = inputGraphsData[0].layout;
         datas = inputGraphsData[0].data;
     } else if (inputGraphsData.length === 2) {
-        if (inputGraphsData[0] != null && inputGraphsData[1] != null) {
-	    let best = 0;
-	    const len0 = inputGraphsData[0].data ? inputGraphsData[0].data.length : 0;
-	    const len1 = inputGraphsData[1].data ? inputGraphsData[1].data.length : 0;
-	    if (len1 > len0) {
-		best = 1;
-	    }
+        const graph1 = inputGraphsData[0];
+        const graph2 = inputGraphsData[1];
+
+        if (graph1 && graph1.data && graph1.layout && graph2 && graph2.data && graph2.layout) {
+            let best = 0;
+            const len0 = graph1.data.length; // Already checked graph1.data
+            const len1 = graph2.data.length; // Already checked graph2.data
+            if (len1 > len0) {
+                best = 1;
+            }
             layout = inputGraphsData[best].layout;
-	    datas = inputGraphsData[0].data.concat(inputGraphsData[1].data);
-        } else if (inputGraphsData[0] != null) {
-            layout = inputGraphsData[0].layout;
-            datas = inputGraphsData[0].data;
-        } else if (inputGraphsData[1] != null) {
-            layout = inputGraphsData[1].layout;
-            datas = inputGraphsData[1].data;
+            datas = graph1.data.concat(graph2.data);
+        } else if (graph1 && graph1.data && graph1.layout) {
+            layout = graph1.layout;
+            datas = graph1.data;
+        } else if (graph2 && graph2.data && graph2.layout) {
+            layout = graph2.layout;
+            datas = graph2.data;
+        } else {
+            // Both are null or malformed
+            return { data: null, layout: null, config: null };
         }
+    }
+
+    // If after the above logic, layout or datas are still null (e.g. inputGraphsData had unexpected structure)
+    if (layout === null || datas === null) {
+         console.log('Error: No valid graph data to process in setGraphOptions');
+         return { data: null, layout: null, config: null };
     }
 
     const isVertical = isDisplayVertical();
