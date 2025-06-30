@@ -12,7 +12,7 @@ abstract: >
 
 ## What is a spinorama set of graphs?
 
-It is a way to understand quickly a speaker properties, how it will sound. It is [defined]("https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers") as a standard from the
+It is a way to understand quickly a speaker properties, how it will sound. It is [defined](https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers) as a standard from the
 from the US [CTA](https://cta.tech).
 
 Here is an example:
@@ -159,7 +159,7 @@ Each speaker measurement shows up in a box similar to:
 
 - **Price**: should be self explanatory; it is in USD per speaker not for a pair. The price was the first hit on Google  when I looked it up. It may be different in your country and/or later in time.
 
-- **Tonality**: this is a value between -10 and 10. It is defined in the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a> standard and is computed from the spinorama data: Higher is better.
+- **Tonality**: this is a value between -10 and 10. It is defined in the [CEA2034 standard](https://webstore.ansi.org/standards/cea/cea20342015ansi) and is computed from the spinorama data: Higher is better.
 
   - It make sense for tower, bookshelves or center but not for surround, in-wall or column speakers; if you see *** instead of a number, it is to remind you that the score is not valid for some shapes of speakers. If you go to the page of a speaker you will still still see the computed value. It needs to be taken with care. It may "work" for some speakers but not for others. The predicted in-room response assumes a rectangular room with standard reflection and a dipole speaker. All bets are off for a stadium or an omnidirectional speaker.
   - Note that a difference between two scores is only significant if the difference is greater than 0.6.

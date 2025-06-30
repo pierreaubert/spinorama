@@ -17,10 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-pylinkvalidate.py -P https://www.spinorama.org
+pylinkvalidate.py -P https://dev.spinorama.org
 
 for f in ./dist/speakers/*/*/*/*.html; do
-    name=${f#dist/}
+    name=${f#./dist/}
     u=${name// /%20}
-    pylinkvalidate.py -P "https://www.spinorama.org/$u"
+    pylinkvalidate.py -d 3 -P "https://dev.spinorama.org/$u"
 done
