@@ -85,12 +85,12 @@ print(datas['DIYSG HT-10']['Misc']['misc-mtg90'].keys())
 
 CEA2034 for the same speaker:
 ```{python}
-print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034'])
+print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034'][0:10])
 ```
 
 CEA2034 for the same speaker in a different format:
 ```{python}
-print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034_unmelted'])
+print(datas['DIYSG HT-10']['Misc']['misc-mtg90']['CEA2034_unmelted'][0:10])
 ```
 
 
