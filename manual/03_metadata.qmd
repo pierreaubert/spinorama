@@ -10,7 +10,7 @@ date: 2025-02-08
 ```
 git clone git@github.com:pierreaubert/spinorama.git
 ```
-Look at the [installation procedure](../README.md). If you are under Linux:
+Look at the [installation procedure](/02_install.html). If you are under Linux:
 ```
 sh setup.sh
 ```

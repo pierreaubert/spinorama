@@ -115,7 +115,7 @@ print('Reference point (Hz) at which the SPL value dropped by 3 dB with respect 
 		 properties['ref_to'],
 		 properties['ref_3dB'],
 ))
-print('Directivity in degrees at which the SPL value dropped by 6 d with respect to the on-axis measurementB: {:5.1f} deg'.format(properties['dir_horizontal_p']))
+print('Directivity in degrees at which the SPL value dropped by 6 d with respect to the on-axis measurementB: {:5.1f} deg'.format(properties['directivity_horizontal_avg']))
 properties
 ```
 
