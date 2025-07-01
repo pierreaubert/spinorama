@@ -103,7 +103,7 @@ def adapt_imports(jscode, versions: dict[str, str], js_files: list[str], mini: s
             " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
         ),
         (
-            "import Plotly from 'plotly-dist-min';",
+            "import Plotly from 'plotly.js-dist-min';",
             "",  # because module support is complicated :(
         ),
     ]

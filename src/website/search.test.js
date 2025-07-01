@@ -18,118 +18,22 @@
 
 /*eslint no-undef: "error"*/
 
-import Fuse from 'fuse.js';
+
 import { readFileSync } from 'fs';
-import { beforeAll, describe, expect, it, vi, beforeEach, afterEach } from 'vitest'; // Added afterEach
+import { beforeAll, describe, expect, it, beforeEach, afterEach } from 'vitest'; // Added afterEach
 
 import { getID } from './misc.js';
 // Import 'process' and 'setupEventListener' and alias the original 'search' to avoid naming conflicts with the mock
-import { isWithinPage, urlParameters2Sort, search as actualSearch, sortMetadata2, isFiltered, rank, rank1, rank2, rankN, process, setupEventListener as actualSetupEventListener } from './search.js';
-import * as miscFunctions from './misc.js'; // To mock 'show'
+import { isWithinPage, urlParameters2Sort, search as actualSearch } from './search.js';
+
 import { JSDOM } from 'jsdom'; // For DOM manipulation in tests
 
 const TEST_URL = 'https://dev.spinorama.org/index.html';
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
-// Helper function to create a Fuse instance for testing rank functions
-const createTestFuse = (data) => {
-    return new Fuse(
-        data.map((item) => ({ key: item.key, speaker: item.speaker })),
-        {
-            isCaseSensitive: false,
-            matchAllTokens: true,
-            findAllMatches: true,
-            minMatchCharLength: 2,
-            keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-            includeScore: true,
-            shouldSort: false, // Important for predictable test results based on input order for perfect matches
-            threshold: 0.0, // Exact matches only for simpler testing of rank logic
-            useExtendedSearch: true,
-        }
-    );
-};
 
-const mockMetadata = new Map([
-    [
-        'SpeakerA',
-        {
-            brand: 'BrandA',
-            model: 'ModelA',
-            price: '100',
-            amount: 'pair',
-            default_measurement: 'dmA',
-            measurements: {
-                dmA: {
-                    review_published: '20230101',
-                    pref_rating: { pref_score: 8.0, pref_score_wsub: 8.5 },
-                    pref_rating_eq: { pref_score: 8.2, pref_score_wsub: 8.7 },
-                    estimates: { ref_3dB: 50, ref_6dB: 40, ref_band: 3.0 },
-                    sensitivity: { sensitivity_1m: 90 },
-                    specifications: { weight: 10, size: { width: 20, height: 30, depth: 25 } },
-                },
-            },
-        },
-    ],
-    [
-        'SpeakerB',
-        {
-            brand: 'BrandB',
-            model: 'ModelB',
-            price: '200',
-            amount: 'single',
-            default_measurement: 'dmB',
-            measurements: {
-                dmB: {
-                    review_published: '20230201',
-                    pref_rating: { pref_score: 7.0, pref_score_wsub: 7.5 },
-                    pref_rating_eq: { pref_score: 7.2, pref_score_wsub: 7.7 },
-                    estimates: { ref_3dB: 60, ref_6dB: 50, ref_band: 4.0 },
-                    sensitivity: { sensitivity_1m: 88 },
-                    specifications: { weight: 12, size: { width: 22, height: 32, depth: 27 } },
-                },
-            },
-        },
-    ],
-    [
-        'SpeakerC',
-        {
-            brand: 'BrandC',
-            model: 'ModelC',
-            price: '150',
-            amount: 'pair',
-            default_measurement: 'dmC',
-            measurements: {
-                dmC: {
-                    // No review_published
-                    pref_rating: { pref_score: 9.0, pref_score_wsub: 9.5 },
-                    pref_rating_eq: { pref_score: 9.2, pref_score_wsub: 9.7 },
-                    estimates: { ref_3dB: 45, ref_6dB: 35, ref_band: 2.0 },
-                    sensitivity: { sensitivity_1m: 92 },
-                    specifications: { weight: 8, size: { width: 18, height: 28, depth: 23 } },
-                },
-            },
-        },
-    ],
-    [
-        'SpeakerD', // Speaker with some missing data
-        {
-            brand: 'BrandD',
-            model: 'ModelD',
-            price: '', // Missing price
-            amount: 'single',
-            default_measurement: 'dmD',
-            measurements: {
-                dmD: {
-                    review_published: '20230301',
-                    // Missing pref_rating
-                    estimates: {}, // Missing estimates
-                    // Missing sensitivity
-                    specifications: {}, // Missing specifications
-                },
-            },
-        },
-    ],
-]);
+
+
 
 describe('urlParameters2Sort', () => {
     const initialUrl = TEST_URL;
