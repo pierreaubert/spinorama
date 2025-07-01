@@ -348,7 +348,7 @@ getMetadata()
         }
 
         // add listeners
-        function windowChanges(event) {
+        function windowChanges(_event) {
             if (!graphsConfigs) {
                 return;
             }
