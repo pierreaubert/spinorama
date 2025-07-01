@@ -168,20 +168,21 @@ function createConfigMenu(divName, config, updateCallback) {
     const container = document.createElement('div');
     container.id = menuContainerId;
     container.className = 'plot-config-container';
-    container.style.cssText = 'margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;';
+    container.style.cssText = 'margin-bottom: 10px; padding: 5px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;';
 
     // Create toggle button
     const toggleBtn = document.createElement('button');
     toggleBtn.textContent = 'Configure Plot';
     toggleBtn.className = 'plot-config-toggle';
-    toggleBtn.style.cssText = 'padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px;';
+    toggleBtn.style.cssText = 'padding: 3px 8px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;';
 
-    // Create menu div (initially hidden)
+    // Create menu div (initially hidden) - using flex layout for single-line
     const menu = document.createElement('div');
     menu.id = menuId;
     menu.className = 'plot-config-menu';
     menu.style.display = 'none';
-    menu.style.cssText = 'display: none; grid-template-columns: repeat(2, 1fr); gap: 10px;';
+    menu.style.cssText = 'display: none; flex-flow: row nowrap; align-items: center; gap: 8px; overflow-x: auto; padding: 5px 0;';
+    
 
     // Font family selection
     const fontFamilyGroup = createFormGroup('Font Family', 'select', config.font.family, [
@@ -292,26 +293,64 @@ function createConfigMenu(divName, config, updateCallback) {
         updateCallback(config);
     });
 
-    // Add all form groups to the menu
-    menu.appendChild(fontFamilyGroup);
-    menu.appendChild(fontSizeGroup);
-    menu.appendChild(themeGroup);
-    menu.appendChild(gridGroup);
-    menu.appendChild(legendPosGroup);
-    menu.appendChild(legendVisGroup);
-    menu.appendChild(colorPaletteGroup);
-    menu.appendChild(layoutDirectionGroup);
-    menu.appendChild(contourColorscaleGroup);
-    menu.appendChild(marginTopGroup);
-    menu.appendChild(marginBottomGroup);
-    menu.appendChild(marginLeftGroup);
-    menu.appendChild(marginRightGroup);
+    // Create group sections to organize controls
+    const createGroupSection = (title) => {
+        const section = document.createElement('div');
+        section.className = 'config-section';
+        section.style.cssText = 'display: flex; align-items: center; border-right: 1px solid #ddd; padding-right: 8px; margin-right: 8px;';
+        
+        if (title) {
+            const titleSpan = document.createElement('span');
+            titleSpan.textContent = title;
+            titleSpan.style.cssText = 'font-weight: bold; font-size: 12px; margin-right: 5px;';
+            section.appendChild(titleSpan);
+        }
+        
+        return section;
+    };
+    
+    // Group 1: Font settings
+    const fontSection = createGroupSection('Font');
+    fontSection.appendChild(fontFamilyGroup);
+    fontSection.appendChild(fontSizeGroup);
+    menu.appendChild(fontSection);
+    
+    // Group 2: Theme & Grid
+    const themeSection = createGroupSection('Display');
+    themeSection.appendChild(themeGroup);
+    themeSection.appendChild(gridGroup);
+    menu.appendChild(themeSection);
+    
+    // Group 3: Legend settings
+    const legendSection = createGroupSection('Legend');
+    legendSection.appendChild(legendPosGroup);
+    legendSection.appendChild(legendVisGroup);
+    menu.appendChild(legendSection);
+    
+    // Group 4: Colors
+    const colorSection = createGroupSection('Colors');
+    colorSection.appendChild(colorPaletteGroup);
+    colorSection.appendChild(contourColorscaleGroup);
+    menu.appendChild(colorSection);
+    
+    // Group 5: Layout
+    const layoutSection = createGroupSection('Layout');
+    layoutSection.appendChild(layoutDirectionGroup);
+    menu.appendChild(layoutSection);
+    
+    // Group 6: Margins
+    const marginSection = createGroupSection('Margins');
+    marginSection.appendChild(marginTopGroup);
+    marginSection.appendChild(marginBottomGroup);
+    marginSection.appendChild(marginLeftGroup);
+    marginSection.appendChild(marginRightGroup);
+    menu.appendChild(marginSection);
 
     // Add reset button
     const resetBtn = document.createElement('button');
     resetBtn.textContent = 'Reset to Defaults';
     resetBtn.className = 'plot-config-reset';
-    resetBtn.style.cssText = 'grid-column: span 2; padding: 5px 10px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;';
+    resetBtn.style.cssText = 'padding: 3px 8px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: auto;';
     resetBtn.addEventListener('click', () => {
         Object.assign(config, JSON.parse(JSON.stringify(defaultConfig)));
         updateCallback(config);
@@ -363,7 +402,7 @@ function createConfigMenu(divName, config, updateCallback) {
     // Toggle menu visibility when button is clicked
     toggleBtn.addEventListener('click', () => {
         if (menu.style.display === 'none') {
-            menu.style.display = 'grid';
+            menu.style.display = 'flex';
             toggleBtn.textContent = 'Hide Configuration';
         } else {
             menu.style.display = 'none';
@@ -371,8 +410,15 @@ function createConfigMenu(divName, config, updateCallback) {
         }
     });
 
-    // Add button and menu to container
-    container.appendChild(toggleBtn);
+    // Add button and menu to container - using flex layout
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    
+    const topRow = document.createElement('div');
+    topRow.style.cssText = 'display: flex; align-items: center;';
+    topRow.appendChild(toggleBtn);
+    
+    container.appendChild(topRow);
     container.appendChild(menu);
 
     // Insert the container before the plot div
@@ -398,12 +444,13 @@ function createConfigMenu(divName, config, updateCallback) {
 function createFormGroup(label, type, value, options, onChange) {
     const group = document.createElement('div');
     group.className = 'plot-config-group';
-    group.style.cssText = 'display: flex; flex-direction: column;';
+    group.style.cssText = 'margin: 0 3px; display: inline-block; vertical-align: top;';
 
-    const labelEl = document.createElement('label');
-    labelEl.textContent = label;
-    labelEl.style.cssText = 'margin-bottom: 5px; font-weight: bold;';
-    group.appendChild(labelEl);
+    // Create label
+    const labelElement = document.createElement('label');
+    labelElement.textContent = label;
+    labelElement.style.cssText = 'display: block; margin-bottom: 2px; font-size: 11px; color: #555;';
+    group.appendChild(labelElement);
 
     let input;
 
