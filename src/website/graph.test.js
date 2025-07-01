@@ -289,7 +289,7 @@ describe('Graph Configuration Menu', () => {
     toggleButton.click();
 
     // Menu should now be visible
-    expect(configMenu.style.display).toBe('grid');
+    expect(configMenu.style.display).toBe('flex');
     expect(toggleButton.textContent).toBe('Hide Configuration');
 
     // Click the toggle button again
