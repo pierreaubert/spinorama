@@ -18,7 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-import Plotly from 'plotly-dist-min';
+import Plotly from 'plotly.js-dist-min';
 
 import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
