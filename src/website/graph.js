@@ -181,11 +181,11 @@ function createConfigMenu(divName, config, updateCallback) {
     menu.id = menuId;
     menu.className = 'plot-config-menu';
     menu.style.display = 'none';
-    menu.style.cssText = 'display: none; flex-flow: row nowrap; align-items: center; gap: 8px; overflow-x: auto; padding: 5px 0;';
-    
+    menu.style.cssText = 'display: none; flex-flow: row wrap; align-items: left; gap: 8px; overflow-x: auto; padding: 5px 0;';
+
 
     // Font family selection
-    const fontFamilyGroup = createFormGroup('Font Family', 'select', config.font.family, [
+    const fontFamilyGroup = createFormGroup('Family', 'select', config.font.family, 'fontfamily', [
         { value: 'Arial, sans-serif', text: 'Arial' },
         { value: '"Times New Roman", serif', text: 'Times New Roman' },
         { value: 'Roboto, sans-serif', text: 'Roboto' },
@@ -196,8 +196,9 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Font size selection
-    const fontSizeGroup = createFormGroup('Font Size', 'select', config.font.size.toString(), [
+    const fontSizeGroup = createFormGroup('Size', 'select', config.font.size.toString(), 'fontsize', [
         { value: '10', text: '10px' },
+        { value: '11', text: '11px' },
         { value: '12', text: '12px' },
         { value: '14', text: '14px' },
         { value: '16', text: '16px' },
@@ -208,7 +209,7 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Theme selection
-    const themeGroup = createFormGroup('Theme', 'select', config.theme, [
+    const themeGroup = createFormGroup('Theme', 'select', config.theme, 'theme', [
         { value: 'light', text: 'Light' },
         { value: 'dark', text: 'Dark' }
     ], (value) => {
@@ -217,13 +218,13 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Grid toggle
-    const gridGroup = createFormGroup('Show Grid', 'checkbox', config.grid, null, (value) => {
+    const gridGroup = createFormGroup('Grid', 'checkbox', config.grid, 'grid', null, (value) => {
         config.grid = value;
         updateCallback(config);
     });
 
     // Legend position
-    const legendPosGroup = createFormGroup('Legend Position', 'select', config.legend.position, [
+    const legendPosGroup = createFormGroup('Position', 'select', config.legend.position, 'legendposition', [
         { value: 'right', text: 'Right' },
         { value: 'bottom', text: 'Bottom' },
         { value: 'top', text: 'Top' },
@@ -234,13 +235,13 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Legend visibility
-    const legendVisGroup = createFormGroup('Show Legend', 'checkbox', config.legend.show, null, (value) => {
+    const legendVisGroup = createFormGroup('Show', 'checkbox', config.legend.show, 'showLegend', null, (value) => {
         config.legend.show = value;
         updateCallback(config);
     });
 
     // Color palette selection
-    const colorPaletteGroup = createFormGroup('Color Palette', 'select', config.colors.palette, [
+    const colorPaletteGroup = createFormGroup('Palette', 'select', config.colors.palette, 'colorpalette', [
         { value: 'default', text: 'Default' },
         { value: 'vibrant', text: 'Vibrant' },
         { value: 'pastel', text: 'Pastel' },
@@ -252,7 +253,7 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Layout direction for multiple graphs
-    const layoutDirectionGroup = createFormGroup('Multiple Graphs Layout', 'select', config.layout.direction, [
+    const layoutDirectionGroup = createFormGroup('Direction', 'select', config.layout.direction, 'layoutdirection', [
         { value: 'horizontal', text: 'Side by Side' },
         { value: 'vertical', text: 'Top to Bottom' }
     ], (value) => {
@@ -261,7 +262,7 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Contour colorscale selection
-    const contourColorscaleGroup = createFormGroup('Contour Colors', 'select', config.contour.colorscale, [
+    const contourColorscaleGroup = createFormGroup('Contour', 'select', config.contour.colorscale, 'contourcolorscale', [
         { value: 'default', text: 'Default (Blue-Red)' },
         { value: 'viridis', text: 'Viridis (Purple-Yellow)' },
         { value: 'plasma', text: 'Plasma (Purple-Pink)' },
@@ -273,22 +274,22 @@ function createConfigMenu(divName, config, updateCallback) {
     });
 
     // Margin controls
-    const marginTopGroup = createFormGroup('Top Margin', 'range', config.margin.t.toString(), { min: 0, max: 150, step: 5 }, (value) => {
+    const marginTopGroup = createFormGroup('Top', 'range', config.margin.t.toString(), 'marginTop', { min: 0, max: 150, step: 5 }, (value) => {
         config.margin.t = parseInt(value, 10);
         updateCallback(config);
     });
 
-    const marginBottomGroup = createFormGroup('Bottom Margin', 'range', config.margin.b.toString(), { min: 0, max: 150, step: 5 }, (value) => {
+    const marginBottomGroup = createFormGroup('Bottom', 'range', config.margin.b.toString(), 'marginBottom', { min: 0, max: 150, step: 5 }, (value) => {
         config.margin.b = parseInt(value, 10);
         updateCallback(config);
     });
 
-    const marginLeftGroup = createFormGroup('Left Margin', 'range', config.margin.l.toString(), { min: 0, max: 150, step: 5 }, (value) => {
+    const marginLeftGroup = createFormGroup('Left', 'range', config.margin.l.toString(), 'marginLeft', { min: 0, max: 150, step: 5 }, (value) => {
         config.margin.l = parseInt(value, 10);
         updateCallback(config);
     });
 
-    const marginRightGroup = createFormGroup('Right Margin', 'range', config.margin.r.toString(), { min: 0, max: 150, step: 5 }, (value) => {
+    const marginRightGroup = createFormGroup('Right', 'range', config.margin.r.toString(), 'marginRight', { min: 0, max: 150, step: 5 }, (value) => {
         config.margin.r = parseInt(value, 10);
         updateCallback(config);
     });
@@ -297,53 +298,59 @@ function createConfigMenu(divName, config, updateCallback) {
     const createGroupSection = (title) => {
         const section = document.createElement('div');
         section.className = 'config-section';
-        section.style.cssText = 'display: flex; align-items: center; border-right: 1px solid #ddd; padding-right: 8px; margin-right: 8px;';
-        
+        section.style.cssText = 'display: flex; flex-direction: column; border-right: 1px solid #ddd; padding-right: 8px; margin-right: 8px;';
+
         if (title) {
             const titleSpan = document.createElement('span');
             titleSpan.textContent = title;
-            titleSpan.style.cssText = 'font-weight: bold; font-size: 12px; margin-right: 5px;';
+            titleSpan.style.cssText = 'font-weight: bold; font-size: 12px; margin-right: 5px; text-align: center;';
             section.appendChild(titleSpan);
+
+            // Add a controls container for the form groups
+            const controlsContainer = document.createElement('div');
+            controlsContainer.style.cssText = 'display: flex; flex-wrap: wrap; align-items: center; justify-content: center;';
+            section.appendChild(controlsContainer);
+            section.controlsContainer = controlsContainer; // Store reference for appending children
         }
-        
+
         return section;
     };
-    
+
     // Group 1: Font settings
     const fontSection = createGroupSection('Font');
-    fontSection.appendChild(fontFamilyGroup);
-    fontSection.appendChild(fontSizeGroup);
+    fontSection.controlsContainer.appendChild(fontFamilyGroup);
+    fontSection.controlsContainer.appendChild(fontSizeGroup);
     menu.appendChild(fontSection);
-    
+
     // Group 2: Theme & Grid
     const themeSection = createGroupSection('Display');
-    themeSection.appendChild(themeGroup);
-    themeSection.appendChild(gridGroup);
+    themeSection.controlsContainer.appendChild(themeGroup);
+    themeSection.controlsContainer.appendChild(gridGroup);
     menu.appendChild(themeSection);
-    
+
     // Group 3: Legend settings
     const legendSection = createGroupSection('Legend');
-    legendSection.appendChild(legendPosGroup);
-    legendSection.appendChild(legendVisGroup);
+    legendSection.controlsContainer.appendChild(legendPosGroup);
+    legendSection.controlsContainer.appendChild(legendVisGroup);
     menu.appendChild(legendSection);
-    
+
     // Group 4: Colors
     const colorSection = createGroupSection('Colors');
-    colorSection.appendChild(colorPaletteGroup);
-    colorSection.appendChild(contourColorscaleGroup);
+    colorSection.controlsContainer.appendChild(colorPaletteGroup);
+    colorSection.controlsContainer.appendChild(contourColorscaleGroup);
     menu.appendChild(colorSection);
-    
+
     // Group 5: Layout
     const layoutSection = createGroupSection('Layout');
-    layoutSection.appendChild(layoutDirectionGroup);
+    layoutSection.controlsContainer.appendChild(layoutDirectionGroup);
     menu.appendChild(layoutSection);
-    
+
     // Group 6: Margins
     const marginSection = createGroupSection('Margins');
-    marginSection.appendChild(marginTopGroup);
-    marginSection.appendChild(marginBottomGroup);
-    marginSection.appendChild(marginLeftGroup);
-    marginSection.appendChild(marginRightGroup);
+    marginSection.controlsContainer.appendChild(marginTopGroup);
+    marginSection.controlsContainer.appendChild(marginBottomGroup);
+    marginSection.controlsContainer.appendChild(marginLeftGroup);
+    marginSection.controlsContainer.appendChild(marginRightGroup);
     menu.appendChild(marginSection);
 
     // Add reset button
@@ -413,11 +420,11 @@ function createConfigMenu(divName, config, updateCallback) {
     // Add button and menu to container - using flex layout
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
-    
+
     const topRow = document.createElement('div');
     topRow.style.cssText = 'display: flex; align-items: center;';
     topRow.appendChild(toggleBtn);
-    
+
     container.appendChild(topRow);
     container.appendChild(menu);
 
@@ -441,10 +448,10 @@ function createConfigMenu(divName, config, updateCallback) {
 }
 
 // Helper function to create form groups
-function createFormGroup(label, type, value, options, onChange) {
+function createFormGroup(label, type, value, name, options, onChange) {
     const group = document.createElement('div');
     group.className = 'plot-config-group';
-    group.style.cssText = 'margin: 0 3px; display: inline-block; vertical-align: top;';
+    group.style.cssText = 'margin: 0 4px; display: inline-block; vertical-align: top;';
 
     // Create label
     const labelElement = document.createElement('label');
@@ -456,8 +463,8 @@ function createFormGroup(label, type, value, options, onChange) {
 
     if (type === 'select') {
         input = document.createElement('select');
-        input.name = label.toLowerCase().replace(/\s+/g, '');
-        input.style.cssText = 'padding: 5px; border: 1px solid #ddd; border-radius: 4px;';
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
+        input.style.cssText = 'padding: 4px; border: 1px solid #ddd; border-radius: 4px; max-width: 70px';
 
         options.forEach(opt => {
             const option = document.createElement('option');
@@ -475,9 +482,9 @@ function createFormGroup(label, type, value, options, onChange) {
     } else if (type === 'checkbox') {
         input = document.createElement('input');
         input.type = 'checkbox';
-        input.name = label.toLowerCase().replace(/\s+/g, '');
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
         input.checked = value;
-        input.style.cssText = 'margin-right: 5px;';
+        input.style.cssText = 'margin-left: 5px; margin-right: 5px;';
 
         const checkboxContainer = document.createElement('div');
         checkboxContainer.style.cssText = 'display: flex; align-items: center;';
@@ -494,10 +501,10 @@ function createFormGroup(label, type, value, options, onChange) {
 
         input = document.createElement('input');
         input.type = 'range';
-        input.name = label.toLowerCase().replace(/\s+/g, '');
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
         input.min = options.min;
         input.max = options.max;
-        input.step = options.step;
+        input.step = options.step || 1;
         input.value = value;
         input.style.cssText = 'flex-grow: 1; margin-right: 10px;';
 
@@ -526,6 +533,14 @@ function createFormGroup(label, type, value, options, onChange) {
 // Apply configuration to plot options
 function applyConfig(options, config) {
     // Define font configuration for use throughout the function
+    const bgColor = config.theme === 'dark' ? '#333333' : '#ffffff';
+    const gridColor = config.theme === 'dark' ? '#555555' : '#e6e6e6';
+    const titleFontConfig = {
+        family: config.font.family,
+        size: config.font.size+2,
+        color: config.theme === 'dark' ? '#ffffff' : '#333333'
+    };
+
     const fontConfig = {
         family: config.font.family,
         size: config.font.size,
@@ -539,34 +554,42 @@ function applyConfig(options, config) {
         options.layout.font = fontConfig;
 
         // Apply theme
-        options.layout.paper_bgcolor = config.theme === 'dark' ? '#333333' : '#ffffff';
-        options.layout.plot_bgcolor = config.theme === 'dark' ? '#333333' : '#ffffff';
+        options.layout.paper_bgcolor = bgColor;
+        options.layout.plot_bgcolor = bgColor;
 
         // Apply font and grid settings to x-axis
         if (options.layout.xaxis) {
             options.layout.xaxis.showgrid = config.grid;
-            options.layout.xaxis.gridcolor = config.theme === 'dark' ? '#555555' : '#e6e6e6';
-            options.layout.xaxis.titlefont = fontConfig;
+            options.layout.xaxis.gridcolor = gridColor;
+	    if (options.layout.xaxis.title && options.layout.xaxis.title.font) {
+		options.layout.xaxis.title.font = fontConfig;
+	    }
             options.layout.xaxis.tickfont = fontConfig;
         }
         if (options.layout.xaxis2) {
             options.layout.xaxis2.showgrid = config.grid;
-            options.layout.xaxis2.gridcolor = config.theme === 'dark' ? '#555555' : '#e6e6e6';
-            options.layout.xaxis2.titlefont = fontConfig;
+            options.layout.xaxis2.gridcolor = gridColor;
+	    if (options.layout.xaxis2.title && options.layout.xaxis2.title.font) {
+		options.layout.xaxis2.title.font = fontConfig;
+	    }
             options.layout.xaxis2.tickfont = fontConfig;
         }
 
         // Apply font and grid settings to y-axis
         if (options.layout.yaxis) {
             options.layout.yaxis.showgrid = config.grid;
-            options.layout.yaxis.gridcolor = config.theme === 'dark' ? '#555555' : '#e6e6e6';
-            options.layout.yaxis.titlefont = fontConfig;
+            options.layout.yaxis.gridcolor = gridColor;
+	    if (options.layout.yaxis.title && options.layout.yaxis.title.font) {
+		options.layout.yaxis.title.font = fontConfig;
+	    }
             options.layout.yaxis.tickfont = fontConfig;
         }
         if (options.layout.yaxis2) {
             options.layout.yaxis2.showgrid = config.grid;
-            options.layout.yaxis2.gridcolor = config.theme === 'dark' ? '#555555' : '#e6e6e6';
-            options.layout.yaxis2.titlefont = fontConfig;
+            options.layout.yaxis2.gridcolor = gridColor;
+	    if (options.layout.yaxis2.title && options.layout.yaxis2.title.font) {
+		options.layout.yaxis2.title.font = fontConfig;
+	    }
             options.layout.yaxis2.tickfont = fontConfig;
         }
 
@@ -575,10 +598,10 @@ function applyConfig(options, config) {
             if (typeof options.layout.title === 'string') {
                 options.layout.title = {
                     text: options.layout.title,
-                    font: fontConfig
+                    font: titleFontConfig
                 };
             } else {
-                options.layout.title.font = fontConfig;
+                options.layout.title.font = titleFontConfig;
             }
         }
 
@@ -594,104 +617,116 @@ function applyConfig(options, config) {
             options.layout.coloraxis.colorbar.titlefont = fontConfig;
             options.layout.coloraxis.colorbar.tickfont = fontConfig;
         }
-    }
 
-    // Apply font settings to data traces
-    if (options.data && Array.isArray(options.data)) {
-        options.data.forEach(trace => {
-            // Apply font to text traces
-            if (trace.textfont) {
-                trace.textfont = { ...trace.textfont, ...fontConfig };
-            }
-            // Apply font to marker text
-            if (trace.marker && trace.marker.textfont) {
-                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
-            }
-            // Apply font to hovertext
-            if (trace.hoverlabel && trace.hoverlabel.font) {
-                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
-            }
-        });
-
-        // Apply legend settings
-        if (options.layout.legend) {
+	// Apply legend settings
+	if (options.layout.legend) {
             options.layout.legend.font = fontConfig;
 
             options.layout.showlegend = config.legend.show;
 
             switch (config.legend.position) {
-                case 'right':
-                    options.layout.legend.x = 1;
-                    options.layout.legend.y = 0.5;
-                    options.layout.legend.xanchor = 'left';
-                    options.layout.legend.yanchor = 'middle';
-                    break;
-                case 'bottom':
-                    options.layout.legend.x = 0.5;
-                    options.layout.legend.y = -0.2;
-                    options.layout.legend.xanchor = 'center';
-                    options.layout.legend.yanchor = 'top';
-                    options.layout.legend.orientation = 'h';
-                    break;
-                case 'top':
-                    options.layout.legend.x = 0.5;
-                    options.layout.legend.y = 1.1;
-                    options.layout.legend.xanchor = 'center';
-                    options.layout.legend.yanchor = 'bottom';
-                    options.layout.legend.orientation = 'h';
-                    break;
-                case 'left':
-                    options.layout.legend.x = -0.1;
-                    options.layout.legend.y = 0.5;
-                    options.layout.legend.xanchor = 'right';
-                    options.layout.legend.yanchor = 'middle';
-                    break;
+            case 'right':
+		options.layout.legend.x = 1;
+		options.layout.legend.y = 0.5;
+		options.layout.legend.xanchor = 'left';
+		options.layout.legend.yanchor = 'middle';
+		break;
+            case 'bottom':
+		options.layout.legend.x = 0.5;
+		options.layout.legend.y = -0.2;
+		options.layout.legend.xanchor = 'center';
+		options.layout.legend.yanchor = 'top';
+		options.layout.legend.orientation = 'h';
+		break;
+            case 'top':
+		options.layout.legend.x = 0.5;
+		options.layout.legend.y = 1.1;
+		options.layout.legend.xanchor = 'center';
+		options.layout.legend.yanchor = 'bottom';
+		options.layout.legend.orientation = 'h';
+		break;
+            case 'left':
+		options.layout.legend.x = -0.1;
+		options.layout.legend.y = 0.5;
+		options.layout.legend.xanchor = 'right';
+            options.layout.legend.yanchor = 'middle';
+		break;
             }
-        }
+	}
 
-        // Apply margin settings
-        options.layout.margin = {
-            l: config.margin.l,
-            r: config.margin.r,
-            t: config.margin.t,
-            b: config.margin.b
-        };
+	// Apply margin settings
+	if (options.layout.margin) {
+	    options.layout.margin = {
+		l: config.margin.l,
+		r: config.margin.r,
+		t: config.margin.t,
+		b: config.margin.b
+	    };
+	}
     }
 
-    // Apply color palette to data traces
-    if (options.data && Array.isArray(options.data) && config.colors && config.colors.palette) {
-        const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
-        options.data.forEach((trace, index) => {
-            // Only apply colors to traces that don't already have specific colors set
-            // and are not contour/heatmap traces (which use colorscales)
-            if (trace.marker?.color && trace.type === 'scatter') {
-                const colorIndex = index % selectedPalette.length;
-                const color = selectedPalette[colorIndex];
+    // Apply font settings to data traces
+    if (options.data && Array.isArray(options.data)) {
 
-                if (trace.marker) {
-                    trace.marker.color = color;
-                }
-                if (trace.line) {
-                    trace.line.color = color;
-                }
-                if (!trace.marker && !trace.line) {
-                    // For traces without explicit marker or line, set both
-                    trace.marker = { color: color };
-                    trace.line = { color: color };
-                }
-            }
-        });
-    }
+        options.data.forEach( trace => {
 
-    // Apply contour colorscale
-    if (options.data && Array.isArray(options.data) && config.contour && config.contour.colorscale) {
-        const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
-        options.data.forEach(trace => {
-            if (trace.type === 'contour' || trace.type === 'heatmap' ||
-                trace.type === 'surface' || trace.type === 'contourgl') {
-                trace.colorscale = selectedColorscale;
+	    if (trace.colorbar) {
+		if (trace.colorbar.tickfont) {
+                    trace.tickfont = fontConfig;
+		}
+		if (trace.colorbar.title && trace.colorbar.title.text) {
+		    if (typeof trace.colorbar.title === 'string') {
+			trace.colorbar.title = {
+			    text: trace.colorbar.title.text,
+			    font: fontConfig,
+			};
+		    } else {
+			trace.colorbar.title.font = fontConfig;
+		    }
+		}
+	    }
+
+            if (trace.marker && trace.marker.textfont) {
+                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
             }
+
+            if (trace.hoverlabel && trace.hoverlabel.font) {
+                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
+            }
+
+	    trace.showlegend = config.legend.show;
         });
+
+	if (config.colors && config.colors.palette) {
+            const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
+            options.data.forEach((trace, index) => {
+		if (trace.marker?.color && trace.type === 'scatter') {
+                    const colorIndex = index % selectedPalette.length;
+                    const color = selectedPalette[colorIndex];
+
+                    if (trace.marker) {
+			trace.marker.color = color;
+                    }
+                    if (trace.line) {
+			trace.line.color = color;
+                    }
+                    if (!trace.marker && !trace.line) {
+			trace.marker = { color: color };
+			trace.line = { color: color };
+                    }
+		}
+            });
+	}
+
+	if (config.contour && config.contour.colorscale) {
+            const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
+            options.data.forEach(trace => {
+		if (trace.type === 'contour' || trace.type === 'heatmap' ||
+                    trace.type === 'surface' || trace.type === 'contourgl') {
+                    trace.colorscale = selectedColorscale;
+		}
+            });
+	}
     }
 
     // Apply layout direction for multiple graphs (this will be used by the calling code)
