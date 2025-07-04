@@ -18,7 +18,6 @@
 
 /*eslint no-undef: "error"*/
 
-
 import { readFileSync } from 'fs';
 import { beforeAll, describe, expect, it, beforeEach, afterEach } from 'vitest'; // Added afterEach
 
@@ -31,16 +30,13 @@ import { JSDOM } from 'jsdom'; // For DOM manipulation in tests
 const TEST_URL = 'https://dev.spinorama.org/index.html';
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
-
-
-
-
 describe('urlParameters2Sort', () => {
     const initialUrl = TEST_URL;
 
     beforeEach(() => {
         // Setup JSDOM for tests in this suite
-        const dom = new JSDOM(`
+        const dom = new JSDOM(
+            `
             <!DOCTYPE html>
             <html>
             <body>
@@ -49,7 +45,9 @@ describe('urlParameters2Sort', () => {
                 <input type="checkbox" id="sortReverse" />
             </body>
             </html>
-        `, { url: initialUrl });
+        `,
+            { url: initialUrl }
+        );
 
         global.document = dom.window.document;
         global.window = dom.window;
@@ -101,7 +99,8 @@ describe('test full text search and filtering', () => {
 
     beforeEach(() => {
         // Setup JSDOM for tests in this suite
-        const dom = new JSDOM(`
+        const dom = new JSDOM(
+            `
             <!DOCTYPE html>
             <html>
             <body>
@@ -125,7 +124,9 @@ describe('test full text search and filtering', () => {
                 <input id="inputDepthMax" />
             </body>
             </html>
-        `, { url: initialUrl });
+        `,
+            { url: initialUrl }
+        );
 
         global.document = dom.window.document;
         global.window = dom.window; // Required for URL processing within the functions
@@ -480,7 +481,8 @@ describe('non regression for bug discussions/279', () => {
 
     beforeEach(() => {
         // Setup JSDOM for tests in this suite
-        const dom = new JSDOM(`
+        const dom = new JSDOM(
+            `
             <!DOCTYPE html>
             <html>
             <body>
@@ -491,7 +493,9 @@ describe('non regression for bug discussions/279', () => {
                 <!-- Simplified DOM for these specific tests; expand if more selectors are used by urlParameters2Sort -->
             </body>
             </html>
-        `, { url: initialUrl });
+        `,
+            { url: initialUrl }
+        );
 
         global.document = dom.window.document;
         global.window = dom.window;
@@ -550,7 +554,8 @@ describe('non regression for bug discussions/288', () => {
 
     beforeEach(() => {
         // Setup JSDOM for tests in this suite
-        const dom = new JSDOM(`
+        const dom = new JSDOM(
+            `
             <!DOCTYPE html>
             <html>
             <body>
@@ -560,7 +565,9 @@ describe('non regression for bug discussions/288', () => {
                 <!-- Simplified DOM; expand if more selectors are used -->
             </body>
             </html>
-        `, { url: initialUrl });
+        `,
+            { url: initialUrl }
+        );
 
         global.document = dom.window.document;
         global.window = dom.window;
@@ -615,7 +622,8 @@ describe('non regression for bug discussions/343', () => {
 
     beforeEach(() => {
         // Setup JSDOM for tests in this suite
-        const dom = new JSDOM(`
+        const dom = new JSDOM(
+            `
             <!DOCTYPE html>
             <html>
             <body>
@@ -625,7 +633,9 @@ describe('non regression for bug discussions/343', () => {
                 <!-- Simplified DOM; expand if more selectors are used -->
             </body>
             </html>
-        `, { url: initialUrl });
+        `,
+            { url: initialUrl }
+        );
 
         global.document = dom.window.document;
         global.window = dom.window;
@@ -659,5 +669,4 @@ describe('non regression for bug discussions/343', () => {
         expect(maxResults1).toBe(1);
         expect(results1[0]).toBe('KEF-Reference-4C-Meta');
     });
-
 });

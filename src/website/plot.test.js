@@ -37,7 +37,6 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-
 function graph_ratio(width, height) {
     width = Math.round(width);
     height = Math.round(height);
@@ -47,8 +46,6 @@ function graph_ratio(width, height) {
     }
     return ratio;
 }
-
-
 
 describe('computeDims', () => {
     // Constants from plot.js (or import them if possible/safer)
@@ -100,32 +97,48 @@ describe('computeDims', () => {
             // Expected logic reimplementation (simplified for clarity, more robust checks might be needed)
             let expectedWidth, expectedHeight;
 
-            if (c) { // Compact
-                if (v) { // Vertical
+            if (c) {
+                // Compact
+                if (v) {
+                    // Vertical
                     expectedWidth = ww;
                     expectedHeight = Math.min(wh, ww / baseGraphRatio + graphMarginTop + graphMarginBottom + graphExtraPadding);
-                } else { // Horizontal
+                } else {
+                    // Horizontal
                     expectedWidth = ww - graphExtraPadding;
                     expectedHeight = Math.min(wh, ww / baseGraphRatio + graphSpacer);
                 }
-            } else { // Non-Compact
-                if (v) { // Vertical
+            } else {
+                // Non-Compact
+                if (v) {
+                    // Vertical
                     expectedWidth = ww - graphMarginLeft - graphMarginRight;
                     const graphWidth = Math.min(graphLargeThreshold, expectedWidth - 2 * graphExtraPadding);
                     expectedHeight = graphWidth / baseGraphRatio + graphMarginTop + graphMarginBottom;
                     // The function returns the overall width, not the graphWidth itself.
-                } else { // Horizontal
+                } else {
+                    // Horizontal
                     if (n > 1) {
                         // Calculate initial height for n=1 first for comparison
                         const tempWidth_n1 = ww - graphMarginRight - graphMarginLeft;
-                        const tempGraphWidth_n1 = Math.min(graphLargeThreshold, tempWidth_n1 - graphLegendWidth - 2 * graphExtraPadding);
+                        const tempGraphWidth_n1 = Math.min(
+                            graphLargeThreshold,
+                            tempWidth_n1 - graphLegendWidth - 2 * graphExtraPadding
+                        );
                         const initialHeight_n1 = tempGraphWidth_n1 / baseGraphRatio;
 
                         expectedWidth = ww / n;
-                        expectedHeight = Math.min(initialHeight_n1, expectedWidth / baseGraphRatio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
+                        expectedHeight =
+                            Math.min(initialHeight_n1, expectedWidth / baseGraphRatio) +
+                            graphMarginTop +
+                            graphMarginBottom +
+                            graphExtraPadding;
                     } else {
                         expectedWidth = ww - graphMarginRight - graphMarginLeft;
-                        const graphWidth = Math.min(graphLargeThreshold, expectedWidth - graphLegendWidth - 2 * graphExtraPadding);
+                        const graphWidth = Math.min(
+                            graphLargeThreshold,
+                            expectedWidth - graphLegendWidth - 2 * graphExtraPadding
+                        );
                         expectedHeight = graphWidth / baseGraphRatio;
                     }
                 }
@@ -165,7 +178,7 @@ describe('setGraphOptions', () => {
                 x: [1, 2, 3],
                 y: [10, 20, 15],
                 legendgroup: 'group1',
-                legendgrouptitle: { text: titleText }
+                legendgrouptitle: { text: titleText },
             });
         }
         const layout = {
@@ -175,7 +188,7 @@ describe('setGraphOptions', () => {
             font: {},
             margin: {},
             legend: {},
-            modebar: {}
+            modebar: {},
         };
         if (yaxis2) {
             layout.yaxis2 = { title: { text: 'Phase (°)', font: {} }, range: [-180, 180], overlaying: 'y', side: 'right' };
@@ -202,7 +215,7 @@ describe('setGraphOptions', () => {
     describe('Title Computation', () => {
         it('should set a simple title for a single graph in non-compact mode', () => {
             console.log('Type of setGraphOptions in test: ', typeof setGraphOptions); // DEBUG LOG
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.text).toBe('Test Graph Title for Speaker by Reviewer');
             expect(options.layout.title.font.size).toBe(16);
             expect(options.layout.title.xanchor).toBe('center');
@@ -210,26 +223,26 @@ describe('setGraphOptions', () => {
 
         it('should adjust title for compact mode and split if long', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const compactTitleData = createMockGraphData("CEA2034 for SpeakerA measured by ReviewerX");
-            const options = setGraphOptions(compactTitleData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const compactTitleData = createMockGraphData('CEA2034 for SpeakerA measured by ReviewerX');
+            const options = setGraphOptions(compactTitleData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.font.size).toBe(12);
             expect(options.layout.title.xanchor).toBe('left');
             expect(options.layout.title.text).toBe('CEA2034 for SpeakerA <br>measured by ReviewerX');
         });
 
         it('should combine titles when comparing two graphs (outputNumberGraphs = 1, two input graphs)', () => {
-            const graphData1 = createMockGraphData("Graph A for SpkA by RevA");
-            const graphData2 = createMockGraphData("Graph B for SpkB by RevB");
+            const graphData1 = createMockGraphData('Graph A for SpkA by RevA');
+            const graphData2 = createMockGraphData('Graph B for SpkB by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.text).toBe('Graph A for SpkA by RevA<br> v.s. Graph B for SpkB by RevB');
         });
 
         it('should update legend group titles if speakers are the same but versions differ when comparing', () => {
-            const graphData1 = createMockGraphData("Measurement for SameSpeaker measured by RevA");
-            const graphData2 = createMockGraphData("Measurement for SameSpeaker measured by RevB");
+            const graphData1 = createMockGraphData('Measurement for SameSpeaker measured by RevA');
+            const graphData2 = createMockGraphData('Measurement for SameSpeaker measured by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
             expect(options.data[0].legendgrouptitle.text).toBe('Measurement for SameSpeaker (RevA)');
             const secondGraphDataStartIndex = graphData1[0].data.length;
@@ -239,7 +252,7 @@ describe('setGraphOptions', () => {
 
     describe('Margin Computation', () => {
         it('should set default margins in non-compact, horizontal mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.l).toBe(30);
             expect(options.layout.margin.r).toBe(30);
             expect(options.layout.margin.t).toBe(60);
@@ -249,7 +262,7 @@ describe('setGraphOptions', () => {
         it('should adjust margins for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 10;
             window.innerHeight = 800;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.l).toBe(10);
             expect(options.layout.margin.r).toBe(10);
             expect(options.layout.margin.t).toBe(30);
@@ -257,59 +270,61 @@ describe('setGraphOptions', () => {
         });
 
         it('should increase top margin for globe plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGlobe: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGlobe: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 50);
         });
 
         it('should increase top margin for surface plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 30);
         });
 
         it('should increase top margin for radar plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isRadar: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isRadar: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 100);
         });
 
         it('should increase bottom margin for spin plots in vertical display', () => {
             window.innerWidth = 700;
             window.innerHeight = 1000;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isSpin: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSpin: true }, 1);
             expect(options.layout.margin.b).toBe(30 + 150);
         });
 
         it('should adjust right margin if yaxis2 is not present (non-compact, vertical)', () => {
-            window.innerWidth = 800; window.innerHeight = 1200; // non-compact, vertical
-            const dataNoY2 = createMockGraphData("Test", 1, false);
-            const options = setGraphOptions(dataNoY2, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            window.innerWidth = 800;
+            window.innerHeight = 1200; // non-compact, vertical
+            const dataNoY2 = createMockGraphData('Test', 1, false);
+            const options = setGraphOptions(dataNoY2, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.r).toBe(30 + 25);
         });
     });
 
     describe('Font Computation', () => {
         it('should set base font size for non-compact mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.font.size).toBe(11);
         });
 
         it('should set smaller base font size for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.font.size).toBe(10);
         });
     });
 
     describe('Axis Computation', () => {
         it('should set default xaxis title in non-compact', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.xaxis.title.text).toBe('SPL (dB) v.s. Frequency (Hz)');
-            expect(options.layout.xaxis.title.font.size).toBe(9 + Math.round(1024/300));
+            expect(options.layout.xaxis.title.font.size).toBe(9 + Math.round(1024 / 300));
         });
 
         it('should hide yaxis title and labels in compact vertical mode', () => {
-            window.innerWidth = 400; window.innerHeight = 800;
-            const dataWithY2 = createMockGraphData("Test", 1, true);
-            const options = setGraphOptions(dataWithY2, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            window.innerWidth = 400;
+            window.innerHeight = 800;
+            const dataWithY2 = createMockGraphData('Test', 1, true);
+            const options = setGraphOptions(dataWithY2, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.yaxis.title).toBeNull();
             expect(options.layout.yaxis.showticklabels).toBe(false);
             expect(options.layout.yaxis2.title).toBeNull();
@@ -317,13 +332,20 @@ describe('setGraphOptions', () => {
         });
 
         it('should set combined xaxis title in compact vertical mode for plots with angle y-axis', () => {
-            window.innerWidth = 400; window.innerHeight = 800;
+            window.innerWidth = 400;
+            window.innerHeight = 800;
             const contourLayout = JSON.parse(JSON.stringify(mockInputGraphsData[0].layout));
             contourLayout.yaxis.title.text = 'Angle';
             contourLayout.yaxis.range = [-90, 90];
             contourLayout.xaxis.range = [Math.log10(100), Math.log10(10000)];
 
-            const options = setGraphOptions([{data: mockInputGraphsData[0].data, layout: contourLayout}], window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(
+                [{ data: mockInputGraphsData[0].data, layout: contourLayout }],
+                window.innerWidth,
+                window.innerHeight,
+                { isSurface: true },
+                1
+            );
             expect(options.layout.xaxis.title.text).toBe('Angle [-90º, 90º]) v.s. Frequency ([100Hz, 10000Hz]).');
         });
     });
@@ -331,7 +353,7 @@ describe('setGraphOptions', () => {
     describe('Legend Computation', () => {
         it('should set legend horizontal, bottom-center for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('h');
             expect(options.layout.legend.yanchor).toBe('bottom');
             expect(options.layout.legend.xanchor).toBe('center');
@@ -339,7 +361,7 @@ describe('setGraphOptions', () => {
         });
 
         it('should set legend vertical, right-middle for non-compact horizontal mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('v');
             expect(options.layout.legend.yanchor).toBe('middle');
             expect(options.layout.legend.xanchor).toBe('bottom');
@@ -349,20 +371,26 @@ describe('setGraphOptions', () => {
 
         it('should shorten trace names and remove group titles in compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const dataWithShortenableName = createMockGraphData("Title", 1);
+            const dataWithShortenableName = createMockGraphData('Title', 1);
             dataWithShortenableName[0].data[0].name = 'Early Reflections';
 
-            const options = setGraphOptions(dataWithShortenableName, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(
+                dataWithShortenableName,
+                window.innerWidth,
+                window.innerHeight,
+                { isGraph: true },
+                1
+            );
             expect(options.data[0].name).toBe('ER');
             expect(options.data[0].legendgroup).toBeNull();
             expect(options.data[0].legendgrouptitle).toBeNull();
         });
 
         it('should remove parts from legend group titles in non-compact mode when comparing two graphs', () => {
-            const graphData1 = createMockGraphData("Measurement v.s. Something for SpeakerA by RevA");
-            const graphData2 = createMockGraphData("Another for SpeakerB by RevB");
+            const graphData1 = createMockGraphData('Measurement v.s. Something for SpeakerA by RevA');
+            const graphData2 = createMockGraphData('Another for SpeakerB by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
             expect(options.data[0].legendgrouptitle.text).toBe('Measurement');
             const secondGraphDataStartIndex = graphData1[0].data.length;
@@ -373,12 +401,12 @@ describe('setGraphOptions', () => {
     describe('Modbar Configuration', () => {
         it('should disable modbar in compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.config.displayModeBar).toBe(false);
         });
 
         it('should enable modbar in non-compact mode with vertical orientation', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.config.displayModeBar).toBe(true);
             expect(options.layout.modebar.orientation).toBe('v');
         });
@@ -386,12 +414,13 @@ describe('setGraphOptions', () => {
 
     describe('Colorbar Configuration', () => {
         it('should configure colorbar for vertical display (non-compact)', () => {
-            window.innerWidth = 800; window.innerHeight = 1200;
-            const dataWithColorbar = createMockGraphData("Colorbar Test", 1);
+            window.innerWidth = 800;
+            window.innerHeight = 1200;
+            const dataWithColorbar = createMockGraphData('Colorbar Test', 1);
             dataWithColorbar[0].data[0].type = 'heatmap';
             dataWithColorbar[0].data[0].colorbar = {};
 
-            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.xanchor).toBe('center');
@@ -401,11 +430,11 @@ describe('setGraphOptions', () => {
         });
 
         it('should configure colorbar for horizontal display (non-compact)', () => {
-            const dataWithColorbar = createMockGraphData("Colorbar Test", 1);
+            const dataWithColorbar = createMockGraphData('Colorbar Test', 1);
             dataWithColorbar[0].data[0].type = 'heatmap';
             dataWithColorbar[0].data[0].colorbar = {};
 
-            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('v');
             expect(cb.xanchor).toBe('top');
@@ -413,51 +442,49 @@ describe('setGraphOptions', () => {
         });
     });
 
-
-
     it('should handle null or undefined inputGraphsData gracefully', () => {
-        const options1 = setGraphOptions(null, 1024, 768, {isGraph: true}, 1);
+        const options1 = setGraphOptions(null, 1024, 768, { isGraph: true }, 1);
         expect(options1.data).toBeNull();
         expect(options1.layout).toBeNull();
 
-        const options2 = setGraphOptions([null, null], 1024, 768, {isGraph: true}, 1);
+        const options2 = setGraphOptions([null, null], 1024, 768, { isGraph: true }, 1);
         expect(options2.data).toBeNull();
         expect(options2.layout).toBeNull();
 
-        const graphData1 = createMockGraphData("Graph A");
-        const options3 = setGraphOptions([graphData1[0], null], 1024, 768, {isGraph: true}, 1);
+        const graphData1 = createMockGraphData('Graph A');
+        const options3 = setGraphOptions([graphData1[0], null], 1024, 768, { isGraph: true }, 1);
         expect(options3.data).toEqual(graphData1[0].data);
-        expect(options3.layout.title.text).toContain("Graph A");
+        expect(options3.layout.title.text).toContain('Graph A');
 
-        const options4 = setGraphOptions([null, graphData1[0]], 1024, 768, {isGraph: true}, 1);
+        const options4 = setGraphOptions([null, graphData1[0]], 1024, 768, { isGraph: true }, 1);
         expect(options4.data).toEqual(graphData1[0].data);
-        expect(options4.layout.title.text).toContain("Graph A");
+        expect(options4.layout.title.text).toContain('Graph A');
     });
 
     it('should correctly merge data when two input graphs are provided', () => {
-        const graphData1 = createMockGraphData("Graph A", 2);
-        const graphData2 = createMockGraphData("Graph B", 3);
+        const graphData1 = createMockGraphData('Graph A', 2);
+        const graphData2 = createMockGraphData('Graph B', 3);
         const combinedInput = [graphData1[0], graphData2[0]];
 
-        const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+        const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
         expect(options.data.length).toBe(2 + 3);
-        expect(options.data.some(d => d.name === "Trace 1" && d.legendgrouptitle.text.startsWith("Graph A"))).toBe(true);
-        expect(options.data.some(d => d.name === "Trace 3" && d.legendgrouptitle.text.startsWith("Graph B"))).toBe(true);
+        expect(options.data.some((d) => d.name === 'Trace 1' && d.legendgrouptitle.text.startsWith('Graph A'))).toBe(true);
+        expect(options.data.some((d) => d.name === 'Trace 3' && d.legendgrouptitle.text.startsWith('Graph B'))).toBe(true);
     });
 
     it('should prefer layout from the graph with more data items if two inputs are provided', () => {
-        const graphDataLessItems = createMockGraphData("Layout From Less", 1);
-        const graphDataMoreItems = createMockGraphData("Layout From More", 3);
-        graphDataMoreItems[0].layout.customLayoutProp = "来自更多数据";
+        const graphDataLessItems = createMockGraphData('Layout From Less', 1);
+        const graphDataMoreItems = createMockGraphData('Layout From More', 3);
+        graphDataMoreItems[0].layout.customLayoutProp = '来自更多数据';
 
         let combined = [graphDataLessItems[0], graphDataMoreItems[0]];
-        let options = setGraphOptions(combined, window.innerWidth, window.innerHeight, {isGraph:true},1);
-        expect(options.layout.customLayoutProp).toBe("来自更多数据");
+        let options = setGraphOptions(combined, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+        expect(options.layout.customLayoutProp).toBe('来自更多数据');
 
         combined = [graphDataMoreItems[0], graphDataLessItems[0]];
-        options = setGraphOptions(combined, window.innerWidth, window.innerHeight, {isGraph:true},1);
-        expect(options.layout.customLayoutProp).toBe("来自更多数据");
+        options = setGraphOptions(combined, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+        expect(options.layout.customLayoutProp).toBe('来自更多数据');
     });
 });
 
@@ -467,25 +494,26 @@ describe('Plot-Specific Setter Functions', () => {
     let mockWidth;
     let mockHeight;
 
-
-
     beforeEach(() => {
         mockWidth = 1024;
         mockHeight = 768;
         global.window = { innerWidth: mockWidth, innerHeight: mockHeight };
 
-        mockSpeakerNames = ["Speaker A", "Speaker B"];
-
+        mockSpeakerNames = ['Speaker A', 'Speaker B'];
 
         // console.log('plotJs module in beforeEach:', plotJs); // DEBUG LOG - No longer needed
         vi.spyOn(plotJs, 'setGraphOptions').mockImplementation((graphs, w, h, _props, _num) => {
-            const layout = graphs && graphs[0] && graphs[0].layout ? JSON.parse(JSON.stringify(graphs[0].layout)) : {title:{text:''}, margin:{}, font:{}, legend:{}, modebar:{}};
+            const layout =
+                graphs && graphs[0] && graphs[0].layout
+                    ? JSON.parse(JSON.stringify(graphs[0].layout))
+                    : { title: { text: '' }, margin: {}, font: {}, legend: {}, modebar: {} };
             const data = graphs && graphs[0] && graphs[0].data ? JSON.parse(JSON.stringify(graphs[0].data)) : [];
             if (graphs && graphs.length > 1 && graphs[1] && graphs[1].data) {
                 data.push(...JSON.parse(JSON.stringify(graphs[1].data)));
             }
-            layout.width = w; layout.height = h;
-            return { layout, data, config: {displayModeBar: true} };
+            layout.width = w;
+            layout.height = h;
+            return { layout, data, config: { displayModeBar: true } };
         });
         vi.spyOn(console, 'info').mockImplementation(() => {});
     });
@@ -495,29 +523,36 @@ describe('Plot-Specific Setter Functions', () => {
         vi.unstubAllGlobals();
     });
 
-
-
-
-
-
-
     describe('setContour', () => {
-
-
         it('should merge two contour graphs with layout adjustments for non-compact horizontal', () => {
-            window.innerWidth = 1200; window.innerHeight = 800;
+            window.innerWidth = 1200;
+            window.innerHeight = 800;
 
-            const graph1Layout = { title: { text: "Contour for SpkA by RevA" }, xaxis: { range: [2,4], side: 'bottom', tick: 'outside' }, yaxis: { range: [-90,90], title: {text: 'Angle'}} };
-            const graph2Layout = { title: { text: "Contour for SpkB by RevB" }, xaxis: { range: [2.1,4.1], side: 'bottom', tick: 'outside' }, yaxis: { range: [-80,80], title: {text: 'Angle'}} };
-            const graph1 = { data: [{name: 'g1d1'}], layout: graph1Layout };
-            const graph2 = { data: [{name: 'g2d1'}], layout: graph2Layout };
+            const graph1Layout = {
+                title: { text: 'Contour for SpkA by RevA' },
+                xaxis: { range: [2, 4], side: 'bottom', tick: 'outside' },
+                yaxis: { range: [-90, 90], title: { text: 'Angle' } },
+            };
+            const graph2Layout = {
+                title: { text: 'Contour for SpkB by RevB' },
+                xaxis: { range: [2.1, 4.1], side: 'bottom', tick: 'outside' },
+                yaxis: { range: [-80, 80], title: { text: 'Angle' } },
+            };
+            const graph1 = { data: [{ name: 'g1d1' }], layout: graph1Layout };
+            const graph2 = { data: [{ name: 'g2d1' }], layout: graph2Layout };
 
             plotJs.setGraphOptions.mockRestore(); // Use actual setGraphOptions for this specific merge test.
-                                               // This is complex as setGraphOptions calls computeDims which uses window.
-                                               // For a focused test on merge logic, might need more direct mocking or setup.
-                                               // Re-spy after use if other tests depend on the general mock.
+            // This is complex as setGraphOptions calls computeDims which uses window.
+            // For a focused test on merge logic, might need more direct mocking or setup.
+            // Re-spy after use if other tests depend on the general mock.
 
-            const result = plotJs.setContour("SPL Horizontal Contour", mockSpeakerNames, [graph1, graph2], window.innerWidth, window.innerHeight);
+            const result = plotJs.setContour(
+                'SPL Horizontal Contour',
+                mockSpeakerNames,
+                [graph1, graph2],
+                window.innerWidth,
+                window.innerHeight
+            );
             expect(result.length).toBe(1);
             const mergedLayout = result[0].layout;
 
@@ -528,20 +563,22 @@ describe('Plot-Specific Setter Functions', () => {
             expect(mergedLayout.yaxis2.title.text).toBe('Angle (B)');
             expect(result[0].data.length).toBe(2);
             expect(result[0].data[1].xaxis).toBe('x2');
-             // Re-apply general spy for other tests
+            // Re-apply general spy for other tests
             vi.spyOn(plotJs, 'setGraphOptions').mockImplementation((graphs, w, h, _props, _num) => {
-                const layout = graphs && graphs[0] && graphs[0].layout ? JSON.parse(JSON.stringify(graphs[0].layout)) : {title:{text:''}, margin:{}, font:{}, legend:{}, modebar:{}};
+                const layout =
+                    graphs && graphs[0] && graphs[0].layout
+                        ? JSON.parse(JSON.stringify(graphs[0].layout))
+                        : { title: { text: '' }, margin: {}, font: {}, legend: {}, modebar: {} };
                 const data = graphs && graphs[0] && graphs[0].data ? JSON.parse(JSON.stringify(graphs[0].data)) : [];
-                if (graphs && graphs.length > 1 && graphs[1] && graphs[1].data) { data.push(...JSON.parse(JSON.stringify(graphs[1].data)));}
-                layout.width = w; layout.height = h;
-                return { layout, data, config: {displayModeBar: true} };
+                if (graphs && graphs.length > 1 && graphs[1] && graphs[1].data) {
+                    data.push(...JSON.parse(JSON.stringify(graphs[1].data)));
+                }
+                layout.width = w;
+                layout.height = h;
+                return { layout, data, config: { displayModeBar: true } };
             });
         });
     });
-
-
-
-
 });
 
 describe('setGraphOptions', () => {
@@ -557,7 +594,7 @@ describe('setGraphOptions', () => {
                 x: [1, 2, 3],
                 y: [10, 20, 15],
                 legendgroup: 'group1',
-                legendgrouptitle: { text: titleText }
+                legendgrouptitle: { text: titleText },
             });
         }
         const layout = {
@@ -567,7 +604,7 @@ describe('setGraphOptions', () => {
             font: {},
             margin: {},
             legend: {},
-            modebar: {}
+            modebar: {},
         };
         if (yaxis2) {
             layout.yaxis2 = { title: { text: 'Phase (°)', font: {} }, range: [-180, 180], overlaying: 'y', side: 'right' };
@@ -593,7 +630,7 @@ describe('setGraphOptions', () => {
     // Test title computation
     describe('Title Computation', () => {
         it('should set a simple title for a single graph in non-compact mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.text).toBe('Test Graph Title for Speaker by Reviewer');
             expect(options.layout.title.font.size).toBe(16);
             expect(options.layout.title.xanchor).toBe('center');
@@ -601,26 +638,26 @@ describe('setGraphOptions', () => {
 
         it('should adjust title for compact mode and split if long', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const compactTitleData = createMockGraphData("CEA2034 for SpeakerA measured by ReviewerX");
-            const options = setGraphOptions(compactTitleData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const compactTitleData = createMockGraphData('CEA2034 for SpeakerA measured by ReviewerX');
+            const options = setGraphOptions(compactTitleData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.font.size).toBe(12);
             expect(options.layout.title.xanchor).toBe('left');
             expect(options.layout.title.text).toBe('CEA2034 for SpeakerA <br>measured by ReviewerX');
         });
 
         it('should combine titles when comparing two graphs (outputNumberGraphs = 1, two input graphs)', () => {
-            const graphData1 = createMockGraphData("Graph A for SpkA by RevA");
-            const graphData2 = createMockGraphData("Graph B for SpkB by RevB");
+            const graphData1 = createMockGraphData('Graph A for SpkA by RevA');
+            const graphData2 = createMockGraphData('Graph B for SpkB by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.title.text).toBe('Graph A for SpkA by RevA<br> v.s. Graph B for SpkB by RevB');
         });
 
         it('should update legend group titles if speakers are the same but versions differ when comparing', () => {
-            const graphData1 = createMockGraphData("Measurement for SameSpeaker measured by RevA");
-            const graphData2 = createMockGraphData("Measurement for SameSpeaker measured by RevB");
+            const graphData1 = createMockGraphData('Measurement for SameSpeaker measured by RevA');
+            const graphData2 = createMockGraphData('Measurement for SameSpeaker measured by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
             expect(options.data[0].legendgrouptitle.text).toBe('Measurement for SameSpeaker (RevA)');
             const secondGraphDataStartIndex = graphData1[0].data.length;
@@ -630,7 +667,7 @@ describe('setGraphOptions', () => {
 
     describe('Margin Computation', () => {
         it('should set default margins in non-compact, horizontal mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.l).toBe(30);
             expect(options.layout.margin.r).toBe(30);
             expect(options.layout.margin.t).toBe(60);
@@ -640,7 +677,7 @@ describe('setGraphOptions', () => {
         it('should adjust margins for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 10;
             window.innerHeight = 800;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.l).toBe(10);
             expect(options.layout.margin.r).toBe(10);
             expect(options.layout.margin.t).toBe(30);
@@ -648,59 +685,61 @@ describe('setGraphOptions', () => {
         });
 
         it('should increase top margin for globe plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGlobe: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGlobe: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 50);
         });
 
         it('should increase top margin for surface plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 30);
         });
 
         it('should increase top margin for radar plots', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isRadar: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isRadar: true }, 1);
             expect(options.layout.margin.t).toBe(60 + 100);
         });
 
         it('should increase bottom margin for spin plots in vertical display', () => {
             window.innerWidth = 700;
             window.innerHeight = 1000;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isSpin: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSpin: true }, 1);
             expect(options.layout.margin.b).toBe(30 + 150);
         });
 
         it('should adjust right margin if yaxis2 is not present (non-compact, vertical)', () => {
-            window.innerWidth = 800; window.innerHeight = 1200; // non-compact, vertical
-            const dataNoY2 = createMockGraphData("Test", 1, false);
-            const options = setGraphOptions(dataNoY2, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            window.innerWidth = 800;
+            window.innerHeight = 1200; // non-compact, vertical
+            const dataNoY2 = createMockGraphData('Test', 1, false);
+            const options = setGraphOptions(dataNoY2, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.margin.r).toBe(30 + 25);
         });
     });
 
     describe('Font Computation', () => {
         it('should set base font size for non-compact mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.font.size).toBe(11);
         });
 
         it('should set smaller base font size for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.font.size).toBe(10);
         });
     });
 
     describe('Axis Computation', () => {
         it('should set default xaxis title in non-compact', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.xaxis.title.text).toBe('SPL (dB) v.s. Frequency (Hz)');
-            expect(options.layout.xaxis.title.font.size).toBe(9 + Math.round(1024/300));
+            expect(options.layout.xaxis.title.font.size).toBe(9 + Math.round(1024 / 300));
         });
 
         it('should hide yaxis title and labels in compact vertical mode', () => {
-            window.innerWidth = 400; window.innerHeight = 800;
-            const dataWithY2 = createMockGraphData("Test", 1, true);
-            const options = setGraphOptions(dataWithY2, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            window.innerWidth = 400;
+            window.innerHeight = 800;
+            const dataWithY2 = createMockGraphData('Test', 1, true);
+            const options = setGraphOptions(dataWithY2, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.yaxis.title).toBeNull();
             expect(options.layout.yaxis.showticklabels).toBe(false);
             expect(options.layout.yaxis2.title).toBeNull();
@@ -708,13 +747,20 @@ describe('setGraphOptions', () => {
         });
 
         it('should set combined xaxis title in compact vertical mode for plots with angle y-axis', () => {
-            window.innerWidth = 400; window.innerHeight = 800;
+            window.innerWidth = 400;
+            window.innerHeight = 800;
             const contourLayout = JSON.parse(JSON.stringify(mockInputGraphsData[0].layout));
             contourLayout.yaxis.title.text = 'Angle';
             contourLayout.yaxis.range = [-90, 90];
             contourLayout.xaxis.range = [Math.log10(100), Math.log10(10000)];
 
-            const options = setGraphOptions([{data: mockInputGraphsData[0].data, layout: contourLayout}], window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(
+                [{ data: mockInputGraphsData[0].data, layout: contourLayout }],
+                window.innerWidth,
+                window.innerHeight,
+                { isSurface: true },
+                1
+            );
             expect(options.layout.xaxis.title.text).toBe('Angle [-90º, 90º]) v.s. Frequency ([100Hz, 10000Hz]).');
         });
     });
@@ -722,7 +768,7 @@ describe('setGraphOptions', () => {
     describe('Legend Computation', () => {
         it('should set legend horizontal, bottom-center for compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('h');
             expect(options.layout.legend.yanchor).toBe('bottom');
             expect(options.layout.legend.xanchor).toBe('center');
@@ -730,7 +776,7 @@ describe('setGraphOptions', () => {
         });
 
         it('should set legend vertical, right-middle for non-compact horizontal mode', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('v');
             expect(options.layout.legend.yanchor).toBe('middle');
             expect(options.layout.legend.xanchor).toBe('bottom');
@@ -740,20 +786,26 @@ describe('setGraphOptions', () => {
 
         it('should shorten trace names and remove group titles in compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const dataWithShortenableName = createMockGraphData("Title", 1);
+            const dataWithShortenableName = createMockGraphData('Title', 1);
             dataWithShortenableName[0].data[0].name = 'Early Reflections';
 
-            const options = setGraphOptions(dataWithShortenableName, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(
+                dataWithShortenableName,
+                window.innerWidth,
+                window.innerHeight,
+                { isGraph: true },
+                1
+            );
             expect(options.data[0].name).toBe('ER');
             expect(options.data[0].legendgroup).toBeNull();
             expect(options.data[0].legendgrouptitle).toBeNull();
         });
 
         it('should remove parts from legend group titles in non-compact mode when comparing two graphs', () => {
-            const graphData1 = createMockGraphData("Measurement v.s. Something for SpeakerA by RevA");
-            const graphData2 = createMockGraphData("Another for SpeakerB by RevB");
+            const graphData1 = createMockGraphData('Measurement v.s. Something for SpeakerA by RevA');
+            const graphData2 = createMockGraphData('Another for SpeakerB by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
-            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
             expect(options.data[0].legendgrouptitle.text).toBe('Measurement');
             const secondGraphDataStartIndex = graphData1[0].data.length;
@@ -764,12 +816,12 @@ describe('setGraphOptions', () => {
     describe('Modbar Configuration', () => {
         it('should disable modbar in compact mode', () => {
             window.innerWidth = graphSmallThreshold - 1;
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.config.displayModeBar).toBe(false);
         });
 
         it('should enable modbar in non-compact mode with vertical orientation', () => {
-            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+            const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.config.displayModeBar).toBe(true);
             expect(options.layout.modebar.orientation).toBe('v');
         });
@@ -777,12 +829,13 @@ describe('setGraphOptions', () => {
 
     describe('Colorbar Configuration', () => {
         it('should configure colorbar for vertical display (non-compact)', () => {
-            window.innerWidth = 800; window.innerHeight = 1200;
-            const dataWithColorbar = createMockGraphData("Colorbar Test", 1);
+            window.innerWidth = 800;
+            window.innerHeight = 1200;
+            const dataWithColorbar = createMockGraphData('Colorbar Test', 1);
             dataWithColorbar[0].data[0].type = 'heatmap';
             dataWithColorbar[0].data[0].colorbar = {};
 
-            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.xanchor).toBe('center');
@@ -792,11 +845,11 @@ describe('setGraphOptions', () => {
         });
 
         it('should configure colorbar for horizontal display (non-compact)', () => {
-            const dataWithColorbar = createMockGraphData("Colorbar Test", 1);
+            const dataWithColorbar = createMockGraphData('Colorbar Test', 1);
             dataWithColorbar[0].data[0].type = 'heatmap';
             dataWithColorbar[0].data[0].colorbar = {};
 
-            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, {isSurface: true}, 1);
+            const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('v');
             expect(cb.xanchor).toBe('top');
@@ -804,51 +857,49 @@ describe('setGraphOptions', () => {
         });
     });
 
-
-
     it('should handle null or undefined inputGraphsData gracefully', () => {
-        const options1 = setGraphOptions(null, 1024, 768, {isGraph: true}, 1);
+        const options1 = setGraphOptions(null, 1024, 768, { isGraph: true }, 1);
         expect(options1.data).toBeNull();
         expect(options1.layout).toBeNull();
 
-        const options2 = setGraphOptions([null, null], 1024, 768, {isGraph: true}, 1);
+        const options2 = setGraphOptions([null, null], 1024, 768, { isGraph: true }, 1);
         expect(options2.data).toBeNull(); // Because the preferred one (based on length) would be null
         expect(options2.layout).toBeNull();
 
-        const graphData1 = createMockGraphData("Graph A");
-        const options3 = setGraphOptions([graphData1[0], null], 1024, 768, {isGraph: true}, 1);
+        const graphData1 = createMockGraphData('Graph A');
+        const options3 = setGraphOptions([graphData1[0], null], 1024, 768, { isGraph: true }, 1);
         expect(options3.data).toEqual(graphData1[0].data);
-        expect(options3.layout.title.text).toContain("Graph A");
+        expect(options3.layout.title.text).toContain('Graph A');
 
-        const options4 = setGraphOptions([null, graphData1[0]], 1024, 768, {isGraph: true}, 1);
+        const options4 = setGraphOptions([null, graphData1[0]], 1024, 768, { isGraph: true }, 1);
         expect(options4.data).toEqual(graphData1[0].data);
-        expect(options4.layout.title.text).toContain("Graph A");
+        expect(options4.layout.title.text).toContain('Graph A');
     });
 
     it('should correctly merge data when two input graphs are provided', () => {
-        const graphData1 = createMockGraphData("Graph A", 2);
-        const graphData2 = createMockGraphData("Graph B", 3);
+        const graphData1 = createMockGraphData('Graph A', 2);
+        const graphData2 = createMockGraphData('Graph B', 3);
         const combinedInput = [graphData1[0], graphData2[0]];
 
-        const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, {isGraph: true}, 1);
+        const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
         expect(options.data.length).toBe(2 + 3);
-        expect(options.data.some(d => d.name === "Trace 1" && d.legendgrouptitle.text.startsWith("Graph A"))).toBe(true);
-        expect(options.data.some(d => d.name === "Trace 3" && d.legendgrouptitle.text.startsWith("Graph B"))).toBe(true);
+        expect(options.data.some((d) => d.name === 'Trace 1' && d.legendgrouptitle.text.startsWith('Graph A'))).toBe(true);
+        expect(options.data.some((d) => d.name === 'Trace 3' && d.legendgrouptitle.text.startsWith('Graph B'))).toBe(true);
     });
 
     it('should prefer layout from the graph with more data items if two inputs are provided', () => {
-        const graphDataLessItems = createMockGraphData("Layout From Less", 1);
-        const graphDataMoreItems = createMockGraphData("Layout From More", 3);
-        graphDataMoreItems[0].layout.customLayoutProp = "来自更多数据";
+        const graphDataLessItems = createMockGraphData('Layout From Less', 1);
+        const graphDataMoreItems = createMockGraphData('Layout From More', 3);
+        graphDataMoreItems[0].layout.customLayoutProp = '来自更多数据';
 
         let combined = [graphDataLessItems[0], graphDataMoreItems[0]];
-        let options = setGraphOptions(combined, window.innerWidth, window.innerHeight, {isGraph:true},1);
-        expect(options.layout.customLayoutProp).toBe("来自更多数据");
+        let options = setGraphOptions(combined, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+        expect(options.layout.customLayoutProp).toBe('来自更多数据');
 
         combined = [graphDataMoreItems[0], graphDataLessItems[0]];
-        options = setGraphOptions(combined, window.innerWidth, window.innerHeight, {isGraph:true},1);
-        expect(options.layout.customLayoutProp).toBe("来自更多数据");
+        options = setGraphOptions(combined, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+        expect(options.layout.customLayoutProp).toBe('来自更多数据');
     });
 });
 
@@ -941,7 +992,7 @@ describe('decode64 and decode', () => {
             const input = { bdata: 'AQID+/A=', dtype: 'u1c' }; // Represents [1, 2, 3, 251, 240]
             const decoded = decode(input);
             expect(decoded).toBeInstanceOf(Uint8ClampedArray);
-            expect(decoded).toEqual(new Uint8ClampedArray([1,2,3,251,240])); // Corrected expected value
+            expect(decoded).toEqual(new Uint8ClampedArray([1, 2, 3, 251, 240])); // Corrected expected value
         });
 
         it('should decode to Int8Array (i1) correctly', () => {
@@ -962,7 +1013,7 @@ describe('decode64 and decode', () => {
             const input = { bdata: 'AQIDBA==', dtype: 'u1' }; // [1,2,3,4]
             const decoded = decode(input);
             expect(decoded).toBeInstanceOf(Uint8Array);
-            expect(decoded).toEqual(new Uint8Array([1,2,3,4]));
+            expect(decoded).toEqual(new Uint8Array([1, 2, 3, 4]));
         });
 
         it('should decode to Uint16Array (u2) correctly', () => {
