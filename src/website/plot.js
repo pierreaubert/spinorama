@@ -377,7 +377,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
     // console.log('layout and data: ' + inputGraphsData.length + ' w=' + windowWidth + ' h=' + windowHeight);
     if (inputGraphsData.length === 1) {
-        if (!inputGraphsData[0]) { // Handle if the single item itself is null/undefined
+        if (!inputGraphsData[0]) {
+            // Handle if the single item itself is null/undefined
             return { data: null, layout: null, config: null };
         }
         layout = inputGraphsData[0].layout;
@@ -409,8 +410,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
     // If after the above logic, layout or datas are still null (e.g. inputGraphsData had unexpected structure)
     if (layout === null || datas === null) {
-         console.log('Error: No valid graph data to process in setGraphOptions');
-         return { data: null, layout: null, config: null };
+        console.log('Error: No valid graph data to process in setGraphOptions');
+        return { data: null, layout: null, config: null };
     }
 
     const isVertical = isDisplayVertical();
@@ -508,7 +509,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     // Remove the 'measured by' part and add version in parentheses
                     const pos_measured = datas[0].legendgrouptitle.text.indexOf(' measured by ');
                     if (pos_measured !== -1) {
-                        datas[0].legendgrouptitle.text = datas[0].legendgrouptitle.text.slice(0, pos_measured) + ' (' + version0 + ')';
+                        datas[0].legendgrouptitle.text =
+                            datas[0].legendgrouptitle.text.slice(0, pos_measured) + ' (' + version0 + ')';
                     } else {
                         datas[0].legendgrouptitle.text += ' (' + version0 + ')';
                     }
@@ -518,7 +520,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     // Remove the 'measured by' part and add version in parentheses
                     const pos_measured = datas[offset].legendgrouptitle.text.indexOf(' measured by ');
                     if (pos_measured !== -1) {
-                        datas[offset].legendgrouptitle.text = datas[offset].legendgrouptitle.text.slice(0, pos_measured) + ' (' + version1 + ')';
+                        datas[offset].legendgrouptitle.text =
+                            datas[offset].legendgrouptitle.text.slice(0, pos_measured) + ' (' + version1 + ')';
                     } else {
                         datas[offset].legendgrouptitle.text += ' (' + version1 + ')';
                     }
@@ -677,8 +680,11 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     const pos_for = title.text.indexOf(' for ');
                     if (pos_for !== -1) {
                         // Check if this is a same speaker comparison that will get version info added
-                        const needsVersionInfo = outputNumberGraphs === 1 && inputGraphsData[1] && 
-                            inputGraphsData[0]?.layout.title.text && inputGraphsData[1]?.layout.title.text;
+                        const needsVersionInfo =
+                            outputNumberGraphs === 1 &&
+                            inputGraphsData[1] &&
+                            inputGraphsData[0]?.layout.title.text &&
+                            inputGraphsData[1]?.layout.title.text;
                         if (needsVersionInfo) {
                             const pos0for = inputGraphsData[0].layout.title.text.indexOf(' for ');
                             const pos0by = inputGraphsData[0].layout.title.text.indexOf(' measured by ');
@@ -1001,11 +1007,12 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
             let options = setGraphOptions(
-		[{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }],
-		width, height,
-		GraphProperties[measurement],
-		2
-	    );
+                [{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }],
+                width,
+                height,
+                GraphProperties[measurement],
+                2
+            );
             // this shapes are not working in 3D thus removing them
             if (options.layout && options.layout?.shapes) {
                 options.layout.shapes = null;
@@ -1024,7 +1031,7 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         config: structuredClone(graphsConfigs[0].config),
     };
     if (isDisplayCompact()) {
-	mergedConfig.layout.width = window.innerWidth;
+        mergedConfig.layout.width = window.innerWidth;
         mergedConfig.layout.height = mergedConfig.layout.width + 280;
         mergedConfig.layout.margin = {
             t: 160, // double lines title + axis
@@ -1033,21 +1040,21 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             b: 120,
         };
     } else {
-	if (isDisplayVertical()) {
-	    mergedConfig.layout.width = window.innerWidth-graphMarginRight;
+        if (isDisplayVertical()) {
+            mergedConfig.layout.width = window.innerWidth - graphMarginRight;
             mergedConfig.layout.height = mergedConfig.layout.width + 240;
             mergedConfig.layout.margin = {
-		t: 160, // double lines title + axis
-		r: 100, // colorbar
+                t: 160, // double lines title + axis
+                r: 100, // colorbar
             };
-	} else {
-	    mergedConfig.layout.width = window.innerWidth;
+        } else {
+            mergedConfig.layout.width = window.innerWidth;
             mergedConfig.layout.margin = {
-		t: 60,  // title
-		b: 40, // axis
-		r: 40, // colorbar
+                t: 60, // title
+                b: 40, // axis
+                r: 40, // colorbar
             };
-	}
+        }
     }
     // customise title
     function split(title) {
@@ -1062,7 +1069,7 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     const split1 = split(graphsConfigs[1].layout.title.text);
     let title = '(A) ' + split0[0] + ' ' + split0[1] + ' v.s. (B) ' + split1[0] + ' ' + split1[1];
     if (isDisplayCompact() || isDisplayVertical()) {
-	title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+        title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
     }
     mergedConfig.layout.title = {
         text: title,
@@ -1096,9 +1103,9 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                     } else {
                         trace.colorbar.orientation = 'v';
                         trace.colorbar.x = 1.15;
-			if (isDisplayCompact()) {
+                        if (isDisplayCompact()) {
                             trace.colorbar.x = 1.25;
-			}
+                        }
                         trace.colorbar.xanchor = 'right';
                         trace.colorbar.y = 0.5;
                         trace.colorbar.yanchor = 'center';
@@ -1119,57 +1126,57 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     }
 
     if (isDisplayCompact() || isDisplayVertical()) {
-	mergedConfig.layout.xaxis.side = 'top';
-	mergedConfig.layout.xaxis.tick = 'outside';
+        mergedConfig.layout.xaxis.side = 'top';
+        mergedConfig.layout.xaxis.tick = 'outside';
 
-	mergedConfig.layout.xaxis2.side = 'bottom';
-	mergedConfig.layout.xaxis2.tick = 'outside';
-	mergedConfig.layout.xaxis2['anchor'] = 'y2';
+        mergedConfig.layout.xaxis2.side = 'bottom';
+        mergedConfig.layout.xaxis2.tick = 'outside';
+        mergedConfig.layout.xaxis2['anchor'] = 'y2';
 
-	mergedConfig.layout.yaxis.tick = 'outside';
-	if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
+        mergedConfig.layout.yaxis.tick = 'outside';
+        if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
             mergedConfig.layout.yaxis.title.text = 'Angle (A)';
-	}
+        }
 
-	mergedConfig.layout.yaxis2.tick = 'outside';
-	if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+        mergedConfig.layout.yaxis2.tick = 'outside';
+        if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
             mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
-	}
+        }
 
-	const range0 = graphsConfigs[0].layout.xaxis.range;
-	const range1 = graphsConfigs[1].layout.xaxis.range;
-	const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
-	mergedConfig.layout.xaxis.range = range;
-	mergedConfig.layout.xaxis2.range = range;
-	mergedConfig.layout.yaxis['domain'] = [0.51, 1];
-	mergedConfig.layout.yaxis2['domain'] = [0, 0.49];
+        const range0 = graphsConfigs[0].layout.xaxis.range;
+        const range1 = graphsConfigs[1].layout.xaxis.range;
+        const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+        mergedConfig.layout.xaxis.range = range;
+        mergedConfig.layout.xaxis2.range = range;
+        mergedConfig.layout.yaxis['domain'] = [0.51, 1];
+        mergedConfig.layout.yaxis2['domain'] = [0, 0.49];
     } else {
-	mergedConfig.layout.xaxis.side = 'bottom';
-	mergedConfig.layout.xaxis.tick = 'outside';
+        mergedConfig.layout.xaxis.side = 'bottom';
+        mergedConfig.layout.xaxis.tick = 'outside';
 
-	mergedConfig.layout.xaxis2.side = 'bottom';
-	mergedConfig.layout.xaxis2.tick = 'outside';
+        mergedConfig.layout.xaxis2.side = 'bottom';
+        mergedConfig.layout.xaxis2.tick = 'outside';
 
-	mergedConfig.layout.yaxis.tick = 'outside';
-	if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
+        mergedConfig.layout.yaxis.tick = 'outside';
+        if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
             mergedConfig.layout.yaxis.title.text = 'Angle (A)';
-	}
+        }
 
-	mergedConfig.layout.yaxis2.side = 'right';
-	mergedConfig.layout.yaxis2.tick = 'outside';
-	mergedConfig.layout.yaxis2['anchor'] = 'x2';
-	if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+        mergedConfig.layout.yaxis2.side = 'right';
+        mergedConfig.layout.yaxis2.tick = 'outside';
+        mergedConfig.layout.yaxis2['anchor'] = 'x2';
+        if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
             mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
-	}
+        }
 
-	const range0 = graphsConfigs[0].layout.yaxis.range;
-	const range1 = graphsConfigs[1].layout.yaxis.range;
-	const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+        const range0 = graphsConfigs[0].layout.yaxis.range;
+        const range1 = graphsConfigs[1].layout.yaxis.range;
+        const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
 
-	mergedConfig.layout.xaxis['domain'] = [0, 0.49];
-	mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
-	mergedConfig.layout.yaxis.range=range;
-	mergedConfig.layout.yaxis2.range=range;
+        mergedConfig.layout.xaxis['domain'] = [0, 0.49];
+        mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
+        mergedConfig.layout.yaxis.range = range;
+        mergedConfig.layout.yaxis2.range = range;
     }
 
     return [mergedConfig];
@@ -1331,7 +1338,7 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
                 [{ data: polarData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
-		GraphProperties[measurement],
+                GraphProperties[measurement],
                 speakerGraphs.length
             );
             if (speakerGraphs.length > 1 && i === 0) {
@@ -1357,7 +1364,7 @@ export function setContour3D(measurement, speakerNames, speakerGraphs, width, he
                 [{ data: surfaceData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
-		GraphProperties[measurement],
+                GraphProperties[measurement],
                 speakerGraphs.length
             );
             // this shapes are not working in 3D thus removing them

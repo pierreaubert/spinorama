@@ -527,6 +527,7 @@ def main():
         "onload",
         "pagination",
         "plot",
+        "plot-config",
         "scores",
         "search",
         "similar",
