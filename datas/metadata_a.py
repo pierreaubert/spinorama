@@ -217,6 +217,38 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Adam D3V": {
+        "brand": "Adam",
+        "model": "D3V",
+        "type": "active",
+        "price": "309",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/adam_d3v/",
+                    "yt": "https://youtu.be/bYipzw4qTGk",
+                },
+                "review_published": "20250707",
+                "specifications": {
+                    "SPL": {
+                        "max": 90,
+                        "peak": 97,
+                    },
+                    "size": {
+                        "height": 200,
+                        "width": 115,
+                        "depth": 150,
+                    },
+                    "weight": 1.87,
+                },
+            },
+        },
+    },
     "Adam S2V": {
         "brand": "Adam",
         "model": "S2V",
