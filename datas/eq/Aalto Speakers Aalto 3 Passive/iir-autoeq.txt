@@ -1,0 +1,14 @@
+EQ for Aalto Speakers Aalto 3 Passive computed from Vendors-Aalto Speakers data
+Preference Score 6.83 with EQ 7.54
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-07-13:47:20
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    32 Hz Gain +2.97 dB Q 0.92
+Filter  2: ON PK Fc   369 Hz Gain +0.98 dB Q 2.52
+Filter  3: ON PK Fc   409 Hz Gain -1.56 dB Q 1.81
+Filter  4: ON PK Fc   643 Hz Gain -1.22 dB Q 1.22
+Filter  5: ON PK Fc  1288 Hz Gain +3.00 dB Q 0.63
+Filter  6: ON PK Fc  1532 Hz Gain -2.97 dB Q 1.81
+Filter  7: ON PK Fc  4989 Hz Gain -1.16 dB Q 0.50

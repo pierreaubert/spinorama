@@ -1158,6 +1158,37 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Arendal Sound 1528 Monitor 8": {
+        "brand": "Arendal Sound",
+        "model": "1528 Monitor 8",
+        "type": "passive",
+        "price": "5900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1528_monitor_8/",
+                    "yt": "https://youtu.be/BvKE3jpnsI8",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 808,
+                        "width": 290,
+                        "depth": 448,
+                    },
+                    "weight": 47,
+                },
+            },
+        },
+    },
     "Arendal Sound 1961 Center": {
         "brand": "Arendal Sound",
         "model": "1961 Center",
@@ -1172,70 +1203,6 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
                 "review_published": "20230323",
-            },
-        },
-    },
-    "Arendal Sound 1961 Monitor": {
-        "brand": "Arendal Sound",
-        "model": "1961 Monitor",
-        "type": "passive",
-        "price": "1100",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
-                "review_published": "20230323",
-            },
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arenda_1961_monitor/",
-                },
-                "review_published": "20231009",
-            },
-        },
-    },
-    "Arendal Sound 1961 Bookshelf": {
-        "brand": "Arendal Sound",
-        "model": "1961 Bookshelf",
-        "type": "passive",
-        "price": "700",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_bookshelf/",
-                },
-                "review_published": "20220118",
-            },
-        },
-    },
-    "Arendal Sound 1961 Tower": {
-        "brand": "Arendal Sound",
-        "model": "1961 Tower",
-        "type": "passive",
-        "price": "1700",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "eac-sealed",
-        "measurements": {
-            "eac-sealed": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_tower/",
-                    "yt": "https://www.youtube.com/watch?v=Ba7aFNyNYZo",
-                },
-                "review_published": "20220122",
             },
         },
     },
@@ -1321,6 +1288,70 @@ speakers_info_a: SpeakerDatabase = {
                     },
                     "weight": 18.7,
                 },
+            },
+        },
+    },
+    "Arendal Sound 1961 Monitor": {
+        "brand": "Arendal Sound",
+        "model": "1961 Monitor",
+        "type": "passive",
+        "price": "1100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
+                "review_published": "20230323",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arenda_1961_monitor/",
+                },
+                "review_published": "20231009",
+            },
+        },
+    },
+    "Arendal Sound 1961 Bookshelf": {
+        "brand": "Arendal Sound",
+        "model": "1961 Bookshelf",
+        "type": "passive",
+        "price": "700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_bookshelf/",
+                },
+                "review_published": "20220118",
+            },
+        },
+    },
+    "Arendal Sound 1961 Tower": {
+        "brand": "Arendal Sound",
+        "model": "1961 Tower",
+        "type": "passive",
+        "price": "1700",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac-sealed",
+        "measurements": {
+            "eac-sealed": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_tower/",
+                    "yt": "https://www.youtube.com/watch?v=Ba7aFNyNYZo",
+                },
+                "review_published": "20220122",
             },
         },
     },
@@ -2026,8 +2057,28 @@ speakers_info_a: SpeakerDatabase = {
         "price": "1100",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor-v2-20240919",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                 "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascilab_c6b/",
+                    "yt": "https://youtu.be/2I4WBxOsDDE",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
+                },
+                "review_published": "20250707",
+                "specifications": {
+                    "size": {
+                        "height": 385,
+                        "width": 197,
+                        "depth": 265,
+                    },
+                    "weight": 10.5,
+                },
+            },
             "vendor-v2-20240919": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
@@ -2037,14 +2088,6 @@ speakers_info_a: SpeakerDatabase = {
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
                 "review_published": "20240920",
-                "specifications": {
-                    "size": {
-                        "height": 385,
-                        "width": 197,
-                        "depth": 265,
-                    },
-                    "weight": 10.5,
-                },
             },
             "vendor-v1-20240814": {
                 "origin": "Vendors-AsciLab",
@@ -2055,14 +2098,6 @@ speakers_info_a: SpeakerDatabase = {
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
                 "review_published": "20240531",
-                "specifications": {
-                    "size": {
-                        "height": 385,
-                        "width": 197,
-                        "depth": 265,
-                    },
-                    "weight": 10.5,
-                },
             },
         },
     },
