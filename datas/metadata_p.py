@@ -1744,4 +1744,53 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Pylon Jasper Monitor 18": {
+        "brand": "Pylon Jasper",
+        "model": "Monitor 18",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac-v1-0-degree",
+        "measurements": {
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/pylon_jasper_18/",
+                    "yt": "https://youtu.be/OxiymvZri3k",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 430,
+                        "width": 200,
+                        "depth": 413,
+                    },
+                    "weight": 13.5,
+                },
+            },
+            "eac-v1-30-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/pylon_jasper_18/",
+                    "yt": "https://youtu.be/OxiymvZri3k",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 430,
+                        "width": 200,
+                        "depth": 413,
+                    },
+                    "weight": 13.5,
+                },
+            },
+        },
+    },
 }

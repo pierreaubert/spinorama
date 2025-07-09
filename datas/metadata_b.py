@@ -1351,4 +1351,33 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Bowers & Wilkins HTM81 D4": {
+        "brand": "Bowers & Wilkins",
+        "model": "HTM81 D4",
+        "type": "passive",
+        "price": "9600",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bower_wilkins_htm81_d4/",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 3,
+                    "size": {
+                        "height": 334,
+                        "width": 847,
+                        "depth": 371,
+                    },
+                    "weight": 32.2,
+                },
+            },
+        },
+    },
 }

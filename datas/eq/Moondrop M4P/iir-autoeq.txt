@@ -1,0 +1,14 @@
+EQ for Moondrop M4P computed from ErinsAudioCorner data
+Preference Score 4.92 with EQ 6.36
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-08-13:50:01
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +2.96 dB Q 2.03
+Filter  2: ON PK Fc   382 Hz Gain +2.93 dB Q 0.91
+Filter  3: ON PK Fc   424 Hz Gain -1.87 dB Q 2.55
+Filter  4: ON PK Fc   820 Hz Gain -0.75 dB Q 2.88
+Filter  5: ON PK Fc  1161 Hz Gain +2.52 dB Q 2.13
+Filter  6: ON PK Fc  2245 Hz Gain +2.80 dB Q 1.00
+Filter  7: ON PK Fc  2862 Hz Gain -3.55 dB Q 0.28

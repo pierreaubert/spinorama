@@ -156,6 +156,37 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Chesky Audio LC1": {
+        "brand": "Chesky Audio",
+        "model": "LC1",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/chesky_lc1/",
+                    "yt": "https://youtu.be/nUOSTOkFCvU",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 254,
+                        "width": 203,
+                        "depth": 254,
+                    },
+                    "weight": 8.2,
+                },
+            },
+        },
+    },
+
     "Coda Audio CoRay4": {
         "brand": "Coda Audio",
         "model": "CoRay4",

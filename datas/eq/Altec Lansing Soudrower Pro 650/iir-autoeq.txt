@@ -1,0 +1,14 @@
+EQ for Altec Lansing Soudrower Pro 650 computed from ErinsAudioCorner data
+Preference Score 0.10 with EQ 2.61
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-08-11:25:28
+
+Preamp: -1.9 dB
+
+Filter  1: ON PK Fc    51 Hz Gain +3.00 dB Q 2.29
+Filter  2: ON PK Fc    92 Hz Gain -5.29 dB Q 1.57
+Filter  3: ON PK Fc   260 Hz Gain -3.14 dB Q 3.00
+Filter  4: ON PK Fc   424 Hz Gain -3.59 dB Q 3.00
+Filter  5: ON PK Fc   540 Hz Gain +3.00 dB Q 3.00
+Filter  6: ON PK Fc  1954 Hz Gain +3.00 dB Q 1.38
+Filter  7: ON PK Fc  4654 Hz Gain -6.56 dB Q 0.50

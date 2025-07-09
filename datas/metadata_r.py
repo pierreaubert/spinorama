@@ -1420,9 +1420,21 @@ speakers_info_r: SpeakerDatabase = {
                 "reviews": {
                     "asr-v1": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
                     "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_f35/",
+                    "yt": "https://youtu.be/hr-Qu1etIng",
                 },
                 "notes": "Second measurement with bass corrections",
                 "review_published": "20200314",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "size": {
+                        "height": 1022,
+                        "width": 214,
+                        "depth": 310,
+                    },
+                    "weight": 18.5,
+                },
             },
             "asr-v1-20200315": {
                 "origin": "ASR",
@@ -1435,6 +1447,11 @@ speakers_info_r: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20250708",
             },
         },
     },

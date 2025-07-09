@@ -735,6 +735,33 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Altec Lansing Soundrower Pro 650": {
+        "brand": "Altec Lansing",
+        "model": "Soundrower Pro 650",
+        "type": "active",
+        "price": "230",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://www.youtube.com/live/hwK5lEAOeJ8?si=s327FcGRQSbnXHiw",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "size": {
+                        "height": 801,
+                        "width": 457,
+                        "depth": 558,
+                    },
+                    "weight": 20,
+                },
+            },
+        },
+    },
     "Amate Audio X102FD": {
         "brand": "Amate Audio",
         "model": "X102FD",
@@ -2060,7 +2087,7 @@ speakers_info_a: SpeakerDatabase = {
         "default_measurement": "eac",
         "measurements": {
             "eac": {
-                 "origin": "ErinsAudioCorner",
+                "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "quality": "high",
                 "reviews": {
