@@ -1,0 +1,14 @@
+EQ for Onkyo GX 30ARC computed from ErinsAudioCorner data
+Preference Score 2.88 with EQ 5.39
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-08-11:09:08
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    52 Hz Gain +2.69 dB Q 0.52
+Filter  2: ON PK Fc   102 Hz Gain -3.95 dB Q 3.00
+Filter  3: ON PK Fc   117 Hz Gain +2.67 dB Q 1.54
+Filter  4: ON PK Fc   382 Hz Gain +2.53 dB Q 0.71
+Filter  5: ON PK Fc  1121 Hz Gain -3.11 dB Q 2.29
+Filter  6: ON PK Fc  1954 Hz Gain -1.41 dB Q 2.89
+Filter  7: ON PK Fc 11085 Hz Gain -2.43 dB Q 0.50

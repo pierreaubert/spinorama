@@ -2154,6 +2154,36 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Moondrop M4P": {
+        "brand": "Moondrop",
+        "model": "M4P",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/moondrop_mrp/",
+                    "yt": "https://youtu.be/W6-7H0sGKKA",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 380,
+                        "width": 155,
+                        "depth": 185,
+                    },
+                    "weight": 6.2,
+                },
+            },
+        },
+    },
     "Morel AVYRA 633": {
         "brand": "Morel",
         "model": "AVYRA 633",

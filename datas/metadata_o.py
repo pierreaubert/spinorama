@@ -91,6 +91,33 @@ speakers_info_o: SpeakerDatabase = {
             },
         },
     },
+    "Onkyo GX 30ARC": {
+        "brand": "Onkyo",
+        "model": "GX 30ARC",
+        "type": "active",
+        "price": "349",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/onkyo_gx_30arc/",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "size": {
+                        "height": 422,
+                        "width": 176,
+                        "depth": 265,
+                    },
+                    "weight": 2.8,
+                },
+            },
+        },
+    },
     "Optimal Audio Cuboid 3": {
         "brand": "Optimal Audio",
         "model": "Cuboid 3",
