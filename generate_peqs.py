@@ -27,7 +27,7 @@ from datas.grapheq import vendor_info as grapheq_info
 from generate_common import (
     get_custom_logger,
     args2level,
-    cache_load_distributed,
+    cache_load,
 )
 from autoeq.auto_save import optim_save_peq
 
@@ -94,6 +94,7 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 skip = True
                 break
         if skip:
+            logger.debug("Skipping %s because of filter criteria", current_speaker_name)
             continue
 
         # skip
@@ -115,6 +116,13 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 ", ".join(df_all_speakers[current_speaker_name]),
             )
             continue
+        else:
+            logger.debug(
+                "default origin %s for %s is %s",
+                default_origin,
+                current_speaker_name,
+                df_all_speakers[current_speaker_name][default_origin],
+            )
 
         if default not in df_all_speakers[current_speaker_name][default_origin]:
             logger.error(
@@ -124,6 +132,13 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 current_speaker_name,
             )
             continue
+        else:
+            logger.debug(
+                "default %s for %s is %s",
+                default,
+                current_speaker_name,
+                df_all_speakers[current_speaker_name][default_origin][default],
+            )
 
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
 
@@ -137,6 +152,8 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 ", ".join(df_speaker),
             )
             continue
+        else:
+            logger.debug("processing %s", current_speaker_name)
 
         # Process EQ computation directly
         results[current_speaker_name] = optim_save_peq(
@@ -306,36 +323,6 @@ def get_argument_parser():
         type=float,
         dest="slope_on_axis",
         help="Slope of the ideal target for On Axis, default is 0, as in flat anechoic",
-    )
-
-    # Numeric slope flags (imply value if present)
-    parser.add_argument(
-        "--0.5",
-        dest="slope_0_5",
-        action="store_const",
-        const=True,
-        help="Set target slope to -0.5 dB/octave. Equivalent to --slope-listening-window -0.5 if it's the primary slope chosen.",
-    )
-    parser.add_argument(
-        "--0.6",
-        dest="slope_0_6",
-        action="store_const",
-        const=True,
-        help="Set target slope to -0.6 dB/octave.",
-    )
-    parser.add_argument(
-        "--0.9",
-        dest="slope_0_9",
-        action="store_const",
-        const=True,
-        help="Set target slope to -0.9 dB/octave.",
-    )
-    parser.add_argument(
-        "--1.2",
-        dest="slope_1_2",
-        action="store_const",
-        const=True,
-        help="Set target slope to -1.2 dB/octave.",
     )
 
     # Aliases for named slope flags (all take a float value)
@@ -744,7 +731,7 @@ def main():
     # name of speaker
     speaker_name = None
     if args.speaker is not None:
-        speaker_name = args.speaker
+        speaker_name = args.speaker.replace('"', "")
 
     origin = None
     if args.origin is not None:
@@ -778,9 +765,7 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        df_all_speakers = cache_load_distributed(
-            filters=do_filters, smoke_test=args.smoke_test, level=level
-        )
+        df_all_speakers = cache_load(filters=do_filters, smoke_test=args.smoke_test, level=level)
         # print(df_all_speakers.keys())
         # print(df_all_speakers[speaker_name].keys())
         # print(df_all_speakers[speaker_name]["unknown"].keys())

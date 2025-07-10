@@ -96,7 +96,7 @@ def create_default_directories():
 
 def cache_key(name: str) -> str:
     # 256 partitions, use hashlib for stable hash
-    key = md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()
+    key = md5(name.replace('"', "").encode("utf-8"), usedforsecurity=False).hexdigest()
     short_key = key[0:2]
     return f"{short_key:2s}"
 
@@ -172,6 +172,7 @@ def cache_load_seq(filters, smoke_test):
         print("Cannot find cache directory or files! Did you run ./generate_graphs.py ?")
         return df_all
     count = 0
+    print("Found {} cache files".format(len(cache_files)))
     logging.debug("found %d cache files", len(cache_files))
     for cache in cache_files:
         speaker_name = filters.get("speaker_name")
@@ -179,16 +180,17 @@ def cache_load_seq(filters, smoke_test):
             logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
-        logging.debug("reading file %s found %d entries", cache, len(df_read) if df_read else 0)
+        print("Reading file {} found {} entries".format(cache, len(df_read) if df_read else 0))
         if not isinstance(df_read, dict):
             continue
         for speaker, data in df_read.items():
             if speaker in df_all:
-                print("error in cache: {} is already in keys".format(speaker))
+                print("Error in cache: {} is already in keys".format(speaker))
                 continue
             if is_filtered(speaker, filters):
-                # print(speaker, speaker_name)
+                # print('Skipping filtered {} {}'.format(speaker, speaker_name))
                 continue
+            print("Found data for {}".format(speaker_name))
             df_all[speaker] = data
             count += 1
         if smoke_test and count > 10:
