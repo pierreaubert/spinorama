@@ -435,7 +435,7 @@ describe('Graph Configuration Functions', () => {
                 colorbar: {
                     thickness: 30,
                     len: 0.7,
-                    show: false
+                    show: false,
                 },
             };
 
@@ -451,8 +451,8 @@ describe('Graph Configuration Functions', () => {
                 data: [],
                 layout: {
                     coloraxis: {
-                        colorbar: {}
-                    }
+                        colorbar: {},
+                    },
                 },
             };
 
@@ -461,7 +461,7 @@ describe('Graph Configuration Functions', () => {
                 colorbar: {
                     thickness: 25,
                     len: 0.8,
-                    show: true
+                    show: true,
                 },
             };
 
