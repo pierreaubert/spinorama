@@ -186,7 +186,6 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
-
     "Coda Audio CoRay4": {
         "brand": "Coda Audio",
         "model": "CoRay4",

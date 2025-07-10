@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# A script to compute EQs using multiprocessing instead of Ray
+#                                                   -*- coding: utf-8 -*-
+# A script to compute EQs using multiprocessing
 #
 # Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
@@ -38,6 +38,7 @@ from pathlib import Path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 GENERATE_PEQS = os.path.join(ROOT_DIR, "generate_peqs.py")
+LOG_LEVEL = "INFO"
 
 
 def setup_directories() -> None:
@@ -64,6 +65,7 @@ def compute_eq(params: tuple[int, str, str, str, str]) -> tuple[bool, str]:
         GENERATE_PEQS,
         "--verbose",
         "--force",
+        "--log-level={LOG_LEVEL}",
         "--optimisation=global",
         "--max-iter=15000",
         f'--speaker="{speaker}"',
@@ -83,8 +85,14 @@ def compute_eq(params: tuple[int, str, str, str, str]) -> tuple[bool, str]:
     log_file = os.path.join(output_dir, "..", f"{os.path.basename(output_dir)}.log")
     try:
         with open(log_file, "w") as f:
-            result = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, text=True, check=True)
-        return (True, f"Successfully processed {speaker} with {fitness} and {max_peq} PEQs")
+            result = subprocess.run(cmd, stdout=f, stderr=f, text=True, check=True)
+            if result.returncode == 0:
+                return (True, f"Successfully processed {speaker} with {fitness} and {max_peq} PEQs")
+            else:
+                return (
+                    False,
+                    f"Failed to process {speaker} with {fitness} and {max_peq} PEQs: return code {result.returncode}",
+                )
     except subprocess.CalledProcessError as e:
         return (False, f"Failed to process {speaker} with {fitness} and {max_peq} PEQs: {e}")
 
@@ -182,16 +190,7 @@ def main():
         help=f"Number of processes to use (default: {multiprocessing.cpu_count()})",
     )
     args = parser.parse_args()
-
-    # Get the list of speakers to process
-    if args.speakers:
-        speakers = args.speakers
-    else:
-        # If no speakers specified, process all speakers
-        # This is a simplified example - you might need to adjust how you get all speakers
-        speakers = ["all"]  # Replace with actual logic to get all speakers
-
-    # Set up environment
+    speakers = args.speakers if args.speakers else None
     setup_directories()
 
     # Generate all workloads

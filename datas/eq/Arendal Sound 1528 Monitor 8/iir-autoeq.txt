@@ -1,14 +1,14 @@
 EQ for Arendal Sound 1528 Monitor 8 computed from ErinsAudioCorner data
-Preference Score 5.41 with EQ 6.84
+Preference Score 5.41 with EQ 7.16
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
-Dated: 2025-07-08-08:51:57
+Dated: 2025-07-09-14:26:18
 
-Preamp: -2.5 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    67 Hz Gain -3.86 dB Q 1.20
-Filter  2: ON PK Fc    69 Hz Gain +2.97 dB Q 0.26
-Filter  3: ON PK Fc   211 Hz Gain -1.96 dB Q 2.88
-Filter  4: ON PK Fc   310 Hz Gain -3.43 dB Q 1.92
-Filter  5: ON PK Fc   395 Hz Gain +1.89 dB Q 0.25
-Filter  6: ON PK Fc   643 Hz Gain -1.36 dB Q 2.73
-Filter  7: ON PK Fc  1429 Hz Gain -2.74 dB Q 2.02
+Filter  1: ON PK Fc    22 Hz Gain +2.78 dB Q 2.06
+Filter  2: ON PK Fc   139 Hz Gain +2.83 dB Q 1.33
+Filter  3: ON PK Fc   321 Hz Gain -0.98 dB Q 0.64
+Filter  4: ON PK Fc   470 Hz Gain +1.33 dB Q 2.61
+Filter  5: ON PK Fc  1532 Hz Gain -3.59 dB Q 1.60
+Filter  6: ON PK Fc  1887 Hz Gain +2.96 dB Q 0.55
+Filter  7: ON PK Fc  3912 Hz Gain -1.72 dB Q 0.49
