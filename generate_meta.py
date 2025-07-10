@@ -211,7 +211,7 @@ def update_metadata(speaker_name, version, target, data):
         )
 
     if target not in Measurement.__optional_keys__ and target not in Measurement.__required_keys__:
-        logger.exception("Got an unkown key %s for a measurement from %s", target, speaker_name)
+        logger.exception("Got an unknown key %s for a measurement from %s", target, speaker_name)
         return
 
     # print("update metadata: update key {} with target {}".format(key, target))
