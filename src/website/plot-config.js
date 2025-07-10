@@ -237,6 +237,9 @@ export function createFormGroup(label, type, value, name, options, onChange) {
     group.className = 'form-group field';
     group.style.cssText = `
         width: 100%;
+        flex: 1 1 auto;
+        min-width: 180px;
+        max-width: 300px;
     `;
 
     // Label with Bulma styling
@@ -303,7 +306,7 @@ export function createFormGroup(label, type, value, name, options, onChange) {
         input.style.cssText = `
             width: 100%;
             padding: 5px;
-            border: 1px solid #ddd;
+            border: 1px solid rgb(221, 221, 221);
             border-radius: 3px;
         `;
 
@@ -355,7 +358,7 @@ export function createFormGroup(label, type, value, name, options, onChange) {
         input.style.cssText = `
             width: 100%;
             padding: 5px;
-            border: 1px solid #ddd;
+            border: 1px solid rgb(221, 221, 221);
             border-radius: 3px;
         `;
     }
@@ -383,57 +386,81 @@ export function createConfigMenu(divName, config, updateCallback) {
         return; // Menu already exists
     }
 
-    // Create main config container
+    // Create main config container with grid layout
     configContainer = document.createElement('div');
     configContainer.className = 'plot-config-container';
     configContainer.style.cssText = `
         width: 100%;
         margin-bottom: 20px;
         order: -1; /* Ensure it appears before other elements in flex contexts */
-        background-color: #fff;
-        border-radius: 4px;
-        box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
-        border: 1px solid #ddd;
     `;
 
-    // Create a simple header bar with toggle button
-    const header = document.createElement('div');
-    header.style.cssText = `
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        background-color: #f8f8f8;
-        border-radius: 4px 4px 0 0;
+    // Create grid container
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'grid';
+    configContainer.appendChild(gridContainer);
+
+    // Create cell for the main config dropdown
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+
+    // Create dropdown structure
+    const dropdown = document.createElement('div');
+    dropdown.className = 'dropdown is-hoverable';
+
+    // Create dropdown trigger
+    const dropdownTrigger = document.createElement('div');
+    dropdownTrigger.className = 'dropdown-trigger';
+
+    // Create main button
+    const mainButton = document.createElement('button');
+    mainButton.className = 'button';
+    mainButton.setAttribute('aria-haspopup', 'true');
+    mainButton.setAttribute('aria-controls', 'dropdown-plotconfig-main');
+
+    const buttonText = document.createElement('span');
+    buttonText.textContent = 'Plot Configuration';
+
+    const buttonIcon = document.createElement('span');
+    buttonIcon.className = 'icon is-small';
+    buttonIcon.innerHTML = '<i class="fas fa-angle-down" aria-hidden="true">⌄</i>';
+
+    mainButton.appendChild(buttonText);
+    mainButton.appendChild(buttonIcon);
+    dropdownTrigger.appendChild(mainButton);
+
+    // Create dropdown menu
+    const dropdownMenu = document.createElement('div');
+    dropdownMenu.className = 'dropdown-menu';
+    dropdownMenu.id = 'dropdown-plotconfig-main';
+    dropdownMenu.setAttribute('role', 'menu');
+
+    // Create dropdown content
+    const dropdownContent = document.createElement('div');
+    dropdownContent.className = 'dropdown-content';
+    dropdownContent.style.cssText = `
+        min-width: 400px;
+        max-width: 600px;
     `;
 
-    // Create toggle button
-    const toggleButton = document.createElement('button');
-    toggleButton.className = 'button is-small';
-    toggleButton.innerHTML = '⚙️ Plot Configuration';
-    toggleButton.style.cssText = `
-        margin-right: auto;
-    `;
+    dropdownMenu.appendChild(dropdownContent);
 
-    header.appendChild(toggleButton);
-    configContainer.appendChild(header);
+    // Assemble dropdown structure
+    dropdown.appendChild(dropdownTrigger);
+    dropdown.appendChild(dropdownMenu);
+    cell.appendChild(dropdown);
+    gridContainer.appendChild(cell);
 
-    // Create config panel container
+    // Create config panel container (inside dropdown content)
     const configPanel = document.createElement('div');
     configPanel.className = 'config-panel';
     configPanel.style.cssText = `
-        display: none;
         padding: 15px;
     `;
-    configContainer.appendChild(configPanel);
+    dropdownContent.appendChild(configPanel);
 
-    // Toggle functionality
-    let isOpen = false;
-    toggleButton.addEventListener('click', () => {
-        isOpen = !isOpen;
-        configPanel.style.display = isOpen ? 'block' : 'none';
-        toggleButton.innerHTML = isOpen ? '⚙️ Hide Configuration' : '⚙️ Plot Configuration';
-    });
+    // Array to keep track of all sections for accordion behavior
+    const allSections = [];
 
     // Create group sections to organize controls
     function createGroupSection(title) {
@@ -441,7 +468,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         section.className = 'config-section';
         section.style.cssText = `
             margin-bottom: 20px;
-            padding: 0;
+            padding: 0px;
         `;
 
         // Create collapsible section header
@@ -451,25 +478,25 @@ export function createConfigMenu(divName, config, updateCallback) {
             display: flex;
             align-items: center;
             padding: 10px;
-            background-color: #f5f5f5;
+            background-color: rgb(245, 245, 245);
             border-radius: 4px;
             cursor: pointer;
-            border: 1px solid #e0e0e0;
+            border: 1px solid rgb(224, 224, 224);
         `;
 
         // Section title
         const heading = document.createElement('h4');
         heading.textContent = title;
         heading.style.cssText = `
-            margin: 0;
+            margin: 0px;
             font-size: 1rem;
             font-weight: bold;
             flex-grow: 1;
         `;
 
-        // Toggle icon
+        // Toggle icon - start with closed state
         const toggleIcon = document.createElement('span');
-        toggleIcon.innerHTML = '▼';
+        toggleIcon.innerHTML = '►';
         toggleIcon.style.cssText = `
             margin-left: 10px;
             font-size: 0.8rem;
@@ -480,16 +507,19 @@ export function createConfigMenu(divName, config, updateCallback) {
         sectionHeader.appendChild(toggleIcon);
         section.appendChild(sectionHeader);
 
-        // Create content area for form elements
+        // Create content area for form elements - start closed
         const contentArea = document.createElement('div');
         contentArea.className = 'section-content';
         contentArea.style.cssText = `
-            display: block;
+            display: none;
             padding: 10px;
-            border: 1px solid #e0e0e0;
+            border-right: 1px solid rgb(224, 224, 224);
+            border-bottom: 1px solid rgb(224, 224, 224);
+            border-left: 1px solid rgb(224, 224, 224);
+            border-image: initial;
             border-top: none;
-            background: #fff;
-            border-radius: 0 0 4px 4px;
+            background: rgb(255, 255, 255);
+            border-radius: 0px 0px 4px 4px;
         `;
 
         // Create a flex container for form elements
@@ -505,13 +535,41 @@ export function createConfigMenu(divName, config, updateCallback) {
         contentArea.appendChild(flexContainer);
         section.appendChild(contentArea);
 
-        // Add click handler for collapsing/expanding
-        let isContentVisible = true;
+        // Store section data for accordion behavior
+        const sectionData = {
+            sectionHeader,
+            contentArea,
+            toggleIcon,
+            isContentVisible: false, // Start closed
+        };
+
+        // Add this section to the allSections array
+        allSections.push(sectionData);
+
+        // Store a reference to close all other sections function
+        section._closeOthers = () => {
+            allSections.forEach((otherSection) => {
+                if (otherSection !== sectionData) {
+                    otherSection.isContentVisible = false;
+                    otherSection.contentArea.style.display = 'none';
+                    otherSection.toggleIcon.innerHTML = '►';
+                    otherSection.toggleIcon.style.transform = 'rotate(-90deg)';
+                }
+            });
+        };
+
+        // Add click handler for accordion behavior
         sectionHeader.addEventListener('click', () => {
-            isContentVisible = !isContentVisible;
-            contentArea.style.display = isContentVisible ? 'block' : 'none';
-            toggleIcon.innerHTML = isContentVisible ? '▼' : '►';
-            toggleIcon.style.transform = isContentVisible ? 'rotate(0)' : 'rotate(-90deg)';
+            const wasVisible = sectionData.isContentVisible;
+
+            // Close all other sections first
+            section._closeOthers();
+
+            // Toggle this section
+            sectionData.isContentVisible = !wasVisible;
+            contentArea.style.display = sectionData.isContentVisible ? 'block' : 'none';
+            toggleIcon.innerHTML = sectionData.isContentVisible ? '▼' : '►';
+            toggleIcon.style.transform = sectionData.isContentVisible ? 'rotate(0)' : 'rotate(-90deg)';
         });
 
         // Override the appendChild method to add items to the flex container
@@ -521,6 +579,7 @@ export function createConfigMenu(divName, config, updateCallback) {
                 // Ensure each form control has proper styling for the flex layout
                 if (element.classList.contains('form-group')) {
                     element.style.cssText += `
+                        width: 100%;
                         flex: 1 1 auto;
                         min-width: 180px;
                         max-width: 300px;
@@ -540,22 +599,22 @@ export function createConfigMenu(divName, config, updateCallback) {
     // Custom theme selector with SVG icons
     const themeGroup = document.createElement('div');
     themeGroup.className = 'form-group field';
-    themeGroup.style.cssText = `
-        width: 100%;
-    `;
-    
+    // themeGroup.style.cssText = `
+    //     width: 100%;
+    // `;
+
     const themeLabel = document.createElement('label');
     themeLabel.className = 'label is-small';
     themeLabel.textContent = 'Theme';
     themeGroup.appendChild(themeLabel);
-    
+
     const themeContainer = document.createElement('div');
     themeContainer.style.cssText = `
         display: flex;
         gap: 10px;
         padding: 5px 0;
     `;
-    
+
     // Light theme option
     const lightTheme = document.createElement('div');
     lightTheme.className = `theme-option ${config.theme === 'light' ? 'active' : ''}`;
@@ -578,7 +637,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         background-color: ${config.theme === 'light' ? '#e8f0fe' : 'transparent'};
     `;
     lightTheme.dataset.value = 'light';
-    
+
     // Dark theme option
     const darkTheme = document.createElement('div');
     darkTheme.className = `theme-option ${config.theme === 'dark' ? 'active' : ''}`;
@@ -593,27 +652,27 @@ export function createConfigMenu(divName, config, updateCallback) {
         background-color: ${config.theme === 'dark' ? '#e8f0fe' : 'transparent'};
     `;
     darkTheme.dataset.value = 'dark';
-    
+
     // Theme option click handlers
-    [lightTheme, darkTheme].forEach(option => {
+    [lightTheme, darkTheme].forEach((option) => {
         option.addEventListener('click', () => {
             const themeValue = option.dataset.value;
             config.theme = themeValue;
-            
+
             // Update UI
-            document.querySelectorAll('.theme-option').forEach(opt => {
+            document.querySelectorAll('.theme-option').forEach((opt) => {
                 opt.style.border = opt === option ? '1px solid #4285f4' : '1px solid #ddd';
                 opt.style.backgroundColor = opt === option ? '#e8f0fe' : 'transparent';
             });
-            
+
             updateCallback(config);
         });
     });
-    
+
     themeContainer.appendChild(lightTheme);
     themeContainer.appendChild(darkTheme);
     themeGroup.appendChild(themeContainer);
-    
+
     themeSection.appendChild(themeGroup);
 
     themeSection.appendChild(
@@ -664,44 +723,44 @@ export function createConfigMenu(divName, config, updateCallback) {
     const layoutDirectionGroup = document.createElement('div');
     layoutDirectionGroup.className = 'form-group field';
     layoutDirectionGroup.style.cssText = `width: 100%;`;
-    
+
     const layoutLabel = document.createElement('label');
     layoutLabel.className = 'label is-small';
     layoutLabel.textContent = 'Layout Direction';
     layoutDirectionGroup.appendChild(layoutLabel);
-    
+
     const selectWrapper = document.createElement('div');
     selectWrapper.className = 'select is-small is-fullwidth';
-    
+
     const layoutSelect = document.createElement('select');
     layoutSelect.id = 'config-layout-direction';
     layoutSelect.name = 'config-layout-direction';
-    
+
     const options = [
         { value: 'horizontal', text: 'Horizontal (Side by Side)' },
-        { value: 'vertical', text: 'Vertical (Top to Bottom)' }
+        { value: 'vertical', text: 'Vertical (Top to Bottom)' },
     ];
-    
-    options.forEach(option => {
+
+    options.forEach((option) => {
         const optElement = document.createElement('option');
         optElement.value = option.value;
         optElement.textContent = option.text;
         optElement.selected = option.value === config.layout.direction;
         layoutSelect.appendChild(optElement);
     });
-    
+
     layoutSelect.addEventListener('change', (e) => {
         config.layout.direction = e.target.value;
         updateCallback(config);
     });
-    
+
     selectWrapper.appendChild(layoutSelect);
-    
+
     const controlDiv = document.createElement('div');
     controlDiv.className = 'control';
     controlDiv.style.cssText = 'display: flex; align-items: center;';
     controlDiv.appendChild(selectWrapper);
-    
+
     layoutDirectionGroup.appendChild(controlDiv);
     layoutSection.appendChild(layoutDirectionGroup);
 
@@ -735,23 +794,23 @@ export function createConfigMenu(divName, config, updateCallback) {
     // Replace margin number inputs with sliders
     ['l', 'r', 't', 'b'].forEach((side) => {
         const labels = { l: 'Left', r: 'Right', t: 'Top', b: 'Bottom' };
-        
+
         const marginGroup = document.createElement('div');
         marginGroup.className = 'form-group field';
         marginGroup.style.cssText = `width: 100%;`;
-        
+
         const marginLabel = document.createElement('label');
         marginLabel.className = 'label is-small';
         marginLabel.textContent = `${labels[side]} Margin`;
         marginGroup.appendChild(marginLabel);
-        
+
         const sliderContainer = document.createElement('div');
         sliderContainer.style.cssText = `
             display: flex;
             align-items: center;
             gap: 10px;
         `;
-        
+
         // Create slider input
         const sliderInput = document.createElement('input');
         sliderInput.type = 'range';
@@ -764,7 +823,7 @@ export function createConfigMenu(divName, config, updateCallback) {
             flex-grow: 1;
             height: 8px;
         `;
-        
+
         // Value display
         const valueDisplay = document.createElement('span');
         valueDisplay.textContent = config.margin[side];
@@ -773,18 +832,18 @@ export function createConfigMenu(divName, config, updateCallback) {
             text-align: right;
             font-size: 0.8rem;
         `;
-        
+
         // Update handler
         sliderInput.addEventListener('input', (e) => {
             const value = parseInt(e.target.value);
             config.margin[side] = value;
             valueDisplay.textContent = value;
         });
-        
+
         sliderInput.addEventListener('change', () => {
             updateCallback(config);
         });
-        
+
         sliderContainer.appendChild(sliderInput);
         sliderContainer.appendChild(valueDisplay);
         marginGroup.appendChild(sliderContainer);
@@ -996,11 +1055,11 @@ export function createConfigMenu(divName, config, updateCallback) {
 
     colorbarSection.appendChild(
         createFormGroup(
-            'Thickness (px)', 
-            'number', 
-            config.colorbar.thickness, 
-            'config-colorbar-thickness', 
-            { min: 5, max: 100, step: 1 }, 
+            'Thickness (px)',
+            'number',
+            config.colorbar.thickness,
+            'config-colorbar-thickness',
+            { min: 5, max: 100, step: 1 },
             (e) => {
                 config.colorbar.thickness = parseInt(e.target.value);
                 updateCallback(config);
@@ -1010,11 +1069,11 @@ export function createConfigMenu(divName, config, updateCallback) {
 
     colorbarSection.appendChild(
         createFormGroup(
-            'Length', 
-            'number', 
-            config.colorbar.len, 
-            'config-colorbar-len', 
-            { min: 0.1, max: 1.0, step: 0.1 }, 
+            'Length',
+            'number',
+            config.colorbar.len,
+            'config-colorbar-len',
+            { min: 0.1, max: 1.0, step: 0.1 },
             (e) => {
                 config.colorbar.len = parseFloat(e.target.value);
                 updateCallback(config);
