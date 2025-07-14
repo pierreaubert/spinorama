@@ -1385,8 +1385,14 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/presonus_eris3.5_mk2/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?attachments/presonus-eris-3-5-gen-2-zip.462395/",
                 },
                 "review_published": "20231009",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20250711",
             },
         },
     },
@@ -1457,6 +1463,36 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/presonus-eris-e8-xt/conclusion",
+            },
+        },
+    },
+    "Presonus Spectre S6": {
+        "brand": "Presonus",
+        "model": "Spectre S6",
+        "type": "active",
+        "price": "900",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-sceptre-s6-monitor-review.64148/",
+                },
+                "review_published": "20250714",
+                "specifications": {
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 335,
+                        "width": 339,
+                        "depth": 301,
+                    },
+                    "weight": 8.5,
+                },
             },
         },
     },

@@ -1,0 +1,14 @@
+EQ for Presonus Spectre S6 computed from ASR data
+Preference Score 3.65 with EQ 5.21
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-14-09:16:01
+
+Preamp: -1.8 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +1.97 dB Q 2.97
+Filter  2: ON PK Fc   289 Hz Gain +2.03 dB Q 1.14
+Filter  3: ON PK Fc   299 Hz Gain -1.82 dB Q 0.45
+Filter  4: ON PK Fc   540 Hz Gain +2.82 dB Q 2.94
+Filter  5: ON PK Fc   643 Hz Gain -1.56 dB Q 3.00
+Filter  6: ON PK Fc  1954 Hz Gain +2.59 dB Q 2.98
+Filter  7: ON PK Fc  9319 Hz Gain -4.20 dB Q 0.47
