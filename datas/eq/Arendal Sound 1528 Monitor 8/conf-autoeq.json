@@ -45,7 +45,7 @@
     "smoke_test": false,
     "force": true,
     "version": "0.27",
-    "level": 30,
+    "level": 20,
     "generate_images_only": false,
-    "output_dir": null
+    "output_dir": "/Users/pierrre/src/spinorama/build/eqs/Arendal Sound 1528 Monitor 8/Score-7-none-pk"
 }

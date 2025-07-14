@@ -23,9 +23,9 @@
     "slope_early_reflections": -4,
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
-    "smooth_measurements": null,
-    "smooth_window_size": null,
-    "smooth_order": null,
+    "smooth_measurements": true,
+    "smooth_window_size": 21,
+    "smooth_order": 5,
     "use_grapheq": false,
     "grapheq_name": null,
     "use_3dB_target": true,
@@ -41,11 +41,12 @@
     "MAX_Q": 3,
     "slope": -0.5,
     "slope_0_5": -0.5,
+    "smooth_window_order": 3,
     "verbose": true,
     "smoke_test": false,
     "force": true,
     "version": "0.27",
-    "level": 30,
+    "level": 20,
     "generate_images_only": false,
-    "output_dir": null
+    "output_dir": "/Users/pierrre/src/spinorama/build/eqs/Moondrop M4P/Score-7-sw21o5-pk"
 }
