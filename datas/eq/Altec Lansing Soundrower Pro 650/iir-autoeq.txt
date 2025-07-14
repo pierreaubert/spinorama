@@ -1,14 +1,14 @@
 EQ for Altec Lansing Soundrower Pro 650 computed from ErinsAudioCorner data
-Preference Score 0.10 with EQ 2.67
+Preference Score 0.10 with EQ 2.70
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
-Dated: 2025-07-08-18:50:55
+Dated: 2025-07-14-10:53:27
 
-Preamp: -2.0 dB
+Preamp: -1.4 dB
 
-Filter  1: ON PK Fc    51 Hz Gain +3.00 dB Q 2.30
-Filter  2: ON PK Fc    88 Hz Gain -5.29 dB Q 1.76
-Filter  3: ON PK Fc   204 Hz Gain +3.00 dB Q 3.00
-Filter  4: ON PK Fc   270 Hz Gain -3.74 dB Q 1.28
+Filter  1: ON PK Fc    92 Hz Gain -4.86 dB Q 1.52
+Filter  2: ON PK Fc   211 Hz Gain +3.00 dB Q 3.00
+Filter  3: ON PK Fc   243 Hz Gain -4.88 dB Q 3.00
+Filter  4: ON PK Fc   439 Hz Gain -3.53 dB Q 3.00
 Filter  5: ON PK Fc   540 Hz Gain +3.00 dB Q 3.00
-Filter  6: ON PK Fc  1954 Hz Gain +3.00 dB Q 1.47
-Filter  7: ON PK Fc  4654 Hz Gain -6.74 dB Q 0.50
+Filter  6: ON PK Fc  1954 Hz Gain +3.00 dB Q 1.20
+Filter  7: ON PK Fc  4495 Hz Gain -6.49 dB Q 0.50

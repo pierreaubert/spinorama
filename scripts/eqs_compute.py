@@ -65,13 +65,13 @@ def compute_eq(params: tuple[int, str, str, str, str]) -> tuple[bool, str]:
         GENERATE_PEQS,
         "--verbose",
         "--force",
-        "--log-level={LOG_LEVEL}",
+        f"--log-level={LOG_LEVEL}",
         "--optimisation=global",
         "--max-iter=15000",
-        f'--speaker="{speaker}"',
+        f"--speaker={speaker}",
         f"--max-peq={max_peq}",
         f"--fitness={fitness}",
-        f'--output-dir="{output_dir}"',
+        f"--output-dir={output_dir}",
     ]
 
     # Add extra arguments if provided
@@ -82,7 +82,9 @@ def compute_eq(params: tuple[int, str, str, str, str]) -> tuple[bool, str]:
     os.makedirs(output_dir, exist_ok=True)
 
     # Run the command
-    log_file = os.path.join(output_dir, "..", f"{os.path.basename(output_dir)}.log")
+    # Use Path for better cross-platform compatibility
+    output_path = Path(output_dir)
+    log_file = output_path.parent / f"{output_path.name}.log"
     try:
         with open(log_file, "w") as f:
             result = subprocess.run(cmd, stdout=f, stderr=f, text=True, check=True)
@@ -190,7 +192,7 @@ def main():
         help=f"Number of processes to use (default: {multiprocessing.cpu_count()})",
     )
     args = parser.parse_args()
-    speakers = args.speakers if args.speakers else None
+    speakers = args.speakers if args.speakers else []
     setup_directories()
 
     # Generate all workloads

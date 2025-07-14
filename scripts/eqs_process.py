@@ -32,10 +32,8 @@ def process(speaker: str, metadata: dict):
     prev_eq_path = "./datas/eq/{}/iir-autoeq.txt".format(speaker_name)
     prev_score = get_previous_score(prev_eq_path)
     prev_score = prev_score if prev_score is not None else -10.0
-    # print('Prev score={}'.format(prev_score))
-    #
-    computed_eqs = path.glob("**/iir-autoeq.txt")
-    # print('Found #{} eqs for {}'.format(len(list(computed_eqs)), speaker))
+    computed_eqs = list(path.glob("*/iir-autoeq.txt"))
+    # print("Prev score={:4.2f} Found #{} eqs for {:32s} in path {}".format(prev_score, len(computed_eqs), speaker_name, path))
     best_score = prev_score
     best_eq = None
     for eqname in computed_eqs:
