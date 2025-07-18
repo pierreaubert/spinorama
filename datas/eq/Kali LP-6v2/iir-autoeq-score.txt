@@ -1,0 +1,14 @@
+EQ for Kali LP-6v2 computed from ErinsAudioCorner data
+Preference Score 5.70 with EQ 6.42
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-14-13:14:00
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    38 Hz Gain +2.98 dB Q 2.07
+Filter  2: ON PK Fc   369 Hz Gain -1.53 dB Q 2.96
+Filter  3: ON PK Fc   409 Hz Gain +2.68 dB Q 1.02
+Filter  4: ON PK Fc   470 Hz Gain -2.33 dB Q 2.08
+Filter  5: ON PK Fc  1333 Hz Gain -2.65 dB Q 2.70
+Filter  6: ON PK Fc  1954 Hz Gain +1.91 dB Q 1.59
+Filter  7: ON PK Fc 15150 Hz Gain -0.81 dB Q 0.26

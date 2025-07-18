@@ -75,6 +75,7 @@ def optim_grapheq(
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
+    print("current_auto_target", current_auto_target[0])
     pref_score = 1.0
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
@@ -87,10 +88,9 @@ def optim_grapheq(
             if f < afreq[0] or f > afreq[-1]:
                 db = 0.0
             else:
-                db = np.interp(f, afreq, np.negative(current_auto_target[0])) * np.array(param)
+                db = np.interp(f, afreq, current_auto_target[0]) * np.array(param)
                 db = round(float(db) * 4) / 4
-                db = max(auto_min, db)
-                db = min(auto_max, db)
+                db = min(auto_max, db) if db > 0 else max(auto_min, db)
             guess_db.append(db)
         return [
             (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
@@ -101,17 +101,17 @@ def optim_grapheq(
         current_peq = fit(param)
         peq_values = np.array(peq_spl(auto_freq, current_peq))
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in afreq]
-        delta = np.subtract(peq_expend, current_auto_target[0])
+        delta = np.subtract(current_auto_target[0], peq_expend)
         return delta
 
     def compute_error(param: Vector) -> np.floating[Any]:
-        return np.linalg.norm(compute_delta(param))
+        return np.linalg.norm(compute_delta(param), 2)
 
     def find_best_param():
         res = opt.minimize(
             fun=lambda x: compute_error(x[0]),
-            x0=0.2,
-            bounds=[(0.1, 1.4)],
+            x0=1.0,
+            bounds=[(auto_min, auto_max)],
             method="Powell",
         )
         return res.x[0]
@@ -123,4 +123,7 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
-    return True, ((1, int(opt_error), -pref_score), auto_peq)
+    auto_peq_inverted = [
+        (k, Biquad(auto_type, peq.freq, 48000, peq.q, -peq.db_gain)) for (k, peq) in auto_peq
+    ]
+    return True, ((1, int(opt_error), -pref_score), auto_peq_inverted)
