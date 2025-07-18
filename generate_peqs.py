@@ -697,7 +697,7 @@ def main():
             # default is too low for global optim
             if args.max_iter is None:
                 current_optim_config["MAX_ITER"] = 2500
-    elif not args.generate_images_only:
+    elif not args.generate_images_only and not args.graphic_eq:
         print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
         sys.exit(1)
 
