@@ -196,9 +196,14 @@ def smoke_test_cea2034(
 ) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
     if "CEA2034_unmelted" not in df_speaker and "CEA2034" not in df_speaker:
         # this should not happen
-        logger.error(
-            "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
-        )
+        if current_speaker_origin == "Princeton":
+            logger.debug(
+                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
+            )
+        else:
+            logger.error(
+                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
+            )
         return False, ("", (0, 0, 0), [])
     return True, ("", (0, 0, 0), [])
 
