@@ -164,6 +164,7 @@ export const defaultConfig = {
         position: 'right', // 'right', 'bottom', 'top', 'left'
         show: true,
     },
+    // delta margin and not absolute one
     margin: {
         l: 50,
         r: 50,
@@ -823,9 +824,9 @@ export function createConfigMenu(divName, config, updateCallback) {
         const sliderInput = document.createElement('input');
         sliderInput.type = 'range';
         sliderInput.min = '0';
-        sliderInput.max = '100';
-        sliderInput.step = '1';
-        sliderInput.value = config.margin[side] > 100 ? 100 : config.margin[side];
+        sliderInput.max = '200';
+        sliderInput.step = '5';
+        sliderInput.value = config.margin[side] > 200 ? 200 : config.margin[side];
         sliderInput.id = `config-margin-${side}`;
         sliderInput.style.cssText = `
             flex-grow: 1;

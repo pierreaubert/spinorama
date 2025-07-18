@@ -259,12 +259,17 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
             if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 97:
                 complete_freq = True
             else:
-                logger.debug("check freq failed: min=%fHz max=%fHz #=%d", freq.min(), freq.max(), freq.shape[0])
+                logger.debug(
+                    "check freq failed: min=%fHz max=%fHz #=%d",
+                    freq.min(),
+                    freq.max(),
+                    freq.shape[0],
+                )
         return complete_freq
 
     complete = check(h_spl) and check(v_spl)
     if not complete:
-        logger.debug("check freq H: %s",check(h_spl))
+        logger.debug("check freq H: %s", check(h_spl))
         logger.debug("check freq V: %s", check(v_spl))
     return complete
 

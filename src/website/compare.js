@@ -23,6 +23,14 @@ import Plotly from 'plotly.js-dist-min';
 import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
+import {
+    colorPalettes,
+    contourColorscales,
+    loadConfigFromStorage,
+    saveConfigToStorage,
+    createConfigMenu,
+    applyConfig,
+} from './plot-config.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -93,6 +101,19 @@ getMetadata()
         const initOrigins = buildInitOrigins(nbSpeakers);
         const initVersions = buildInitVersions(nbSpeakers);
 
+        // Load plot configuration from storage
+        let config = loadConfigFromStorage();
+
+        // Create configuration menu - add it to the form container
+        createConfigMenu(formContainer, config, (updatedConfig) => {
+            config = updatedConfig;
+            saveConfigToStorage(config);
+            // Re-plot with updated configuration if we have existing graph configs
+            if (graphsConfigs.length > 0) {
+                applyConfigAndPlot();
+            }
+        });
+
         const speakersSelector = [];
         const originsSelector = [];
         const versionsSelector = [];
@@ -100,6 +121,47 @@ getMetadata()
         const fieldsetVersionsSelector = [];
 
         let graphsConfigs = [];
+
+        // Helper function to apply configuration and re-plot
+        function applyConfigAndPlot() {
+            if (graphsConfigs.length > 0) {
+                // Apply configuration to existing graph configs
+                const configuredGraphs = graphsConfigs.map((graphConfig) => {
+                    if (graphConfig) {
+                        return applyConfig(graphConfig, config);
+                    }
+                    return graphConfig;
+                });
+
+                // Re-render the plots with updated configuration
+                if (configuredGraphs.length === 1) {
+                    const graphConfig = configuredGraphs[0];
+                    if (graphConfig) {
+                        plot0Container.style.display = 'block';
+                        Plotly.react('plot0', graphConfig.data, graphConfig.layout, graphConfig.config);
+                    }
+                } else if (configuredGraphs.length === 2) {
+                    plot0Container.style.display = 'block';
+                    plot1Container.style.display = 'block';
+                    for (let i = 0; i < configuredGraphs.length; i++) {
+                        const graphConfig = configuredGraphs[i];
+                        if (graphConfig) {
+                            Plotly.react('plot' + i, graphConfig);
+                        }
+                    }
+                } else if (configuredGraphs.length === 3) {
+                    plot0Container.style.display = 'block';
+                    plot1Container.style.display = 'block';
+                    plot2Container.style.display = 'block';
+                    for (let i = 0; i < configuredGraphs.length; i++) {
+                        const graphConfig = configuredGraphs[i];
+                        if (graphConfig) {
+                            Plotly.react('plot' + i, graphConfig);
+                        }
+                    }
+                }
+            }
+        }
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
@@ -147,36 +209,44 @@ getMetadata()
                         console.error('Measurement ' + measurement + ' is unknown');
                     }
 
+                    // Apply configuration to graphs before rendering
+                    const configuredGraphs = graphsConfigs.map((graphConfig) => {
+                        if (graphConfig) {
+                            return applyConfig(graphConfig, config);
+                        }
+                        return graphConfig;
+                    });
+
                     // hide blocks by default
                     plotContainerError.style.display = 'none';
                     plot0Container.style.display = 'none';
                     plot1Container.style.display = 'none';
                     plot2Container.style.display = 'none';
 
-                    // console.log('datas and layouts length='+graphsConfigs.length)
-                    if (graphsConfigs.length === 1) {
-                        const graphConfig = graphsConfigs[0];
+                    // console.log('datas and layouts length='+configuredGraphs.length)
+                    if (configuredGraphs.length === 1) {
+                        const graphConfig = configuredGraphs[0];
                         if (graphConfig) {
                             plot0Container.style.display = 'block';
                             Plotly.react('plot0', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
-                    } else if (graphsConfigs.length === 2) {
+                    } else if (configuredGraphs.length === 2) {
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
-                        for (let i = 0; i < graphsConfigs.length; i++) {
-                            const config = graphsConfigs[i];
-                            if (config) {
-                                Plotly.react('plot' + i, config);
+                        for (let i = 0; i < configuredGraphs.length; i++) {
+                            const graphConfig = configuredGraphs[i];
+                            if (graphConfig) {
+                                Plotly.react('plot' + i, graphConfig);
                             }
                         }
-                    } else if (graphsConfigs.length === 3) {
+                    } else if (configuredGraphs.length === 3) {
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
                         plot2Container.style.display = 'block';
-                        for (let i = 0; i < graphsConfigs.length; i++) {
-                            const config = graphsConfigs[i];
-                            if (config) {
-                                Plotly.react('plot' + i, config);
+                        for (let i = 0; i < configuredGraphs.length; i++) {
+                            const graphConfig = configuredGraphs[i];
+                            if (graphConfig) {
+                                Plotly.react('plot' + i, graphConfig);
                             }
                         }
                     }
