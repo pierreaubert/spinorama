@@ -42,7 +42,7 @@ class JSImportTests(unittest.TestCase):
         self.assertIn(self.versions["FUSE"], transformed)
 
     def test_import_plotly(self):
-        code = "import Plotly from 'plotly-dist-min';"
+        code = "import Plotly from 'plotly.js-dist-min';"
         transformed = adapt_imports(code, self.versions, self.jsfiles, self.mini)
         self.assertNotIn("/js3rd", transformed)
         self.assertNotIn("/js", transformed)

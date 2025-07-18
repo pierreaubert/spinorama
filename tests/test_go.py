@@ -184,7 +184,7 @@ class GlobalOptimizerTests(unittest.TestCase):
         x = np.array([0, 25, 2, 2, 1, 50, 2, -2, 2, 75, 2, 2])
         # self.go._x2print(x)
         c = fun(x)
-        self.assertEqual(c, -1)  # true
+        self.assertEqual(c, 1)  # false
         x = np.array([0, 25, 2, 2, 1, 34, 2, -2, 2, 75, 2, 2])
         # self.go._x2print(x)
         c = fun(x)

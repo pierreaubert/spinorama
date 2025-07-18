@@ -39,7 +39,8 @@ from selenium.webdriver.chrome.service import Service
 
 
 PROD = "https://www.spinorama.org"
-DEV = "https://dev.spinorama.org"
+# DEV = "https://dev.spinorama.org"
+DEV = "http://localhost:8888"
 COMPARE = "/compare.html"
 SIMILAR = "/similar.html"
 SCORES = "/scores.html"
@@ -69,8 +70,11 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
         self.assertIsNotNone(elac)
 
+        genelec = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        self.assertIsNotNone(genelec)
+
         with self.assertRaises(NoSuchElementException):
-            gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+            gene = self.driver.find_element(by=By.ID, value="Revel-F35")
 
     def test_index_search_elac_menu(self):
         self.driver.get(DEV)

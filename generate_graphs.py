@@ -74,7 +74,7 @@ def process_single_measurement(
     speaker_info: tuple[str, str, str, dict[str, Any], int, str, bool],
 ) -> tuple[bool, str, str, str, dict[str, Any], Optional[Exception]]:
     """Process a single measurement (worker function for parallel processing)"""
-    speaker, origin, mversion, measurement, level, data_dir, force = speaker_info
+    speaker, origin, mversion, measurement, log_level, data_dir, force = speaker_info
 
     try:
         # Extract parameters
@@ -92,7 +92,6 @@ def process_single_measurement(
             "mversion": mversion,
             "msymmetry": msymmetry,
             "mparameters": mparameters,
-            "level": level,
             "distance": distance,
             "shape": shape,
             "width": int(plot_params_default["width"]),
@@ -105,6 +104,7 @@ def process_single_measurement(
             speaker_brand=brand,
             speaker_name=speaker,
             speaker_parameters=parameters,
+            log_level=log_level,
         )
 
         # Process EQ
@@ -113,6 +113,7 @@ def process_single_measurement(
             speaker_name=speaker,
             df_ref=results,
             speaker_parameters=parameters,
+            log_level=log_level,
         )
 
         logger.debug("Generating graphs for %s / %s", speaker, mversion)
@@ -124,6 +125,7 @@ def process_single_measurement(
             parameters,
             metadata.origins_info,
             force,
+            log_level=log_level,
         )
 
         # Generate EQ graphs
@@ -138,6 +140,7 @@ def process_single_measurement(
             parameters_eq,
             metadata.origins_info,
             force,
+            log_level=log_level,
         )
 
         return True, speaker, morigin, mversion, {"df": results, "eq": results_eq}, None
@@ -151,7 +154,7 @@ def process_single_measurement(
 def process_measurements_parallel(
     speakerlist: set[str],
     filters: dict[str, str],
-    level: int,
+    log_level: int,
     num_processes: int,
     data_dir: str,
     force: bool,
@@ -185,7 +188,7 @@ def process_measurements_parallel(
                 logger.debug("skipping %s/%s/%s/%s", speaker, morigin, mformat, mversion)
                 continue
 
-            tasks.append((speaker, morigin, mversion, measurement, level, data_dir, force))
+            tasks.append((speaker, morigin, mversion, measurement, log_level, data_dir, force))
 
     num_process = max(1, min(num_processes, len(tasks)))
     logger.info("Processing %d measurements using %d processes", len(tasks), num_processes)
@@ -224,7 +227,7 @@ def process_measurements_parallel(
     return data_frame
 
 
-def main(level, args):
+def main(log_level, args):
     """Main function to process speakers and generate graphs"""
     # Set global variables
     data_dir = args.data_dir
@@ -268,14 +271,14 @@ def main(level, args):
 
     # Process measurements in parallel
     df_new = process_measurements_parallel(
-        speakerlist, filters, level, num_processes, data_dir, force
+        speakerlist, filters, log_level, num_processes, data_dir, force
     )
 
     # Update cache if needed
     if not filters:  # Only update cache if no filters are applied
         cache_save(df_new)
     elif args.update_cache:
-        cache_update(df_new, filters, level)
+        cache_update(df_new, filters, log_level)
 
     logger.info("Graph generation completed successfully")
     return 0
@@ -323,4 +326,4 @@ if __name__ == "__main__":
     logger = get_custom_logger(level=LEVEL, duplicate=True)
 
     # Run main function
-    sys.exit(main(level=LEVEL, args=args))
+    sys.exit(main(log_level=LEVEL, args=args))

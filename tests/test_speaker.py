@@ -63,6 +63,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
         self.dfs_full = {}
         self.dfs_limited = {}
         self.dfs_partial = {}
+        self.log_level = logging.INFO
 
         parameters = {
             "mformat": "klippel",
@@ -70,7 +71,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "eac",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 1.0,
             "shape": "bookshelves",
         }
@@ -79,6 +79,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="Neumann",
             speaker_name="Neumann KH 80",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -87,7 +88,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "asr-vertical",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 1.0,
             "shape": "bookshelves",
         }
@@ -96,6 +96,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="Genelec",
             speaker_name="Genelec 8341A",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -104,7 +105,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "princeton",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 1.0,
             "shape": "bookshelves",
         }
@@ -113,6 +113,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="Genelec",
             speaker_name="Genelec 8351A",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -121,7 +122,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "misc-ageve",
             "msymmetry": "vertical",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 1.0,
             "shape": "bookshelves",
         }
@@ -130,6 +130,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="Andersson",
             speaker_name="Andersson HIS 2.1",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -138,7 +139,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "vendor-pattern-90x70",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 10.0,
             "shape": "liveportable",
         }
@@ -147,6 +147,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="RCF",
             speaker_name="RCF ART 708-A MK4",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -155,7 +156,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "vendor",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 10.0,
             "shape": "floorstanders",
         }
@@ -164,6 +164,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="BIC America",
             speaker_name="BIC America Venturi DV62si",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
         parameters = {
@@ -172,7 +173,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "mversion": "vendor",
             "msymmetry": "None",
             "mparameters": None,
-            "level": logging.INFO,
             "distance": 10.0,
             "shape": "floorstanders",
         }
@@ -181,6 +181,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             speaker_brand="Revel",
             speaker_name="Revel F208",
             speaker_parameters=parameters,
+            log_level=self.log_level,
         )
 
     def test_dfs_full(self):
