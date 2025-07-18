@@ -605,7 +605,7 @@ def parse_graphs_speaker(
     speaker_brand: str,
     speaker_name: str,
     speaker_parameters: dict,
-    log_level: int
+    log_level: int,
 ) -> dict:
     setup_logger(level=log_level)
 
