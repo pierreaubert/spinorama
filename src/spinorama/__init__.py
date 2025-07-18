@@ -22,7 +22,7 @@ import sys
 logger = logging.getLogger("spinorama")
 
 
-def ray_setup_logger(level=logging.WARNING):
+def setup_logger(level=logging.WARNING):
     """Since ray execution is remote, the logger needs to be instanciated and
     configured in each process
     """

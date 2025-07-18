@@ -24,7 +24,7 @@ import pandas as pd
 
 from datas import Parameters
 
-from spinorama import logger
+from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
@@ -605,13 +605,15 @@ def parse_graphs_speaker(
     speaker_brand: str,
     speaker_name: str,
     speaker_parameters: dict,
+    log_level: int
 ) -> dict:
+    setup_logger(level=log_level)
+
     mformat = speaker_parameters["mformat"]
     morigin = speaker_parameters["morigin"]
     mversion = speaker_parameters["mversion"]
     msymmetry = speaker_parameters["msymmetry"]
     mparameters = speaker_parameters["mparameters"]
-    level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
     shape = speaker_parameters["shape"]
     df_graph = None
@@ -741,10 +743,11 @@ def parse_eq_speaker(
     speaker_name: str,
     df_ref: dict,
     speaker_parameters: dict,
+    log_level: int,
 ) -> tuple[Peq, DataSpeaker]:
+    setup_logger(level=log_level)
     mformat = speaker_parameters["mformat"]
     mparameters = speaker_parameters["mparameters"]
-    level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)

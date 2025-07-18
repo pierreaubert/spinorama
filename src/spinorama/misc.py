@@ -254,13 +254,17 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
         complete_freq = False
         if spl is not None:
             freq = spl["Freq"]
-            if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 100:
+            # 97 comes from some old ASR measurements that are good enough but only have 98 freq datapoints
+            # later on, ASR switched to 200 points
+            if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 97:
                 complete_freq = True
+            else:
+                logger.debug("check freq failed: min=%fHz max=%fHz #=%d", freq.min(), freq.max(), freq.shape[0])
         return complete_freq
 
     complete = check(h_spl) and check(v_spl)
     if not complete:
-        logger.debug("check freq H: %s", check(h_spl))
+        logger.debug("check freq H: %s",check(h_spl))
         logger.debug("check freq V: %s", check(v_spl))
     return complete
 

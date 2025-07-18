@@ -21,7 +21,7 @@ import pathlib
 import copy
 import math
 
-from spinorama import logger
+from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
 from spinorama.misc import measurements_valid_freq_range, write_multiformat
@@ -419,14 +419,15 @@ def print_graphs(
     parameters: dict,
     origins_info: dict,
     force_print: bool,
+    log_level: int,
 ) -> int:
+    setup_logger(level=log_level)
     mformat = parameters["mformat"]
     version = parameters["mversion"]
     origin = parameters["morigin"]
     version_key = parameters.get("mversion_key", version)
     width = parameters["width"]
     height = parameters["height"]
-    level = parameters["level"]
     #
     df_speaker = {}
     iir = []
