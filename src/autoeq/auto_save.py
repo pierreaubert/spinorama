@@ -24,7 +24,7 @@ import os
 import re
 import pathlib
 
-from spinorama import logger, ray_setup_logger
+from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.misc import measurements_complete_spl, measurements_complete_freq
@@ -226,13 +226,6 @@ def optim_save_peq(
             logger.info("eq %s already exist!", eq_name)
         logger.debug("Skipping %s since EQ already exist!", current_speaker_name)
         return False, ("", (0, 0, 0), [])
-
-    # do we have CEA2034 data
-    smoke_test, smoke_empty = smoke_test_cea2034(
-        current_speaker_name, current_speaker_origin, df_speaker
-    )
-    if not smoke_test:
-        return smoke_test, smoke_empty
 
     # do we have the full data?
     use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker

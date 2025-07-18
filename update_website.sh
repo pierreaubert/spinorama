@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 echo "Update starts"
+mkdir -p .cache
 mkdir -p build/website
 export PYTHONPATH=src:src/website:src/spinorama:.
 
