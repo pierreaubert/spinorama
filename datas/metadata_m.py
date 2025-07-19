@@ -172,6 +172,43 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "MAG Theatron MC12-C": {
+        "brand": "MAG Theatron",
+        "model": "MC12-C",
+        "type": "passive",
+        "price": "2300",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-m12-c-speaker-review.64229/#post-2354858",
+                },
+                "review_published": "20250719",
+                "specifications": {
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 840,
+                        "width": 565,
+                        "depth": 250,
+                    },
+                    "weight": 32.2,
+                },
+            },
+        },
+    },
+
     "Magnepan LRS": {
         "brand": "Magnepan",
         "model": "LRS",
