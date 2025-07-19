@@ -389,9 +389,11 @@ class GlobalOptimizer(object):
                     if f1 - f2 > -1:
                         return 1
                 # only 1 peq before min_index
-                if (i == 0 and f1 < self.freq_min_index) or (
-                    i == (l - 2) and f2 > self.freq_max_index
-                ):
+# TO DEBUG why it does not work
+#                if (i == 0 and f1 < self.freq_min_index) or (
+#                    i == (l - 2) and f2 > self.freq_max_index
+#                ):
+                if f2 < self.freq_min_index or f2 > self.freq_max_index:
                     # print(f1, self.freq_min_index, f2)
                     return 1
             return -1
