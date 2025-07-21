@@ -90,7 +90,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
 
 def peq_print(peq: Peq) -> None:
     print("IIR    Hz.  Q.   dB")
-    for _, iir in peq:
+    for _, iir in sorted(peq, key=lambda x: x[1].freq):
         print(f"{iir.biquad_type:3d} {iir.freq:5.0f} {iir.q:1.1f} {iir.db_gain:+1.2f}")
 
 
