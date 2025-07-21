@@ -116,7 +116,7 @@ def print_auto_graphs_seq(
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
 
-        print('DEBUG: local_freq=', freq)
+        # print('DEBUG: local_freq=', freq)
         graphs = auto_graph_results(
             speaker_name,
             speaker_origin,
