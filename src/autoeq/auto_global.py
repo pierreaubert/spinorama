@@ -389,26 +389,36 @@ class GlobalOptimizer(object):
                     if f1 - f2 > -1:
                         return 1
                 # only 1 peq before min_index
-# TO DEBUG why it does not work
-#                if (i == 0 and f1 < self.freq_min_index) or (
-#                    i == (l - 2) and f2 > self.freq_max_index
-#                ):
-                if f2 < self.freq_min_index or f2 > self.freq_max_index:
-                    # print(f1, self.freq_min_index, f2)
+                if f1 < self.freq_min_index or f2 > self.freq_max_index:
                     return 1
             return -1
 
+        def _sorted_x(x):
+            l = len(x) // 4
+            s = []
+            for i in range(l):
+                _, f, _, _, _ = self._x2params(x, i)
+                s.append((f, i))
+            sx = []
+            for f, i in sorted(s, key=lambda t: t[0]):
+                sx.append(x[i * 4 + 0])
+                sx.append(x[i * 4 + 1])
+                sx.append(x[i * 4 + 2])
+                sx.append(x[i * 4 + 3])
+            return sx
+
         def _opt_constraints_all(x) -> int:
-            c_freq = _opt_constraints_freq(x) == 1
-            c_gain = _opt_constraints_gain(x) == 1
-            c_q = _opt_constraints_q(x) == 1
+            sx = _sorted_x(x)
+            c_freq = _opt_constraints_freq(sx) == 1
+            c_gain = _opt_constraints_gain(sx) == 1
+            c_q = _opt_constraints_q(sx) == 1
             if c_freq or c_gain or c_q:
                 # print("NL constraints: freq={} gain={} q={}".format(c_freq, c_gain, c_q))
                 return 1
             return -1
 
         return opt.NonlinearConstraint(
-            fun=_opt_constraints_all, lb=-np.inf, ub=0, keep_feasible=True
+            fun=_opt_constraints_all, lb=-np.inf, ub=0, keep_feasible=False
         )
 
     def _opt_display(self, xk, convergence):
@@ -423,7 +433,8 @@ class GlobalOptimizer(object):
         print(
             f"[f={1 - convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} funct score={score_status} tonality score={tonality_status}"
         )
-        peq_print(self._x2peq(xk))
+        auto_peq = self._x2peq(xk)
+        peq_print(auto_peq)
 
     def run(self):
         logger.info(
