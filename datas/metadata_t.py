@@ -550,6 +550,36 @@ speakers_info_t: SpeakerDatabase = {
             },
         },
     },
+    "Triangle Esprit Titus EZ": {
+        "brand": "Triangle",
+        "model": "Esprit Titus EZ",
+        "type": "passive",
+        "price": "449",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-titus-ez-spinorama-measurements-cta-2034.64250/#post-2355524",
+                },
+                "review_published": "20250720",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 305,
+                        "width": 267,
+                        "depth": 168,
+                    },
+                    "weight": 5.9,
+                },
+            },
+        },
+    },
     "Turbosound NuQ62": {
         "brand": "Turbosound",
         "model": "NuQ62",

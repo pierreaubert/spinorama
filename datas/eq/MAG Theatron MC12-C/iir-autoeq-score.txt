@@ -1,0 +1,14 @@
+EQ for MAG Theatron MC12-C computed from ASR data
+Preference Score 3.92 with EQ 5.48
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-19-16:55:42
+
+Preamp: -5.0 dB
+
+Filter  1: ON PK Fc    41 Hz Gain +4.98 dB Q 0.75
+Filter  2: ON PK Fc   130 Hz Gain -4.03 dB Q 1.85
+Filter  3: ON PK Fc   144 Hz Gain +2.12 dB Q 1.05
+Filter  4: ON PK Fc   344 Hz Gain -2.45 dB Q 2.99
+Filter  5: ON PK Fc  1121 Hz Gain +2.09 dB Q 2.99
+Filter  6: ON PK Fc  1954 Hz Gain +4.98 dB Q 1.35
+Filter  7: ON PK Fc  2168 Hz Gain -3.81 dB Q 0.46
