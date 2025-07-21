@@ -208,7 +208,6 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
-
     "Magnepan LRS": {
         "brand": "Magnepan",
         "model": "LRS",
