@@ -32,7 +32,7 @@ from generate_common import (
 from autoeq.auto_save import optim_save_peq
 
 
-VERSION = "0.27"
+VERSION = "0.28"
 
 
 def print_items(aggregated_results):
