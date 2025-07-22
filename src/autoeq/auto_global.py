@@ -184,11 +184,19 @@ class GlobalOptimizer(object):
         peq = self._x2peq(x)
         peq_print(peq)
 
+    def _x2print2(peq1: Peq, peq2: Peq) -> None:
+        print("IIR    Hz.  Q.   dB | IIR    Hz.  Q.   dB")
+        for _, (iir1, iir2) in zip(
+                sorted(peq1, key=lambda x: x[1].freq),
+                sorted(peq2, key=lambda x: x[1].freq)):
+            print(f"{iir1.biquad_type:3d} {iir1.freq:5.0f} {iir1.q:1.1f} {iir1.db_gain:+1.2f} | {iir2.biquad_type:3d} {iir2.freq:5.0f} {iir2.q:1.1f} {iir2.db_gain:+1.2f}")
+
+
     def _x2spl(self, x: Encoded) -> Vector:
         # take a list of encoded filters and return the magnitude of the filter across the freq range
         return peq_spl(self.freq_space, self._x2peq(x))
 
-    def _opt_peq_score(self, x: Encoded) -> tuple[float, float]:
+    def _opt_peq_score_on(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
@@ -196,22 +204,37 @@ class GlobalOptimizer(object):
         flat_on = np.add(self.target_on, peq_freq)
         # currently unsued
         # flat_lw = np.add(self.target_lw, peq_freq)
-        # flat_pir = np.add(self.target_pir, peq_freq)
         # split flatness of ON on various ranges
         flatness_on_bass_mid = np.linalg.norm(
             flat_on[self.freq_min_index : self.freq_midrange_index], ord=2
         )
         flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_midrange_index :], ord=2)
-        # flatness_on_bass_mid = np.linalg.norm(flat_on[self.freq_min_index : self.freq_2k_index], ord=2)
-        # flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_2k_index :], ord=2)
-        # not used but could be
-        # flatness_pir = np.linalg.norm(flat_pir, ord=2)
-        # flatness_pir_bass_mid = np.linalg.norm(flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2)
-        # flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
         return score, score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
+
+    def _opt_peq_score_lw(self, x: Encoded) -> tuple[float, float]:
+        # for  a given encoded peq, compute the score
+        peq = self._x2peq(x)
+        peq_freq = np.array(self._x2spl(x))
+        score = score_loss(self.df_speaker, peq)
+        flat_lw = np.add(self.target_lw, peq_freq)
+        flatness_lw = np.linalg.norm(flat_lw, ord=2)
+        flatness_lw_bass_mid = np.linalg.norm(flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2)
+        flatness_lw_mid_high = np.linalg.norm(flat_lw[self.freq_midrange_index :], ord=2)
+        return score, score + float(flatness_lw_bass_mid) / 15 + float(flatness_lw_mid_high) / 50
+
+    def _opt_peq_score_pir(self, x: Encoded) -> tuple[float, float]:
+        # for  a given encoded peq, compute the score
+        peq = self._x2peq(x)
+        peq_freq = np.array(self._x2spl(x))
+        score = score_loss(self.df_speaker, peq)
+        flat_pir = np.add(self.target_pir, peq_freq)
+        flatness_pir = np.linalg.norm(flat_pir, ord=2)
+        flatness_pir_bass_mid = np.linalg.norm(flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2)
+        flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
+        return score, score + float(flatness_pir_bass_mid) / 15 + float(flatness_pir_mid_high) / 50
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
@@ -235,7 +258,7 @@ class GlobalOptimizer(object):
     def _opt_peq(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function
         if self.config["loss"] == "score_loss":
-            self.current_score_speaker, self.current_score = self._opt_peq_score(x)
+            self.current_score_speaker, self.current_score = self._opt_peq_score_on(x)
         else:
             self.current_score = self._opt_peq_flat(x)
 
@@ -358,7 +381,7 @@ class GlobalOptimizer(object):
             # check that total gain at any point in lower that max_db
             l = len(x) // 4
             for i in range(l):
-                _, f, _, g, _ = self._x2params(x, i)
+                _, _, _, g, _ = self._x2params(x, i)
                 # ko if between -min and +min
                 if ((g > 0.0 and (g < self.min_db)) or (g > self.max_db)) or (
                     g < 0.0 and g > -self.min_db
@@ -373,42 +396,50 @@ class GlobalOptimizer(object):
                 # print("max gain {} > {} rejected".format(spl_max, self.max_db))
                 # print(spl)
                 return 1
+
             return -1
 
         def _opt_constraints_freq(x) -> int:
             # check on frequencies
             l = len(x) // 4
+            shift = 5  # FREQ_NB_POINTS // l - 1
             for i in range(l - 1):
                 _, f1, _, _, s1 = self._x2params(x, i)
                 _, f2, _, _, s2 = self._x2params(x, i + 1)
                 # if the sign is the same, then make some space between frequencies
                 if s1 == s2:
-                    if f1 - f2 > -5:
+                    if (f2 - f1) < shift:
                         return 1
                 else:
-                    if f1 - f2 > -1:
+                    if f2 - f1 < (shift // 2):
                         return 1
                 # only 1 peq before min_index
                 if f1 < self.freq_min_index or f2 > self.freq_max_index:
                     return 1
             return -1
 
-        def _sorted_x(x):
+        def _sorted_by_freq(x: Encoded) -> Encoded:
             l = len(x) // 4
             s = []
             for i in range(l):
                 _, f, _, _, _ = self._x2params(x, i)
                 s.append((f, i))
             sx = []
-            for f, i in sorted(s, key=lambda t: t[0]):
-                sx.append(x[i * 4 + 0])
-                sx.append(x[i * 4 + 1])
-                sx.append(x[i * 4 + 2])
-                sx.append(x[i * 4 + 3])
+            for _, i in sorted(s, key=lambda t: t[0]):
+                sx.append(int(x[i * 4 + 0]))   # type
+                sx.append(int(x[i * 4 + 1]))   # freq
+                sx.append(float(x[i * 4 + 2])) # Q
+                sx.append(float(x[i * 4 + 3])) # Gain
+            # print('debug X')
+            # for i in range(l-1):
+            #     print(x[i*4:(i+1)*4])
+            # print('debug SX')
+            # for i in range(l-1):
+            #     print(sx[i*4:(i+1)*4])
             return sx
 
         def _opt_constraints_all(x) -> int:
-            sx = _sorted_x(x)
+            sx = _sorted_by_freq(x)
             c_freq = _opt_constraints_freq(sx) == 1
             c_gain = _opt_constraints_gain(sx) == 1
             c_q = _opt_constraints_q(sx) == 1
@@ -451,6 +482,7 @@ class GlobalOptimizer(object):
             func=self._opt_peq,
             bounds=self._opt_bounds(self.max_peq),
             maxiter=self.max_iter,
+            # init="random",
             init="sobol",
             polish=False,
             integrality=self._opt_integrality(self.max_peq),
@@ -458,6 +490,8 @@ class GlobalOptimizer(object):
             constraints=self._opt_constraints_nonlinear(self.max_peq),
             disp=True,
             tol=CONVERGENCE_TOLERANCE,
+            # updating='deferred',
+            # workers=10,
         )
 
         auto_peq = self._x2peq(res.x)
