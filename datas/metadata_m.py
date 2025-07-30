@@ -208,6 +208,42 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "MAG Theatron S6": {
+        "brand": "MAG Theatron",
+        "model": "S6",
+        "type": "passive",
+        "price": "950",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-s6-surround-speaker-review.64391/",
+                },
+                "review_published": "20250728",
+                "specifications": {
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 20,
+                    },
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 280,
+                        "depth": 100,
+                    },
+                    "weight": 6.0,
+                },
+            },
+        },
+    },
     "Magnepan LRS": {
         "brand": "Magnepan",
         "model": "LRS",
