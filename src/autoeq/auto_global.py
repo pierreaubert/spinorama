@@ -187,10 +187,11 @@ class GlobalOptimizer(object):
     def _x2print2(peq1: Peq, peq2: Peq) -> None:
         print("IIR    Hz.  Q.   dB | IIR    Hz.  Q.   dB")
         for _, (iir1, iir2) in zip(
-                sorted(peq1, key=lambda x: x[1].freq),
-                sorted(peq2, key=lambda x: x[1].freq)):
-            print(f"{iir1.biquad_type:3d} {iir1.freq:5.0f} {iir1.q:1.1f} {iir1.db_gain:+1.2f} | {iir2.biquad_type:3d} {iir2.freq:5.0f} {iir2.q:1.1f} {iir2.db_gain:+1.2f}")
-
+            sorted(peq1, key=lambda x: x[1].freq), sorted(peq2, key=lambda x: x[1].freq)
+        ):
+            print(
+                f"{iir1.biquad_type:3d} {iir1.freq:5.0f} {iir1.q:1.1f} {iir1.db_gain:+1.2f} | {iir2.biquad_type:3d} {iir2.freq:5.0f} {iir2.q:1.1f} {iir2.db_gain:+1.2f}"
+            )
 
     def _x2spl(self, x: Encoded) -> Vector:
         # take a list of encoded filters and return the magnitude of the filter across the freq range
@@ -221,7 +222,9 @@ class GlobalOptimizer(object):
         score = score_loss(self.df_speaker, peq)
         flat_lw = np.add(self.target_lw, peq_freq)
         flatness_lw = np.linalg.norm(flat_lw, ord=2)
-        flatness_lw_bass_mid = np.linalg.norm(flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2)
+        flatness_lw_bass_mid = np.linalg.norm(
+            flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2
+        )
         flatness_lw_mid_high = np.linalg.norm(flat_lw[self.freq_midrange_index :], ord=2)
         return score, score + float(flatness_lw_bass_mid) / 15 + float(flatness_lw_mid_high) / 50
 
@@ -232,7 +235,9 @@ class GlobalOptimizer(object):
         score = score_loss(self.df_speaker, peq)
         flat_pir = np.add(self.target_pir, peq_freq)
         flatness_pir = np.linalg.norm(flat_pir, ord=2)
-        flatness_pir_bass_mid = np.linalg.norm(flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2)
+        flatness_pir_bass_mid = np.linalg.norm(
+            flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2
+        )
         flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         return score, score + float(flatness_pir_bass_mid) / 15 + float(flatness_pir_mid_high) / 50
 
@@ -426,10 +431,10 @@ class GlobalOptimizer(object):
                 s.append((f, i))
             sx = []
             for _, i in sorted(s, key=lambda t: t[0]):
-                sx.append(int(x[i * 4 + 0]))   # type
-                sx.append(int(x[i * 4 + 1]))   # freq
-                sx.append(float(x[i * 4 + 2])) # Q
-                sx.append(float(x[i * 4 + 3])) # Gain
+                sx.append(int(x[i * 4 + 0]))  # type
+                sx.append(int(x[i * 4 + 1]))  # freq
+                sx.append(float(x[i * 4 + 2]))  # Q
+                sx.append(float(x[i * 4 + 3]))  # Gain
             # print('debug X')
             # for i in range(l-1):
             #     print(x[i*4:(i+1)*4])
