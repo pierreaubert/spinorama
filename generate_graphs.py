@@ -200,7 +200,11 @@ def process_measurements_parallel(
 
     with Pool(processes=num_processes) as pool:
         results = pool.imap_unordered(process_single_measurement, tasks, chunksize=1)
-        for i, (success, speaker, origin, mversion, result, error) in enumerate(results):
+        for i, answer in enumerate(results):
+            if answer is None:
+                logger.info("Processing failed for %d", i)
+                continue
+            success, speaker, origin, mversion, result, error = answer
             if success:
                 if speaker not in data_frame:
                     data_frame[speaker] = {}
