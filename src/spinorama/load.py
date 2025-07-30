@@ -664,6 +664,7 @@ def parse_graphs_speaker(
         # print('debug: after filter_graph {}'.format(df_graph['SPL Vertical_unmelted'].keys()))
     elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
+        df_even = None
         df_uneven = None
         if mformat == "webplotdigitizer":
             status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
@@ -672,8 +673,6 @@ def parse_graphs_speaker(
             if not status:
                 logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
                 return {}
-            # necessary to do first (most digitalize graphs are uneven in frequency)
-            df_uneven = graph_melt(unify_freq(df_uneven))
         elif mformat == "rew_text_dump":
             status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
@@ -682,18 +681,22 @@ def parse_graphs_speaker(
                 logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
                 return {}
 
-        nan_count = check_nan({"test": df_uneven})
+        # normalize frequency for all graphs
+        df_even = graph_melt(unify_freq(df_uneven))
+
+        # check NaN
+        nan_count = check_nan({"test": df_even})
         if nan_count > 0:
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
 
         logger.debug("DEBUG title: %s", title)
-        logger.debug("DEBUG df_uneven keys (%s)", ", ".join(df_uneven.keys()))
-        logger.debug("DEBUG df_uneven measurements (%s)", ", ".join(set(df_uneven.Measurements)))
+        logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+        logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
         try:
             if title == "CEA2034":
-                df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
+                df_full = spin_compute_di_eir(speaker_name, title, df_even)
             else:
-                df_full = {title: unify_freq(graph_melt(df_uneven))}
+                df_full = {title: unify_freq(graph_melt(df_even))}
             nan_count = check_nan(df_full)
             if nan_count > 0:
                 logger.error("df_full %s has %d NaNs", speaker_name, nan_count)
