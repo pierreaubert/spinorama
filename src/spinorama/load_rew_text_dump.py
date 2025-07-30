@@ -66,4 +66,7 @@ def parse_graphs_speaker_rew_text_dump(
                 return False, ("", pd.DataFrame({}))
 
     # print('List of measurements {}'.format(sorted(set(msrts))))
-    return True, ("CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts}))
+    measurements = pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts}).drop_duplicates(
+        subset=["Freq", "Measurements"]
+    )
+    return True, ("CEA2034", measurements)
