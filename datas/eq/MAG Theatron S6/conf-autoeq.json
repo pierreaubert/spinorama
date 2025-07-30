@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 50.5,
+    "target_min_freq": 108.4,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
@@ -36,7 +36,7 @@
     "MAX_STEPS_Q": 6,
     "MAX_ITER": 15000,
     "MIN_DBGAIN": 0.75,
-    "MAX_DBGAIN": 3,
+    "MAX_DBGAIN": 4.0,
     "MIN_Q": 0.25,
     "MAX_Q": 3,
     "slope": -0.5,
@@ -45,7 +45,7 @@
     "smoke_test": false,
     "force": true,
     "version": "0.28",
-    "level": 20,
+    "level": 30,
     "generate_images_only": false,
-    "output_dir": "/Users/pierrre/src/spinorama/build/eqs/Adam D3V/Score-7-none-pk"
+    "output_dir": null
 }

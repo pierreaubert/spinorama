@@ -265,6 +265,39 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Perlisten a3m": {
+        "brand": "Perlisten",
+        "model": "a3m",
+        "type": "passive",
+        "price": "1500",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "rew_text_dump",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20250722",
+                "quality": "low",
+                "specifications": {
+                    "sensitivity": 87.4,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 111,
+                    },
+                    "size": {
+                        "height": 675,
+                        "width": 280,
+                        "depth": 350,
+                    },
+                },
+            },
+        },
+    },
     "Perlisten r4b": {
         "brand": "Perlisten",
         "model": "r4b",

@@ -1,0 +1,14 @@
+EQ for Paradigm Founder 40B computed from ErinsAudioCorner data
+Preference Score 5.00 with EQ 6.47
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-07-22-12:57:27
+
+Preamp: -2.0 dB
+
+Filter  1: ON PK Fc  1429 Hz Gain +1.70 dB Q 2.95
+Filter  2: ON PK Fc    69 Hz Gain +2.98 dB Q 0.50
+Filter  3: ON PK Fc   666 Hz Gain -1.32 dB Q 2.67
+Filter  4: ON PK Fc   714 Hz Gain +2.63 dB Q 2.54
+Filter  5: ON PK Fc   849 Hz Gain -1.43 dB Q 1.64
+Filter  6: ON PK Fc   144 Hz Gain -3.99 dB Q 0.84
+Filter  7: ON PK Fc 13186 Hz Gain -3.01 dB Q 0.40
