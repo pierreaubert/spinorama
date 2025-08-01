@@ -221,7 +221,8 @@ export function urlParameters2Sort(url) {
     const pagination = paginationParameters2Sort(url);
 
     // if we have keywords to search for then give priority for search
-    if (keywords !== '') {
+    // but only if the sort parameter is not explicitly set to something other than 'date' (default)
+    if (keywords !== '' && sorter.by === 'date') {
         sorter.by = 'fullTextSearch';
         sorter.reverse = true;
     }
@@ -237,7 +238,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 const sa = score(a);
                 const sb = score(b);
                 if (sa === sb) {
-                    return a < b;
+                    return a < b ? -1 : a > b ? 1 : 0;
                 }
                 return sa - sb;
             });
@@ -246,7 +247,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 const sa = score(a);
                 const sb = score(b);
                 if (sa === sb) {
-                    return b < a;
+                    return b < a ? -1 : b > a ? 1 : 0;
                 }
                 return sb - sa;
             });
