@@ -70,11 +70,11 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
         self.assertIsNotNone(elac)
 
-        genelec = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        self.assertIsNotNone(genelec)
+        with self.assertRaises(NoSuchElementException):
+            genelec = self.driver.find_element(by=By.ID, value="Genelec-8361A")
 
         with self.assertRaises(NoSuchElementException):
-            gene = self.driver.find_element(by=By.ID, value="Revel-F35")
+            revel = self.driver.find_element(by=By.ID, value="Revel-F35")
 
     def test_index_search_elac_menu(self):
         self.driver.get(DEV)
