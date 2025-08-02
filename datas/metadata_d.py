@@ -270,6 +270,36 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "Danley HRE1": {
+        "brand": "Danley",
+        "model": "HRE1",
+        "type": "active",
+        "price": "46150",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+		"quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/tom-danley%E2%80%99s-new-%E2%80%98hyperion%E2%80%99.26663/",
+                },
+                "review_published": "20250802",
+                "specifications": {
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 1390,
+                        "width": 717,
+                        "depth": 700,
+                    },
+                },
+            },
+        },
+    },
     "Danley SH-50": {
         "brand": "Danley",
         "model": "SH-50",

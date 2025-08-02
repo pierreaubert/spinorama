@@ -1,0 +1,14 @@
+EQ for Danley HRE1 computed from Vendors-Danley data
+Preference Score 3.74 with EQ 5.73
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-02-16:18:11
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc  1161 Hz Gain +2.84 dB Q 2.99
+Filter  2: ON PK Fc   470 Hz Gain +1.18 dB Q 2.30
+Filter  3: ON PK Fc   197 Hz Gain -2.92 dB Q 2.99
+Filter  4: ON PK Fc   184 Hz Gain +2.29 dB Q 1.52
+Filter  5: ON PK Fc  1333 Hz Gain -3.12 dB Q 3.00
+Filter  6: ON PK Fc    95 Hz Gain -1.21 dB Q 2.98
+Filter  6: ON PK Fc  9000 Hz Gain -1.21 dB Q 0.5
