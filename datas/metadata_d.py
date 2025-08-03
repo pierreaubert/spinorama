@@ -287,6 +287,10 @@ speakers_info_d: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/tom-danley%E2%80%99s-new-%E2%80%98hyperion%E2%80%99.26663/",
                 },
                 "review_published": "20250802",
+		"data_acquisition": {
+		    "min_valid_freq": 20,
+		    "max_valid_freq": 18000,
+		},
                 "specifications": {
                     "SPL": {
                         "peak": 132,
@@ -295,6 +299,37 @@ speakers_info_d: SpeakerDatabase = {
                         "height": 1390,
                         "width": 717,
                         "depth": 700,
+                    },
+                },
+            },
+        },
+    },
+    "Danley ILE3": {
+        "brand": "Danley",
+        "model": "ILE3",
+        "type": "active",
+        "price": "37000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+		"quality": "low",
+                "review_published": "20250803",
+		"data_acquisition": {
+		    "min_valid_freq": 20,
+		    "max_valid_freq": 16000,
+		},
+                "specifications": {
+                    "SPL": {
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 1594,
+                        "width": 595,
+                        "depth": 566,
                     },
                 },
             },
