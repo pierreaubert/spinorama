@@ -79,7 +79,7 @@ function getContext(key, index, value) {
 }
 
 function isShort(values) {
-    const max_len = 25;
+    const max_len = 29;
     let len = 0;
     for (const value of values) {
         if (value.origin) {
@@ -111,7 +111,7 @@ function footerHtml(id, reviews) {
         return reviews
             .flatMap(
                 (review) => `
-            <a class="card-footer-item" href="${review.url}">${review.origin}</a>
+            <a class="card-footer-item" href="${review.url}">${review.originLong}</a>
         `
             )
             .join(' ');
@@ -134,11 +134,11 @@ function footerHtml(id, reviews) {
                    <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
                </button>
              </div>
-             <div class="dropdown-menu" id="dropdown-menu-reviews-${id}" role="menu">
-                <div class="dropdown-content">
-                  ${dropdown}
-                </div>
-             </div>
+             <div class="dropdown-menu" id="dropdown-menu-reviews-${id}" role="menu" style="min-width: 300px; left: 50%; transform: translateX(-50%);">
+                 <div class="dropdown-content" style="min-width: 300px;">
+                   ${dropdown}
+                 </div>
+              </div>
            </div>
         </div>
     `;
