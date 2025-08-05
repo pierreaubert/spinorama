@@ -154,7 +154,7 @@ speakers_info_d: SpeakerDatabase = {
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
-                "quality": "medium",
+                "quality": "low",
             },
         },
     },
@@ -165,9 +165,9 @@ speakers_info_d: SpeakerDatabase = {
         "price": "",
         "amount": "pair",
         "shape": "toursound",
-        "default_measurement": "vendor-pattern-90x40",
+        "default_measurement": "vendor-v1-2022",
         "measurements": {
-            "vendor-pattern-90x40": {
+            "vendor-v1-2022": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
@@ -282,15 +282,15 @@ speakers_info_d: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
-		"quality": "medium",
+                "quality": "medium",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/tom-danley%E2%80%99s-new-%E2%80%98hyperion%E2%80%99.26663/",
                 },
                 "review_published": "20250802",
-		"data_acquisition": {
-		    "min_valid_freq": 20,
-		    "max_valid_freq": 18000,
-		},
+                "data_acquisition": {
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 18000,
+                },
                 "specifications": {
                     "SPL": {
                         "peak": 132,
@@ -316,12 +316,12 @@ speakers_info_d: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
-		"quality": "low",
+                "quality": "low",
                 "review_published": "20250803",
-		"data_acquisition": {
-		    "min_valid_freq": 20,
-		    "max_valid_freq": 16000,
-		},
+                "data_acquisition": {
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 16000,
+                },
                 "specifications": {
                     "SPL": {
                         "peak": 125,
@@ -342,14 +342,20 @@ speakers_info_d: SpeakerDatabase = {
         "price": "8000",
         "amount": "pair",
         "shape": "toursound",
-        "default_measurement": "eac",
+        "default_measurement": "vendor-v3-2025",
         "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
-                    "yt": "",
+            "vendor-v3-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250804",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+		    "distance": 10.0, # m
+		    "resolution": 5.0, # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
                 },
                 "specifications": {
                     "sensitivity": 100,
@@ -365,17 +371,22 @@ speakers_info_d: SpeakerDatabase = {
                     },
                     "weight": 60.3,
                 },
+            },
+            "eac-v1-2021": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
+                    "yt": "",
+                },
                 "review_published": "20210815",
             },
-            "vendor-pattern-50x50": {
+            "vendor-v1-2022": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
-                },
                 "review_published": "20221116",
-                "quality": "medium",
+                "quality": "low",
             },
         },
     },
@@ -477,14 +488,45 @@ speakers_info_d: SpeakerDatabase = {
         "price": "",
         "amount": "pair",
         "shape": "toursound",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v1-2025",
         "measurements": {
-            "vendor": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250803",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+		    "distance": 10.0, # m
+		    "resolution": 5.0, # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 99,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 125,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 523,
+                        "width": 523,
+                        "depth": 414,
+                    },
+                },
+            },
+            "vendor-v1-2022": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221117",
-                "quality": "medium",
+                "quality": "low",
             },
         },
     },
