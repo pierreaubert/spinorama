@@ -352,8 +352,8 @@ speakers_info_d: SpeakerDatabase = {
                 "data_acquisition": {
                     "via": "gll",
                     "signal": "aes 20Hz-20kHz",
-		    "distance": 10.0, # m
-		    "resolution": 5.0, # deg
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
                     "min_valid_freq": 50,
                     "max_valid_freq": 18000,
                 },
@@ -498,8 +498,8 @@ speakers_info_d: SpeakerDatabase = {
                 "data_acquisition": {
                     "via": "gll",
                     "signal": "aes 20Hz-20kHz",
-		    "distance": 10.0, # m
-		    "resolution": 5.0, # deg
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
                     "min_valid_freq": 50,
                     "max_valid_freq": 18000,
                 },
@@ -567,22 +567,48 @@ speakers_info_d: SpeakerDatabase = {
         },
     },
     "Danley SM-80F": {
-        # data is too low quality
-        "skip": True,
         "brand": "Danley",
         "model": "SM-80F",
         "type": "passive",
         "price": "",
         "amount": "pair",
         "shape": "toursound",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v1-2025",
         "measurements": {
-            "vendor": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 102,
+                    "impedance": 2,
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 1143,
+                        "width": 660,
+                        "depth": 711,
+                    },
+                    "weight": 97.5,
+                },
+            },
+            "vendor-v1-2022": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
-                "quality": "medium",
+                "quality": "low",
             },
         },
     },
