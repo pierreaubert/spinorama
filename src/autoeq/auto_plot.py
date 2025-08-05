@@ -152,8 +152,8 @@ def graph_results(
         "xmax": 20000,
         "ymin": -40,
         "ymax": 10,
-        "width": 800,
-        "height": 400,
+        "width": 1024,
+        "height": 1680,
     }
 
     # what's the min over freq?

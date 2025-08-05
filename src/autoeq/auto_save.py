@@ -154,6 +154,7 @@ def print_auto_graphs_seq(
             graph_filename += ".png"
             logger.debug("writing graph %s", graph_filename)
             force = not optim_config["generate_images_only"]
+            # print('{} {} {}'.format(graph_filename, graph.layout.width, graph.layout.height))
             write_multiformat(chart=graph, filename=graph_filename, force=force)
 
 

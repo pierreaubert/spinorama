@@ -200,7 +200,10 @@ def write_multiformat(chart, filename, force):
         return
     if not filepath.is_file() or force:
         try:
-            chart.write_image(filename)
+            print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
+            chart.write_image(
+                filename, format="png", width=chart.layout.width, height=chart.layout.height
+            )
         except RuntimeError as rt:
             logger.error("writing image %s crashed! %s", filename, rt)
             return
