@@ -98,7 +98,7 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
     res = [comment]
     res.append("Preamp: {:.1f} dB".format(peq_preamp_gain(peq)))
     res.append("")
-    for i, data in enumerate(peq):
+    for i, data in enumerate(sorted(peq, key=lambda iir: iir[1].freq)):
         _, iir = data
         if iir.biquad_type in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
             res.append(
