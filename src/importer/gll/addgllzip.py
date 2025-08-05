@@ -56,6 +56,9 @@ manual_exceptions_table = {
     "Bose AM40 100.zip": ("Bose ArenaMatch AM40", "vendor-pattern-100x40"),
     "HK Audio LINEAR 9 110.zip": ("HK Audio LINEAR 9 110 XA", "vendor"),
     "HK Audio LINEAR 9 112.zip": ("HK Audio LINEAR 9 112 XA", "vendor"),
+    "Danley SM60F.zip": ("Danley SM-60F", "vendor-v5-2025"),
+    "Danley SM-60F.zip": ("Danley SM-60F", "vendor-v5-2025"),
+    "Danley SH-50.zip": ("Danley SH-50", "vendor-v3-2025"),
 }
 
 
@@ -257,10 +260,10 @@ def find_speaker(zipfile):
         spl_name = None
         # look for exact matches first
         for name, data in measurements["measurements"].items():
-            if data["format"] == "gllHVtxt" and version == name:
+            if data["format"] == "gll_hv_txt" and version == name:
                 count_gll += 1
                 gll_name = name
-            elif data["format"] == "splHVtxt" and version == name:
+            elif data["format"] == "spl_hv_txt" and version == name:
                 count_spl += 1
                 spl_name = name
 
@@ -273,10 +276,10 @@ def find_speaker(zipfile):
         # if not look for partial matches
         if count_gll + count_spl == 0:
             for name, data in measurements["measurements"].items():
-                if data["format"] == "gllHVtxt" and match(version, name):
+                if data["format"] == "gll_hv_txt" and match(version, name):
                     count_gll += 1
                     gll_name = name
-                elif data["format"] == "splHVtxt" and match(version, name):
+                elif data["format"] == "spl_hv_txt" and match(version, name):
                     count_spl += 1
                     spl_name = name
 
