@@ -1090,7 +1090,10 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                 trace['yaxis'] = 'y' + offset;
             }
             if (trace?.colorbar) {
-                if (i === '0') {
+                // Hide colorbar when plotting multiple contours side by side
+                if (Object.keys(graphsConfigs).length > 1) {
+                    trace.showscale = false;
+                } else if (i === '0') {
                     trace.colorbar.xref = 'paper';
                     trace.colorbar.yref = 'paper';
                     if (isDisplayCompact()) {
