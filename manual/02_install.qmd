@@ -18,10 +18,10 @@ On a Mac you can replace all `apt` calls by `brew`.
 ### Using python3, ipython and Jupyter-Lab
 
 ``` {.shell}
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-pip3 may also be pip depending on your system.
+pip may also be pip3 depending on your system.
 
 ``` {.shell}
 export PYTHONPATH=src:src/website
@@ -43,10 +43,9 @@ Start with launching the setup script: (maybe as root if you need to install som
 If it doesn't work out of the box which is likely, please go step by step:
 
 ```  {.shell}
-pip3 install -r requirements.txt
-pip3 install -r requirements-test.txt
-pip3 install -r requirements-dev.txt
-pip3 install -r requirements-api.txt
+pip install -r requirements.txt
+pip install -r requirements-test.txt
+pip install -r requirements-dev.txt
 ```
 
 For linting the python, html and javascript code or generating helpers:
@@ -70,11 +69,9 @@ Before committing, please check that the various checks are fine:
 
 1. `./scripts/check_html.sh` : check that HTML generated files are conforming.
 2. `./scripts/check_meta.py` : check that the metadata file looks sane.
-3. `flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv` should report 0
-4. `ruff format .` will take care of formatting all the python files.
-5. `ruff check` also need to pass.
-6. `prettier -w src/website/*.js` will format the javascript files.
-7. `eslint` should be happy.
+3. `ruff format .` will take care of formatting all the python files.
+4. `ruff check src tests` also need to pass.
+5. `prettier -w src/website/*.js` will format the javascript files.
 
 Most of the checks are enforced in the pre-submit which means that
 you cannot commit new codes without passing tests and checks.
