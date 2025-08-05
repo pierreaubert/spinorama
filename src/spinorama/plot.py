@@ -408,11 +408,11 @@ def common_layout(params):
         ),
         legend=dict(
             x=0.5,
-            y=1.12,
+            y=1.2,
             xanchor="center",
             yanchor="top",
             orientation=orientation,
-            font=FONT_H2,
+            font=FONT_H3,
         ),
         margin={
             "t": 100,
@@ -862,6 +862,8 @@ def plot_graph_spl(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
+    fig.layout.margin.t += 40
+    fig.layout.legend.y += 0.15
     fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
