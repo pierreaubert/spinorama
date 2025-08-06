@@ -200,7 +200,7 @@ def write_multiformat(chart, filename, force):
         return
     if not filepath.is_file() or force:
         try:
-            print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
+            # print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
             chart.write_image(
                 filename, format="png", width=chart.layout.width, height=chart.layout.height
             )
