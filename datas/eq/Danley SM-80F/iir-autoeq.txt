@@ -1,14 +1,14 @@
 EQ for Danley SM-80F computed from Vendors-Danley data
-Preference Score 1.60 with EQ 4.55
+Preference Score 1.60 with EQ 4.56
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
-Dated: 2025-08-05-11:38:06
+Dated: 2025-08-05-18:37:05
 
-Preamp: -2.7 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc    65 Hz Gain -8.44 dB Q 2.10
-Filter  2: ON PK Fc   139 Hz Gain -4.43 dB Q 2.76
-Filter  3: ON PK Fc   190 Hz Gain +3.00 dB Q 3.00
-Filter  4: ON PK Fc   369 Hz Gain +2.79 dB Q 3.00
-Filter  5: ON PK Fc  2406 Hz Gain -2.12 dB Q 2.00
-Filter  6: ON PK Fc  7834 Hz Gain -5.77 dB Q 1.50
-Filter  7: ON PK Fc 13652 Hz Gain -3.03 dB Q 1.47
+Filter  1: ON PK Fc   134 Hz Gain -4.73 dB Q 2.08
+Filter  2: ON PK Fc   190 Hz Gain +3.00 dB Q 2.99
+Filter  3: ON PK Fc   382 Hz Gain +2.29 dB Q 2.99
+Filter  4: ON PK Fc   522 Hz Gain -2.11 dB Q 2.99
+Filter  5: ON PK Fc  1586 Hz Gain +2.80 dB Q 1.83
+Filter  6: ON PK Fc  1887 Hz Gain -4.17 dB Q 2.97
+Filter  7: ON PK Fc  8397 Hz Gain -5.29 dB Q 1.07

@@ -1,0 +1,14 @@
+EQ for Danley SM-100F computed from Vendors-Danley data
+Preference Score -1.64 with EQ 2.19
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-06-09:39:33
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc   260 Hz Gain -9.00 dB Q 3.00
+Filter  2: ON PK Fc   369 Hz Gain +3.00 dB Q 3.00
+Filter  3: ON PK Fc   579 Hz Gain +3.00 dB Q 1.58
+Filter  4: ON PK Fc   792 Hz Gain -9.00 dB Q 3.00
+Filter  5: ON PK Fc   910 Hz Gain +2.65 dB Q 0.62
+Filter  6: ON PK Fc  9001 Hz Gain -6.28 dB Q 0.31
+Filter  7: ON PK Fc  9648 Hz Gain +2.84 dB Q 1.50
