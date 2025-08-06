@@ -1003,6 +1003,10 @@ export function setRadar(measurement, speakerNames, speakerGraphs, width, height
 
 export function setContour(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    let len = 1;
+    if (speakerGraphs.length > 1) {
+        len = 2;
+    }
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
@@ -1011,8 +1015,10 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                 width,
                 height,
                 GraphProperties[measurement],
-                2
+                len
             );
+            // do not show the legend
+            options.layout.showlegend = false;
             // this shapes are not working in 3D thus removing them
             if (options.layout && options.layout?.shapes) {
                 options.layout.shapes = null;
@@ -1379,4 +1385,57 @@ export function setContour3D(measurement, speakerNames, speakerGraphs, width, he
         }
     }
     return graphsConfigs;
+}
+
+export function setPlotForMeasurement(measurement, speakersName, graphs, windowWidth, windowHeight) {
+    if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
+        return setCEA2034(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+    if (
+        measurement === 'On Axis' ||
+        measurement === 'Estimated In-Room Response' ||
+        measurement === 'Early Reflections' ||
+        measurement === 'SPL Horizontal' ||
+        measurement === 'SPL Vertical' ||
+        measurement === 'SPL Horizontal Normalized' ||
+        measurement === 'SPL Vertical Normalized' ||
+        measurement === 'Horizontal Reflections' ||
+        measurement === 'Vertical Reflections'
+    ) {
+        return setGraph(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
+        return setRadar(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (
+        measurement === 'SPL Horizontal Contour' ||
+        measurement === 'SPL Vertical Contour' ||
+        measurement === 'SPL Horizontal Contour Normalized' ||
+        measurement === 'SPL Vertical Contour Normalized'
+    ) {
+        return setContour(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (
+        measurement === 'SPL Horizontal Contour 3D' ||
+        measurement === 'SPL Vertical Contour 3D' ||
+        measurement === 'SPL Horizontal Contour Normalized 3D' ||
+        measurement === 'SPL Vertical Contour Normalized 3D'
+    ) {
+        return setContour3D(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (
+        measurement === 'SPL Horizontal Globe' ||
+        measurement === 'SPL Vertical Globe' ||
+        measurement === 'SPL Horizontal Globe Normalized' ||
+        measurement === 'SPL Vertical Globe Normalized'
+    ) {
+        return setGlobe(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    console.error('Measurement ' + measurement + ' is unknown');
+    return null;
 }

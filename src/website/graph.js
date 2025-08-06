@@ -19,7 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import Plotly from 'plotly.js-dist-min';
-import { setGraph } from './plot.js';
+import { setPlotForMeasurement } from './plot.js';
 import {
     colorPalettes,
     contourColorscales,
@@ -36,14 +36,14 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
         return Promise.reject(new Error('Invalid divName parameter'));
     }
     // Create a config object for this graph, loading from storage if available
-    const config = loadConfigFromStorage();
+    const config = loadConfigFromStorage(measurementName);
 
     async function run() {
         const w = window.innerWidth;
         const h = window.innerHeight;
 
         const title = graphSpec.layout.title.text;
-        let graphOptions = setGraph(measurementName, [title], [graphSpec], w, h, 1);
+        let graphOptions = setPlotForMeasurement(measurementName, [title], [graphSpec], w, h, 1);
 
         if (graphOptions?.length >= 1) {
             let options = graphOptions[0];

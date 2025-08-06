@@ -153,38 +153,38 @@ export const contourColorscales = {
 
 // Default configuration options for plots
 export const defaultConfig = {
-    font: {
-        family: 'Arial, sans-serif',
-        size: 12,
-        color: '#333333',
-    },
+    // font: {
+    //     family: 'Arial, sans-serif',
+    //     size: 12,
+    //     color: '#333333',
+    // },
     theme: 'light', // 'light' or 'dark'
-    grid: true,
+    // grid: true,
     legend: {
-        position: 'right', // 'right', 'bottom', 'top', 'left'
+        position: 'top',
         show: true,
     },
-    // delta margin and not absolute one
-    margin: {
-        l: 50,
-        r: 50,
-        t: 80,
-        b: 50,
-    },
-    colors: {
-        palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
-    },
-    layout: {
-        direction: 'horizontal', // 'horizontal' (left/right) or 'vertical' (top/down) for multiple graphs
-    },
-    contour: {
-        colorscale: 'default', // 'default', 'viridis', 'plasma', 'cool', 'hot'
-    },
-    colorbar: {
-        thickness: 20, // thickness in pixels
-        len: 0.9, // length as fraction (0-1)
-        show: true,
-    },
+    // // delta margin and not absolute one
+    // margin: {
+    //     l: 50,
+    //     r: 50,
+    //     t: 80,
+    //     b: 50,
+    // },
+    // colors: {
+    //     palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
+    // },
+    // layout: {
+    //     direction: 'horizontal', // 'horizontal' (left/right) or 'vertical' (top/down) for multiple graphs
+    // },
+    // contour: {
+    //     colorscale: 'default', // 'default', 'viridis', 'plasma', 'cool', 'hot'
+    // },
+    // colorbar: {
+    //     thickness: 20, // thickness in pixels
+    //     len: 0.9, // length as fraction (0-1)
+    //     show: true,
+    // },
 };
 
 // Local storage key for configuration
@@ -200,11 +200,16 @@ export function saveConfigToStorage(config) {
 }
 
 // Load configuration from local storage
-export function loadConfigFromStorage() {
+export function loadConfigFromStorage(measurementName) {
     try {
         const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
         if (stored) {
             const parsed = JSON.parse(stored);
+            let config = defaultConfig;
+            if (measurementName.indexOf('Contour') !== -1) {
+                config.showlegend = false;
+                config.legend.show = false;
+            }
             return mergeConfigs(defaultConfig, parsed);
         }
     } catch (error) {

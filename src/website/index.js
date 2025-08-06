@@ -21,7 +21,7 @@
 const flagCounters = false;
 
 import { getMetadataHead, getMetadataTail } from './download.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
+import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews, getSensitivity, getSPL } from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
@@ -66,6 +66,8 @@ function getContext(key, index, value) {
         price: price,
         priceAsDollar: getDollar(price),
         shape: value.shape,
+	sensitivity: getSensitivity(value),
+	splinfo: getSPL(value),
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -192,6 +194,8 @@ function contextHtml(context) {
     const img = context.img;
     const score = context.score;
     const price = context.price;
+    const sensitivity = context.sensitivity;
+    const [splinfo, splvalue] = [...context.splinfo];
     const dollar = context.priceAsDollar;
     const iconLFX = '#icon-volume-info-' + iconValue(score.lfxScaled);
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
@@ -218,39 +222,28 @@ function contextHtml(context) {
                  <span class="icon">${dollar}</span>
                  <span>Price: <b>${price}</b></span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                  <a href="/help.html#priceDefinition">
-                     <svg width="20px" height="20px"><use href="#icon-circle-question"/></svg>
-                  </a>
-               </span>
--->
                <br/>
                ${html_score}
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
-                 <span>Bass extension: <b>${score.lfx}</b>Hz</span>
+                 <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                 <a href="/help.html#bassExtensionDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a>
-               </span>
--->
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="rating"><use href="${iconFlatness}"/></svg></span>
-                 <span>Flatness: <b>&plusmn;${score.flatness}</b>dB</span>
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${iconFlatness}"/></svg></span>
+                 <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                  <a href="/help.html#flatnessDefinition">
-                     <svg width="20px" height="20px">
-                        <use href="#icon-circle-question"/>
-                     </svg>
-                  </a>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-sensitivity"/></svg></span>
+                 <span>Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>
                </span>
--->
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="spl"><use href="#icon-spl}"/></svg></span>
+                 <span>${splinfo} SPL: <b>${splvalue}</b>&nbsp;dB</span>
+               </span>
              </div>
            </div>
            <footer class="card-footer">
