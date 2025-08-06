@@ -165,14 +165,46 @@ speakers_info_d: SpeakerDatabase = {
         "price": "",
         "amount": "pair",
         "shape": "toursound",
-        "default_measurement": "vendor-v1-2022",
+        "default_measurement": "vendor-v4-2025",
         "measurements": {
+            "vendor-v4-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250804",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 100,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "continuous": 148,
+                        "peak": 154,
+                    },
+                    "size": {
+                        "height": 1520,
+                        "width": 1140,
+                        "depth": 760,
+                    },
+                    "weight": 326,
+                },
+            },
             "vendor-v1-2022": {
                 "origin": "Vendors-Danley",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
-                "quality": "medium",
+                "quality": "low",
             },
         },
     },
@@ -408,6 +440,46 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "Danley SH-62": {
+        "brand": "Danley",
+        "model": "SH-62",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v2-2025",
+        "measurements": {
+            "vendor-v2-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 105,
+                    "impedance": 4,
+                    "SPL": {
+                        "continuous": 138,
+                        "peak": 144,
+                    },
+                    "size": {
+                        "height": 471,
+                        "width": 914,
+                        "depth": 762,
+                    },
+                    "weight": 106.6,
+                },
+            },
+        },
+    },
     "Danley SH-96-HO": {
         "brand": "Danley",
         "model": "SH-96-HO",
@@ -627,6 +699,45 @@ speakers_info_d: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
+            },
+        },
+    },
+    "Danley SM-100F": {
+        "brand": "Danley",
+        "model": "SM-100F",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1-2025",
+        "measurements": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 98,
+                    "impedance": 5.3,
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 850,
+                        "width": 520,
+                        "depth": 482,
+                    },
+                    "weight": 55.3,
+                },
             },
         },
     },

@@ -1,16 +1,14 @@
 EQ for Danley SM-60F computed from Vendors-Danley data
-Preference Score 1.60 with EQ 4.46
+Preference Score 1.60 with EQ 4.08
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
-Dated: 2025-08-04-09:45:46
+Dated: 2025-08-05-18:54:20
 
-Preamp: -4.5 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc   190 Hz Gain +3.26 dB Q 1.16
-Filter  2: ON PK Fc   356 Hz Gain -4.48 dB Q 2.48
-Filter  3: ON PK Fc   504 Hz Gain -2.10 dB Q 5.89
-Filter  4: ON PK Fc   621 Hz Gain +4.60 dB Q 3.52
-Filter  5: ON PK Fc   739 Hz Gain +2.38 dB Q 5.84
-Filter  6: ON PK Fc  1333 Hz Gain -4.13 dB Q 3.81
-Filter  7: ON HS Fc  1700 Hz Gain +3.08 dB Q 1.54
-Filter  8: ON PK Fc  3405 Hz Gain -3.54 dB Q 1.99
-Filter  9: ON PK Fc  9648 Hz Gain -4.61 dB Q 1.25
+Filter  1: ON PK Fc   190 Hz Gain +2.99 dB Q 1.20
+Filter  2: ON PK Fc   344 Hz Gain -4.32 dB Q 3.00
+Filter  3: ON PK Fc   689 Hz Gain +3.00 dB Q 2.25
+Filter  4: ON PK Fc  1333 Hz Gain -3.47 dB Q 3.00
+Filter  5: ON PK Fc  2245 Hz Gain +2.95 dB Q 2.00
+Filter  6: ON PK Fc  3289 Hz Gain -1.76 dB Q 0.86
+Filter  7: ON PK Fc  5732 Hz Gain +2.98 dB Q 1.50
