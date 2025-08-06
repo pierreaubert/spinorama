@@ -18,10 +18,13 @@
 
 import bisect
 import math
+from typing import List
 
 import numpy as np
 import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.signal import find_peaks
+from scipy.ndimage import gaussian_filter1d
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
@@ -184,6 +187,7 @@ class GlobalOptimizer(object):
         peq = self._x2peq(x)
         peq_print(peq)
 
+    @staticmethod
     def _x2print2(peq1: Peq, peq2: Peq) -> None:
         print("IIR    Hz.  Q.   dB | IIR    Hz.  Q.   dB")
         for _, (iir1, iir2) in zip(
@@ -378,7 +382,7 @@ class GlobalOptimizer(object):
                 if q > self.max_q or q < self.min_q:
                     return 1
                 f_hz = self._index2freq(f)
-                if (f_hz > 2000 and q > 1.0) or (f_hz > 3500 and q > 0.5):
+                if (f_hz > 2000 and q > 2.0) or (f_hz > 3500 and q > 1.5):
                     return 1
             return -1
 
@@ -435,12 +439,6 @@ class GlobalOptimizer(object):
                 sx.append(int(x[i * 4 + 1]))  # freq
                 sx.append(float(x[i * 4 + 2]))  # Q
                 sx.append(float(x[i * 4 + 3]))  # Gain
-            # print('debug X')
-            # for i in range(l-1):
-            #     print(x[i*4:(i+1)*4])
-            # print('debug SX')
-            # for i in range(l-1):
-            #     print(sx[i*4:(i+1)*4])
             return sx
 
         def _opt_constraints_all(x) -> int:
@@ -472,6 +470,83 @@ class GlobalOptimizer(object):
         auto_peq = self._x2peq(xk)
         peq_print(auto_peq)
 
+    def _create_smart_initial_guess(self, n: int) -> List[np.ndarray]:
+        """Create smart initial guesses based on frequency response analysis"""
+        initial_guesses = []
+
+        # Analyze frequency response to find peaks/dips
+        target_response = (
+            self.target_on
+            if self.config.get("curve_names", ["On Axis"])[0] == "On Axis"
+            else self.target_lw
+        )
+
+        smoothed = gaussian_filter1d(target_response, sigma=2)
+
+        peaks, _ = find_peaks(smoothed, height=1.0, distance=20)
+        dips, _ = find_peaks(-smoothed, height=1.0, distance=20)
+
+        problem_frequencies = []
+
+        # Add peaks (need cuts)
+        for peak_idx in peaks:
+            if self.freq_min_index <= peak_idx <= self.freq_max_index:
+                freq = self.freq_space[peak_idx]
+                magnitude = smoothed[peak_idx]
+                problem_frequencies.append((freq, -abs(magnitude), 1.0))  # Cut
+
+        # Add dips (need boosts)
+        for dip_idx in dips:
+            if self.freq_min_index <= dip_idx <= self.freq_max_index:
+                freq = self.freq_space[dip_idx]
+                magnitude = smoothed[dip_idx]
+                problem_frequencies.append((freq, abs(magnitude), 0.7))  # Boost with lower Q
+
+        # Sort by magnitude (most problematic first)
+        problem_frequencies.sort(key=lambda x: abs(x[1]), reverse=True)
+
+        # Create initial guesses
+        for guess_idx in range(min(5, max(1, n))):  # Create up to 5 different initial guesses
+            x0 = []
+            used_frequencies = (
+                problem_frequencies[:n] if len(problem_frequencies) >= n else problem_frequencies
+            )
+
+            # Fill remaining slots with analysis-based guesses
+            while len(used_frequencies) < n:
+                # Add frequencies in critical regions
+                critical_freqs = [100, 300, 1000, 3000, 8000, 16000]
+                for cf in critical_freqs:
+                    if self.freq_min <= cf <= self.freq_max:
+                        used_frequencies.append((cf, 0.5, 1.0))
+                    if len(used_frequencies) >= n:
+                        break
+                if len(used_frequencies) < n:
+                    # Fill with random frequencies
+                    for _ in range(n - len(used_frequencies)):
+                        rand_freq = np.random.uniform(self.freq_min, self.freq_max)
+                        used_frequencies.append((rand_freq, np.random.uniform(-2, 2), 1.0))
+
+            for i, (freq, gain, q) in enumerate(used_frequencies[:n]):
+                # Add some randomization to avoid identical guesses
+                freq_var = freq * (1 + np.random.uniform(-0.1, 0.1))
+                gain_var = gain * (1 + np.random.uniform(-0.2, 0.2))
+                q_var = q * (1 + np.random.uniform(-0.3, 0.3))
+
+                # Constrain to bounds
+                freq_var = np.clip(freq_var, self.freq_min, self.freq_max)
+                gain_var = np.clip(gain_var, -self.max_db, self.max_db)
+                q_var = np.clip(q_var, self.min_q, self.max_q)
+
+                filter_type = 3  # Peak filter
+                freq_idx = self._freq2index(freq_var)
+
+                x0.extend([filter_type, freq_idx, q_var, gain_var])
+
+            initial_guesses.append(np.array(x0))
+
+        return initial_guesses
+
     def run(self):
         logger.info(
             "global optim: #peq=%d dB=[%1.1f, %1.1f] Q=[%1.1f, %1.1f] #iter=%d",
@@ -483,20 +558,63 @@ class GlobalOptimizer(object):
             self.max_iter,
         )
 
+        # First create a Sobol population for good parameter space coverage
+        bounds = self._opt_bounds(self.max_peq)
+        n_params = len(bounds)
+        popsize = 15  # Default population size multiplier
+        sobol_size = popsize * n_params
+
+        # Generate Sobol sequence
+        from scipy.stats import qmc
+
+        sobol = qmc.Sobol(d=n_params, scramble=True)
+        sobol_samples = sobol.random(n=sobol_size)
+
+        # Scale Sobol samples to bounds
+        sobol_population = []
+        for sample in sobol_samples:
+            scaled_sample = []
+            for i, (lower, upper) in enumerate(bounds):
+                scaled_value = lower + sample[i] * (upper - lower)
+                scaled_sample.append(scaled_value)
+            sobol_population.append(np.array(scaled_sample))
+
+        # Create smart initial guesses based on frequency response analysis
+        smart_initial_guesses = self._create_smart_initial_guess(self.max_peq)
+        logger.info(f"Created {len(smart_initial_guesses)} smart initial guesses")
+
+        print("Initial guesses:")
+        initial_peq = self._x2peq(smart_initial_guesses[0].tolist())
+        peq_print(initial_peq)
+
+        # Combine Sobol population with smart initial guesses
+        # Replace the first few Sobol samples with our smart guesses
+        combined_population = sobol_population.copy()
+        for i, smart_guess in enumerate(smart_initial_guesses):
+            if i < len(combined_population):
+                combined_population[i] = smart_guess
+
+        # Convert to 2D array format expected by differential_evolution
+        init_population = np.array(combined_population)
+        logger.info(
+            f"Combined population: {len(sobol_population)} Sobol + {len(smart_initial_guesses)} smart guesses"
+        )
+        logger.debug(f"Initial population shape: {init_population.shape}")
+
         res = opt.differential_evolution(
             func=self._opt_peq,
             bounds=self._opt_bounds(self.max_peq),
             maxiter=self.max_iter,
-            # init="random",
-            init="sobol",
+            # init='sobol',
+            init=init_population,  # type: ignore[arg-type]
             polish=False,
             integrality=self._opt_integrality(self.max_peq),
             callback=self._opt_display,
             constraints=self._opt_constraints_nonlinear(self.max_peq),
             disp=True,
             tol=CONVERGENCE_TOLERANCE,
-            # updating='deferred',
-            # workers=10,
+            # updating='deferred',  # Required for parallel execution
+            # workers=-1,  # Use all available CPU cores
         )
 
         auto_peq = self._x2peq(res.x)
