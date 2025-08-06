@@ -102,17 +102,7 @@ getMetadata()
         const initVersions = buildInitVersions(nbSpeakers);
 
         // Load plot configuration from storage
-        let config = loadConfigFromStorage();
-
-        // Create configuration menu - add it to the form container
-        createConfigMenu(formContainer, config, (updatedConfig) => {
-            config = updatedConfig;
-            saveConfigToStorage(config);
-            // Re-plot with updated configuration if we have existing graph configs
-            if (graphsConfigs.length > 0) {
-                applyConfigAndPlot();
-            }
-        });
+        let config = loadConfigFromStorage('Graph');
 
         const speakersSelector = [];
         const originsSelector = [];

@@ -137,7 +137,40 @@ export function getField(value, field, version) {
     return fields;
 }
 
-export function getSensitivity(value, version) {
+export function getSensitivity(value, def) {
+   if (def === undefined) {
+        def = value.default_measurement;
+    }
+    if (value.type === "passive"
+	&& value.measurements[def]
+	&& value.measurements[def].specifications
+	&& value.measurements[def].specifications.sensitivity
+       ) {
+	return value.measurements[def].specifications.sensitivity;
+    }
+    return 0.0;
+}
+
+export function getSPL(value, def) {
+   if (def === undefined) {
+        def = value.default_measurement;
+    }
+    if (value.measurements[def]
+	&& value.measurements[def].specifications
+	&& value.measurements[def].specifications.SPL
+       ) {
+	if (value.measurements[def].specifications.SPL.peak ) {
+	    return ['Peak', value.measurements[def].specifications.SPL.peak];
+	} else if (value.measurements[def].specifications.SPL.max ) {
+	    return ['Max', value.measurements[def].specifications.SPL.max];
+	} else if (value.measurements[def].specifications.SPL.continuous ) {
+	    return ['Continuous', value.measurements[def].specifications.SPL.continuous];
+	}
+    }
+    return ['***', 0.0];
+}
+
+export function getComputedSensitivity(value, version) {
     let init_sensitivity = 0;
     let delta = 0;
     if (value.sensitivity) {
@@ -205,7 +238,7 @@ export function getReviews(value) {
             originShort = 'ASR';
             origin = 'Audio Science Review';
         } else if (origin.search('ErinsAudioCorner') !== -1) {
-            origin = 'Erin\'s Audio Corner';
+            origin = "Erin's Audio Corner";
             originShort = 'EAC';
         } else if (origin.search('pp') !== -1) {
             origin = 'Production Partner';
@@ -213,10 +246,10 @@ export function getReviews(value) {
         } else if (origin === 'Danley') {
             originShort = 'Danley';
             origin = 'Danley';
-	} else if (origin === 'Perlisten') {
+        } else if (origin === 'Perlisten') {
             originShort = 'Perlisten';
             origin = 'Perlisten';
-	}
+        }
 
         origin = origin.charAt(0).toUpperCase() + origin.slice(1);
         originLong = originLong.charAt(0).toUpperCase() + origin.slice(1);
@@ -353,7 +386,7 @@ export function getReviews(value) {
         // version
         const posVersion = version.search(/-v[123456]-/);
         if (posVersion !== -1) {
-            origin = origin         + ' (v' + version[posVersion + 2] + '-' + version.slice(posVersion + 4) + ')';
+            origin = origin + ' (v' + version[posVersion + 2] + '-' + version.slice(posVersion + 4) + ')';
             originLong = originLong + ' (v' + version[posVersion + 2] + '-' + version.slice(posVersion + 4) + ')';
         }
 
@@ -372,29 +405,29 @@ export function getReviews(value) {
         }
 
         // eac-15-deg
-	const degree = /[-][0-9]+[-]deg(ree)?/;
-	const degree_pos = origin.search(degree);
+        const degree = /[-][0-9]+[-]deg(ree)?/;
+        const degree_pos = origin.search(degree);
         if (degree_pos !== -1) {
-	    origin = origin.replace(/[-]deg(ree)?/, '°');
-	    originShort = originShort.replace(/[-]deg(ree)?/, '°');
-	    originLong = originLong.replace(/[-]deg(ree)?/, '°');
+            origin = origin.replace(/[-]deg(ree)?/, '°');
+            originShort = originShort.replace(/[-]deg(ree)?/, '°');
+            originLong = originLong.replace(/[-]deg(ree)?/, '°');
         }
 
-	// add an icon if we have one
-	const icons = [
-	    ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
-	    ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
-	    ['Erin\'s Audio Corner', '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
-	    ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
-	    ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
-	];
+        // add an icon if we have one
+        const icons = [
+            ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
+            ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
+            ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
+            ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
+            ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
+        ];
 
-	icons.map( (icon) => {
-	    const [reviewer, img] = [...icon];
-	    if (origin.search(reviewer) !== -1) {
-		originLong = `<span class="icon-text"><span class="icon">${img}</span><span>${originLong}</span><span>`;
-	    }
-	})
+        icons.map((icon) => {
+            const [reviewer, img] = [...icon];
+            if (origin.search(reviewer) !== -1) {
+                originLong = `<span class="icon-text"><span class="icon">${img}</span><span>${originLong}</span><span>`;
+            }
+        });
 
         reviews.push({
             url: encodeURI(url),
