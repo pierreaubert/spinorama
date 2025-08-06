@@ -408,14 +408,14 @@ def common_layout(params):
         ),
         legend=dict(
             x=0.5,
-            y=1.2,
+            y=1.075,
             xanchor="center",
             yanchor="top",
             orientation=orientation,
             font=FONT_H3,
         ),
         margin={
-            "t": 100,
+            "t": 80,
             "b": 10,
             "l": 10,
             "r": 10,
@@ -431,12 +431,19 @@ def contour_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
+        legend=dict(
+            x=0.5,
+            y=0.95,
+            xanchor="center",
+            orientation=orientation,
+            font=FONT_H3,
+        ),
         title=dict(
             x=0.5,
             y=0.99,
             xanchor="center",
             yanchor="top",
+            font=FONT_H1,
         ),
         margin={
             "t": 40,
@@ -462,7 +469,7 @@ def radar_layout(params):
         height=params["height"],
         legend=dict(
             x=0.5,
-            y=1.05,
+            y=1.1,
             xanchor="center",
             orientation=orientation,
             title_font=FONT_H5,
@@ -475,7 +482,7 @@ def radar_layout(params):
             yanchor="top",
         ),
         margin=dict(
-            t=100,
+            t=120,
             b=0,
             l=50,
             r=50,
@@ -644,7 +651,7 @@ def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
                 y=[min_spl, min_spl, max_spl, max_spl],
                 mode="none",
                 fill="toself",
-                name="no data or low quality",
+                name="N/A",
                 showlegend=True,
                 fillcolor="LightGreen",
                 opacity=0.3,
@@ -659,7 +666,7 @@ def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
                 y=[min_spl, min_spl, max_spl, max_spl],
                 mode="none",
                 fill="toself",
-                name="no data or low quality",
+                name="N/A",
                 showlegend=False,
                 fillcolor="LightGreen",
                 opacity=0.3,
@@ -862,8 +869,9 @@ def plot_graph_spl(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
-    fig.layout.margin.t += 40
-    fig.layout.legend.y += 0.15
+    # useful if legend gets too large
+    # fig.layout.margin.t += 40
+    # fig.layout.legend.y += 0.15
     fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
