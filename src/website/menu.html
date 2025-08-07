@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title>A collection of loudspeakers measurements</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/bulma-1.0.4.min.css">
+    <link media="all" href="/css/spinorama.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="/pictures/favicon-16x16.png" sizes="16x16">
+
+    <body>
+
+      <div class="grid">
+	<div class="cell">
+	  <div class="dropdown is-hoverable">
+	    <div class="dropdown-trigger">
+	      <button class="button" aria-haspopup="true" aria-controls="dropdown-plotconfig-theme">
+		<span>Theme</span>
+		<span class="icon is-small">
+		  <i class="fas fa-angle-down" aria-hidden="true">v</i>
+		</span>
+	      </button>
+	    </div>
+	    <div class="dropdown-menu" id="dropdown-plotconfig-theme" role="menu">
+	      <div class="dropdown-content">
+		<div class="grid">
+		  <div class="cell">
+		    <div class="config-section" style="margin-bottom: 20px; padding: 0px;">
+		      <div class="section-header is-clickable" style="display: flex; align-items: center; padding: 10px; background-color: rgb(245, 245, 245); border-radius: 4px; cursor: pointer; border: 1px solid rgb(224, 224, 224);">
+			<h4 style="margin: 0px; font-size: 1rem; font-weight: bold; flex-grow: 1;">Theme &amp; Appearance</h4>
+			<span style="margin-left: 10px; font-size: 0.8rem; transition: transform 0.2s;">▼</span>
+		      </div>
+		      <div class="section-content" style="display: block; padding: 10px; border-right: 1px solid rgb(224, 224, 224); border-bottom: 1px solid rgb(224, 224, 224); border-left: 1px solid rgb(224, 224, 224); border-image: initial; border-top: none; background: rgb(255, 255, 255); border-radius: 0px 0px 4px 4px;">
+			<div class="config-flex-container" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start;" data-protonpass-form="">
+			  <div class="form-group field" style="width: 100%; flex: 1 1 auto; min-width: 180px; max-width: 300px;"><label class="label is-small">Theme</label>
+			    <div style="display: flex; gap: 10px; padding: 5px 0px;">
+			      <div class="theme-option " data-value="light" style="padding: 10px; border-radius: 4px; cursor: pointer; border: 1px solid rgb(221, 221, 221); background-color: transparent;">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				  <path d="M12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z" fill="currentColor"></path>
+				  <path d="M12 2L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M12 20L12 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M22 12L20 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M4 12L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M19.0711 4.92893L17.6569 6.34315" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M6.34315 17.6569L4.92893 19.0711" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M19.0711 19.0711L17.6569 17.6569" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				  <path d="M6.34315 6.34315L4.92893 4.92893" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+				</svg>
+			      </div>
+			      <div class="theme-option active" data-value="dark" style="padding: 10px; border-radius: 4px; cursor: pointer; border: 1px solid rgb(66, 133, 244); background-color: rgb(232, 240, 254);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20V4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="currentColor"></path>
+			      </svg>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="form-group field" style="width: 100%; flex: 1 1 auto; min-width: 180px; max-width: 300px;"><label class="label is-small">Font Family</label><div class="control" style="display: flex; align-items: center;"><div class="select is-small is-fullwidth"></div><select name="config-font-family"><option value="Arial, sans-serif">Arial, sans-serif</option><option value="Helvetica, Arial, sans-serif">Helvetica, Arial, sans-serif</option><option value="Georgia, serif">Georgia, serif</option><option value="Times New Roman, serif">Times New Roman, serif</option><option value="Courier New, monospace">Courier New, monospace</option></select></div></div><div class="form-group field" style="width: 100%; flex: 1 1 auto; min-width: 180px; max-width: 300px;"><label class="label is-small">Font Size</label><div class="control" style="display: flex; align-items: center;"><input type="number" name="config-font-size" id="config-font-size" min="8" max="24" step="1" style="width: 100%; padding: 5px; border: 1px solid rgb(221, 221, 221); border-radius: 3px;"></div></div><div class="form-group field" style="width: 100%; flex: 1 1 auto; min-width: 180px; max-width: 300px;"><label class="label is-small">Font Color</label><div class="control" style="display: flex; align-items: center;"><div style="display: inline-block; width: 20px; height: 20px; background-color: rgb(51, 51, 51); border: 1px solid rgb(221, 221, 221); margin-left: 8px; vertical-align: middle;"></div><input type="color" class="input is-small" name="config-font-color" style="width: 40px; height: 30px; padding: 0px; cursor: pointer;"></div></div></div></div></div>		    cell 1
+		  </div>
+		  <div class="cell">
+		    cell 2
+		  </div>
+		  <div class="cell">
+		    cell 3
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="cell">
+	  <div class="dropdown is-hoverable">
+	    <div class="dropdown-trigger">
+	      <button class="button" aria-haspopup="true" aria-controls="dropdown-plotconfig-colormap">
+		<span>Colormap</span>
+		<span class="icon is-small">
+		  <i class="fas fa-angle-down" aria-hidden="true">v</i>
+		</span>
+	      </button>
+	    </div>
+	    <div class="dropdown-menu" id="dropdown-plotconfig-colormap" role="menu">
+	      <div class="dropdown-content">
+		<div class="grid">
+		  <div class="cell">
+		    cell 1
+		  </div>
+		  <div class="cell">
+		    cell 2
+		  </div>
+		  <div class="cell">
+		    cell 3
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+    </body>
+</html>
