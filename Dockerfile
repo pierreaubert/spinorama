@@ -22,7 +22,8 @@ RUN npm install
 ENV PYTHONPATH=/usr/src/spinorama/src:/usr/src/spinorama/src/website
 
 RUN cd /work/src/spinorama && \
-    python3.12 setup.py build_ext --inplace && \
+    python3.12 ./setup.py build_ext --inplace && \
+    rm -f c_compute_scores.so && \
     ln -s c_compute_scores.cpython-*.so c_compute_scores.so
 
 CMD ["bash", "-c", "cd /work/spinorama && pytest tests && vitest"]
