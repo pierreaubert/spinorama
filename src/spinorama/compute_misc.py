@@ -75,7 +75,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         )
         # print(df_interpolated)
         # print(df_interpolated.keys())
-        data[key] = df_interpolated.values
+        data[key] = df_interpolated.to_numpy()
 
     return data.dropna().reset_index(drop=True)
 
