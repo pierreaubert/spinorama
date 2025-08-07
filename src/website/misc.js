@@ -238,7 +238,7 @@ export function getReviews(value) {
         } else if (origin.search('ErinsAudioCorner') !== -1) {
             origin = "Erin's Audio Corner";
             originShort = 'EAC';
-        } else if (origin.search('pp') !== -1) {
+        } else if (origin.search('pp') !== -1 && origin !== 'Topping') {
             origin = 'Production Partner';
             originShort = 'PP';
         } else if (origin === 'Danley') {

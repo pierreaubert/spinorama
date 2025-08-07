@@ -563,14 +563,15 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     size: fontSizeH1,
                     color: '#000',
                 },
+		automargin: true,
                 xref: 'paper',
                 xanchor: 'center',
                 // title start sligthly on the right
                 x: 0.5,
                 // keep title below modBar if title is long
-                // yref: 'paper',
-                // yanchor: 'top',
-                // y: 1.15,
+                yref: 'container',
+                yanchor: 'top',
+                y: 0.95,
             };
         }
     }
@@ -877,6 +878,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
+    let legendShift = 0;
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
@@ -895,8 +897,21 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
                         speakerGraphs[i].data[trace].name.indexOf('recommended') === 0
                     ) {
                         speakerGraphs[i].data[trace]['visible'] = 'legendonly';
+                        speakerGraphs[i].data[trace]['legendrank'] = 2000;
+			legendShift += 1;
+		    }
+		    else if (
+                        'name' in speakerGraphs[i].data[trace] && (
+			    speakerGraphs[i].data[trace].name.indexOf('no data') !== -1 ||
+			    speakerGraphs[i].data[trace].name.indexOf('N/A') !== -1
+			)
+                    ) {
+                        speakerGraphs[i].data[trace]['legendrank'] = 4000;
+			legendShift += 1;
                     } else if ('line' in speakerGraphs[i].data[trace] && speakerGraphs[i].data[trace].x.length < 10) {
-                        speakerGraphs[i].data[trace]['visible'] = false;
+                        speakerGraphs[i].data[trace]['visible'] = 'legendonly';
+			legendShift += 1;
+                        speakerGraphs[i].data[trace]['legendrank'] = 3000;
                     }
                 }
             }
@@ -904,6 +919,11 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
     }
     let option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
     option.layout.height += 4 * 14;
+
+    if (legendShift > 0) {
+	option.layout.margin.t += 5*legendShift;
+	option.layout.height += 5*legendShift;
+    }
 
     // move the legend2 such that they do not overlap
     if (option.layout.legend2) {

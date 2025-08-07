@@ -541,16 +541,11 @@ def plot_spinorama_traces(
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
                     visible=FLAG_FEATURE_VISIBLE,
-                    showlegend=True,
+                    showlegend=False,
                     name="{} slope".format(measurement),
                 )
             )
-        if (
-            FLAG_FEATURE_CONFIDENCE_ZONES
-            and measurement in ("Sound Power")
-            and minmax_slopes is not None
-            and len(minmax_slopes) > 0
-        ):
+        if FLAG_FEATURE_CONFIDENCE_ZONES and minmax_slopes is not None and len(minmax_slopes) > 0 and measurement in minmax_slopes:
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]
@@ -567,8 +562,8 @@ def plot_spinorama_traces(
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
                     visible=FLAG_FEATURE_VISIBLE,
-                    name="recommended SP zone",
-                    showlegend=True,
+                    name="recommended {} zone".format(label_short.get(measurement)),
+                    showlegend=False,
                 )
             )
 
@@ -602,14 +597,10 @@ def plot_spinorama_traces(
                     opacity=1,
                     showlegend=False,
                     visible=FLAG_FEATURE_VISIBLE,
+                    name="{} slope".format(measurement),
                 )
             )
-        if (
-            FLAG_FEATURE_CONFIDENCE_ZONES
-            and measurement == "Sound Power DI"
-            and minmax_slopes is not None
-            and len(minmax_slopes) > 0
-        ):
+        if FLAG_FEATURE_CONFIDENCE_ZONES and minmax_slopes is not None and len(minmax_slopes) > 0 and measurement in minmax_slopes:
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]
@@ -623,9 +614,10 @@ def plot_spinorama_traces(
                     y=y,
                     fill="toself",
                     opacity=0.25,
-                    name="recommended SP DI zone",
+                    name="recommended {} zone".format(label_short.get(measurement)),
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
+                    showlegend=False,
                     visible=FLAG_FEATURE_VISIBLE,
                 )
             )

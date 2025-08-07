@@ -64,7 +64,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .ve
 
 # compile
 rm -f src/spinorama/c_compute_scores.cpython-*.so
-PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
+PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && rm -f c_compute_scores.so && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
 
 # install deepsource
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
