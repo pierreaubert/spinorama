@@ -706,6 +706,13 @@ origins_info = {
         "max dB": 10,
         "url": "https://sunaudio.com/",
     },
+    "Vendors-Tannoy": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.tannoy.com",
+    },
     "Vendors-Theory Audio": {
         "min hz": 20,
         "max hz": 20000,
@@ -713,12 +720,12 @@ origins_info = {
         "max dB": 10,
         "url": "https://www.theoryprofessional.com",
     },
-    "Vendors-Tannoy": {
+    "Vendors-Topping": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
         "max dB": 10,
-        "url": "https://www.tannoy.com",
+        "url": "https://www.topping.com",
     },
     "Vendors-Vue Audiotechnik": {
         "min hz": 20,
