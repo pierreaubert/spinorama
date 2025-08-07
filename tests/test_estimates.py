@@ -127,7 +127,7 @@ class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
         status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
             speaker_path="datas/measurements",
             speaker_name="Danley SH-50",
-            version="vendor-pattern-50x50",
+            version="vendor-v1-2022",
         )
         self.assertTrue(status)
         self.sensitivity, self.sensitivity_1m = compute_sensitivity(
