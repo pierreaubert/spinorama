@@ -63,11 +63,12 @@ function getContext(key, index, value) {
         id: getID(value.brand, value.model),
         brand: value.brand,
         model: value.model,
+        type: value.type,
         price: price,
         priceAsDollar: getDollar(price),
         shape: value.shape,
-	sensitivity: getSensitivity(value),
-	splinfo: getSPL(value),
+        sensitivity: getSensitivity(value),
+        splinfo: getSPL(value),
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -188,14 +189,33 @@ function scoreHtml(shape, score) {
     }
 }
 
+function sensitivityHtml(stype, sensitivity) {
+    if (stype === 'active') {
+        return 'Active';
+    }
+    if (sensitivity !== '0') {
+        return `Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>`;
+    }
+    return 'Sensitivity: <b>?</b>&nbsp;dB</span>';
+}
+
+function splHtml(splinfo, splvalue) {
+    if (splinfo === '***' || splinfo === '0') {
+        return 'SPL ? dB';
+    }
+    return `${splinfo} SPL: <b>${splvalue}</b>&nbsp;dB</span>`;
+}
+
 function contextHtml(context) {
     const brand = context.brand;
     const model = context.model;
+    const stype = context.type;
     const img = context.img;
     const score = context.score;
     const price = context.price;
-    const sensitivity = context.sensitivity;
+    const sensitivity = sensitivityHtml(stype, context.sensitivity);
     const [splinfo, splvalue] = [...context.splinfo];
+    const spl = splHtml(splinfo, splvalue);
     const dollar = context.priceAsDollar;
     const iconLFX = '#icon-volume-info-' + iconValue(score.lfxScaled);
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
@@ -236,13 +256,17 @@ function contextHtml(context) {
                </span>
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-sensitivity"/></svg></span>
-                 <span>Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
+                 <span>${sensitivity}</span>
                </span>
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="spl"><use href="#icon-spl}"/></svg></span>
-                 <span>${splinfo} SPL: <b>${splvalue}</b>&nbsp;dB</span>
+                 <span class="icon has-text-success">
+                   <svg width="20px" height="20px" alt="spl">
+                    <use href="#icon-circle-dot"/>
+                   </svg>
+                 </span>
+                 <span>${spl}</span>
                </span>
              </div>
            </div>

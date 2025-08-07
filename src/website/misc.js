@@ -138,34 +138,32 @@ export function getField(value, field, version) {
 }
 
 export function getSensitivity(value, def) {
-   if (def === undefined) {
+    if (def === undefined) {
         def = value.default_measurement;
     }
-    if (value.type === "passive"
-	&& value.measurements[def]
-	&& value.measurements[def].specifications
-	&& value.measurements[def].specifications.sensitivity
-       ) {
-	return value.measurements[def].specifications.sensitivity;
+    if (
+        value.type === 'passive' &&
+        value.measurements[def] &&
+        value.measurements[def].specifications &&
+        value.measurements[def].specifications.sensitivity
+    ) {
+        return value.measurements[def].specifications.sensitivity;
     }
     return 0.0;
 }
 
 export function getSPL(value, def) {
-   if (def === undefined) {
+    if (def === undefined) {
         def = value.default_measurement;
     }
-    if (value.measurements[def]
-	&& value.measurements[def].specifications
-	&& value.measurements[def].specifications.SPL
-       ) {
-	if (value.measurements[def].specifications.SPL.peak ) {
-	    return ['Peak', value.measurements[def].specifications.SPL.peak];
-	} else if (value.measurements[def].specifications.SPL.max ) {
-	    return ['Max', value.measurements[def].specifications.SPL.max];
-	} else if (value.measurements[def].specifications.SPL.continuous ) {
-	    return ['Continuous', value.measurements[def].specifications.SPL.continuous];
-	}
+    if (value.measurements[def] && value.measurements[def].specifications && value.measurements[def].specifications.SPL) {
+        if (value.measurements[def].specifications.SPL.peak) {
+            return ['Peak', value.measurements[def].specifications.SPL.peak];
+        } else if (value.measurements[def].specifications.SPL.max) {
+            return ['Max', value.measurements[def].specifications.SPL.max];
+        } else if (value.measurements[def].specifications.SPL.continuous) {
+            return ['Continuous', value.measurements[def].specifications.SPL.continuous];
+        }
     }
     return ['***', 0.0];
 }
