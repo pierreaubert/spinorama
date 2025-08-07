@@ -431,6 +431,38 @@ speakers_info_t: SpeakerDatabase = {
             },
         },
     },
+    "Topping MA4": {
+        "brand": "Topping",
+        "model": "MA4",
+        "type": "active",
+        "price": "800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Topping",
+                "format": "webplotdigitizer",
+		"quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/topping-ma4-review.64592/",
+                },
+                "notes": "origin measurement done by a Klippel NFS",
+                "review_published": "20250807",
+                "specifications": {
+                    "SPL": {
+                        "peak": 105,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 140,
+                        "depth": 288,
+                    },
+                    "weight": 3.78,
+                },
+            },
+        },
+    },
     "Totem Acoustic Kin One": {
         "brand": "Totem Acoustic",
         "model": "Kin One",

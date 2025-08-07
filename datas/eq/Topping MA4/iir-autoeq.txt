@@ -1,0 +1,14 @@
+EQ for Topping MA4 computed from Vendors-Topping data
+Preference Score 5.84 with EQ 6.75
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-07-10:09:31
+
+Preamp: -0.6 dB
+
+Filter  1: ON PK Fc   160 Hz Gain -0.96 dB Q 2.14
+Filter  2: ON PK Fc   243 Hz Gain -1.58 dB Q 1.32
+Filter  3: ON PK Fc   424 Hz Gain -1.15 dB Q 2.14
+Filter  4: ON PK Fc   689 Hz Gain +2.32 dB Q 0.94
+Filter  5: ON PK Fc   792 Hz Gain -2.78 dB Q 2.44
+Filter  6: ON PK Fc  2168 Hz Gain +1.21 dB Q 1.93
+Filter  7: ON PK Fc  2964 Hz Gain -2.18 dB Q 1.46
