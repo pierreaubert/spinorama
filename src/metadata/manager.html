@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <title>Speaker Metadata Manager - Spinorama</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/bulma-1.0.4.min.css">
+
+    <style>
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        /* Custom step indicator styling */
+        .step-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #dbdbdb;
+            color: #4a4a4a;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-indicator.is-active {
+            background-color: #3273dc;
+            color: white;
+        }
+
+        .step-indicator.is-completed {
+            background-color: #48c774;
+            color: white;
+        }
+
+        /* Measurement tabs styling */
+        .measurement-form {
+            display: none;
+        }
+
+        .measurement-form.is-active {
+            display: block;
+        }
+
+        #measurement-tabs {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #measurement-tabs .tabs {
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+
+        .speaker-item {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .speaker-item:hover {
+            border-color: #3273dc;
+            box-shadow: 0 2px 8px rgba(50, 115, 220, 0.1);
+        }
+
+        .speaker-item.selected {
+            border-color: #3273dc;
+            background: #f0f7ff;
+        }
+
+        .form-section {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-section-title {
+            font-weight: 600;
+            color: #363636;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .measurement-item {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-preview {
+            background: #f5f5f5;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .validation-error {
+            color: #ff3860;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar is-primary" role="navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong>Spinorama</strong>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">Home</a>
+                <a class="navbar-item is-active">Metadata Manager</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="section">
+            <h1 class="title">Speaker Metadata Manager</h1>
+            <p class="subtitle">3-step process to add or edit speaker metadata</p>
+
+            <!-- Step Progress Indicator -->
+            <nav class="level is-mobile mb-5">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <span class="step-indicator is-active" id="step-1-indicator">1</span>
+                        <p class="heading">Select/Create Speaker</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <span class="step-indicator" id="step-2-indicator">2</span>
+                        <p class="heading">Edit Metadata</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <span class="step-indicator" id="step-3-indicator">3</span>
+                        <p class="heading">Generate Code & Commit</p>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Step 1: Select or Create Speaker -->
+            <div id="step-1" class="step active">
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="box">
+                            <h3 class="title is-4">Existing Speakers</h3>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" id="speaker-search" placeholder="Search speakers...">
+                                </div>
+                            </div>
+                            <div id="speaker-list" style="max-height: 400px; overflow-y: auto;">
+                                <div class="has-text-centered has-text-grey">
+                                    <p>Loading speakers...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="box">
+                            <h3 class="title is-4">Create New Speaker</h3>
+                            <div class="field">
+                                <label class="label">Brand</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="new-brand" placeholder="Enter brand name">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Model</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="new-model" placeholder="Enter model name">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-success" id="create-new-btn">Create New Speaker</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-primary" id="continue-step-1" disabled>Continue to Step 2</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Edit Metadata -->
+            <div id="step-2" class="step">
+                <h3 class="title is-4">Edit Speaker Metadata</h3>
+                <p class="subtitle" id="current-speaker-info">Editing: [Speaker Name]</p>
+
+                <form id="metadata-form">
+                    <div class="form-section">
+                        <div class="form-section-title">Speaker Information</div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Brand *</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="brand" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Model *</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="model" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Type *</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select name="type" required>
+                                                <option value="">Select...</option>
+                                                <option value="passive">Passive</option>
+                                                <option value="active">Active</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Shape *</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select name="shape" required>
+                                                <option value="">Select...</option>
+                                                <option value="floorstanders">Floorstanders</option>
+                                                <option value="bookshelves">Bookshelves</option>
+                                                <option value="center">Center</option>
+                                                <option value="surround">Surround</option>
+                                                <option value="omnidirectional">Omnidirectional</option>
+                                                <option value="columns">Columns</option>
+                                                <option value="cbt">CBT</option>
+                                                <option value="outdoor">Outdoor</option>
+                                                <option value="panel">Panel</option>
+                                                <option value="inwall">In-wall</option>
+                                                <option value="soundbar">Soundbar</option>
+                                                <option value="liveportable">Live/Portable</option>
+                                                <option value="toursound">Tour Sound</option>
+                                                <option value="cinema">Cinema</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Price (optional)</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="price" placeholder="e.g., $500">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Amount (optional)</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select name="amount">
+                                                <option value="">Select...</option>
+                                                <option value="each">each</option>
+                                                <option value="pair">pair</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">Measurements</div>
+
+                        <!-- Measurement Tabs -->
+                        <div class="tabs is-boxed" id="measurement-tabs">
+                            <ul>
+                                <li class="is-active" data-measurement="default">
+                                    <a>
+                                        <span>Default</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <button class="button is-small is-success ml-2" id="add-measurement-btn">
+                                <span class="icon is-small">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span>Add Measurement</span>
+                            </button>
+                        </div>
+
+                        <!-- Measurement Form -->
+                        <div id="measurement-form-container">
+                            <div class="measurement-form is-active" data-measurement="default">
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label">Origin *</label>
+                                            <div class="control">
+                                                <input class="input" type="text" id="origin" placeholder="e.g., ASR, Erin's Audio Corner" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label">Format *</label>
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select id="format" required>
+                                                        <option value="">Select format...</option>
+                                                        <option value="klippel">Klippel</option>
+                                                        <option value="webplotdigitizer">WebPlotDigitizer</option>
+                                                        <option value="spl_hv_txt">SPL HV TXT</option>
+                                                        <option value="gll_hv_txt">GLL HV TXT</option>
+                                                        <option value="princeton">Princeton</option>
+                                                        <option value="rew_text_dump">REW Text Dump</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label">Quality</label>
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select id="quality">
+                                                        <option value="">Select quality...</option>
+                                                        <option value="low">Low</option>
+                                                        <option value="medium">Medium</option>
+                                                        <option value="high">High</option>
+                                                        <option value="unknown">Unknown</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label">Symmetry</label>
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select id="symmetry">
+                                                        <option value="">Select symmetry...</option>
+                                                        <option value="none">None</option>
+                                                        <option value="coaxial">Coaxial</option>
+                                                        <option value="vertical">Vertical</option>
+                                                        <option value="horizontal">Horizontal</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                <div class="field">
+                                    <label class="label">Review</label>
+                                    <div class="control">
+                                        <input class="input" type="text" id="review" placeholder="Review title or description">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Review Published</label>
+                                    <div class="control">
+                                        <input class="input" type="date" id="review_published">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Notes</label>
+                                    <div class="control">
+                                        <textarea class="textarea" id="notes" placeholder="Additional notes about this measurement"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Sensitivity (dB)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="sensitivity" placeholder="e.g., 87.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">Data Acquisition</div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Via</label>
+                                    <div class="control">
+                                        <input class="input" type="text" id="data_acquisition_via" placeholder="e.g., gll, klippel">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Distance (m)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="data_acquisition_distance" placeholder="e.g., 1.0">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Signal</label>
+                                    <div class="control">
+                                        <input class="input" type="text" id="data_acquisition_signal" placeholder="e.g., aes 20Hz-20kHz">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Resolution</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="data_acquisition_resolution" placeholder="e.g., 2.5">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Min Valid Frequency (Hz)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" id="data_acquisition_min_valid_freq" placeholder="e.g., 20">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Max Valid Frequency (Hz)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" id="data_acquisition_max_valid_freq" placeholder="e.g., 20000">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Air Absorption</label>
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" id="data_acquisition_air_absorbtion">
+                                            Air absorption compensation applied
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Data Acquisition Notes</label>
+                                    <div class="control">
+                                        <textarea class="textarea" id="data_acquisition_notes" placeholder="Notes about data acquisition"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">Parameters & Extras</div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Mean Min</label>
+                                    <div class="control">
+                                        <input class="input" type="number" id="parameters_mean_min" placeholder="e.g., -30">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Mean Max</label>
+                                    <div class="control">
+                                        <input class="input" type="number" id="parameters_mean_max" placeholder="e.g., 30">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Scaled Flatness</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="scaled_flatness" placeholder="e.g., 0.95">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Is EQ'd</label>
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" id="extras_is_equed">
+                                            This measurement includes equalization
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Score Penalty</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="extras_score_penalty" placeholder="e.g., 0.0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">Specifications</div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Sensitivity (dB)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_sensitivity" placeholder="e.g., 87.5">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Impedance (Ω)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_impedance" placeholder="e.g., 8.0">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Weight (kg)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_weight" placeholder="e.g., 12.5">
+                                    </div>
+                                </div>
+
+                                <h5 class="subtitle is-6 mt-4">Dispersion</h5>
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label">Horizontal (°)</label>
+                                            <div class="control">
+                                                <input class="input" type="number" step="0.1" id="specifications_dispersion_horizontal" placeholder="e.g., 60">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label">Vertical (°)</label>
+                                            <div class="control">
+                                                <input class="input" type="number" step="0.1" id="specifications_dispersion_vertical" placeholder="e.g., 40">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <h5 class="subtitle is-6">Size (mm)</h5>
+                                <div class="field">
+                                    <label class="label">Height</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_size_height" placeholder="e.g., 350">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Width</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_size_width" placeholder="e.g., 200">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Depth</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_size_depth" placeholder="e.g., 250">
+                                    </div>
+                                </div>
+
+                                <h5 class="subtitle is-6 mt-4">SPL Limits (dB)</h5>
+                                <div class="field">
+                                    <label class="label">Peak</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_spl_peak" placeholder="e.g., 110">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Continuous</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_spl_continuous" placeholder="e.g., 105">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Max</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="specifications_spl_max" placeholder="e.g., 115">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">Preference Rating</div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">AAD On Axis</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_aad_on_axis" placeholder="e.g., 2.5">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">NBD On Axis</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_nbd_on_axis" placeholder="e.g., 1.2">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">NBD Listening Window</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_nbd_listening_window" placeholder="e.g., 1.8">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">NBD Sound Power</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_nbd_sound_power" placeholder="e.g., 2.1">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">NBD Pred In Room</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_nbd_pred_in_room" placeholder="e.g., 1.9">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">SM Pred In Room</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_sm_pred_in_room" placeholder="e.g., 1.7">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">SM Sound Power</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_sm_sound_power" placeholder="e.g., 2.0">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Pref Score</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_pref_score" placeholder="e.g., 6.8">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Pref Score w/Sub</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_pref_score_wsub" placeholder="e.g., 7.2">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">LFX Hz</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_lfx_hz" placeholder="e.g., 45.0">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">LFQ</label>
+                                    <div class="control">
+                                        <input class="input" type="number" step="0.1" id="pref_rating_lfq" placeholder="e.g., 0.7">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button" id="back-step-1">Back to Step 1</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-primary" id="continue-step-2">Continue to Step 3</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Generate Code & Commit -->
+            <div id="step-3" class="step">
+                <h3 class="title is-4">Generate Python Code & Commit</h3>
+
+                <div class="form-section">
+                    <div class="form-section-title">Data Validation</div>
+                    <div id="validation-status">
+                        <!-- Validation results will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Generated Python Code</div>
+                    <div id="python-code" class="code-preview">
+                        <!-- Generated Python code will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Write Metadata to File</div>
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-primary" id="write-metadata-btn" disabled>Write Metadata to File</button>
+                        </div>
+                    </div>
+                    <div id="write-status">
+                        <!-- Write status will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Git Commit</div>
+                    <div class="field">
+                        <label class="label">Commit Message</label>
+                        <div class="control">
+                            <textarea class="textarea" id="commit-message" placeholder="Add/update speaker metadata for..."></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-success" id="create-commit-btn">Create Git Commit</button>
+                        </div>
+                    </div>
+                    <div id="commit-result" class="content" style="display: none;">
+                        <!-- Commit result will appear here -->
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button" id="back-step-2">Back to Step 2</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-primary" id="start-over-btn">Start Over</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="manager.js"></script>
+</body>
+</html>
