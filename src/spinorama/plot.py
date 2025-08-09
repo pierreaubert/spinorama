@@ -545,7 +545,12 @@ def plot_spinorama_traces(
                     name="{} slope".format(measurement),
                 )
             )
-        if FLAG_FEATURE_CONFIDENCE_ZONES and minmax_slopes is not None and len(minmax_slopes) > 0 and measurement in minmax_slopes:
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and minmax_slopes is not None
+            and len(minmax_slopes) > 0
+            and measurement in minmax_slopes
+        ):
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]
@@ -600,7 +605,12 @@ def plot_spinorama_traces(
                     name="{} slope".format(measurement),
                 )
             )
-        if FLAG_FEATURE_CONFIDENCE_ZONES and minmax_slopes is not None and len(minmax_slopes) > 0 and measurement in minmax_slopes:
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and minmax_slopes is not None
+            and len(minmax_slopes) > 0
+            and measurement in minmax_slopes
+        ):
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]

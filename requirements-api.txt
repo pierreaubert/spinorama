@@ -2,3 +2,4 @@ fastapi
 gunicorn
 pyyaml
 uvicorn
+pydantic

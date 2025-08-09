@@ -443,7 +443,7 @@ speakers_info_t: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Topping",
                 "format": "webplotdigitizer",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/topping-ma4-review.64592/",
                 },

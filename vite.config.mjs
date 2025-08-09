@@ -11,7 +11,7 @@ export default defineConfig({
 	    instances: [{ browser: 'chromium' }]
 	},
     */
-        include: ['**/src/website/*.test.js', '**/tests/*.test.js'],
+        include: ['**/src/website/*.test.js', '**/tests/*.test.js', '**/src/metadata/*.test.js'],
         exclude: [...configDefaults.exclude, '**/dist/**', '**/build/**'],
         watch: false,
         environment: 'jsdom',
