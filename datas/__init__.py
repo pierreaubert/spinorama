@@ -109,6 +109,8 @@ class PrefRating(TypedDict, total=False):
 
 
 class Measurement(MeasurementRequired, total=False):
+    sensitivity: float
+    computed_sensitivity: dict[str, float]
     review: str
     reviews: dict[str, str]
     review_published: str
@@ -126,8 +128,7 @@ class Measurement(MeasurementRequired, total=False):
     pref_rating_eq: PrefRating
     scaled_flatness: float
     scaled_pref_rating: PrefRating
-    sensitivity: float
-    computed_sensitivity: dict[str, float]
+    scaled_pref_rating_eq: PrefRating
 
 
 class Peq(TypedDict, total=False):

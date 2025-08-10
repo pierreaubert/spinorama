@@ -438,12 +438,11 @@ speakers_info_t: SpeakerDatabase = {
         "price": "800",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v1-20250810",
         "measurements": {
-            "vendor": {
+            "vendor-v1-20250810": {
                 "origin": "Vendors-Topping",
-                "format": "webplotdigitizer",
-                "quality": "low",
+                "format": "klippel",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/topping-ma4-review.64592/",
                 },
@@ -460,6 +459,13 @@ speakers_info_t: SpeakerDatabase = {
                     },
                     "weight": 3.78,
                 },
+            },
+            "vendor-v1-20250805": {
+                "origin": "Vendors-Topping",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "notes": "origin measurement done by a Klippel NFS",
+                "review_published": "20250805",
             },
         },
     },
