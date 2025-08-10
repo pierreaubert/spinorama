@@ -563,7 +563,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     size: fontSizeH1,
                     color: '#000',
                 },
-		automargin: true,
+                automargin: true,
                 xref: 'paper',
                 xanchor: 'center',
                 // title start sligthly on the right
@@ -898,19 +898,17 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
                     ) {
                         speakerGraphs[i].data[trace]['visible'] = 'legendonly';
                         speakerGraphs[i].data[trace]['legendrank'] = 2000;
-			legendShift += 1;
-		    }
-		    else if (
-                        'name' in speakerGraphs[i].data[trace] && (
-			    speakerGraphs[i].data[trace].name.indexOf('no data') !== -1 ||
-			    speakerGraphs[i].data[trace].name.indexOf('N/A') !== -1
-			)
+                        legendShift += 1;
+                    } else if (
+                        'name' in speakerGraphs[i].data[trace] &&
+                        (speakerGraphs[i].data[trace].name.indexOf('no data') !== -1 ||
+                            speakerGraphs[i].data[trace].name.indexOf('N/A') !== -1)
                     ) {
                         speakerGraphs[i].data[trace]['legendrank'] = 4000;
-			legendShift += 1;
+                        legendShift += 1;
                     } else if ('line' in speakerGraphs[i].data[trace] && speakerGraphs[i].data[trace].x.length < 10) {
                         speakerGraphs[i].data[trace]['visible'] = 'legendonly';
-			legendShift += 1;
+                        legendShift += 1;
                         speakerGraphs[i].data[trace]['legendrank'] = 3000;
                     }
                 }
@@ -921,8 +919,8 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
     option.layout.height += 4 * 14;
 
     if (legendShift > 0) {
-	option.layout.margin.t += 5*legendShift;
-	option.layout.height += 5*legendShift;
+        option.layout.margin.t += 5 * legendShift;
+        option.layout.height += 5 * legendShift;
     }
 
     // move the legend2 such that they do not overlap
