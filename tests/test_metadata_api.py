@@ -9,7 +9,7 @@ import sys
 # Add the datas directory to the path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent / "datas"))
 
-from datas.metadata_api import MetadataAPI
+from metadata.api import MetadataAPI
 
 
 class TestMetadataAPI(unittest.TestCase):
