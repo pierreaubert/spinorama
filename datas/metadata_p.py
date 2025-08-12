@@ -1429,6 +1429,41 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Presonus Eris E5 BT": {
+        "brand": "Presonus",
+        "model": "Eris E5 BT",
+        "type": "active",
+        "price": "250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "quality": "low",
+                "format": "spl_hv_txt",
+                "reviews": {
+                    "akr": "https://audiore.kr/presonus-eris-e5-bt-%eb%a6%ac%eb%b7%b0/",
+                },
+                "review_published": "20250812",
+                "data_acquisition": {
+                    "min_valid_freq": 1000,
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 261,
+                        "width": 178,
+                        "depth": 200,
+                    },
+                    "weight": 6.3,
+                },
+                "notes": "Data is valid above ~1kHz. The On-Axis is correct below that",
+            },
+        },
+    },
     "Presonus Eris E5 XT": {
         "brand": "Presonus",
         "model": "Eris E5 XT",
@@ -1443,42 +1478,6 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-e5-xt-active-speaker-review.13436/",
                 "review_published": "20200516",
-            },
-        },
-    },
-    "Presonus ULT10": {
-        "brand": "Presonus",
-        "model": "ULT10",
-        "type": "active",
-        "price": "830",
-        "amount": "pair",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-110x50",
-        "measurements": {
-            "vendor-pattern-110x50": {
-                "origin": "Vendors-Presonus",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20221125",
-            },
-        },
-    },
-    "Presonus ULT12": {
-        "brand": "Presonus",
-        "model": "ULT12",
-        "type": "active",
-        "price": "1000",
-        "amount": "pair",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-110x50",
-        "measurements": {
-            "vendor-pattern-110x50": {
-                "origin": "Vendors-Presonus",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20221125",
             },
         },
     },
@@ -1529,6 +1528,42 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Presonus ULT10": {
+        "brand": "Presonus",
+        "model": "ULT10",
+        "type": "active",
+        "price": "830",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-110x50",
+        "measurements": {
+            "vendor-pattern-110x50": {
+                "origin": "Vendors-Presonus",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20221125",
+            },
+        },
+    },
+    "Presonus ULT12": {
+        "brand": "Presonus",
+        "model": "ULT12",
+        "type": "active",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-110x50",
+        "measurements": {
+            "vendor-pattern-110x50": {
+                "origin": "Vendors-Presonus",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20221125",
+            },
+        },
+    },
     "PSB Alpha P3": {
         "brand": "PSB",
         "model": "Alpha P3",
@@ -1560,6 +1595,40 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/",
                 "review_published": "20200806",
+            },
+        },
+    },
+    "PSB Imagine C3": {
+        "brand": "PSB",
+        "model": "Imagine C3",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "ark": "",
+                },
+                "review_published": "20250812",
+                "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "size": {
+                        "height": 235,
+                        "width": 622,
+                        "depth": 346,
+                    },
+                    "weight": 15.2,
+                },
             },
         },
     },

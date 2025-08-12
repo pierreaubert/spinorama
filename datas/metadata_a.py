@@ -762,6 +762,38 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "AIYIMA S600": {
+        "brand": "AIYIMA",
+        "model": "S600",
+        "type": "active",
+        "price": "160",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "akr": "https://audiore.kr/aiyima-s600-%eb%a6%ac%eb%b7%b0/",
+                },
+                "review_published": "20250812",
+                "notes": "Data is valid above 500hz.",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "size": {
+                        "height": 260,
+                        "width": 170,
+                        "depth": 200,
+                    },
+                    "weight": 5.24,
+                },
+            },
+        },
+    },
     "Amate Audio X102FD": {
         "brand": "Amate Audio",
         "model": "X102FD",

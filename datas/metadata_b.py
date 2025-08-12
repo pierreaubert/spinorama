@@ -19,6 +19,38 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Barefoot Footprint 02": {
+        "brand": "Barefoot",
+        "model": "Footprint 02",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "3000",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "akr": "https://audiore.kr/barefoot-footprint-02-%eb%a6%ac%eb%b7%b0/",
+                },
+                "review_published": "20250812",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "size": {
+                        "height": 308,
+                        "width": 222,
+                        "depth": 330,
+                    },
+                    "weight": 12.7,
+                },
+                "notes": "Data is valid above 500Hz. The On-Axis is correct below that",
+            },
+        },
+    },
     "Bang & Olufsen Beolab 20": {
         "brand": "Bang & Olufsen",
         "model": "Beolab 20",

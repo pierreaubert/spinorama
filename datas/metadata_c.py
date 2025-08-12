@@ -16,6 +16,40 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Cambridge Audio Minx MIN12": {
+        "brand": "Cambridge Audio",
+        "model": "MIN12",
+        "type": "passive",
+        "price": "70",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "akr": "",
+                },
+                "review_published": "20251012",
+                "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 78,
+                        "width": 78,
+                        "depth": 85,
+                    },
+                    "weight": 0.43,
+                },
+            },
+        },
+    },
     "Cambridge Audio Minx XL": {
         "brand": "Cambridge Audio",
         "model": "Minx XL",
