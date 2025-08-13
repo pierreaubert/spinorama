@@ -18,6 +18,8 @@
 
 /*eslint no-undef: "error"*/
 
+import { labelShort, labelLong } from './plot.js';
+
 // Color palettes for graphs
 export const colorPalettes = {
     default: [
@@ -153,38 +155,48 @@ export const contourColorscales = {
 
 // Default configuration options for plots
 export const defaultConfig = {
-    // font: {
-    //     family: 'Arial, sans-serif',
-    //     size: 12,
-    //     color: '#333333',
-    // },
+    font: {
+        family: 'Georgia, serif',
+        size: 12,
+        color: '#333333',
+    },
     theme: 'light', // 'light' or 'dark'
-    // grid: true,
+    colors: {
+        palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
+    },
+    annotations: {
+        show: false, // Show or hide annotations
+    },
     legend: {
         position: 'top',
         show: true,
+        label: 'long', // 'short' or 'long' label format
+        offset: {
+            x: 0, // range from -0.2 to 0.2
+            y: 0, // range from -0.2 to 0.2
+        },
     },
     // // delta margin and not absolute one
-    // margin: {
-    //     l: 50,
-    //     r: 50,
-    //     t: 80,
-    //     b: 50,
-    // },
-    // colors: {
-    //     palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
-    // },
-    // layout: {
-    //     direction: 'horizontal', // 'horizontal' (left/right) or 'vertical' (top/down) for multiple graphs
-    // },
-    // contour: {
-    //     colorscale: 'default', // 'default', 'viridis', 'plasma', 'cool', 'hot'
-    // },
-    // colorbar: {
-    //     thickness: 20, // thickness in pixels
-    //     len: 0.9, // length as fraction (0-1)
-    //     show: true,
-    // },
+    margin: {
+        l: 50,
+        r: 50,
+        t: 80,
+        b: 50,
+    },
+    colors: {
+        palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
+    },
+    layout: {
+        direction: 'horizontal', // 'horizontal' (left/right) or 'vertical' (top/down) for multiple graphs
+    },
+    contour: {
+        colorscale: 'default', // 'default', 'viridis', 'plasma', 'cool', 'hot'
+    },
+    colorbar: {
+        thickness: 20, // thickness in pixels
+        len: 0.9, // length as fraction (0-1)
+        show: true,
+    },
 };
 
 // Local storage key for configuration
@@ -402,6 +414,8 @@ export function createConfigMenu(divName, config, updateCallback) {
         width: 100%;
         margin-bottom: 20px;
         order: -1; /* Ensure it appears before other elements in flex contexts */
+        display: flex;
+        justify-content: center;
     `;
 
     // Create grid container
@@ -410,6 +424,9 @@ export function createConfigMenu(divName, config, updateCallback) {
     gridContainer.style.cssText = `
         justify-content: center;
         text-align: center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
     `;
     configContainer.appendChild(gridContainer);
 
@@ -448,6 +465,11 @@ export function createConfigMenu(divName, config, updateCallback) {
     dropdownMenu.className = 'dropdown-menu';
     dropdownMenu.id = 'dropdown-plotconfig-main';
     dropdownMenu.setAttribute('role', 'menu');
+    dropdownMenu.style.cssText = `
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+    `;
 
     // Create dropdown content
     const dropdownContent = document.createElement('div');
@@ -802,6 +824,74 @@ export function createConfigMenu(divName, config, updateCallback) {
         )
     );
 
+    // Add legend label format options
+    legendSection.appendChild(
+        createFormGroup('Label Format', 'select', config.legend.label, 'config-legend-label', ['short', 'long'], (e) => {
+            config.legend.label = e.target.value;
+            updateCallback(config);
+        })
+    );
+
+    // Add legend position adjustment sliders
+    const createLegendOffsetSlider = (axis, label) => {
+        const sliderGroup = document.createElement('div');
+        sliderGroup.className = 'form-group field';
+        sliderGroup.style.cssText = `width: 100%;`;
+
+        const sliderLabel = document.createElement('label');
+        sliderLabel.className = 'label is-small';
+        sliderLabel.textContent = `${label} Offset`;
+        sliderGroup.appendChild(sliderLabel);
+
+        const sliderContainer = document.createElement('div');
+        sliderContainer.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+
+        // Create slider input for incremental adjustments
+        const sliderInput = document.createElement('input');
+        sliderInput.type = 'range';
+        sliderInput.min = '-20';
+        sliderInput.max = '20';
+        sliderInput.step = '1';
+        sliderInput.value = Math.round(config.legend.offset[axis] * 100); // Convert from -0.2...0.2 to -20...20
+        sliderInput.id = `config-legend-offset-${axis}`;
+        sliderInput.style.cssText = `
+            flex-grow: 1;
+            height: 8px;
+        `;
+
+        // Value display
+        const valueDisplay = document.createElement('span');
+        valueDisplay.textContent = config.legend.offset[axis].toFixed(2);
+        valueDisplay.style.cssText = `
+            min-width: 40px;
+            text-align: right;
+            font-size: 0.8rem;
+        `;
+
+        // Update handler
+        sliderInput.addEventListener('input', (e) => {
+            const sliderValue = parseInt(e.target.value);
+            const offsetValue = sliderValue / 100; // Convert slider value to offset (-0.2 to 0.2)
+            config.legend.offset[axis] = offsetValue;
+            valueDisplay.textContent = offsetValue.toFixed(2);
+            updateCallback(config);
+        });
+
+        sliderContainer.appendChild(sliderInput);
+        sliderContainer.appendChild(valueDisplay);
+        sliderGroup.appendChild(sliderContainer);
+
+        return sliderGroup;
+    };
+
+    // Add X and Y offset sliders
+    legendSection.appendChild(createLegendOffsetSlider('x', 'Horizontal'));
+    legendSection.appendChild(createLegendOffsetSlider('y', 'Vertical'));
+
     // Margin section
     const marginSection = createGroupSection('Margins');
 
@@ -1095,6 +1185,17 @@ export function createConfigMenu(divName, config, updateCallback) {
         )
     );
 
+    // Create annotations section
+    const annotationsSection = createGroupSection('Annotations');
+
+    // Add checkbox to show/hide annotations
+    annotationsSection.appendChild(
+        createFormGroup('Show Annotations', 'checkbox', config.annotations.show, 'config-annotations-show', null, (e) => {
+            config.annotations.show = e.target.checked;
+            updateCallback(config);
+        })
+    );
+
     // Add all sections to the config panel
     configPanel.appendChild(themeSection);
     configPanel.appendChild(layoutSection);
@@ -1102,6 +1203,7 @@ export function createConfigMenu(divName, config, updateCallback) {
     configPanel.appendChild(legendSection);
     configPanel.appendChild(colorsSection);
     configPanel.appendChild(colorbarSection);
+    configPanel.appendChild(annotationsSection);
 
     // Add reset button at the bottom
     const resetContainer = document.createElement('div');
@@ -1139,17 +1241,22 @@ export function applyConfig(options, config) {
     // Define font configuration for use throughout the function
     const bgColor = config.theme === 'dark' ? 'rgb(51, 51, 51)' : 'rgb(255, 255, 255)';
     const gridColor = config.theme === 'dark' ? 'rgb(85, 85, 85)' : 'rgb(230, 230, 230)';
-    const titleFontConfig = {
-        family: config.font.family,
-        size: config.font.size + 2,
-        color: config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)',
-    };
-
-    const fontConfig = {
-        family: config.font.family,
-        size: config.font.size,
-        color: config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)',
-    };
+    let titleFontConfig = {};
+    let fontConfig = {};
+    if (config.font) {
+        if (config.font.family) {
+            titleFontConfig['family'] = config.font.family;
+            fontConfig['family'] = config.font.family;
+        }
+        if (config.font.size) {
+            titleFontConfig['size'] = config.font.size + 2;
+            fontConfig['size'] = config.font.size;
+        }
+        if (config.font.color) {
+            titleFontConfig['color'] = config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)';
+            fontConfig['color'] = config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)';
+        }
+    }
 
     // Apply font settings
     if (options.layout) {
@@ -1208,11 +1315,29 @@ export function applyConfig(options, config) {
             }
         }
 
-        // Apply font settings to annotations (if any)
+        // Apply font settings and visibility to annotations (if any)
         if (options.layout.annotations && Array.isArray(options.layout.annotations)) {
-            options.layout.annotations.forEach((annotation) => {
-                annotation.font = fontConfig;
-            });
+            // Store original annotations if not already stored
+            if (!options._originalAnnotations && config.annotations.show === false) {
+                options._originalAnnotations = JSON.parse(JSON.stringify(options.layout.annotations));
+            }
+
+            if (config.annotations.show === false) {
+                // Hide annotations by setting an empty array
+                options.layout.annotations = [];
+            } else if (config.annotations.show === true && options._originalAnnotations) {
+                // Restore original annotations when show is enabled
+                options.layout.annotations = JSON.parse(JSON.stringify(options._originalAnnotations));
+                // Apply font settings
+                options.layout.annotations.forEach((annotation) => {
+                    annotation.font = fontConfig;
+                });
+            } else {
+                // Just apply font settings if show is true but we don't have originals
+                options.layout.annotations.forEach((annotation) => {
+                    annotation.font = fontConfig;
+                });
+            }
         }
 
         // Apply font settings and configuration to colorbar (if any)
@@ -1240,31 +1365,35 @@ export function applyConfig(options, config) {
 
             options.layout.showlegend = config.legend.show;
 
+            // Get offsets from config (with fallbacks)
+            const xOffset = config.legend.offset?.x || 0;
+            const yOffset = config.legend.offset?.y || 0;
+
             switch (config.legend.position) {
                 case 'left':
-                    options.layout.legend.x = 0.05;
-                    options.layout.legend.y = 0.5;
+                    options.layout.legend.x = 0.05 + xOffset;
+                    options.layout.legend.y = 0.5 + yOffset;
                     options.layout.legend.xanchor = 'bottom';
                     options.layout.legend.yanchor = 'middle';
                     options.layout.legend.orientation = 'v';
                     break;
                 case 'right':
-                    options.layout.legend.x = 0.95;
-                    options.layout.legend.y = 0.5;
+                    options.layout.legend.x = 0.95 + xOffset;
+                    options.layout.legend.y = 0.5 + yOffset;
                     options.layout.legend.xanchor = 'bottom';
                     options.layout.legend.yanchor = 'middle';
                     options.layout.legend.orientation = 'v';
                     break;
                 case 'bottom':
-                    options.layout.legend.x = 0.5;
-                    options.layout.legend.y = 0.0;
+                    options.layout.legend.x = 0.5 + xOffset;
+                    options.layout.legend.y = 0.0 + yOffset;
                     options.layout.legend.xanchor = 'center';
                     options.layout.legend.yanchor = 'bottom';
                     options.layout.legend.orientation = 'h';
                     break;
                 case 'top':
-                    options.layout.legend.x = 0.5;
-                    options.layout.legend.y = 0.9;
+                    options.layout.legend.x = 0.5 + xOffset;
+                    options.layout.legend.y = 0.8 + yOffset;
                     options.layout.legend.xanchor = 'center';
                     options.layout.legend.yanchor = 'top';
                     options.layout.legend.orientation = 'h';
@@ -1323,8 +1452,24 @@ export function applyConfig(options, config) {
                 trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
             }
 
-            if (config.legend && config.legend.show !== undefined) {
-                trace.showlegend = config.legend.show;
+            // Apply legend settings
+            if (config.legend) {
+                // Show/hide legend
+                if (config.legend.show !== undefined) {
+                    trace.showlegend = config.legend.show;
+                }
+
+                // Apply label format (short or long)
+                if (trace.name) {
+                    trace._fullName = trace.name;
+                    if (config.legend.label) {
+                        if (config.legend.label === 'short') {
+                            trace.name = labelShort[trace._fullName] || trace.name;
+                        } else if (config.legend.label === 'short') {
+                            trace.name = labelLong[trace._fullName] || trace.name;
+                        }
+                    }
+                }
             }
         });
 
