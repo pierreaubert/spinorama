@@ -62,7 +62,7 @@ const contourColorscale = [
     [1, 'rgb(253,14,13)'],
 ];
 
-const labelShort = {
+export const labelShort = {
     // regression
     'Linear Regression': 'Reg',
     'Band ±1.5dB': '±1.5dB',
@@ -94,6 +94,11 @@ const labelShort = {
     'Total Horizontal Reflection': 'THR',
     'Total Vertical Reflection': 'TVR',
 };
+
+export const labelLong = Object.entries(labelShort).reduce((obj, [k, v]) => {
+    obj[v] = k;
+    return obj;
+}, {});
 
 const graphSmall = 550;
 const graphLarge = 1024;
@@ -260,7 +265,7 @@ const GraphProperties = Object.freeze({
         isGlobe: false,
     },
     'SPL Vertical Normalized': {
-        isGraph: false,
+        isGraph: true,
         isSpin: false,
         isRadar: false,
         isSurface: true,
@@ -491,14 +496,14 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         let speaker0 = '';
         let version0 = '';
         if (inputGraphsData[0] && inputGraphsData[0]?.layout.title.text) {
-            title = inputGraphsData[0].layout.title.text;
+            title = '(A) ' + inputGraphsData[0].layout.title.text;
             pos0for = inputGraphsData[0].layout.title.text.indexOf(' for ');
             pos0by = inputGraphsData[0].layout.title.text.indexOf(' measured by ');
             speaker0 = inputGraphsData[0].layout.title.text.slice(pos0for, pos0by);
             version0 = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
         }
         if (outputNumberGraphs === 1 && inputGraphsData[1] && inputGraphsData[1]?.layout.title.text) {
-            title += '<br> v.s. ' + inputGraphsData[1].layout.title.text;
+            title += '<br> v.s. (B) ' + inputGraphsData[1].layout.title.text;
             const pos1for = inputGraphsData[1].layout.title.text.indexOf(' for ');
             const pos1by = inputGraphsData[1].layout.title.text.indexOf(' measured by ');
             const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);
@@ -525,6 +530,15 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     } else {
                         datas[offset].legendgrouptitle.text += ' (' + version1 + ')';
                     }
+                }
+            }
+            // Add (A) or (B)
+            for (let i = 0; i < datas.length; i++) {
+                if (datas[i]?.legendgrouptitle?.text && datas[i].legendgrouptitle.text.indexOf(speaker0.slice(5)) !== -1) {
+                    datas[i].legendgrouptitle.text = '(A) ' + datas[i].legendgrouptitle.text;
+                }
+                if (datas[i]?.legendgrouptitle?.text && datas[i].legendgrouptitle.text.indexOf(speaker1.slice(5)) !== -1) {
+                    datas[i].legendgrouptitle.text = '(B) ' + datas[i].legendgrouptitle.text;
                 }
             }
         }
@@ -560,7 +574,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.title = {
                 text: title,
                 font: {
-                    size: fontSizeH1,
+                    size: fontSizeH3,
                     color: '#000',
                 },
                 automargin: true,
@@ -611,14 +625,25 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.margin.t += 50;
         }
         if (outputGraphProperties.isSurface) {
-            layout.margin.t += 30;
+            layout.margin.b += 60;
         }
         if (outputGraphProperties.isRadar) {
             layout.margin.t += 100;
         }
-        if (outputGraphProperties.isSpin && isVertical) {
-            layout.margin.b += 150;
-        }
+        if (outputGraphProperties.isGraph) {
+            if (outputGraphProperties.isSpin) {
+		if (isVertical) {
+                    layout.margin.t += 140;
+		} else {
+                    layout.margin.t -= 60;
+                    layout.margin.r += 160;
+		}
+            } else {
+		if (isVertical) {
+                    layout.margin.t += 60;
+		}
+	    }
+	}
     }
 
     function computeLegend() {
@@ -634,27 +659,27 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             groupclick: 'toggleitem',
         };
         if (!isCompact) {
-            if (!isVertical) {
+            layout.legend.xref = 'paper';
+            layout.legend.yref = 'paper';
+            if (isVertical) {
+                layout.legend.orientation = 'h';
+                layout.legend.xanchor = 'center';
+                layout.legend.yanchor = 'bottom';
+                layout.legend.x = 0.5;
+                layout.legend.y = 1.05;
+		layout.legend.entrywidth = 120;
+		layout.legend.entrywidthmode = 'pixels';
+                console.log('debug Vertical Legend x=', layout.legend.x, ' y=', layout.legend.y);
+            } else {
                 layout.legend.orientation = 'v';
-                layout.legend.y = 0.5;
-                layout.legend.x = 0.95;
-                layout.legend.xanchor = 'bottom';
-                layout.legend.yanchor = 'middle';
-                layout.legend.entrywidth = graphLegendWidth;
+                layout.legend.xanchor = 'center';
+                layout.legend.yanchor = 'middel';
+                layout.legend.x = 1.15;
+                layout.legend.y = 0;
+		layout.legend.entrywidth = 0.2;
+		layout.legend.entrywidthmode = 'fraction';
+                console.log('debug Horizontal Legend x=', layout.legend.x, ' y=', layout.legend.y);
             }
-            /* not working as is
-	       } else {
-		layout.legend.orientation = 'h';
-		layout.legend.y = y_shift;
-		layout.legend.x = 0.5;
-		layout.legend.xanchor = 'center';
-		layout.legend.yanchor = 'bottom';
-		if (outputGraphProperties.isSpin) {
-		    layout.height += 200;
-		    layout.margin.bottom -= 100;
-		    }
-		    }
-*/
         }
         // how many columns in legend?
         const groups = new Set();
@@ -825,7 +850,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     datas[k].colorbar.xanchor = 'center';
                     datas[k].colorbar.x = 0.5;
                     datas[k].colorbar.yanchor = 'bottom';
-                    datas[k].colorbar.y = -0.3;
+                    datas[k].colorbar.y = -0.5;
                     if (isCompact) {
                         datas[k].colorbar.y = -0.7;
                     }
@@ -879,6 +904,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
     let legendShift = 0;
+    const isCompact = isDisplayCompact();
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
@@ -890,7 +916,8 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
                 if (i % 2 === 1) {
                     speakerGraphs[i].data[trace].line = { dash: 'dashdot' };
                 }
-                if (speakerGraphs.length > 1) {
+                /* pierre
+                if (speakerGraphs.length > 1 && !isCompact) {
                     // hide recommended zones by default
                     if (
                         'name' in speakerGraphs[i].data[trace] &&
@@ -912,6 +939,7 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
                         speakerGraphs[i].data[trace]['legendrank'] = 3000;
                     }
                 }
+*/
             }
         }
     }
@@ -946,11 +974,21 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
             }
         }
     }
+    /* can enable with the menu
+    else if (!isCompact) {
+        if ('annotations' in option.layout) {
+            for (let i = 0; i < option.layout.annotations.length; i++) {
+                option.layout.annotations[i]['visible'] = 'legendonly';
+            }
+        }
+    }
+    */
     return [option];
 }
 
 export function setGraph(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    const isCompact = isDisplayCompact();
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
@@ -968,7 +1006,7 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
                 ) {
                     speakerGraphs[i].data[trace].visible = 'legendonly';
                 }
-                if (speakerGraphs.length > 1) {
+                if (speakerGraphs.length > 1 && !isCompact) {
                     if (
                         'name' in speakerGraphs[i].data[trace] &&
                         speakerGraphs[i].data[trace].name.indexOf('recommended') === 0

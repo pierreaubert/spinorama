@@ -29,6 +29,8 @@ import {
     applyConfig,
 } from './plot-config.js';
 
+const flagsEnableConfig = false;
+
 export function displayGraph(measurementName, jsonName, divName, graphSpec) {
     // Ensure divName is either a string ID or an HTMLElement
     if (typeof divName !== 'string' && !(divName instanceof HTMLElement)) {
@@ -53,24 +55,25 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
                 }
             }
 
-            // Apply initial configuration
-            options = applyConfig(options, config);
+            if (flagsEnableConfig) {
+                // Apply initial configuration
+                options = applyConfig(options, config);
 
-            // Create configuration menu first
-            createConfigMenu(divName, config, (updatedConfig) => {
-                // Save updated configuration to local storage
-                saveConfigToStorage(updatedConfig);
-                // Apply updated configuration and redraw the plot
-                const updatedOptions = applyConfig(JSON.parse(JSON.stringify(options)), updatedConfig);
-                // Get the actual element if divName is a string ID
-                const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
-                if (!targetElement) {
-                    console.error(`Error: Target element not found for updating plot`);
-                    return;
-                }
-                Plotly.react(divName, updatedOptions.data, updatedOptions.layout, updatedOptions.config);
-            });
-
+                // Create configuration menu first
+                createConfigMenu(divName, config, (updatedConfig) => {
+                    // Save updated configuration to local storage
+                    saveConfigToStorage(updatedConfig);
+                    // Apply updated configuration and redraw the plot
+                    const updatedOptions = applyConfig(JSON.parse(JSON.stringify(options)), updatedConfig);
+                    // Get the actual element if divName is a string ID
+                    const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
+                    if (!targetElement) {
+                        console.error(`Error: Target element not found for updating plot`);
+                        return;
+                    }
+                    Plotly.react(divName, updatedOptions.data, updatedOptions.layout, updatedOptions.config);
+                });
+            }
             // Plot the graph
             // Get the actual element if divName is a string ID
             const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;

@@ -32,6 +32,8 @@ import {
     applyConfig,
 } from './plot-config.js';
 
+const flagGraphConfig = false;
+
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
     // console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version);
@@ -117,7 +119,7 @@ getMetadata()
             if (graphsConfigs.length > 0) {
                 // Apply configuration to existing graph configs
                 const configuredGraphs = graphsConfigs.map((graphConfig) => {
-                    if (graphConfig) {
+                    if (graphConfig && flagGraphConfig) {
                         return applyConfig(graphConfig, config);
                     }
                     return graphConfig;
@@ -201,7 +203,7 @@ getMetadata()
 
                     // Apply configuration to graphs before rendering
                     const configuredGraphs = graphsConfigs.map((graphConfig) => {
-                        if (graphConfig) {
+                        if (graphConfig && flagGraphConfig) {
                             return applyConfig(graphConfig, config);
                         }
                         return graphConfig;
