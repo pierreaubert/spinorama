@@ -18,7 +18,7 @@ speakers_info_c: SpeakerDatabase = {
     },
     "Cambridge Audio Minx MIN12": {
         "brand": "Cambridge Audio",
-        "model": "MIN12",
+        "model": "Minx MIN12",
         "type": "passive",
         "price": "70",
         "amount": "each",

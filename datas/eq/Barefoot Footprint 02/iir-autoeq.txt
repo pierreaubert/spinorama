@@ -1,0 +1,14 @@
+EQ for Barefoot Footprint 02 computed from Misc data
+Preference Score 5.61 with EQ 7.06
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-12-16:52:14
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    65 Hz Gain +2.88 dB Q 0.30
+Filter  2: ON PK Fc   279 Hz Gain +0.87 dB Q 1.88
+Filter  3: ON PK Fc   714 Hz Gain -0.78 dB Q 2.90
+Filter  4: ON PK Fc  1642 Hz Gain -2.63 dB Q 2.21
+Filter  5: ON PK Fc  1954 Hz Gain +2.64 dB Q 2.20
+Filter  6: ON PK Fc  2406 Hz Gain -0.99 dB Q 1.95
+Filter  7: ON PK Fc  7059 Hz Gain -1.13 dB Q 0.92

@@ -1,0 +1,14 @@
+EQ for Cambridge Audio Minx MIN12 computed from Misc data
+Preference Score 0.26 with EQ 2.48
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-13-09:10:47
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc   155 Hz Gain +2.93 dB Q 0.25
+Filter  2: ON PK Fc   487 Hz Gain -1.52 dB Q 1.05
+Filter  3: ON PK Fc   560 Hz Gain +1.03 dB Q 0.57
+Filter  4: ON PK Fc  1532 Hz Gain +2.22 dB Q 2.77
+Filter  5: ON PK Fc  2406 Hz Gain -2.28 dB Q 1.07
+Filter  6: ON PK Fc  7834 Hz Gain -6.87 dB Q 1.50
+Filter  7: ON PK Fc 14134 Hz Gain -6.09 dB Q 1.01
