@@ -676,8 +676,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.legend.yanchor = 'middel';
                 layout.legend.x = 1.15;
                 layout.legend.y = 0;
-		layout.legend.entrywidth = 0.2;
-		layout.legend.entrywidthmode = 'fraction';
+		layout.legend.entrywidth = 120;
+		layout.legend.entrywidthmode = 'pixels';
+		traceorder: 'grouped',
                 console.log('debug Horizontal Legend x=', layout.legend.x, ' y=', layout.legend.y);
             }
         }
