@@ -1,0 +1,14 @@
+EQ for PSB Imagine C3 computed from Misc data
+Preference Score 6.06 with EQ 7.44
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-12-16:42:02
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc    56 Hz Gain +2.99 dB Q 0.25
+Filter  2: ON PK Fc   102 Hz Gain -4.77 dB Q 1.17
+Filter  3: ON PK Fc   235 Hz Gain -1.75 dB Q 0.73
+Filter  4: ON PK Fc  1480 Hz Gain +1.47 dB Q 2.92
+Filter  5: ON PK Fc  2491 Hz Gain +2.67 dB Q 1.98
+Filter  6: ON PK Fc  3177 Hz Gain -4.08 dB Q 0.77
+Filter  7: ON PK Fc 16239 Hz Gain -0.99 dB Q 0.35

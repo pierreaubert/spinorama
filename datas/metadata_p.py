@@ -1602,7 +1602,7 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "PSB",
         "model": "Imagine C3",
         "type": "passive",
-        "price": "",
+        "price": "2000",
         "amount": "each",
         "shape": "center",
         "default_measurement": "misc-audiorekr",
