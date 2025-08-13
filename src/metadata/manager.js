@@ -45,6 +45,13 @@ class SimpleMetadataManager {
             }
         });
         
+        // Manage step navigation buttons
+        const continueStep2 = document.getElementById('continue-step-2');
+        if (continueStep2) {
+            // Disable Step 3 button when at Step 1
+            continueStep2.disabled = (stepNum === 1);
+        }
+        
         // Special handling for each step
         if (stepNum === 3) {
             this.generatePythonCode();
@@ -419,6 +426,12 @@ class SimpleMetadataManager {
         const container = document.getElementById('measurement-form-container');
         if (!container) return;
         
+        // Check if form already exists for this measurement
+        const existingForm = container.querySelector(`.measurement-form[data-measurement="${measurementName}"]`);
+        if (existingForm) {
+            return existingForm; // Form already exists, don't create a duplicate
+        }
+        
         // Clone the default measurement form
         const defaultForm = container.querySelector('.measurement-form[data-measurement="default"]');
         if (!defaultForm) return;
@@ -427,35 +440,48 @@ class SimpleMetadataManager {
         newForm.dataset.measurement = measurementName;
         newForm.classList.remove('is-active');
         
-        // Update form field IDs to be unique
+        // Update form field IDs to be unique and preserve their name attributes
         const fields = newForm.querySelectorAll('[id]');
         fields.forEach(field => {
-            field.id = `${field.id}-${measurementName}`;
+            // Create unique ID by appending measurement name
+            const baseId = field.id.replace(/-default$/, '');
+            field.id = `${baseId}-${measurementName}`;
+            
+            // Clear any values from the template
+            if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA' || field.tagName === 'SELECT') {
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    field.checked = false;
+                } else {
+                    field.value = '';
+                }
+            }
         });
         
         container.appendChild(newForm);
+        return newForm;
     }
     
     switchToMeasurementTab(measurementName) {
-        // Update tab active state
-        const tabs = document.querySelectorAll('#measurement-tabs .tabs li');
-        tabs.forEach(tab => {
-            tab.classList.remove('is-active');
-            if (tab.dataset.measurement === measurementName) {
-                tab.classList.add('is-active');
-            }
-        });
+        // Deactivate all tabs and forms
+        const tabs = document.querySelectorAll('.measurement-tab');
+        tabs.forEach(tab => tab.classList.remove('is-active'));
         
-        // Update form active state
         const forms = document.querySelectorAll('.measurement-form');
-        forms.forEach(form => {
-            form.classList.remove('is-active');
-            if (form.dataset.measurement === measurementName) {
-                form.classList.add('is-active');
-            }
-        });
+        forms.forEach(form => form.classList.add('is-hidden'));
         
-        this.currentMeasurement = measurementName;
+        // Activate the selected tab and form
+        const selectedTab = document.querySelector(`.measurement-tab[data-measurement="${measurementName}"]`);
+        if (selectedTab) {
+            selectedTab.classList.add('is-active');
+        }
+        
+        const selectedForm = document.getElementById(`measurement-form-${measurementName}`);
+        if (selectedForm) {
+            selectedForm.classList.remove('is-hidden');
+            // Track the current active measurement
+            this.currentMeasurement = measurementName;
+            console.log(`Switched to measurement: ${measurementName}`);
+        }
     }
     
     removeMeasurementTab(measurementName) {
@@ -482,46 +508,49 @@ class SimpleMetadataManager {
         const measurements = this.selectedSpeaker.measurements || {};
         const measurementNames = Object.keys(measurements);
         
-        // Clear existing tabs and create new ones for each measurement
-        const tabsContainer = document.querySelector('#measurement-tabs .tabs ul');
-        if (tabsContainer) {
-            tabsContainer.innerHTML = '';
-            
-            if (measurementNames.length === 0) {
-                // Create default tab if no measurements exist
-                tabsContainer.innerHTML = `
-                    <li class="is-active" data-measurement="default">
-                        <a><span>Default</span></a>
-                    </li>
-                `;
-                this.currentMeasurement = 'default';
-            } else {
-                // Create tabs for each existing measurement
-                measurementNames.forEach((name, index) => {
-                    const isActive = index === 0;
-                    const tabHtml = `
-                        <li class="${isActive ? 'is-active' : ''}" data-measurement="${name}">
-                            <a>
-                                <span>${name}</span>
-                                <button class="delete is-small ml-2" onclick="manager.removeMeasurement('${name}')" title="Remove measurement"></button>
-                            </a>
-                        </li>
-                    `;
-                    tabsContainer.innerHTML += tabHtml;
-                });
-                
-                // Set the first measurement as current
-                this.currentMeasurement = measurementNames[0];
+        // Clear existing measurement tabs and forms
+        document.getElementById('measurement-tabs').innerHTML = '';
+        document.querySelectorAll('.measurement-form').forEach(form => {
+            if (form.id !== 'measurement-form-template') {
+                form.remove();
             }
-        }
+        });
         
-        // Populate the form with the current measurement data
-        if (this.currentMeasurement && measurements[this.currentMeasurement]) {
-            this.populateMeasurementForm(this.currentMeasurement, measurements[this.currentMeasurement]);
-        } else if (measurementNames.length === 0) {
-            // Clear form for new measurement
-            this.clearMeasurementForm();
-        }
+        // Create tabs for each measurement
+        measurementNames.forEach((measurementName, index) => {
+            // Create and add tab
+            const tab = document.createElement('li');
+            tab.classList.add('measurement-tab');
+            tab.setAttribute('data-measurement', measurementName);
+            if (index === 0) {
+                tab.classList.add('is-active');
+                // Set the initial current measurement
+                this.currentMeasurement = measurementName;
+            }
+            
+            const tabLink = document.createElement('a');
+            tabLink.textContent = measurementName;
+            tab.appendChild(tabLink);
+            
+            document.getElementById('measurement-tabs').appendChild(tab);
+            
+            // Create and populate form for this measurement
+            this.createMeasurementForm(measurementName);
+            
+            // Set active state for the form
+            const formContainer = document.getElementById('measurement-form-container');
+            if (formContainer) {
+                const form = formContainer.querySelector(`.measurement-form[data-measurement="${measurementName}"]`);
+                if (form) {
+                    form.classList.toggle('is-active', index === 0);
+                }
+            }
+            
+            // Populate the form with measurement data
+            if (measurements[measurementName]) {
+                this.populateMeasurementForm(measurementName, measurements[measurementName]);
+            }
+        });
         
         // Set up tab listeners
         this.setupMeasurementTabListeners();
@@ -529,73 +558,73 @@ class SimpleMetadataManager {
     
     populateMeasurementForm(measurementName, measurementData) {
         // Populate basic measurement fields
-        this.setFieldValue('origin', measurementData.origin);
-        this.setFieldValue('format', measurementData.format);
-        this.setFieldValue('review', measurementData.review);
-        this.setFieldValue('review_published', measurementData.review_published);
-        this.setFieldValue('quality', measurementData.quality);
-        this.setFieldValue('notes', measurementData.notes);
-        this.setFieldValue('symmetry', measurementData.symmetry);
-        this.setFieldValue('sensitivity', measurementData.sensitivity);
-        this.setFieldValue('scaled_flatness', measurementData.scaled_flatness);
+        this.setFieldValue(`origin-${measurementName}`, measurementData.origin);
+        this.setFieldValue(`format-${measurementName}`, measurementData.format);
+        this.setFieldValue(`review-${measurementName}`, measurementData.review);
+        this.setFieldValue(`review_published-${measurementName}`, measurementData.review_published);
+        this.setFieldValue(`quality-${measurementName}`, measurementData.quality);
+        this.setFieldValue(`notes-${measurementName}`, measurementData.notes);
+        this.setFieldValue(`symmetry-${measurementName}`, measurementData.symmetry);
+        this.setFieldValue(`sensitivity-${measurementName}`, measurementData.sensitivity);
+        this.setFieldValue(`scaled_flatness-${measurementName}`, measurementData.scaled_flatness);
         
         // Populate data acquisition fields
         const dataAcq = measurementData.data_acquisition || {};
-        this.setFieldValue('data_acquisition_via', dataAcq.via);
-        this.setFieldValue('data_acquisition_distance', dataAcq.distance);
-        this.setFieldValue('data_acquisition_signal', dataAcq.signal);
-        this.setCheckboxValue('data_acquisition_air_absorbtion', dataAcq.air_absorbtion);
-        this.setFieldValue('data_acquisition_resolution', dataAcq.resolution);
-        this.setFieldValue('data_acquisition_notes', dataAcq.notes);
-        this.setFieldValue('data_acquisition_min_valid_freq', dataAcq.min_valid_freq);
-        this.setFieldValue('data_acquisition_max_valid_freq', dataAcq.max_valid_freq);
+        this.setFieldValue(`data_acquisition_via-${measurementName}`, dataAcq.via);
+        this.setFieldValue(`data_acquisition_distance-${measurementName}`, dataAcq.distance);
+        this.setFieldValue(`data_acquisition_signal-${measurementName}`, dataAcq.signal);
+        this.setCheckboxValue(`data_acquisition_air_absorbtion-${measurementName}`, dataAcq.air_absorbtion);
+        this.setFieldValue(`data_acquisition_resolution-${measurementName}`, dataAcq.resolution);
+        this.setFieldValue(`data_acquisition_notes-${measurementName}`, dataAcq.notes);
+        this.setFieldValue(`data_acquisition_min_valid_freq-${measurementName}`, dataAcq.min_valid_freq);
+        this.setFieldValue(`data_acquisition_max_valid_freq-${measurementName}`, dataAcq.max_valid_freq);
         
         // Populate parameters
         const params = measurementData.parameters || {};
-        this.setFieldValue('parameters_mean_min', params.mean_min);
-        this.setFieldValue('parameters_mean_max', params.mean_max);
+        this.setFieldValue(`parameters_mean_min-${measurementName}`, params.mean_min);
+        this.setFieldValue(`parameters_mean_max-${measurementName}`, params.mean_max);
         
         // Populate extras
         const extras = measurementData.extras || {};
-        this.setCheckboxValue('extras_is_equed', extras.is_equed);
-        this.setFieldValue('extras_score_penalty', extras.score_penalty);
+        this.setCheckboxValue(`extras_is_equed-${measurementName}`, extras.is_equed);
+        this.setFieldValue(`extras_score_penalty-${measurementName}`, extras.score_penalty);
         
         // Populate specifications
         const specs = measurementData.specifications || {};
-        this.setFieldValue('specifications_sensitivity', specs.sensitivity);
-        this.setFieldValue('specifications_impedance', specs.impedance);
-        this.setFieldValue('specifications_weight', specs.weight);
+        this.setFieldValue(`specifications_sensitivity-${measurementName}`, specs.sensitivity);
+        this.setFieldValue(`specifications_impedance-${measurementName}`, specs.impedance);
+        this.setFieldValue(`specifications_weight-${measurementName}`, specs.weight);
         
         // Populate dispersion
         const dispersion = specs.dispersion || {};
-        this.setFieldValue('specifications_dispersion_horizontal', dispersion.horizontal);
-        this.setFieldValue('specifications_dispersion_vertical', dispersion.vertical);
+        this.setFieldValue(`specifications_dispersion_horizontal-${measurementName}`, dispersion.horizontal);
+        this.setFieldValue(`specifications_dispersion_vertical-${measurementName}`, dispersion.vertical);
         
         // Populate size
         const size = specs.size || {};
-        this.setFieldValue('specifications_size_height', size.height);
-        this.setFieldValue('specifications_size_width', size.width);
-        this.setFieldValue('specifications_size_depth', size.depth);
+        this.setFieldValue(`specifications_size_height-${measurementName}`, size.height);
+        this.setFieldValue(`specifications_size_width-${measurementName}`, size.width);
+        this.setFieldValue(`specifications_size_depth-${measurementName}`, size.depth);
         
         // Populate SPL
         const spl = specs.SPL || {};
-        this.setFieldValue('specifications_spl_peak', spl.peak);
-        this.setFieldValue('specifications_spl_continuous', spl.continuous);
-        this.setFieldValue('specifications_spl_max', spl.max);
+        this.setFieldValue(`specifications_spl_peak-${measurementName}`, spl.peak);
+        this.setFieldValue(`specifications_spl_continuous-${measurementName}`, spl.continuous);
+        this.setFieldValue(`specifications_spl_max-${measurementName}`, spl.max);
         
         // Populate preference rating
         const prefRating = measurementData.pref_rating || {};
-        this.setFieldValue('pref_rating_aad_on_axis', prefRating.aad_on_axis);
-        this.setFieldValue('pref_rating_nbd_on_axis', prefRating.nbd_on_axis);
-        this.setFieldValue('pref_rating_nbd_listening_window', prefRating.nbd_listening_window);
-        this.setFieldValue('pref_rating_nbd_sound_power', prefRating.nbd_sound_power);
-        this.setFieldValue('pref_rating_nbd_pred_in_room', prefRating.nbd_pred_in_room);
-        this.setFieldValue('pref_rating_sm_pred_in_room', prefRating.sm_pred_in_room);
-        this.setFieldValue('pref_rating_sm_sound_power', prefRating.sm_sound_power);
-        this.setFieldValue('pref_rating_pref_score', prefRating.pref_score);
-        this.setFieldValue('pref_rating_pref_score_wsub', prefRating.pref_score_wsub);
-        this.setFieldValue('pref_rating_lfx_hz', prefRating.lfx_hz);
-        this.setFieldValue('pref_rating_lfq', prefRating.lfq);
+        this.setFieldValue(`pref_rating_aad_on_axis-${measurementName}`, prefRating.aad_on_axis);
+        this.setFieldValue(`pref_rating_nbd_on_axis-${measurementName}`, prefRating.nbd_on_axis);
+        this.setFieldValue(`pref_rating_nbd_listening_window-${measurementName}`, prefRating.nbd_listening_window);
+        this.setFieldValue(`pref_rating_nbd_sound_power-${measurementName}`, prefRating.nbd_sound_power);
+        this.setFieldValue(`pref_rating_nbd_pred_in_room-${measurementName}`, prefRating.nbd_pred_in_room);
+        this.setFieldValue(`pref_rating_sm_pred_in_room-${measurementName}`, prefRating.sm_pred_in_room);
+        this.setFieldValue(`pref_rating_sm_sound_power-${measurementName}`, prefRating.sm_sound_power);
+        this.setFieldValue(`pref_rating_pref_score-${measurementName}`, prefRating.pref_score);
+        this.setFieldValue(`pref_rating_pref_score_wsub-${measurementName}`, prefRating.pref_score_wsub);
+        this.setFieldValue(`pref_rating_lfx_hz-${measurementName}`, prefRating.lfx_hz);
+        this.setFieldValue(`pref_rating_lfq-${measurementName}`, prefRating.lfq);
     }
     
     clearMeasurementForm() {
@@ -666,188 +695,212 @@ class SimpleMetadataManager {
         const amountField2 = form.querySelector('[name="amount"]');
         this.selectedSpeaker.amount = amountField2 ? amountField2.value : '';
         
-        // Collect comprehensive measurement data
+        // Save the current measurement data from the active form
+        if (this.currentMeasurement) {
+            // Initialize measurements object if needed
+            if (!this.selectedSpeaker.measurements) {
+                this.selectedSpeaker.measurements = {};
+            }
+            
+            // Get data for the current measurement
+            const measurementData = this.collectMeasurementData(this.currentMeasurement);
+            
+            // Save this measurement data
+            this.selectedSpeaker.measurements[this.currentMeasurement] = measurementData;
+            
+            // Set default measurement if not set
+            if (!this.selectedSpeaker.default_measurement && Object.keys(this.selectedSpeaker.measurements).length > 0) {
+                this.selectedSpeaker.default_measurement = this.currentMeasurement;
+            }
+        }
+
+        console.log('Saved speaker data:', this.selectedSpeaker);
+    }
+    
+    collectMeasurementData(measurementName) {
+        // Collect comprehensive measurement data for the specified measurement
         const measurementData = {
             // Required fields
-            origin: (document.getElementById('origin') && document.getElementById('origin').value) || '',
-            format: (document.getElementById('format') && document.getElementById('format').value) || 'klippel',
+            origin: (document.getElementById(`origin-${measurementName}`) && document.getElementById(`origin-${measurementName}`).value) || '',
+            format: (document.getElementById(`format-${measurementName}`) && document.getElementById(`format-${measurementName}`).value) || 'klippel',
         };
 
         // Add optional fields if they have values
         const optionalFields = {
-            review: document.getElementById('review') && document.getElementById('review').value,
-            review_published: document.getElementById('review_published') && document.getElementById('review_published').value,
-            quality: document.getElementById('quality') && document.getElementById('quality').value,
-            notes: document.getElementById('notes') && document.getElementById('notes').value,
-            symmetry: document.getElementById('symmetry') && document.getElementById('symmetry').value,
-            sensitivity: this.parseNumber(document.getElementById('sensitivity') && document.getElementById('sensitivity').value),
-            scaled_flatness: this.parseNumber(document.getElementById('scaled_flatness') && document.getElementById('scaled_flatness').value)
+            review: document.getElementById(`review-${measurementName}`) && document.getElementById(`review-${measurementName}`).value,
+            review_published: document.getElementById(`review_published-${measurementName}`) && document.getElementById(`review_published-${measurementName}`).value,
+            quality: document.getElementById(`quality-${measurementName}`) && document.getElementById(`quality-${measurementName}`).value,
+            notes: document.getElementById(`notes-${measurementName}`) && document.getElementById(`notes-${measurementName}`).value,
+            symmetry: document.getElementById(`symmetry-${measurementName}`) && document.getElementById(`symmetry-${measurementName}`).value,
+            sensitivity: this.parseNumber(document.getElementById(`sensitivity-${measurementName}`) && document.getElementById(`sensitivity-${measurementName}`).value),
+            scaled_flatness: this.parseNumber(document.getElementById(`scaled_flatness-${measurementName}`) && document.getElementById(`scaled_flatness-${measurementName}`).value)
+        }
         };
 
         // Add non-empty optional fields
-        Object.keys(optionalFields).forEach(key => {
+        var optionalKeys = Object.keys(optionalFields);
+        for (var i = 0; i < optionalKeys.length; i++) {
+            var key = optionalKeys[i];
             if (optionalFields[key] !== undefined && optionalFields[key] !== '') {
                 measurementData[key] = optionalFields[key];
             }
-        });
+        }
 
         // Data acquisition
         const dataAcquisition = {
-            via: document.getElementById('data_acquisition_via') && document.getElementById('data_acquisition_via').value,
-            distance: this.parseNumber(document.getElementById('data_acquisition_distance') && document.getElementById('data_acquisition_distance').value),
-            signal: document.getElementById('data_acquisition_signal') && document.getElementById('data_acquisition_signal').value,
-            air_absorbtion: document.getElementById('data_acquisition_air_absorbtion') && document.getElementById('data_acquisition_air_absorbtion').checked,
-            resolution: this.parseNumber(document.getElementById('data_acquisition_resolution') && document.getElementById('data_acquisition_resolution').value),
-            notes: document.getElementById('data_acquisition_notes') && document.getElementById('data_acquisition_notes').value,
-            min_valid_freq: this.parseNumber(document.getElementById('data_acquisition_min_valid_freq') && document.getElementById('data_acquisition_min_valid_freq').value),
-            max_valid_freq: this.parseNumber(document.getElementById('data_acquisition_max_valid_freq') && document.getElementById('data_acquisition_max_valid_freq').value)
+            via: document.getElementById(`data_acquisition_via-${measurementName}`) && document.getElementById(`data_acquisition_via-${measurementName}`).value,
+            distance: this.parseNumber(document.getElementById(`data_acquisition_distance-${measurementName}`) && document.getElementById(`data_acquisition_distance-${measurementName}`).value),
+            signal: document.getElementById(`data_acquisition_signal-${measurementName}`) && document.getElementById(`data_acquisition_signal-${measurementName}`).value,
+            air_absorbtion: document.getElementById(`data_acquisition_air_absorbtion-${measurementName}`) && document.getElementById(`data_acquisition_air_absorbtion-${measurementName}`).checked,
+            resolution: this.parseNumber(document.getElementById(`data_acquisition_resolution-${measurementName}`) && document.getElementById(`data_acquisition_resolution-${measurementName}`).value),
+            notes: document.getElementById(`data_acquisition_notes-${measurementName}`) && document.getElementById(`data_acquisition_notes-${measurementName}`).value,
+            min_valid_freq: this.parseNumber(document.getElementById(`data_acquisition_min_valid_freq-${measurementName}`) && document.getElementById(`data_acquisition_min_valid_freq-${measurementName}`).value),
+            max_valid_freq: this.parseNumber(document.getElementById(`data_acquisition_max_valid_freq-${measurementName}`) && document.getElementById(`data_acquisition_max_valid_freq-${measurementName}`).value)
         };
 
         // Only add data_acquisition if it has meaningful data
-        const cleanedDataAcquisition = {};
-        Object.keys(dataAcquisition).forEach(key => {
+        var cleanedDataAcquisition = {};
+        var dataAcqKeys = Object.keys(dataAcquisition);
+        for (var j = 0; j < dataAcqKeys.length; j++) {
+            var key = dataAcqKeys[j];
             if (dataAcquisition[key] !== undefined && dataAcquisition[key] !== '' && dataAcquisition[key] !== false) {
                 cleanedDataAcquisition[key] = dataAcquisition[key];
             }
-        });
+        }
         if (Object.keys(cleanedDataAcquisition).length > 0) {
             measurementData.data_acquisition = cleanedDataAcquisition;
         }
 
         // Parameters
         const parameters = {
-            mean_min: this.parseNumber(document.getElementById('parameters_mean_min') && document.getElementById('parameters_mean_min').value, true),
-            mean_max: this.parseNumber(document.getElementById('parameters_mean_max') && document.getElementById('parameters_mean_max').value, true)
+            mean_min: this.parseNumber(document.getElementById(`parameters_mean_min-${measurementName}`) && document.getElementById(`parameters_mean_min-${measurementName}`).value, true),
+            mean_max: this.parseNumber(document.getElementById(`parameters_mean_max-${measurementName}`) && document.getElementById(`parameters_mean_max-${measurementName}`).value, true)
         };
-        const cleanedParameters = {};
-        Object.keys(parameters).forEach(key => {
+        var cleanedParameters = {};
+        var paramKeys = Object.keys(parameters);
+        for (var k = 0; k < paramKeys.length; k++) {
+            var key = paramKeys[k];
             if (parameters[key] !== undefined) {
                 cleanedParameters[key] = parameters[key];
             }
-        });
+        };
         if (Object.keys(cleanedParameters).length > 0) {
             measurementData.parameters = cleanedParameters;
         }
 
         // Extras
-        const extras = {
-            is_equed: document.getElementById('extras_is_equed') && document.getElementById('extras_is_equed').checked,
-            score_penalty: this.parseNumber(document.getElementById('extras_score_penalty') && document.getElementById('extras_score_penalty').value)
+        var extras = {
+            is_equed: document.getElementById(`extras_is_equed-${measurementName}`) && document.getElementById(`extras_is_equed-${measurementName}`).checked,
+            score_penalty: this.parseNumber(document.getElementById(`extras_score_penalty-${measurementName}`) && document.getElementById(`extras_score_penalty-${measurementName}`).value)
         };
-        const cleanedExtras = {};
-        Object.keys(extras).forEach(key => {
+        var cleanedExtras = {};
+        var extrasKeys = Object.keys(extras);
+        for (var l = 0; l < extrasKeys.length; l++) {
+            var key = extrasKeys[l];
             if (extras[key] !== undefined && extras[key] !== false && extras[key] !== '') {
                 cleanedExtras[key] = extras[key];
             }
-        });
+        };
         if (Object.keys(cleanedExtras).length > 0) {
             measurementData.extras = cleanedExtras;
         }
 
         // Specifications
         const specifications = {
-            sensitivity: this.parseNumber(document.getElementById('specifications_sensitivity') && document.getElementById('specifications_sensitivity').value),
-            impedance: this.parseNumber(document.getElementById('specifications_impedance') && document.getElementById('specifications_impedance').value),
-            weight: this.parseNumber(document.getElementById('specifications_weight') && document.getElementById('specifications_weight').value)
+            sensitivity: this.parseNumber(document.getElementById(`specifications_sensitivity-${measurementName}`) && document.getElementById(`specifications_sensitivity-${measurementName}`).value),
+            impedance: this.parseNumber(document.getElementById(`specifications_impedance-${measurementName}`) && document.getElementById(`specifications_impedance-${measurementName}`).value),
+            weight: this.parseNumber(document.getElementById(`specifications_weight-${measurementName}`) && document.getElementById(`specifications_weight-${measurementName}`).value)
         };
 
         // Dispersion
-        const dispersion = {
-            horizontal: this.parseNumber(document.getElementById('specifications_dispersion_horizontal') && document.getElementById('specifications_dispersion_horizontal').value),
-            vertical: this.parseNumber(document.getElementById('specifications_dispersion_vertical') && document.getElementById('specifications_dispersion_vertical').value)
+        var dispersion = {
+            horizontal: this.parseNumber(document.getElementById(`specifications_dispersion_horizontal-${measurementName}`) && document.getElementById(`specifications_dispersion_horizontal-${measurementName}`).value),
+            vertical: this.parseNumber(document.getElementById(`specifications_dispersion_vertical-${measurementName}`) && document.getElementById(`specifications_dispersion_vertical-${measurementName}`).value)
         };
-        const cleanedDispersion = {};
-        Object.keys(dispersion).forEach(key => {
+        var cleanedDispersion = {};
+        var dispersionKeys = Object.keys(dispersion);
+        for (var m = 0; m < dispersionKeys.length; m++) {
+            var key = dispersionKeys[m];
             if (dispersion[key] !== undefined && dispersion[key] !== '') {
                 cleanedDispersion[key] = dispersion[key];
             }
-        });
+        };
         if (Object.keys(cleanedDispersion).length > 0) {
             specifications.dispersion = cleanedDispersion;
         }
 
         // Size
-        const size = {
-            height: this.parseNumber(document.getElementById('specifications_size_height') && document.getElementById('specifications_size_height').value),
-            width: this.parseNumber(document.getElementById('specifications_size_width') && document.getElementById('specifications_size_width').value),
-            depth: this.parseNumber(document.getElementById('specifications_size_depth') && document.getElementById('specifications_size_depth').value)
+        var size = {
+            height: this.parseNumber(document.getElementById(`specifications_size_height-${measurementName}`) && document.getElementById(`specifications_size_height-${measurementName}`).value),
+            width: this.parseNumber(document.getElementById(`specifications_size_width-${measurementName}`) && document.getElementById(`specifications_size_width-${measurementName}`).value),
+            depth: this.parseNumber(document.getElementById(`specifications_size_depth-${measurementName}`) && document.getElementById(`specifications_size_depth-${measurementName}`).value)
         };
-        const cleanedSize = {};
-        Object.keys(size).forEach(key => {
+        var cleanedSize = {};
+        var sizeKeys = Object.keys(size);
+        for (var n = 0; n < sizeKeys.length; n++) {
+            var key = sizeKeys[n];
             if (size[key] !== undefined && size[key] !== '') {
                 cleanedSize[key] = size[key];
             }
-        });
+        };
         if (Object.keys(cleanedSize).length > 0) {
             specifications.size = cleanedSize;
         }
 
         // SPL
-        const spl = {
-            peak: this.parseNumber(document.getElementById('specifications_spl_peak') && document.getElementById('specifications_spl_peak').value),
-            continuous: this.parseNumber(document.getElementById('specifications_spl_continuous') && document.getElementById('specifications_spl_continuous').value),
-            max: this.parseNumber(document.getElementById('specifications_spl_max') && document.getElementById('specifications_spl_max').value)
+        var spl = {
+            peak: this.parseNumber(document.getElementById(`specifications_spl_peak-${measurementName}`) && document.getElementById(`specifications_spl_peak-${measurementName}`).value),
+            continuous: this.parseNumber(document.getElementById(`specifications_spl_continuous-${measurementName}`) && document.getElementById(`specifications_spl_continuous-${measurementName}`).value),
+            max: this.parseNumber(document.getElementById(`specifications_spl_max-${measurementName}`) && document.getElementById(`specifications_spl_max-${measurementName}`).value)
         };
-        const cleanedSPL = {};
-        Object.keys(spl).forEach(key => {
+        var cleanedSPL = {};
+        var splKeys = Object.keys(spl);
+        for (var p = 0; p < splKeys.length; p++) {
+            var key = splKeys[p];
             if (spl[key] !== undefined && spl[key] !== '') {
                 cleanedSPL[key] = spl[key];
             }
-        });
+        };
         if (Object.keys(cleanedSPL).length > 0) {
             specifications.SPL = cleanedSPL;
         }
 
         // Only add specifications if it has meaningful data
-        const cleanedSpecifications = {};
-        Object.keys(specifications).forEach(key => {
+        var cleanedSpecifications = {};
+        var specKeys = Object.keys(specifications);
+        for (var r = 0; r < specKeys.length; r++) {
+            var key = specKeys[r];
             if (specifications[key] !== undefined && specifications[key] !== '' && 
                 (typeof specifications[key] !== 'object' || Object.keys(specifications[key]).length > 0)) {
                 cleanedSpecifications[key] = specifications[key];
             }
-        });
+        }
         if (Object.keys(cleanedSpecifications).length > 0) {
             measurementData.specifications = cleanedSpecifications;
         }
 
         // Preference Rating
-        const prefRating = {
-            aad_on_axis: this.parseNumber(document.getElementById('pref_rating_aad_on_axis') && document.getElementById('pref_rating_aad_on_axis').value),
-            nbd_on_axis: this.parseNumber(document.getElementById('pref_rating_nbd_on_axis') && document.getElementById('pref_rating_nbd_on_axis').value),
-            nbd_listening_window: this.parseNumber(document.getElementById('pref_rating_nbd_listening_window') && document.getElementById('pref_rating_nbd_listening_window').value),
-            nbd_sound_power: this.parseNumber(document.getElementById('pref_rating_nbd_sound_power') && document.getElementById('pref_rating_nbd_sound_power').value),
-            nbd_pred_in_room: this.parseNumber(document.getElementById('pref_rating_nbd_pred_in_room') && document.getElementById('pref_rating_nbd_pred_in_room').value),
-            sm_pred_in_room: this.parseNumber(document.getElementById('pref_rating_sm_pred_in_room') && document.getElementById('pref_rating_sm_pred_in_room').value),
-            sm_sound_power: this.parseNumber(document.getElementById('pref_rating_sm_sound_power') && document.getElementById('pref_rating_sm_sound_power').value),
-            pref_score: this.parseNumber(document.getElementById('pref_rating_pref_score') && document.getElementById('pref_rating_pref_score').value),
-            pref_score_wsub: this.parseNumber(document.getElementById('pref_rating_pref_score_wsub') && document.getElementById('pref_rating_pref_score_wsub').value),
-            lfx_hz: this.parseNumber(document.getElementById('pref_rating_lfx_hz') && document.getElementById('pref_rating_lfx_hz').value),
-            lfq: this.parseNumber(document.getElementById('pref_rating_lfq') && document.getElementById('pref_rating_lfq').value)
-        };
-
-        // Only add preference rating if it has meaningful data
-        const cleanedPrefRating = {};
-        Object.keys(prefRating).forEach(key => {
-            if (prefRating[key] !== undefined && prefRating[key] !== '') {
-                cleanedPrefRating[key] = prefRating[key];
+        var ratings = {
+            bass: this.parseNumber(document.getElementById(`preference_rating_bass-${measurementName}`) && document.getElementById(`preference_rating_bass-${measurementName}`).value),
+            dynamics: this.parseNumber(document.getElementById(`preference_rating_dynamics-${measurementName}`) && document.getElementById(`preference_rating_dynamics-${measurementName}`).value),
+            highs: this.parseNumber(document.getElementById(`preference_rating_highs-${measurementName}`) && document.getElementById(`preference_rating_highs-${measurementName}`).value),
+            midrange: this.parseNumber(document.getElementById(`preference_rating_midrange-${measurementName}`) && document.getElementById(`preference_rating_midrange-${measurementName}`).value),
+            neutrality: this.parseNumber(document.getElementById(`preference_rating_neutrality-${measurementName}`) && document.getElementById(`preference_rating_neutrality-${measurementName}`).value),
+            preference_score: this.parseNumber(document.getElementById(`preference_rating_preference_score-${measurementName}`) && document.getElementById(`preference_rating_preference_score-${measurementName}`).value)
+        }
+        var cleanedRatings = {};
+        var ratingsKeys = Object.keys(ratings);
+        for (var q = 0; q < ratingsKeys.length; q++) {
+            var key = ratingsKeys[q];
+            if (ratings[key] !== undefined && ratings[key] !== '') {
+                cleanedRatings[key] = ratings[key];
             }
-        });
-        if (Object.keys(cleanedPrefRating).length > 0) {
-            measurementData.pref_rating = cleanedPrefRating;
-        }
-
-        // Update measurements - use default measurement name or create one
-        const measurementName = this.selectedSpeaker.default_measurement || 'default';
-        this.selectedSpeaker.measurements = {
-            [measurementName]: measurementData
         };
-        
-        // Set default measurement if not set
-        if (!this.selectedSpeaker.default_measurement) {
-            this.selectedSpeaker.default_measurement = measurementName;
+        if (Object.keys(cleanedRatings).length > 0) {
+            measurementData.pref_rating = cleanedRatings;
         }
-
-        console.log('Saved speaker data:', this.selectedSpeaker);
+        
+        return measurementData;
     }
 
     parseNumber(value, isInteger = false) {

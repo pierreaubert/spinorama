@@ -248,11 +248,11 @@ def create_app():
 
     @app.get("/")
     async def index():
-        return HTMLResponse(content=open(website_dir / "metadata-manager.html").read())
+        return HTMLResponse(content=open(website_dir / "manager.html").read())
 
-    @app.get("/metadata-manager.js")
+    @app.get("/manager.js")
     async def serve_metadata_js():
-        file_path = website_dir / "metadata-manager.js"
+        file_path = website_dir / "manager.js"
         if file_path.exists():
             with open(file_path, "r") as f:
                 content = f.read()
@@ -269,7 +269,7 @@ def create_app():
     @app.get("/css/{filename}")
     async def serve_css(filename: str):
         # Look for CSS files in the css directory
-        css_dir = website_dir / "css"
+        css_dir = website_dir / "../../dist/css"
         file_path = css_dir / filename
         if file_path.exists() and file_path.suffix == ".css":
             with open(file_path, "r") as f:
