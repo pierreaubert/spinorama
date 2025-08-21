@@ -153,49 +153,50 @@ export const contourColorscales = {
     ],
 };
 
-// Default configuration options for plots
+// Default delta configuration options for plots
 export const defaultConfig = {
     font: {
-        family: 'Georgia, serif',
-        size: 12,
-        color: '#333333',
+        family: 'default', // 'default' means keep original value
+        size: 0, // 0 means no change to original size
+        color: 'default', // 'default' means keep original color
     },
-    theme: 'light', // 'light' or 'dark'
+    theme: 'default', // 'default' means keep original theme
     colors: {
-        palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
-    },
-    annotations: {
-        show: false, // Show or hide annotations
-    },
-    legend: {
-        position: 'top',
-        show: true,
-        label: 'long', // 'short' or 'long' label format
-        offset: {
-            x: 0, // range from -0.2 to 0.2
-            y: 0, // range from -0.2 to 0.2
-        },
-    },
-    // // delta margin and not absolute one
-    margin: {
-        l: 50,
-        r: 50,
-        t: 80,
-        b: 50,
-    },
-    colors: {
-        palette: 'default', // 'default', 'vibrant', 'pastel', 'dark', 'monochrome'
-    },
-    layout: {
-        direction: 'horizontal', // 'horizontal' (left/right) or 'vertical' (top/down) for multiple graphs
+        palette: 'default', // 'default' means keep original palette
     },
     contour: {
-        colorscale: 'default', // 'default', 'viridis', 'plasma', 'cool', 'hot'
+        colorscale: 'default', // 'default' means keep original colorscale
+    },
+    grid: {
+        show: true, // Boolean overrides original value
+        color: 'default', // 'default' means keep original color
+    },
+    legend: {
+        position: 'default', // 'default' means keep original position
+        xanchor: 'default', // 'default' means keep original xanchor
+        yanchor: 'default', // 'default' means keep original yanchor
+        xoffset: 0, // 0 means no change to original offset
+        yoffset: 0, // 0 means no change to original offset
+        label: 'default', // 'default' means keep original label style
+    },
+    margins: {
+        l: 0, // 0 means no change to original margin
+        r: 0, // 0 means no change to original margin
+        t: 0, // 0 means no change to original margin
+        b: 0, // 0 means no change to original margin
+        pad: 0, // 0 means no change to original padding
+    },
+    showAxisLabels: true, // Boolean overrides original value
+    layout: {
+        direction: 'default', // 'default' means keep original direction
     },
     colorbar: {
-        thickness: 20, // thickness in pixels
-        len: 0.9, // length as fraction (0-1)
-        show: true,
+        thickness: 0, // 0 means no change to original thickness
+        len: 0, // 0 means no change to original length
+        show: true, // Boolean overrides original value
+    },
+    annotations: {
+        show: true, // Boolean overrides original value
     },
 };
 
@@ -211,185 +212,319 @@ export function saveConfigToStorage(config) {
     }
 }
 
-// Load configuration from local storage
-export function loadConfigFromStorage(measurementName) {
+// Load configuration from local storage and apply to graph config
+export function loadConfigFromStorage(graphConfig) {
+    // If graphConfig is a primitive, start with defaultConfig as base
+    let baseConfig =
+        typeof graphConfig === 'object' && graphConfig !== null && !Array.isArray(graphConfig) ? graphConfig : defaultConfig;
+
     try {
-        const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            let config = defaultConfig;
-            if (measurementName.indexOf('Contour') !== -1) {
-                config.showlegend = false;
-                config.legend.show = false;
-            }
-            return mergeConfigs(defaultConfig, parsed);
+        const storedConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
+        if (storedConfig) {
+            const userConfig = JSON.parse(storedConfig);
+            // First apply default deltas, then user deltas
+            return mergeConfigs(mergeConfigs(baseConfig, defaultConfig), userConfig);
         }
     } catch (error) {
-        console.warn('Failed to load configuration from localStorage:', error);
+        console.warn('Error loading configuration from localStorage:', error);
     }
-    return { ...defaultConfig };
+
+    // Apply just the default config as delta if storage access fails
+    return mergeConfigs(baseConfig, defaultConfig);
 }
 
-// Deep merge two configuration objects
-export function mergeConfigs(defaultConf, userConf) {
-    function deepMerge(target, source) {
-        const result = { ...target };
-        for (const key in source) {
-            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-                result[key] = deepMerge(target[key] || {}, source[key]);
+// Apply delta configuration to a base configuration
+export function mergeConfigs(baseConf, deltaConf) {
+    if (!deltaConf) return baseConf;
+    const result = JSON.parse(JSON.stringify(baseConf));
+    applyDelta(result, deltaConf);
+    return result;
+
+    function applyDelta(target, delta) {
+        // If target itself is a primitive (string, number, etc), we can't set properties on it
+        if (typeof target !== 'object' || target === null || Array.isArray(target)) {
+            return; // Can't apply delta to a primitive target
+        }
+
+        for (const key in delta) {
+            if (delta[key] && typeof delta[key] === 'object' && !Array.isArray(delta[key])) {
+                // Check if target[key] is a string or other primitive - if so, convert to object
+                // Also handle the case where target[key] is null or undefined
+                if (!target[key] || typeof target[key] !== 'object' || Array.isArray(target[key])) {
+                    target[key] = {};
+                }
+                applyDelta(target[key], delta[key]);
             } else {
-                result[key] = source[key];
+                // For strings, 'default' means keep the original value
+                if (typeof delta[key] === 'string' && delta[key] === 'default') {
+                    continue; // Skip this property, keep target value
+                }
+                // For numbers, apply as delta (addition)
+                else if (typeof delta[key] === 'number' && typeof target[key] === 'number') {
+                    target[key] += delta[key];
+                }
+                // For other cases (booleans, arrays, etc), replace as before
+                else {
+                    target[key] = delta[key];
+                }
             }
         }
-        return result;
     }
-
-    return deepMerge(defaultConf, userConf || {});
 }
 
-// Helper function to create form groups
-export function createFormGroup(label, type, value, name, options, onChange) {
-    let input, group, flexContainer;
+// Apply configuration to plot options, treating config values as deltas
+export function applyConfig(options, config) {
+    if (!options || !config) return options;
 
-    group = document.createElement('div');
-    group.className = 'form-group field';
-    group.style.cssText = `
-        width: 100%;
-        flex: 1 1 auto;
-        min-width: 180px;
-        max-width: 300px;
-    `;
+    // Apply options to layout if it exists
+    if (options.layout) {
+        const layout = options.layout;
 
-    // Label with Bulma styling
-    if (label) {
-        const labelElement = document.createElement('label');
-        labelElement.className = 'label is-small';
-        labelElement.textContent = label;
-        group.appendChild(labelElement);
-    }
+        // Apply font to layout
+        if (Object.keys(fontConfig).length > 0) {
+	    [
+		layout,
+		layout.xaxis,
+		layout.yaxis,
+		layout.zaxis,
+		layout.legend
+	    ].forEach((axis) => {
+		if (axis?.title?.font) {
+		    if (config.font ) {
+			if (config.font.size && typeof config.font.size === 'number') {
+			    if (axis.title.font.size) {
+				axis.title.font.size += config.font.size;
+			    }
+			}
+			if (config.font.family && config.font.family !== 'default') {
+			    axis.title.font.family = config.font.family;
+			}
+			if (config.font.color && config.font.color !== 'default') {
+			    axis.title.font.color = config.font.color;
+			}
+		    }
+		}
+            });
+	}
 
-    // Container for inputs with Bulma control class
-    flexContainer = document.createElement('div');
-    flexContainer.className = 'control';
-    flexContainer.style.cssText = `
-        display: flex;
-        align-items: center;
-    `;
-    group.appendChild(flexContainer);
-
-    if (type === 'select') {
-        // Create a Bulma select wrapper
-        const selectWrapper = document.createElement('div');
-        selectWrapper.className = 'select is-small is-fullwidth';
-        flexContainer.appendChild(selectWrapper);
-
-        input = document.createElement('select');
-        input.name = name || label.toLowerCase().replace(/\s+/g, '');
-
-        // Add options
-        options.forEach((option) => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option;
-            optionElement.textContent = option;
-            optionElement.selected = option === value;
-            input.appendChild(optionElement);
-        });
-
-        selectWrapper.appendChild(input);
-    } else if (type === 'checkbox') {
-        // Create a Bulma checkbox wrapper
-        const checkWrapper = document.createElement('label');
-        checkWrapper.className = 'checkbox';
-
-        input = document.createElement('input');
-        input.type = 'checkbox';
-        input.name = name || label.toLowerCase().replace(/\s+/g, '');
-        input.checked = value;
-        input.style.cssText = 'margin-right: 8px;';
-
-        checkWrapper.appendChild(input);
-        checkWrapper.appendChild(document.createTextNode(label));
-
-        // Replace the main label with an empty span since we've moved the label text
-        const labelElement = group.querySelector('label');
-        if (labelElement) labelElement.textContent = '';
-
-        flexContainer.appendChild(checkWrapper);
-    } else if (type === 'number') {
-        input = document.createElement('input');
-        input.type = 'number';
-        input.name = name;
-        input.id = name;
-        input.value = value;
-        input.style.cssText = `
-            width: 100%;
-            padding: 5px;
-            border: 1px solid rgb(221, 221, 221);
-            border-radius: 3px;
-        `;
-
-        if (options) {
-            if (options.min !== undefined) input.min = options.min;
-            if (options.max !== undefined) input.max = options.max;
-            if (options.step !== undefined) input.step = options.step;
+        // Apply margins as deltas to existing margins
+        if (config.margins) {
+            if (!layout.margin) {
+                layout.margin = {};
+            }
+            if (config.margins.l !== undefined) {
+                layout.margin.l = (layout.margin.l || 0) + config.margins.l;
+            }
+            if (config.margins.r !== undefined) {
+                layout.margin.r = (layout.margin.r || 0) + config.margins.r;
+            }
+            if (config.margins.t !== undefined) {
+                layout.margin.t = (layout.margin.t || 0) + config.margins.t;
+            }
+            if (config.margins.b !== undefined) {
+                layout.margin.b = (layout.margin.b || 0) + config.margins.b;
+            }
+            if (config.margins.pad !== undefined) {
+                layout.margin.pad = (layout.margin.pad || 0) + config.margins.pad;
+            }
         }
-    } else if (type === 'color') {
-        // Create a Bulma color input with better styling
-        const colorWrapper = document.createElement('div');
-        colorWrapper.className = 'field has-addons';
 
-        input = document.createElement('input');
-        input.type = 'color';
-        input.className = 'input is-small';
-        input.name = name || label.toLowerCase().replace(/\s+/g, '');
-        input.value = value;
-        input.style.cssText = `
-            width: 40px;
-            height: 30px;
-            padding: 0;
-            cursor: pointer;
-        `;
+        // Apply legend configuration
+        if (config.legend) {
+            if (!layout.legend) {
+                layout.legend = {};
+            }
 
-        const colorPreview = document.createElement('div');
-        colorPreview.style.cssText = `
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background-color: ${value};
-            border: 1px solid #ddd;
-            margin-left: 8px;
-            vertical-align: middle;
-        `;
+            if (config.legend.show !== undefined) {
+                layout.showlegend = config.legend.show;
+            }
 
-        input.addEventListener('input', (e) => {
-            colorPreview.style.backgroundColor = e.target.value;
+            // Apply legend position
+            if (config.legend.position && config.legend.position !== 'default') {
+                switch (config.legend.position) {
+                    case 'top-left':
+                        layout.legend.x = 0.01;
+                        layout.legend.y = 0.99;
+                        break;
+                    case 'top':
+                        layout.legend.x = 0.5;
+                        layout.legend.y = 0.99;
+                        break;
+                    case 'top-right':
+                        layout.legend.x = 0.99;
+                        layout.legend.y = 0.99;
+                        break;
+                    case 'left':
+                        layout.legend.x = 0.01;
+                        layout.legend.y = 0.5;
+                        break;
+                    case 'center':
+                        layout.legend.x = 0.5;
+                        layout.legend.y = 0.5;
+                        break;
+                    case 'right':
+                        layout.legend.x = 0.99;
+                        layout.legend.y = 0.5;
+                        break;
+                    case 'bottom-left':
+                        layout.legend.x = 0.01;
+                        layout.legend.y = 0.01;
+                        break;
+                    case 'bottom':
+                        layout.legend.x = 0.5;
+                        layout.legend.y = 0.01;
+                        break;
+                    case 'bottom-right':
+                        layout.legend.x = 0.99;
+                        layout.legend.y = 0.01;
+                        break;
+                }
+            }
+
+            // Apply legend anchor
+            if (config.legend.xanchor && config.legend.xanchor !== 'default') {
+                layout.legend.xanchor = config.legend.xanchor;
+            }
+
+            if (config.legend.yanchor && config.legend.yanchor !== 'default') {
+                layout.legend.yanchor = config.legend.yanchor;
+            }
+
+            // Apply legend offset as deltas
+            if (config.legend.xoffset !== undefined) {
+                if (!layout.legend.x) layout.legend.x = 0;
+                layout.legend.x += config.legend.xoffset;
+            }
+
+            if (config.legend.yoffset !== undefined) {
+                if (!layout.legend.y) layout.legend.y = 0;
+                layout.legend.y += config.legend.yoffset;
+            }
+
+            // Apply legend font
+            if (Object.keys(fontConfig).length > 0) {
+                layout.legend.font = { ...layout.legend.font, ...fontConfig };
+            }
+        }
+
+        // Apply grid configuration
+        if (config.grid) {
+            const axes = ['xaxis', 'yaxis', 'zaxis'];
+            axes.forEach((axis) => {
+                if (layout[axis]) {
+                    if (config.grid.show !== undefined) {
+                        layout[axis].showgrid = config.grid.show;
+                    }
+                    if (config.grid.color && config.grid.color !== 'default') {
+                        layout[axis].gridcolor = config.grid.color;
+                    }
+                }
+            });
+        }
+
+        // Apply axis labels
+        if (config.showAxisLabels !== undefined) {
+            ['xaxis', 'yaxis', 'zaxis'].forEach((axis) => {
+                if (layout[axis]) {
+                    layout[axis].showticklabels = config.showAxisLabels;
+                }
+            });
+        }
+    }
+
+    // Apply to data traces if they exist
+    if (options.data && Array.isArray(options.data)) {
+        options.data.forEach((trace) => {
+            if (trace.colorbar) {
+                // Apply colorbar configuration if it exists
+                if (config.colorbar) {
+                    if (config.colorbar.thickness !== undefined) {
+                        // Apply thickness as delta
+                        trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
+                    }
+                    if (config.colorbar.len !== undefined) {
+                        // Apply length as delta
+                        trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
+                    }
+                    if (config.colorbar.show !== undefined) {
+                        trace.colorbar.visible = config.colorbar.show;
+                    }
+                }
+            }
+
+            if (trace.marker && trace.marker.textfont) {
+                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
+            }
+
+            if (trace.hoverlabel && trace.hoverlabel.font) {
+                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
+            }
+
+            // Apply legend settings
+            if (config.legend) {
+                // Show/hide legend
+                if (config.legend.show !== undefined) {
+                    trace.showlegend = config.legend.show;
+                }
+
+                // Apply label format (short or long)
+                if (trace.name) {
+                    trace._fullName = trace.name;
+                    if (config.legend.label && config.legend.label !== 'default') {
+                        if (config.legend.label === 'short') {
+                            trace.name = labelShort[trace._fullName] || trace.name;
+                        } else if (config.legend.label === 'long') {
+                            trace.name = labelLong[trace._fullName] || trace.name;
+                        }
+                    }
+                }
+            }
         });
 
-        flexContainer.appendChild(input);
-        flexContainer.appendChild(colorPreview);
-    } else {
-        input = document.createElement('input');
-        input.type = type;
-        input.name = name;
-        input.id = name;
-        input.value = value;
-        input.style.cssText = `
-            width: 100%;
-            padding: 5px;
-            border: 1px solid rgb(221, 221, 221);
-            border-radius: 3px;
-        `;
+        // Only apply color palette if not set to 'default'
+        if (config.colors && config.colors.palette && config.colors.palette !== 'default') {
+            const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
+            options.data.forEach((trace, index) => {
+                if (trace.type === 'scatter') {
+                    const colorIndex = index % selectedPalette.length;
+                    const color = selectedPalette[colorIndex];
+
+                    if (trace.marker) {
+                        trace.marker.color = color;
+                    }
+                    if (trace.line) {
+                        trace.line.color = color;
+                    }
+                    if (!trace.marker && !trace.line) {
+                        trace.marker = { color: color };
+                        trace.line = { color: color };
+                    }
+                }
+            });
+        }
+
+        // Only apply colorscale if not set to 'default'
+        if (config.contour && config.contour.colorscale && config.contour.colorscale !== 'default') {
+            const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
+            options.data.forEach((trace) => {
+                if (
+                    trace.type === 'contour' ||
+                    trace.type === 'heatmap' ||
+                    trace.type === 'surface' ||
+                    trace.type === 'contourgl'
+                ) {
+                    trace.colorscale = selectedColorscale;
+                }
+            });
+        }
     }
 
-    if (onChange) {
-        input.addEventListener('change', onChange);
+    // Apply layout direction for multiple graphs only if not default
+    if (config.layout && config.layout.direction && config.layout.direction !== 'default') {
+        options._layoutDirection = config.layout.direction;
     }
 
-    // Only append input directly if it's not already wrapped (select elements are wrapped)
-    if (type !== 'select' && type !== 'checkbox' && type !== 'color') {
-        flexContainer.appendChild(input);
-    }
-    return group;
+    return options;
 }
 
 // Create plot configuration menu
@@ -732,7 +867,7 @@ export function createConfigMenu(divName, config, updateCallback) {
     );
 
     themeSection.appendChild(
-        createFormGroup('Font Size', 'number', config.font.size, 'config-font-size', { min: 8, max: 24, step: 1 }, (e) => {
+        createFormGroup('Font Size', 'number', config.font.size, 'config-font-size', { min: -6, max: 6, step: 1 }, (e) => {
             config.font.size = parseInt(e.target.value);
             updateCallback(config);
         })
@@ -749,8 +884,8 @@ export function createConfigMenu(divName, config, updateCallback) {
     const layoutSection = createGroupSection('Layout & Grid');
 
     layoutSection.appendChild(
-        createFormGroup('Show Grid', 'checkbox', config.grid, 'config-grid', null, (e) => {
-            config.grid = e.target.checked;
+        createFormGroup('Show Grid', 'checkbox', config.grid.show, 'config-grid', null, (e) => {
+            config.grid.show = e.target.checked;
             updateCallback(config);
         })
     );
@@ -856,7 +991,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         sliderInput.min = '-20';
         sliderInput.max = '20';
         sliderInput.step = '1';
-        sliderInput.value = Math.round(config.legend.offset[axis] * 100); // Convert from -0.2...0.2 to -20...20
+        sliderInput.value = Math.round(config.legend[axis + 'offset'] * 100); // Convert from -0.2...0.2 to -20...20
         sliderInput.id = `config-legend-offset-${axis}`;
         sliderInput.style.cssText = `
             flex-grow: 1;
@@ -865,7 +1000,7 @@ export function createConfigMenu(divName, config, updateCallback) {
 
         // Value display
         const valueDisplay = document.createElement('span');
-        valueDisplay.textContent = config.legend.offset[axis].toFixed(2);
+        valueDisplay.textContent = config.legend[axis + 'offset'].toFixed(2);
         valueDisplay.style.cssText = `
             min-width: 40px;
             text-align: right;
@@ -876,7 +1011,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         sliderInput.addEventListener('input', (e) => {
             const sliderValue = parseInt(e.target.value);
             const offsetValue = sliderValue / 100; // Convert slider value to offset (-0.2 to 0.2)
-            config.legend.offset[axis] = offsetValue;
+            config.legend[axis + 'offset'] = offsetValue;
             valueDisplay.textContent = offsetValue.toFixed(2);
             updateCallback(config);
         });
@@ -921,7 +1056,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         sliderInput.min = '0';
         sliderInput.max = '200';
         sliderInput.step = '5';
-        sliderInput.value = config.margin[side] > 200 ? 200 : config.margin[side];
+        sliderInput.value = config.margins[side] > 200 ? 200 : config.margins[side];
         sliderInput.id = `config-margin-${side}`;
         sliderInput.style.cssText = `
             flex-grow: 1;
@@ -930,7 +1065,7 @@ export function createConfigMenu(divName, config, updateCallback) {
 
         // Value display
         const valueDisplay = document.createElement('span');
-        valueDisplay.textContent = config.margin[side];
+        valueDisplay.textContent = config.margins[side];
         valueDisplay.style.cssText = `
             min-width: 30px;
             text-align: right;
@@ -940,7 +1075,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         // Update handler
         sliderInput.addEventListener('input', (e) => {
             const value = parseInt(e.target.value);
-            config.margin[side] = value;
+            config.margins[side] = value;
             valueDisplay.textContent = value;
         });
 
@@ -987,9 +1122,9 @@ export function createConfigMenu(divName, config, updateCallback) {
         paletteRow.style.cssText = `
             display: flex;
             align-items: center;
+            cursor: pointer;
             padding: 5px;
             border-radius: 4px;
-            cursor: pointer;
             background-color: ${paletteName === config.colors.palette ? '#f0f0f0' : 'transparent'};
             border: 1px solid ${paletteName === config.colors.palette ? '#ccc' : 'transparent'};
         `;
@@ -1037,7 +1172,7 @@ export function createConfigMenu(divName, config, updateCallback) {
 
             // Update config
             config.colors.palette = paletteName;
-            if (updateCallback) updateCallback(config);
+            updateCallback(config);
         });
 
         paletteContainer.appendChild(paletteRow);
@@ -1232,287 +1367,147 @@ export function createConfigMenu(divName, config, updateCallback) {
     });
 }
 
-// Apply configuration to plot options
-export function applyConfig(options, config) {
-    if (!options || !config) {
-        return options;
+// Helper function to create form groups
+export function createFormGroup(label, type, value, name, options, onChange) {
+    let input, group, flexContainer;
+
+    group = document.createElement('div');
+    group.className = 'form-group field';
+    group.style.cssText = `
+        width: 100%;
+        flex: 1 1 auto;
+        min-width: 180px;
+        max-width: 300px;
+    `;
+
+    // Label with Bulma styling
+    if (label) {
+        const labelElement = document.createElement('label');
+        labelElement.className = 'label is-small';
+        labelElement.textContent = label;
+        group.appendChild(labelElement);
     }
 
-    // Define font configuration for use throughout the function
-    const bgColor = config.theme === 'dark' ? 'rgb(51, 51, 51)' : 'rgb(255, 255, 255)';
-    const gridColor = config.theme === 'dark' ? 'rgb(85, 85, 85)' : 'rgb(230, 230, 230)';
-    let titleFontConfig = {};
-    let fontConfig = {};
-    if (config.font) {
-        if (config.font.family) {
-            titleFontConfig['family'] = config.font.family;
-            fontConfig['family'] = config.font.family;
-        }
-        if (config.font.size) {
-            titleFontConfig['size'] = config.font.size + 2;
-            fontConfig['size'] = config.font.size;
-        }
-        if (config.font.color) {
-            titleFontConfig['color'] = config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)';
-            fontConfig['color'] = config.theme === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(51, 51, 51)';
-        }
-    }
+    // Container for inputs with Bulma control class
+    flexContainer = document.createElement('div');
+    flexContainer.className = 'control';
+    flexContainer.style.cssText = `
+        display: flex;
+        align-items: center;
+    `;
+    group.appendChild(flexContainer);
 
-    // Apply font settings
-    if (options.layout) {
-        // Apply global font settings
-        options.layout.font = fontConfig;
+    if (type === 'select') {
+        // Create a Bulma select wrapper
+        const selectWrapper = document.createElement('div');
+        selectWrapper.className = 'select is-small is-fullwidth';
+        flexContainer.appendChild(selectWrapper);
 
-        // Apply theme
-        options.layout.paper_bgcolor = bgColor;
-        options.layout.plot_bgcolor = bgColor;
+        input = document.createElement('select');
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
 
-        // Apply font and grid settings to x-axis
-        if (options.layout.xaxis) {
-            options.layout.xaxis.showgrid = config.grid;
-            options.layout.xaxis.gridcolor = gridColor;
-            if (options.layout.xaxis.title && options.layout.xaxis.title.font) {
-                options.layout.xaxis.title.font = fontConfig;
-            }
-            options.layout.xaxis.tickfont = fontConfig;
-        }
-        if (options.layout.xaxis2) {
-            options.layout.xaxis2.showgrid = config.grid;
-            options.layout.xaxis2.gridcolor = gridColor;
-            if (options.layout.xaxis2.title && options.layout.xaxis2.title.font) {
-                options.layout.xaxis2.title.font = fontConfig;
-            }
-            options.layout.xaxis2.tickfont = fontConfig;
-        }
-
-        // Apply font and grid settings to y-axis
-        if (options.layout.yaxis) {
-            options.layout.yaxis.showgrid = config.grid;
-            options.layout.yaxis.gridcolor = gridColor;
-            if (options.layout.yaxis.title && options.layout.yaxis.title.font) {
-                options.layout.yaxis.title.font = fontConfig;
-            }
-            options.layout.yaxis.tickfont = fontConfig;
-        }
-        if (options.layout.yaxis2) {
-            options.layout.yaxis2.showgrid = config.grid;
-            options.layout.yaxis2.gridcolor = gridColor;
-            if (options.layout.yaxis2.title && options.layout.yaxis2.title.font) {
-                options.layout.yaxis2.title.font = fontConfig;
-            }
-            options.layout.yaxis2.tickfont = fontConfig;
-        }
-
-        // Apply font settings to title
-        if (options.layout.title) {
-            if (typeof options.layout.title === 'string') {
-                options.layout.title = {
-                    text: options.layout.title,
-                    font: titleFontConfig,
-                };
-            } else {
-                options.layout.title.font = titleFontConfig;
-            }
-        }
-
-        // Apply font settings and visibility to annotations (if any)
-        if (options.layout.annotations && Array.isArray(options.layout.annotations)) {
-            // Store original annotations if not already stored
-            if (!options._originalAnnotations && config.annotations.show === false) {
-                options._originalAnnotations = JSON.parse(JSON.stringify(options.layout.annotations));
-            }
-
-            if (config.annotations.show === false) {
-                // Hide annotations by setting an empty array
-                options.layout.annotations = [];
-            } else if (config.annotations.show === true && options._originalAnnotations) {
-                // Restore original annotations when show is enabled
-                options.layout.annotations = JSON.parse(JSON.stringify(options._originalAnnotations));
-                // Apply font settings
-                options.layout.annotations.forEach((annotation) => {
-                    annotation.font = fontConfig;
-                });
-            } else {
-                // Just apply font settings if show is true but we don't have originals
-                options.layout.annotations.forEach((annotation) => {
-                    annotation.font = fontConfig;
-                });
-            }
-        }
-
-        // Apply font settings and configuration to colorbar (if any)
-        if (options.layout.coloraxis && options.layout.coloraxis.colorbar) {
-            options.layout.coloraxis.colorbar.titlefont = fontConfig;
-            options.layout.coloraxis.colorbar.tickfont = fontConfig;
-
-            // Apply colorbar configuration to layout coloraxis
-            if (config.colorbar) {
-                if (config.colorbar.thickness !== undefined) {
-                    options.layout.coloraxis.colorbar.thickness = config.colorbar.thickness;
-                }
-                if (config.colorbar.len !== undefined) {
-                    options.layout.coloraxis.colorbar.len = config.colorbar.len;
-                }
-                if (config.colorbar.show !== undefined) {
-                    options.layout.coloraxis.colorbar.visible = config.colorbar.show;
-                }
-            }
-        }
-
-        // Apply legend settings
-        if (options.layout.legend) {
-            options.layout.legend.font = fontConfig;
-
-            options.layout.showlegend = config.legend.show;
-
-            // Get offsets from config (with fallbacks)
-            const xOffset = config.legend.offset?.x || 0;
-            const yOffset = config.legend.offset?.y || 0;
-
-            switch (config.legend.position) {
-                case 'left':
-                    options.layout.legend.x = 0.05 + xOffset;
-                    options.layout.legend.y = 0.5 + yOffset;
-                    options.layout.legend.xanchor = 'bottom';
-                    options.layout.legend.yanchor = 'middle';
-                    options.layout.legend.orientation = 'v';
-                    break;
-                case 'right':
-                    options.layout.legend.x = 0.95 + xOffset;
-                    options.layout.legend.y = 0.5 + yOffset;
-                    options.layout.legend.xanchor = 'bottom';
-                    options.layout.legend.yanchor = 'middle';
-                    options.layout.legend.orientation = 'v';
-                    break;
-                case 'bottom':
-                    options.layout.legend.x = 0.5 + xOffset;
-                    options.layout.legend.y = 0.0 + yOffset;
-                    options.layout.legend.xanchor = 'center';
-                    options.layout.legend.yanchor = 'bottom';
-                    options.layout.legend.orientation = 'h';
-                    break;
-                case 'top':
-                    options.layout.legend.x = 0.5 + xOffset;
-                    options.layout.legend.y = 0.8 + yOffset;
-                    options.layout.legend.xanchor = 'center';
-                    options.layout.legend.yanchor = 'top';
-                    options.layout.legend.orientation = 'h';
-                    break;
-            }
-        }
-
-        // Apply margin settings
-        if (options.layout.margin) {
-            options.layout.margin = {
-                l: config.margin.l,
-                r: config.margin.r,
-                t: config.margin.t,
-                b: config.margin.b,
-            };
-        }
-    }
-
-    // Apply font settings to data traces
-    if (options.data && Array.isArray(options.data)) {
-        options.data.forEach((trace) => {
-            if (trace.colorbar) {
-                // Apply colorbar configuration if it exists
-                if (config.colorbar) {
-                    if (config.colorbar.thickness !== undefined) {
-                        trace.colorbar.thickness = config.colorbar.thickness;
-                    }
-                    if (config.colorbar.len !== undefined) {
-                        trace.colorbar.len = config.colorbar.len;
-                    }
-                    if (config.colorbar.show !== undefined) {
-                        trace.colorbar.visible = config.colorbar.show;
-                    }
-                }
-
-                if (trace.colorbar.tickfont) {
-                    trace.tickfont = fontConfig;
-                }
-                if (trace.colorbar.title && trace.colorbar.title.text) {
-                    if (typeof trace.colorbar.title === 'string') {
-                        trace.colorbar.title = {
-                            text: trace.colorbar.title.text,
-                            font: fontConfig,
-                        };
-                    } else {
-                        trace.colorbar.title.font = fontConfig;
-                    }
-                }
-            }
-
-            if (trace.marker && trace.marker.textfont) {
-                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
-            }
-
-            if (trace.hoverlabel && trace.hoverlabel.font) {
-                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
-            }
-
-            // Apply legend settings
-            if (config.legend) {
-                // Show/hide legend
-                if (config.legend.show !== undefined) {
-                    trace.showlegend = config.legend.show;
-                }
-
-                // Apply label format (short or long)
-                if (trace.name) {
-                    trace._fullName = trace.name;
-                    if (config.legend.label) {
-                        if (config.legend.label === 'short') {
-                            trace.name = labelShort[trace._fullName] || trace.name;
-                        } else if (config.legend.label === 'short') {
-                            trace.name = labelLong[trace._fullName] || trace.name;
-                        }
-                    }
-                }
-            }
+        // Add options
+        options.forEach((option) => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            optionElement.selected = option === value;
+            input.appendChild(optionElement);
         });
 
-        if (config.colors && config.colors.palette) {
-            const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
-            options.data.forEach((trace, index) => {
-                if (trace.marker?.color && trace.type === 'scatter') {
-                    const colorIndex = index % selectedPalette.length;
-                    const color = selectedPalette[colorIndex];
+        selectWrapper.appendChild(input);
+    } else if (type === 'checkbox') {
+        // Create a Bulma checkbox wrapper
+        const checkWrapper = document.createElement('label');
+        checkWrapper.className = 'checkbox';
 
-                    if (trace.marker) {
-                        trace.marker.color = color;
-                    }
-                    if (trace.line) {
-                        trace.line.color = color;
-                    }
-                    if (!trace.marker && !trace.line) {
-                        trace.marker = { color: color };
-                        trace.line = { color: color };
-                    }
-                }
-            });
-        }
+        input = document.createElement('input');
+        input.type = 'checkbox';
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
+        input.checked = value;
+        input.style.cssText = 'margin-right: 8px;';
 
-        if (config.contour && config.contour.colorscale) {
-            const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
-            options.data.forEach((trace) => {
-                if (
-                    trace.type === 'contour' ||
-                    trace.type === 'heatmap' ||
-                    trace.type === 'surface' ||
-                    trace.type === 'contourgl'
-                ) {
-                    trace.colorscale = selectedColorscale;
-                }
-            });
+        checkWrapper.appendChild(input);
+        checkWrapper.appendChild(document.createTextNode(label));
+
+        // Replace the main label with an empty span since we've moved the label text
+        const labelElement = group.querySelector('label');
+        if (labelElement) labelElement.textContent = '';
+
+        flexContainer.appendChild(checkWrapper);
+    } else if (type === 'number') {
+        input = document.createElement('input');
+        input.type = 'number';
+        input.name = name;
+        input.id = name;
+        input.value = value;
+        input.style.cssText = `
+            width: 100%;
+            padding: 5px;
+            border: 1px solid rgb(221, 221, 221);
+            border-radius: 3px;
+        `;
+
+        if (options) {
+            if (options.min !== undefined) input.min = options.min;
+            if (options.max !== undefined) input.max = options.max;
+            if (options.step !== undefined) input.step = options.step;
         }
+    } else if (type === 'color') {
+        // Create a Bulma color input with better styling
+        const colorWrapper = document.createElement('div');
+        colorWrapper.className = 'field has-addons';
+
+        input = document.createElement('input');
+        input.type = 'color';
+        input.className = 'input is-small';
+        input.name = name || label.toLowerCase().replace(/\s+/g, '');
+        input.value = value;
+        input.style.cssText = `
+            width: 40px;
+            height: 30px;
+            padding: 0;
+            cursor: pointer;
+        `;
+
+        const colorPreview = document.createElement('div');
+        colorPreview.style.cssText = `
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: ${value};
+            border: 1px solid #ddd;
+            margin-left: 8px;
+            vertical-align: middle;
+        `;
+
+        input.addEventListener('input', (e) => {
+            colorPreview.style.backgroundColor = e.target.value;
+        });
+
+        flexContainer.appendChild(input);
+        flexContainer.appendChild(colorPreview);
+    } else {
+        input = document.createElement('input');
+        input.type = type;
+        input.name = name;
+        input.id = name;
+        input.value = value;
+        input.style.cssText = `
+            width: 100%;
+            padding: 5px;
+            border: 1px solid rgb(221, 221, 221);
+            border-radius: 3px;
+        `;
     }
 
-    // Apply layout direction for multiple graphs (this will be used by the calling code)
-    if (config.layout && config.layout.direction) {
-        options._layoutDirection = config.layout.direction;
+    if (onChange) {
+        input.addEventListener('change', onChange);
     }
 
-    return options;
+    // Only append input directly if it's not already wrapped (select elements are wrapped)
+    if (type !== 'select' && type !== 'checkbox' && type !== 'color') {
+        flexContainer.appendChild(input);
+    }
+    return group;
 }

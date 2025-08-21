@@ -2038,9 +2038,9 @@ speakers_info_d: SpeakerDatabase = {
         "price": "2400",
         "amount": "each",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v10",
         "measurements": {
-            "vendor": {
+            "vendor-v10": {
                 "origin": "Vendors-Devialet",
                 "format": "gll_hv_txt",
                 "quality": "medium",
@@ -2058,7 +2058,7 @@ speakers_info_d: SpeakerDatabase = {
                     "weight": 11.4,
                 },
             },
-            "vendor-vGecko": {
+            "vendor-v10-gecko": {
                 "origin": "Vendors-Devialet",
                 "format": "gll_hv_txt",
                 "quality": "medium",
@@ -2076,7 +2076,7 @@ speakers_info_d: SpeakerDatabase = {
                     "weight": 11.4,
                 },
             },
-            "vendor-vTree": {
+            "vendor-v10-tree": {
                 "origin": "Vendors-Devialet",
                 "format": "gll_hv_txt",
                 "quality": "medium",
