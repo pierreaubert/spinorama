@@ -23,7 +23,7 @@ A web-based interface for managing speaker metadata in the Spinorama project. Th
 
 2. **Start the Server**:
    ```bash
-   python src/metadata/start_metadata_manager.py
+   python src/metadata/start.py 
    ```
 
 3. **Open in Browser**:

@@ -114,7 +114,7 @@ getMetadata()
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
                         const currentGraphs = [graphs[0], graphs[i + 1]];
-                        const currentNames = [speakersName[0] + ' v.s. ' + speakersName[i + 1], speakersName[i + 1]];
+                        const currentNames = [speakersName[0] + '<br> v.s. ' + speakersName[i + 1], speakersName[i + 1]];
                         if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
                             graphOptions = setCEA2034(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
@@ -159,20 +159,16 @@ getMetadata()
 
                         if (graphOptions?.length === 1) {
                             let options = applyConfig(graphOptions[0], config);
-                            options.layout.title = currentNames[0];
                             Plotly.newPlot('plot' + i, options);
                         } else if (graphOptions?.length === 2) {
                             if (i === 0) {
                                 let options0 = applyConfig(graphOptions[0], config);
-                                options0.layout.title = speakersName[0];
                                 Plotly.newPlot('plot0', options0);
                                 let options1 = applyConfig(graphOptions[1], config);
-                                options1.layout.title = speakersName[1];
                                 Plotly.newPlot('plot1', options1);
                             } else {
                                 const pos = i + 1;
                                 let options = applyConfig(graphOptions[1], config);
-                                options.layout.title = speakersName[pos];
                                 Plotly.newPlot('plot' + pos, options);
                             }
                         }
