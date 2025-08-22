@@ -290,4 +290,142 @@ describe('Speaker Metadata Manager', () => {
       expect(result.valid).toBe(true)
     })
   })
+
+  describe('Multiple Measurements Loading', () => {
+    it('should load KEF LS60 Wireless with multiple measurements correctly', async () => {
+      const mockSpeakerData = {
+        "brand": "KEF",
+        "model": "LS60 Wireless",
+        "type": "active",
+        "shape": "floorstanders",
+        "measurements": {
+          "eac-0-degree": {
+            "origin": "ErinsAudioCorner",
+            "format": "klippel",
+            "review_published": "20231218",
+            "specifications": {
+              "SPL": { "peak": 111 },
+              "size": { "height": 1090, "width": 212, "depth": 394 },
+              "weight": 31.2
+            }
+          },
+          "eac-15-degree": {
+            "origin": "ErinsAudioCorner", 
+            "format": "klippel",
+            "review_published": "20231218",
+            "specifications": {
+              "SPL": { "peak": 111 },
+              "size": { "height": 1090, "width": 212, "depth": 394 },
+              "weight": 31.2
+            }
+          },
+          "vendor": {
+            "origin": "Vendors-KEF",
+            "format": "webplotdigitizer",
+            "quality": "medium",
+            "review_published": "20220909",
+            "specifications": {
+              "SPL": { "peak": 111 },
+              "size": { "height": 1090, "width": 212, "depth": 394 },
+              "weight": 31.2
+            }
+          }
+        },
+        "default_measurement": "eac-0-degree"
+      }
+
+      const { SpeakerMetadataManager } = await import('./manager.js')
+      const manager = new SpeakerMetadataManager()
+      
+      // Set the speaker data and populate form
+      manager.currentSpeakerData = mockSpeakerData
+      manager.populateForm()
+      
+      // Check that all measurements were loaded
+      const measurementPanels = document.querySelectorAll('.measurement-panel')
+      expect(measurementPanels.length).toBe(3)
+      
+      // Check that measurement titles show the actual keys
+      const panelHeadings = document.querySelectorAll('.panel-heading')
+      const headingTexts = Array.from(panelHeadings).map(h => h.textContent.trim().split('\n')[0].trim())
+      expect(headingTexts).toContain('eac-0-degree')
+      expect(headingTexts).toContain('eac-15-degree') 
+      expect(headingTexts).toContain('vendor')
+      
+      // Check that review_published dates are loaded correctly
+      const dateInputs = document.querySelectorAll('.measurement-review-published')
+      const dateValues = Array.from(dateInputs).map(input => input.value)
+      expect(dateValues).toContain('2023-12-18')
+      expect(dateValues).toContain('2022-09-09')
+    })
+
+    it('should convert dates correctly when collecting form data', async () => {
+      const { SpeakerMetadataManager } = await import('./manager.js')
+      const manager = new SpeakerMetadataManager()
+      
+      // Mock DOM elements for form data collection
+      const mockPanel = {
+        querySelector: (selector) => {
+          const mockInputs = {
+            '.measurement-key': { value: 'test-measurement' },
+            '.measurement-origin': { value: 'TestOrigin' },
+            '.measurement-format': { value: 'klippel' },
+            '.measurement-quality': { value: 'high' },
+            '.measurement-notes': { value: 'Test notes' },
+            '.measurement-review': { value: 'Test review' },
+            '.measurement-review-published': { value: '2023-12-18' }, // HTML date format
+            '.measurement-symmetry': { value: 'vertical' },
+            '.measurement-da-via': { value: '' },
+            '.measurement-da-distance': { value: '' },
+            '.measurement-da-signal': { value: '' },
+            '.measurement-da-resolution': { value: '' },
+            '.measurement-da-min-freq': { value: '' },
+            '.measurement-da-max-freq': { value: '' },
+            '.measurement-da-air-absorption': { checked: false },
+            '.measurement-da-notes': { value: '' },
+            '.measurement-extras-equed': { checked: false },
+            '.measurement-extras-penalty': { value: '' },
+            '.measurement-spec-sensitivity': { value: '' },
+            '.measurement-spec-impedance': { value: '' },
+            '.measurement-spec-weight': { value: '' },
+            '.measurement-spec-height': { value: '' },
+            '.measurement-spec-width': { value: '' },
+            '.measurement-spec-depth': { value: '' },
+            '.measurement-spec-spl-peak': { value: '' },
+            '.measurement-spec-spl-continuous': { value: '' },
+            '.measurement-spec-spl-max': { value: '' },
+            '.measurement-spec-disp-horizontal': { value: '' },
+            '.measurement-spec-disp-vertical': { value: '' }
+          }
+          return mockInputs[selector] || { value: '', checked: false }
+        }
+      }
+
+      // Mock DOM methods
+      global.document = {
+        getElementById: (id) => {
+          const mockElements = {
+            'form-brand': { value: 'TestBrand' },
+            'form-model': { value: 'TestModel' },
+            'form-type': { value: 'active' },
+            'form-shape': { value: 'bookshelves' },
+            'form-price': { value: '1000' },
+            'form-amount': { value: 'pair' }
+          }
+          return mockElements[id] || { value: '' }
+        },
+        querySelectorAll: (selector) => {
+          if (selector === '.measurement-panel') {
+            return [mockPanel]
+          }
+          return []
+        }
+      }
+
+      manager.collectFormData()
+      
+      // Check that the date was converted from YYYY-MM-DD to YYYYMMDD
+      expect(manager.currentSpeakerData.measurements['test-measurement'].review_published).toBe('20231218')
+    })
+  })
 })
