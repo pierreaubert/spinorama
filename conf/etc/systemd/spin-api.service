@@ -1,0 +1,14 @@
+[Unit]
+Description=Spinorama API
+After=default.target
+
+[Service]
+StandardOutput=journal
+Environment="SPINAPI_ENV=prod"
+ExecStart=/bin/bash -c 'cd /var/www/html/spinorama-api && source ./.venv/bin/activate && ./gunicorn_start.sh'
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
