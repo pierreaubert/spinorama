@@ -64,6 +64,109 @@ class SpeakerMetadataManager {
         return dateString.replace(/-/g, '');
     }
 
+    renderReviewsFields(reviews) {
+        let html = '';
+        Object.entries(reviews).forEach(([key, url]) => {
+            html += `
+                <div class="field has-addons review-field mb-2">
+                    <div class="control">
+                        <input class="input review-key" type="text" placeholder="Review key" value="${key}">
+                    </div>
+                    <div class="control is-expanded">
+                        <input class="input review-url" type="url" placeholder="Review URL" value="${url}">
+                    </div>
+                    <div class="control">
+                        <button type="button" class="button is-danger remove-review-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Add empty field if no reviews exist
+        if (Object.keys(reviews).length === 0) {
+            html += `
+                <div class="field has-addons review-field mb-2">
+                    <div class="control">
+                        <input class="input review-key" type="text" placeholder="Review key">
+                    </div>
+                    <div class="control is-expanded">
+                        <input class="input review-url" type="url" placeholder="Review URL">
+                    </div>
+                    <div class="control">
+                        <button type="button" class="button is-danger remove-review-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        return html;
+    }
+
+    convertLegacyReviews(speakerData) {
+        // Deep clone the speaker data to avoid modifying the original
+        const convertedData = JSON.parse(JSON.stringify(speakerData));
+        
+        // Convert legacy review fields in measurements
+        if (convertedData.measurements) {
+            Object.keys(convertedData.measurements).forEach(measurementKey => {
+                const measurement = convertedData.measurements[measurementKey];
+                
+                // If there's a legacy 'review' field, convert it to 'reviews' with 'default' key
+                if (measurement.review && !measurement.reviews) {
+                    measurement.reviews = {
+                        'default': measurement.review
+                    };
+                    // Remove the legacy field
+                    delete measurement.review;
+                }
+            });
+        }
+        
+        return convertedData;
+    }
+
+    setupReviewHandlers(measurementPanel) {
+        const addBtn = measurementPanel.querySelector('.add-review-btn');
+        const container = measurementPanel.querySelector('.measurement-reviews-container');
+        
+        // Add review button handler
+        addBtn.addEventListener('click', () => {
+            const newReviewField = document.createElement('div');
+            newReviewField.className = 'field has-addons review-field mb-2';
+            newReviewField.innerHTML = `
+                <div class="control">
+                    <input class="input review-key" type="text" placeholder="Review key">
+                </div>
+                <div class="control is-expanded">
+                    <input class="input review-url" type="url" placeholder="Review URL">
+                </div>
+                <div class="control">
+                    <button type="button" class="button is-danger remove-review-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(newReviewField);
+            
+            // Add remove handler for the new field
+            newReviewField.querySelector('.remove-review-btn').addEventListener('click', () => {
+                newReviewField.remove();
+            });
+        });
+        
+        // Add remove handlers for existing review fields
+        container.querySelectorAll('.remove-review-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.target.closest('.review-field').remove();
+            });
+        });
+    }
+
     async loadInitialData() {
         try {
             // Load speakers
@@ -191,7 +294,8 @@ class SpeakerMetadataManager {
                 return;
             }
             
-            this.currentSpeakerData = speakerData;
+            // Convert legacy review field to reviews dictionary
+            this.currentSpeakerData = this.convertLegacyReviews(speakerData);
             this.populateForm();
         } catch (error) {
             console.error('Error loading speaker:', error);
@@ -335,9 +439,14 @@ class SpeakerMetadataManager {
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
-                                    <label class="label">Review</label>
+                                    <label class="label">Reviews</label>
                                     <div class="control">
-                                        <textarea class="textarea measurement-review" placeholder="Review text">${measurementData.review || ''}</textarea>
+                                        <div class="measurement-reviews-container">
+                                            ${this.renderReviewsFields(measurementData.reviews || {})}
+                                        </div>
+                                        <button type="button" class="button is-small is-info add-review-btn">
+                                            <i class="fas fa-plus"></i> Add Review
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -607,6 +716,9 @@ class SpeakerMetadataManager {
             measurementPanel.remove();
         });
         
+        // Add review management functionality
+        this.setupReviewHandlers(measurementPanel);
+        
         // Update speaker type dependent fields
         if (this.updateSpeakerTypeDependentFields) {
             this.updateSpeakerTypeDependentFields();
@@ -651,13 +763,23 @@ class SpeakerMetadataManager {
                 // Basic fields
                 const quality = panel.querySelector('.measurement-quality').value;
                 const notes = panel.querySelector('.measurement-notes').value;
-                const review = panel.querySelector('.measurement-review').value;
                 const reviewPublished = panel.querySelector('.measurement-review-published').value;
                 const symmetry = panel.querySelector('.measurement-symmetry').value;
                 
+                // Collect reviews
+                const reviews = {};
+                const reviewFields = panel.querySelectorAll('.review-field');
+                reviewFields.forEach(field => {
+                    const key = field.querySelector('.review-key').value.trim();
+                    const url = field.querySelector('.review-url').value.trim();
+                    if (key && url) {
+                        reviews[key] = url;
+                    }
+                });
+                
                 if (quality) measurement.quality = quality;
                 if (notes) measurement.notes = notes;
-                if (review) measurement.review = review;
+                if (Object.keys(reviews).length > 0) measurement.reviews = reviews;
                 if (reviewPublished) measurement.review_published = this.formatDateForPython(reviewPublished);
                 if (symmetry && symmetry !== 'none') measurement.symmetry = symmetry;
                 
