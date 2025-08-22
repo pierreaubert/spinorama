@@ -1,243 +1,196 @@
-// Simple 3-Step Speaker Metadata Manager
-class SimpleMetadataManager {
+// Speaker Metadata Manager - Main Application
+class SpeakerMetadataManager {
     constructor() {
         this.currentStep = 1;
-        this.selectedSpeaker = null;
-        this.isNewSpeaker = false;
         this.speakers = [];
+        this.brands = [];
+        this.currentSpeakerData = {};
         this.measurementCounter = 0;
         
         this.init();
     }
-    
-    init() {
+
+    async init() {
         this.setupEventListeners();
-        this.loadSpeakers();
-        this.showStep(1);
+        await this.loadInitialData();
+        this.updateStepIndicator();
     }
-    
-    showStep(stepNum) {
-        this.currentStep = stepNum;
-        
-        // Update step indicators
-        ['step-1-indicator', 'step-2-indicator', 'step-3-indicator'].forEach((id, idx) => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            if (idx < stepNum - 1) {
-                el.classList.add('is-completed');
-                el.classList.remove('is-active');
-            } else if (idx === stepNum - 1) {
-                el.classList.add('is-active');
-                el.classList.remove('is-completed');
-            } else {
-                el.classList.remove('is-active', 'is-completed');
-            }
-        });
-        
-        // Show/hide step content
-        ['step-1', 'step-2', 'step-3'].forEach((id, idx) => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            if (idx === stepNum - 1) {
-                el.classList.add('active');
-            } else {
-                el.classList.remove('active');
-            }
-        });
-        
-        // Manage step navigation buttons
-        const continueStep2 = document.getElementById('continue-step-2');
-        if (continueStep2) {
-            // Disable Step 3 button when at Step 1
-            continueStep2.disabled = (stepNum === 1);
-        }
-        
-        // Special handling for each step
-        if (stepNum === 3) {
-            this.generatePythonCode();
-        }
-    }
-    
+
     setupEventListeners() {
-        // Step 1: Speaker search
-        const searchInput = document.getElementById('speaker-search');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                this.filterSpeakers(e.target.value);
-            });
+        // Skip DOM setup in test environment
+        if (typeof window === 'undefined' || !document.getElementById) {
+            return;
         }
         
-        // Step 1: Create new speaker button
-        const createNewBtn = document.getElementById('create-new-btn');
-        if (createNewBtn) {
-            createNewBtn.addEventListener('click', () => {
-                this.createNewSpeaker();
-            });
-        }
-        
-        // Step 1: Continue button
-        const continueStep1 = document.getElementById('continue-step-1');
-        if (continueStep1) {
-            continueStep1.addEventListener('click', () => {
-                this.showStep(2);
-                this.populateMetadataForm();
-            });
-        }
-        
-        // Step 2: Add measurement button
-        const addMeasurementBtn = document.getElementById('add-measurement-btn');
-        if (addMeasurementBtn) {
-            addMeasurementBtn.addEventListener('click', () => {
-                this.addMeasurement();
-            });
-        }
-        
-        // Step 2: Measurement tab switching
-        this.setupMeasurementTabListeners();
-        
-        // Step 2: Back and continue buttons
-        const backStep1 = document.getElementById('back-step-1');
-        if (backStep1) {
-            backStep1.addEventListener('click', () => {
-                this.showStep(1);
-            });
-        }
-        
-        const continueStep2 = document.getElementById('continue-step-2');
-        if (continueStep2) {
-            continueStep2.addEventListener('click', () => {
-                this.saveMetadataForm();
-                this.showStep(3);
-            });
-        }
+        // Step navigation
+        document.getElementById('next-to-step-2')?.addEventListener('click', () => this.goToStep2());
+        document.getElementById('back-to-step-1')?.addEventListener('click', () => this.goToStep(1));
+        document.getElementById('next-to-step-3')?.addEventListener('click', () => this.goToStep3());
+        document.getElementById('back-to-step-2')?.addEventListener('click', () => this.goToStep(2));
+        document.getElementById('start-over')?.addEventListener('click', () => this.startOver());
+
+        // Speaker option toggle
+        document.querySelectorAll('input[name="speaker-option"]').forEach(radio => {
+            radio.addEventListener('change', (e) => this.toggleSpeakerOption(e.target.value));
+        });
         
         // Speaker type change listener
-        const speakerTypeSelect = document.querySelector('[name="type"]');
-        if (speakerTypeSelect) {
-            speakerTypeSelect.addEventListener('change', () => {
-                this.handleSpeakerTypeChange();
-            });
+        document.getElementById('form-type')?.addEventListener('change', () => this.updateSpeakerTypeDependentFields());
+
+        // Speaker search
+        document.getElementById('speaker-search')?.addEventListener('input', (e) => this.filterSpeakers(e.target.value));
+
+        // Brand selection
+        document.getElementById('brand-list')?.addEventListener('change', (e) => this.selectBrand(e.target.value));
+        document.getElementById('new-brand')?.addEventListener('input', (e) => this.handleNewBrand(e.target.value));
+
+        // Add measurement
+        document.getElementById('add-measurement')?.addEventListener('click', () => this.addMeasurement());
+
+        // Export actions
+        document.getElementById('download-code')?.addEventListener('click', () => this.downloadCode());
+        document.getElementById('copy-code')?.addEventListener('click', () => this.copyCode());
+    }
+
+    async loadInitialData() {
+        try {
+            // Load speakers
+            const speakersResponse = await fetch('/api/v1/speakers');
+            this.speakers = await speakersResponse.json();
+            this.populateSpeakerList();
+
+            // Load brands
+            const brandsResponse = await fetch('/api/v1/brands');
+            this.brands = await brandsResponse.json();
+            this.populateBrandList();
+        } catch (error) {
+            console.error('Error loading initial data:', error);
+            this.showError('Failed to load initial data. Please check your connection.');
+        }
+    }
+
+    populateSpeakerList() {
+        // Skip DOM updates in test environment
+        if (typeof window === 'undefined' || !document.getElementById) {
+            return;
         }
         
-        // Step 3: Back and commit buttons
-        const backStep2 = document.getElementById('back-step-2');
-        if (backStep2) {
-            backStep2.addEventListener('click', () => {
-                this.showStep(2);
-            });
-        }
-
-        const writeMetadataBtn = document.getElementById('write-metadata-btn');
-        if (writeMetadataBtn) {
-            writeMetadataBtn.addEventListener('click', () => {
-                this.writeMetadataToFile();
-            });
-        }
-
-        const createCommitBtn = document.getElementById('create-commit-btn');
-        if (createCommitBtn) {
-            createCommitBtn.addEventListener('click', () => {
-                this.createGitCommit();
-            });
-        }
-
-        const startOverBtn = document.getElementById('start-over-btn');
-        if (startOverBtn) {
-            startOverBtn.addEventListener('click', () => {
-                this.startOver();
-            });
-        }
-    }
-    
-    async loadSpeakers() {
-        try {
-            const response = await fetch('/api/speakers');
-            const result = await response.json();
-            
-            if (result.success) {
-                this.speakers = result.data;
-                this.renderSpeakerList();
-            } else {
-                throw new Error(result.message || 'Failed to load speakers');
-            }
-        } catch (error) {
-            console.error('Failed to load speakers:', error);
-            this.showNotification('Failed to load speakers', 'error');
-            // Show fallback message
-            const speakerList = document.getElementById('speaker-list');
-            if (speakerList) {
-                speakerList.innerHTML = '<div class="has-text-centered has-text-grey"><p>Failed to load speakers. Please refresh the page.</p></div>';
-            }
-        }
-    }
-    
-    renderSpeakerList(filter = '') {
         const speakerList = document.getElementById('speaker-list');
         if (!speakerList) return;
         
-        const filteredSpeakers = this.speakers.filter(speaker => {
-            if (!filter) return true;
-            const searchText = `${speaker.brand} ${speaker.model}`.toLowerCase();
-            return searchText.includes(filter.toLowerCase());
-        });
+        speakerList.innerHTML = '<option value="">Select a speaker...</option>';
         
-        if (filteredSpeakers.length === 0) {
-            speakerList.innerHTML = '<div class="has-text-centered has-text-grey"><p>No speakers found</p></div>';
+        this.speakers.forEach(speaker => {
+            const option = document.createElement('option');
+            option.value = speaker;
+            option.textContent = speaker;
+            speakerList.appendChild(option);
+        });
+    }
+
+    populateBrandList() {
+        // Skip DOM updates in test environment
+        if (typeof window === 'undefined' || !document.getElementById) {
             return;
         }
         
-        speakerList.innerHTML = filteredSpeakers.map(speaker => `
-            <div class="speaker-item" data-speaker-id="${speaker.id}">
-                <div class="has-text-weight-semibold">${speaker.brand} ${speaker.model}</div>
-                <div class="is-size-7 has-text-grey">${speaker.type} • ${speaker.shape}</div>
-                <div class="is-size-7 has-text-grey">${Object.keys(speaker.measurements || {}).length} measurements</div>
-            </div>
-        `).join('');
+        const brandList = document.getElementById('brand-list');
+        if (!brandList) return;
         
-        // Add click handlers
-        speakerList.querySelectorAll('.speaker-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const speakerId = item.dataset.speakerId;
-                const speaker = this.speakers.find(s => s.id === speakerId);
-                this.selectSpeaker(speaker, item);
-            });
+        brandList.innerHTML = '<option value="">Select a brand...</option>';
+        
+        this.brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand;
+            option.textContent = brand;
+            brandList.appendChild(option);
         });
     }
-    
-    filterSpeakers(filter) {
-        this.renderSpeakerList(filter);
-    }
-    
-    selectSpeaker(speaker, element) {
-        this.selectedSpeaker = speaker;
-        this.isNewSpeaker = false;
+
+    filterSpeakers(searchTerm) {
+        const speakerList = document.getElementById('speaker-list');
+        const options = speakerList.querySelectorAll('option');
         
-        // Update UI to show selection
-        document.querySelectorAll('.speaker-item').forEach(item => {
-            item.classList.remove('selected');
+        options.forEach(option => {
+            if (option.value === '') return; // Keep the default option
+            
+            const matches = option.textContent.toLowerCase().includes(searchTerm.toLowerCase());
+            option.style.display = matches ? 'block' : 'none';
         });
-        element.classList.add('selected');
+    }
+
+    toggleSpeakerOption(option) {
+        const existingSection = document.getElementById('existing-speaker-section');
+        const newSection = document.getElementById('new-speaker-section');
         
-        // Enable continue button
-        const continueBtn = document.getElementById('continue-step-1');
-        if (continueBtn) {
-            continueBtn.disabled = false;
+        if (option === 'existing') {
+            existingSection.classList.remove('hidden');
+            newSection.classList.add('hidden');
+        } else {
+            existingSection.classList.add('hidden');
+            newSection.classList.remove('hidden');
         }
     }
-    
-    createNewSpeaker() {
-        const brand = document.getElementById('new-brand').value.trim();
-        const model = document.getElementById('new-model').value.trim();
+
+    selectBrand(brand) {
+        if (brand) {
+            document.getElementById('new-brand').value = '';
+        }
+    }
+
+    handleNewBrand(newBrand) {
+        if (newBrand) {
+            document.getElementById('brand-list').value = '';
+        }
+    }
+
+    goToStep2() {
+        const option = document.querySelector('input[name="speaker-option"]:checked').value;
         
-        if (!brand || !model) {
-            this.showNotification('Please enter both brand and model', 'error');
-            return;
+        if (option === 'existing') {
+            const selectedSpeaker = document.getElementById('speaker-list').value;
+            if (!selectedSpeaker) {
+                this.showError('Please select a speaker.');
+                return;
+            }
+            this.loadExistingSpeaker(selectedSpeaker);
+        } else {
+            const brand = document.getElementById('brand-list').value || document.getElementById('new-brand').value;
+            const speakerName = document.getElementById('speaker-name').value;
+            
+            if (!brand || !speakerName) {
+                this.showError('Please provide both brand and speaker name.');
+                return;
+            }
+            
+            this.createNewSpeaker(brand, speakerName);
         }
         
-        // Create a new speaker object
-        this.selectedSpeaker = {
+        this.goToStep(2);
+    }
+
+    async loadExistingSpeaker(speakerName) {
+        try {
+            const response = await fetch(`/api/v1/speaker/${encodeURIComponent(speakerName)}/metadata`);
+            const speakerData = await response.json();
+            
+            if (speakerData.error) {
+                this.showError(`Error loading speaker: ${speakerData.error}`);
+                return;
+            }
+            
+            this.currentSpeakerData = speakerData;
+            this.populateForm();
+        } catch (error) {
+            console.error('Error loading speaker:', error);
+            this.showError('Failed to load speaker data.');
+        }
+    }
+
+    createNewSpeaker(brand, speakerName) {
+        this.currentSpeakerData = {
             brand: brand,
-            model: model,
+            model: speakerName,
             type: '',
             shape: '',
             price: '',
@@ -245,1296 +198,756 @@ class SimpleMetadataManager {
             measurements: {},
             default_measurement: ''
         };
-        this.isNewSpeaker = true;
-        
-        // Clear any existing selection
-        document.querySelectorAll('.speaker-item').forEach(item => {
-            item.classList.remove('selected');
-        });
-        
-        // Enable continue button
-        const continueBtn = document.getElementById('continue-step-1');
-        if (continueBtn) {
-            continueBtn.disabled = false;
-        }
-        
-        this.showNotification(`Created new speaker: ${brand} ${model}`, 'success');
-    }
-    
-    populateMetadataForm() {
-        if (!this.selectedSpeaker) return;
-        
-        // Update the current speaker info
-        const speakerInfo = document.getElementById('current-speaker-info');
-        if (speakerInfo) {
-            speakerInfo.textContent = `Editing: ${this.selectedSpeaker.brand} ${this.selectedSpeaker.model}`;
-        }
-        
-        // Populate form fields
-        const form = document.getElementById('metadata-form');
-        if (!form) return;
-        
-        form.querySelector('[name="brand"]').value = this.selectedSpeaker.brand || '';
-        form.querySelector('[name="model"]').value = this.selectedSpeaker.model || '';
-        form.querySelector('[name="type"]').value = this.selectedSpeaker.type || '';
-        form.querySelector('[name="shape"]').value = this.selectedSpeaker.shape || '';
-        const priceField = form.querySelector('[name="price"]');
-        if (priceField) priceField.value = this.selectedSpeaker.price || '';
-        const amountField = form.querySelector('[name="amount"]');
-        if (amountField) amountField.value = this.selectedSpeaker.amount || '';
-        
-        // Populate measurements and set up tabs
-        this.renderMeasurements();
-        
-        // Handle speaker type-specific field enabling/disabling
-        this.handleSpeakerTypeChange();
+        this.populateForm();
     }
 
-    setFieldValue(fieldId, value) {
-        const field = document.getElementById(fieldId);
-        if (field && value !== undefined && value !== null) {
-            field.value = value;
-        }
-    }
-
-    setCheckboxValue(fieldId, value) {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.checked = Boolean(value);
-        }
-    }
-    
-    setupMeasurementTabListeners() {
-        const tabsContainer = document.querySelector('#measurement-tabs .tabs ul');
-        if (tabsContainer) {
-            tabsContainer.addEventListener('click', (e) => {
-                const tabLink = e.target.closest('a');
-                if (tabLink) {
-                    const tab = tabLink.closest('li');
-                    const measurementName = tab.dataset.measurement;
-                    if (measurementName) {
-                        this.switchToMeasurementTab(measurementName);
-                    }
-                }
+    populateForm() {
+        const data = this.currentSpeakerData;
+        
+        document.getElementById('form-speaker-name').value = `${data.brand} ${data.model}`;
+        document.getElementById('form-brand').value = data.brand || '';
+        document.getElementById('form-model').value = data.model || '';
+        document.getElementById('form-type').value = data.type || '';
+        document.getElementById('form-shape').value = data.shape || '';
+        document.getElementById('form-price').value = data.price || '';
+        document.getElementById('form-amount').value = data.amount || '';
+        
+        // Clear existing measurements
+        document.getElementById('measurements-container').innerHTML = '';
+        this.measurementCounter = 0;
+        
+        // Add existing measurements
+        if (data.measurements) {
+            Object.keys(data.measurements).forEach(key => {
+                this.addMeasurement(key, data.measurements[key]);
             });
         }
+        
+        // Add at least one measurement panel if none exist
+        if (this.measurementCounter === 0) {
+            this.addMeasurement();
+        }
     }
-    
-    handleSpeakerTypeChange() {
-        const speakerTypeSelect = document.querySelector('[name="type"]');
-        if (!speakerTypeSelect) return;
+
+    addMeasurement(measurementKey = '', measurementData = {}) {
+        this.measurementCounter++;
+        const container = document.getElementById('measurements-container');
         
-        const speakerType = speakerTypeSelect.value;
-        const isActive = speakerType === 'active';
+        const today = new Date().toISOString().split('T')[0];
         
-        // Find sensitivity and impedance fields in both measurement and specifications sections
-        const sensitivityFields = [
-            document.getElementById('sensitivity'),
-            document.getElementById('specifications_sensitivity')
-        ];
-        
-        const impedanceFields = [
-            document.getElementById('specifications_impedance')
-        ];
-        
-        // Disable/enable sensitivity fields
-        sensitivityFields.forEach(field => {
-            if (field) {
-                field.disabled = isActive;
-                if (isActive) {
-                    field.classList.add('is-disabled');
-                    field.style.backgroundColor = '#f5f5f5';
-                    field.style.color = '#999';
-                    field.value = ''; // Clear value when disabled
-                } else {
-                    field.classList.remove('is-disabled');
-                    field.style.backgroundColor = '';
-                    field.style.color = '';
-                }
-            }
-        });
-        
-        // Disable/enable impedance fields
-        impedanceFields.forEach(field => {
-            if (field) {
-                field.disabled = isActive;
-                if (isActive) {
-                    field.classList.add('is-disabled');
-                    field.style.backgroundColor = '#f5f5f5';
-                    field.style.color = '#999';
-                    field.value = ''; // Clear value when disabled
-                } else {
-                    field.classList.remove('is-disabled');
-                    field.style.backgroundColor = '';
-                    field.style.color = '';
-                }
-            }
-        });
-        
-        // Update field labels to indicate why they're disabled
-        const sensitivityLabels = document.querySelectorAll('label[for="sensitivity"], label[for="specifications_sensitivity"]');
-        const impedanceLabels = document.querySelectorAll('label[for="specifications_impedance"]');
-        
-        sensitivityLabels.forEach(label => {
-            if (label) {
-                const originalText = label.textContent.replace(' (N/A for active speakers)', '');
-                if (isActive) {
-                    label.textContent = originalText + ' (N/A for active speakers)';
-                    label.style.color = '#999';
-                } else {
-                    label.textContent = originalText;
-                    label.style.color = '';
-                }
-            }
-        });
-        
-        impedanceLabels.forEach(label => {
-            if (label) {
-                const originalText = label.textContent.replace(' (N/A for active speakers)', '');
-                if (isActive) {
-                    label.textContent = originalText + ' (N/A for active speakers)';
-                    label.style.color = '#999';
-                } else {
-                    label.textContent = originalText;
-                    label.style.color = '';
-                }
-            }
-        });
-    }
-    
-    addMeasurementTab(measurementName) {
-        const tabsContainer = document.querySelector('#measurement-tabs .tabs ul');
-        if (!tabsContainer) return;
-        
-        // Create new tab
-        const newTab = document.createElement('li');
-        newTab.dataset.measurement = measurementName;
-        newTab.innerHTML = `
-            <a>
-                <span>${measurementName}</span>
-                <button class="delete is-small ml-2" onclick="event.stopPropagation(); window.metadataManager.removeMeasurementTab('${measurementName}')"></button>
-            </a>
+        const measurementPanel = document.createElement('div');
+        measurementPanel.className = 'measurement-panel';
+        measurementPanel.innerHTML = `
+            <article class="panel is-primary">
+                <p class="panel-heading">
+                    Measurement ${this.measurementCounter}
+                    <button type="button" class="button is-small is-danger is-pulled-right remove-measurement">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </p>
+                <div class="panel-block">
+                    <div class="container">
+                        <!-- Basic Measurement Info -->
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Measurement Key</label>
+                                    <div class="control">
+                                        <input class="input measurement-key" type="text" value="${measurementKey}" placeholder="e.g., asr, klippel, vendor">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Origin</label>
+                                    <div class="control">
+                                        <input class="input measurement-origin" type="text" value="${measurementData.origin || ''}" placeholder="e.g., ASR, Klippel, Vendor" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Format</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select class="measurement-format" required>
+                                                <option value="">Select format</option>
+                                                <option value="klippel" ${measurementData.format === 'klippel' ? 'selected' : ''}>Klippel</option>
+                                                <option value="webplotdigitizer" ${measurementData.format === 'webplotdigitizer' ? 'selected' : ''}>WebPlotDigitizer</option>
+                                                <option value="spl_hv_txt" ${measurementData.format === 'spl_hv_txt' ? 'selected' : ''}>SPL HV TXT</option>
+                                                <option value="gll_hv_txt" ${measurementData.format === 'gll_hv_txt' ? 'selected' : ''}>GLL HV TXT</option>
+                                                <option value="princeton" ${measurementData.format === 'princeton' ? 'selected' : ''}>Princeton</option>
+                                                <option value="rew_text_dump" ${measurementData.format === 'rew_text_dump' ? 'selected' : ''}>REW Text Dump</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Quality</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select class="measurement-quality">
+                                                <option value="">Select quality</option>
+                                                <option value="low" ${measurementData.quality === 'low' ? 'selected' : ''}>Low</option>
+                                                <option value="medium" ${measurementData.quality === 'medium' ? 'selected' : ''}>Medium</option>
+                                                <option value="high" ${measurementData.quality === 'high' ? 'selected' : ''}>High</option>
+                                                <option value="unknown" ${measurementData.quality === 'unknown' ? 'selected' : ''}>Unknown</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reviews Section -->
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Review</label>
+                                    <div class="control">
+                                        <textarea class="textarea measurement-review" placeholder="Review text">${measurementData.review || ''}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Review Published Date</label>
+                                    <div class="control">
+                                        <input class="input measurement-review-published" type="date" value="${measurementData.review_published || today}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Symmetry -->
+                        <div class="columns">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">Symmetry</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select class="measurement-symmetry">
+                                                <option value="none" ${(measurementData.symmetry || 'none') === 'none' ? 'selected' : ''}>None</option>
+                                                <option value="coaxial" ${measurementData.symmetry === 'coaxial' ? 'selected' : ''}>Coaxial</option>
+                                                <option value="vertical" ${measurementData.symmetry === 'vertical' ? 'selected' : ''}>Vertical</option>
+                                                <option value="horizontal" ${measurementData.symmetry === 'horizontal' ? 'selected' : ''}>Horizontal</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Acquisition Section -->
+                        <div class="field">
+                            <label class="label">Data Acquisition</label>
+                            <div class="box">
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Via</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-via" type="text" value="${measurementData.data_acquisition?.via || ''}" placeholder="e.g., microphone">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Distance (m)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-distance" type="number" step="0.1" value="${measurementData.data_acquisition?.distance || ''}" placeholder="e.g., 1.0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Signal</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-signal" type="text" value="${measurementData.data_acquisition?.signal || ''}" placeholder="e.g., sine sweep">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Resolution (Hz)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-resolution" type="number" step="0.1" value="${measurementData.data_acquisition?.resolution || ''}" placeholder="e.g., 0.1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Min Valid Freq (Hz)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-min-freq" type="number" value="${measurementData.data_acquisition?.min_valid_freq || ''}" placeholder="e.g., 20">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Max Valid Freq (Hz)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-da-max-freq" type="number" value="${measurementData.data_acquisition?.max_valid_freq || ''}" placeholder="e.g., 20000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column is-half">
+                                        <div class="field">
+                                            <label class="checkbox">
+                                                <input type="checkbox" class="measurement-da-air-absorption" ${measurementData.data_acquisition?.air_absorbtion ? 'checked' : ''}>
+                                                Air Absorption Correction
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label is-small">Data Acquisition Notes</label>
+                                    <div class="control">
+                                        <textarea class="textarea is-small measurement-da-notes" placeholder="Additional notes about data acquisition">${measurementData.data_acquisition?.notes || ''}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Extras Section -->
+                        <div class="field">
+                            <label class="label">Extras</label>
+                            <div class="box">
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="checkbox">
+                                                <input type="checkbox" class="measurement-extras-equed" ${measurementData.extras?.is_equed ? 'checked' : ''}>
+                                                Is EQ'd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Score Penalty</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-extras-penalty" type="number" step="0.1" value="${measurementData.extras?.score_penalty || ''}" placeholder="e.g., 0.5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Specifications Section -->
+                        <div class="field">
+                            <label class="label">Specifications</label>
+                            <div class="box">
+                                <div class="columns">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Sensitivity (dB)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-spec-sensitivity speaker-type-dependent" type="number" step="0.1" value="${measurementData.specifications?.sensitivity || ''}" placeholder="e.g., 85.0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Impedance (Ω)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-spec-impedance speaker-type-dependent" type="number" step="0.1" value="${measurementData.specifications?.impedance || ''}" placeholder="e.g., 8.0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="label is-small">Weight (kg)</label>
+                                            <div class="control">
+                                                <input class="input is-small measurement-spec-weight" type="number" step="0.1" value="${measurementData.specifications?.weight || ''}" placeholder="e.g., 5.5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Size Section -->
+                                <div class="field">
+                                    <label class="label is-small">Size (mm)</label>
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Height</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-height" type="number" value="${measurementData.specifications?.size?.height || ''}" placeholder="e.g., 300">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Width</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-width" type="number" value="${measurementData.specifications?.size?.width || ''}" placeholder="e.g., 200">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Depth</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-depth" type="number" value="${measurementData.specifications?.size?.depth || ''}" placeholder="e.g., 250">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- SPL Section -->
+                                <div class="field">
+                                    <label class="label is-small">SPL (dB)</label>
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Peak</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-spl-peak" type="number" step="0.1" value="${measurementData.specifications?.SPL?.peak || ''}" placeholder="e.g., 110">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Continuous</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-spl-continuous" type="number" step="0.1" value="${measurementData.specifications?.SPL?.continuous || ''}" placeholder="e.g., 105">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Max</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-spl-max" type="number" step="0.1" value="${measurementData.specifications?.SPL?.max || ''}" placeholder="e.g., 115">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Dispersion Section -->
+                                <div class="field">
+                                    <label class="label is-small">Dispersion (degrees)</label>
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Horizontal</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-disp-horizontal" type="number" step="0.1" value="${measurementData.specifications?.dispersion?.horizontal || ''}" placeholder="e.g., 60">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="field">
+                                                <label class="label is-small">Vertical</label>
+                                                <div class="control">
+                                                    <input class="input is-small measurement-spec-disp-vertical" type="number" step="0.1" value="${measurementData.specifications?.dispersion?.vertical || ''}" placeholder="e.g., 30">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notes -->
+                        <div class="field">
+                            <label class="label">Notes</label>
+                            <div class="control">
+                                <textarea class="textarea measurement-notes" placeholder="General notes about this measurement">${measurementData.notes || ''}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
         `;
         
-        tabsContainer.appendChild(newTab);
+        container.appendChild(measurementPanel);
         
-        // Create corresponding form
-        this.createMeasurementForm(measurementName);
-    }
-    
-    createMeasurementForm(measurementName) {
-        const container = document.getElementById('measurement-form-container');
-        if (!container) return;
-        
-        // Check if form already exists for this measurement
-        const existingForm = container.querySelector(`.measurement-form[data-measurement="${measurementName}"]`);
-        if (existingForm) {
-            return existingForm; // Form already exists, don't create a duplicate
-        }
-        
-        // Clone the default measurement form
-        const defaultForm = container.querySelector('.measurement-form[data-measurement="default"]');
-        if (!defaultForm) return;
-        
-        const newForm = defaultForm.cloneNode(true);
-        newForm.dataset.measurement = measurementName;
-        newForm.classList.remove('is-active');
-        
-        // Update form field IDs to be unique and preserve their name attributes
-        const fields = newForm.querySelectorAll('[id]');
-        fields.forEach(field => {
-            // Create unique ID by appending measurement name
-            const baseId = field.id.replace(/-default$/, '');
-            field.id = `${baseId}-${measurementName}`;
-            
-            // Clear any values from the template
-            if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA' || field.tagName === 'SELECT') {
-                if (field.type === 'checkbox' || field.type === 'radio') {
-                    field.checked = false;
-                } else {
-                    field.value = '';
-                }
-            }
+        // Add remove functionality
+        measurementPanel.querySelector('.remove-measurement').addEventListener('click', () => {
+            measurementPanel.remove();
         });
         
-        container.appendChild(newForm);
-        return newForm;
+        // Update speaker type dependent fields
+        this.updateSpeakerTypeDependentFields();
     }
-    
-    switchToMeasurementTab(measurementName) {
-        // Deactivate all tabs and forms
-        const tabs = document.querySelectorAll('.measurement-tab');
-        tabs.forEach(tab => tab.classList.remove('is-active'));
+
+    goToStep3() {
+        // Collect form data
+        this.collectFormData();
         
-        const forms = document.querySelectorAll('.measurement-form');
-        forms.forEach(form => form.classList.add('is-hidden'));
+        // Validate data
+        this.validateSpeakerData();
         
-        // Activate the selected tab and form
-        const selectedTab = document.querySelector(`.measurement-tab[data-measurement="${measurementName}"]`);
-        if (selectedTab) {
-            selectedTab.classList.add('is-active');
-        }
-        
-        const selectedForm = document.getElementById(`measurement-form-${measurementName}`);
-        if (selectedForm) {
-            selectedForm.classList.remove('is-hidden');
-            // Track the current active measurement
-            this.currentMeasurement = measurementName;
-            console.log(`Switched to measurement: ${measurementName}`);
-        }
+        this.goToStep(3);
     }
-    
-    removeMeasurementTab(measurementName) {
-        if (measurementName === 'default') return; // Can't remove default
+
+    collectFormData() {
+        this.currentSpeakerData = {
+            brand: document.getElementById('form-brand').value,
+            model: document.getElementById('form-model').value,
+            type: document.getElementById('form-type').value,
+            shape: document.getElementById('form-shape').value,
+            price: document.getElementById('form-price').value || undefined,
+            amount: document.getElementById('form-amount').value || undefined,
+            measurements: {},
+            default_measurement: ''
+        };
         
-        // Remove tab
-        const tab = document.querySelector(`#measurement-tabs .tabs li[data-measurement="${measurementName}"]`);
-        if (tab) tab.remove();
-        
-        // Remove form
-        const form = document.querySelector(`.measurement-form[data-measurement="${measurementName}"]`);
-        if (form) form.remove();
-        
-        // Remove from data
-        if (this.selectedSpeaker.measurements) {
-            delete this.selectedSpeaker.measurements[measurementName];
-        }
-        
-        // Switch to default tab
-        this.switchToMeasurementTab('default');
-    }
-    
-    renderMeasurements() {
-        const measurements = this.selectedSpeaker.measurements || {};
-        const measurementNames = Object.keys(measurements);
-        
-        // Clear existing measurement tabs and forms
-        document.getElementById('measurement-tabs').innerHTML = '';
-        document.querySelectorAll('.measurement-form').forEach(form => {
-            if (form.id !== 'measurement-form-template') {
-                form.remove();
-            }
-        });
-        
-        // Create tabs for each measurement
-        measurementNames.forEach((measurementName, index) => {
-            // Create and add tab
-            const tab = document.createElement('li');
-            tab.classList.add('measurement-tab');
-            tab.setAttribute('data-measurement', measurementName);
-            if (index === 0) {
-                tab.classList.add('is-active');
-                // Set the initial current measurement
-                this.currentMeasurement = measurementName;
-            }
+        // Collect measurements
+        const measurementPanels = document.querySelectorAll('.measurement-panel');
+        measurementPanels.forEach(panel => {
+            const key = panel.querySelector('.measurement-key').value;
+            const origin = panel.querySelector('.measurement-origin').value;
+            const format = panel.querySelector('.measurement-format').value;
             
-            const tabLink = document.createElement('a');
-            tabLink.textContent = measurementName;
-            tab.appendChild(tabLink);
-            
-            document.getElementById('measurement-tabs').appendChild(tab);
-            
-            // Create and populate form for this measurement
-            this.createMeasurementForm(measurementName);
-            
-            // Set active state for the form
-            const formContainer = document.getElementById('measurement-form-container');
-            if (formContainer) {
-                const form = formContainer.querySelector(`.measurement-form[data-measurement="${measurementName}"]`);
-                if (form) {
-                    form.classList.toggle('is-active', index === 0);
-                }
-            }
-            
-            // Populate the form with measurement data
-            if (measurements[measurementName]) {
-                this.populateMeasurementForm(measurementName, measurements[measurementName]);
-            }
-        });
-        
-        // Set up tab listeners
-        this.setupMeasurementTabListeners();
-    }
-    
-    populateMeasurementForm(measurementName, measurementData) {
-        // Populate basic measurement fields
-        this.setFieldValue(`origin-${measurementName}`, measurementData.origin);
-        this.setFieldValue(`format-${measurementName}`, measurementData.format);
-        this.setFieldValue(`review-${measurementName}`, measurementData.review);
-        this.setFieldValue(`review_published-${measurementName}`, measurementData.review_published);
-        this.setFieldValue(`quality-${measurementName}`, measurementData.quality);
-        this.setFieldValue(`notes-${measurementName}`, measurementData.notes);
-        this.setFieldValue(`symmetry-${measurementName}`, measurementData.symmetry);
-        this.setFieldValue(`sensitivity-${measurementName}`, measurementData.sensitivity);
-        this.setFieldValue(`scaled_flatness-${measurementName}`, measurementData.scaled_flatness);
-        
-        // Populate data acquisition fields
-        const dataAcq = measurementData.data_acquisition || {};
-        this.setFieldValue(`data_acquisition_via-${measurementName}`, dataAcq.via);
-        this.setFieldValue(`data_acquisition_distance-${measurementName}`, dataAcq.distance);
-        this.setFieldValue(`data_acquisition_signal-${measurementName}`, dataAcq.signal);
-        this.setCheckboxValue(`data_acquisition_air_absorbtion-${measurementName}`, dataAcq.air_absorbtion);
-        this.setFieldValue(`data_acquisition_resolution-${measurementName}`, dataAcq.resolution);
-        this.setFieldValue(`data_acquisition_notes-${measurementName}`, dataAcq.notes);
-        this.setFieldValue(`data_acquisition_min_valid_freq-${measurementName}`, dataAcq.min_valid_freq);
-        this.setFieldValue(`data_acquisition_max_valid_freq-${measurementName}`, dataAcq.max_valid_freq);
-        
-        // Populate parameters
-        const params = measurementData.parameters || {};
-        this.setFieldValue(`parameters_mean_min-${measurementName}`, params.mean_min);
-        this.setFieldValue(`parameters_mean_max-${measurementName}`, params.mean_max);
-        
-        // Populate extras
-        const extras = measurementData.extras || {};
-        this.setCheckboxValue(`extras_is_equed-${measurementName}`, extras.is_equed);
-        this.setFieldValue(`extras_score_penalty-${measurementName}`, extras.score_penalty);
-        
-        // Populate specifications
-        const specs = measurementData.specifications || {};
-        this.setFieldValue(`specifications_sensitivity-${measurementName}`, specs.sensitivity);
-        this.setFieldValue(`specifications_impedance-${measurementName}`, specs.impedance);
-        this.setFieldValue(`specifications_weight-${measurementName}`, specs.weight);
-        
-        // Populate dispersion
-        const dispersion = specs.dispersion || {};
-        this.setFieldValue(`specifications_dispersion_horizontal-${measurementName}`, dispersion.horizontal);
-        this.setFieldValue(`specifications_dispersion_vertical-${measurementName}`, dispersion.vertical);
-        
-        // Populate size
-        const size = specs.size || {};
-        this.setFieldValue(`specifications_size_height-${measurementName}`, size.height);
-        this.setFieldValue(`specifications_size_width-${measurementName}`, size.width);
-        this.setFieldValue(`specifications_size_depth-${measurementName}`, size.depth);
-        
-        // Populate SPL
-        const spl = specs.SPL || {};
-        this.setFieldValue(`specifications_spl_peak-${measurementName}`, spl.peak);
-        this.setFieldValue(`specifications_spl_continuous-${measurementName}`, spl.continuous);
-        this.setFieldValue(`specifications_spl_max-${measurementName}`, spl.max);
-        
-        // Populate preference rating
-        const prefRating = measurementData.pref_rating || {};
-        this.setFieldValue(`pref_rating_aad_on_axis-${measurementName}`, prefRating.aad_on_axis);
-        this.setFieldValue(`pref_rating_nbd_on_axis-${measurementName}`, prefRating.nbd_on_axis);
-        this.setFieldValue(`pref_rating_nbd_listening_window-${measurementName}`, prefRating.nbd_listening_window);
-        this.setFieldValue(`pref_rating_nbd_sound_power-${measurementName}`, prefRating.nbd_sound_power);
-        this.setFieldValue(`pref_rating_nbd_pred_in_room-${measurementName}`, prefRating.nbd_pred_in_room);
-        this.setFieldValue(`pref_rating_sm_pred_in_room-${measurementName}`, prefRating.sm_pred_in_room);
-        this.setFieldValue(`pref_rating_sm_sound_power-${measurementName}`, prefRating.sm_sound_power);
-        this.setFieldValue(`pref_rating_pref_score-${measurementName}`, prefRating.pref_score);
-        this.setFieldValue(`pref_rating_pref_score_wsub-${measurementName}`, prefRating.pref_score_wsub);
-        this.setFieldValue(`pref_rating_lfx_hz-${measurementName}`, prefRating.lfx_hz);
-        this.setFieldValue(`pref_rating_lfq-${measurementName}`, prefRating.lfq);
-    }
-    
-    clearMeasurementForm() {
-        // Clear all measurement form fields
-        const formFields = [
-            'origin', 'format', 'review', 'review_published', 'quality', 'notes', 
-            'symmetry', 'sensitivity', 'scaled_flatness',
-            'data_acquisition_via', 'data_acquisition_distance', 'data_acquisition_signal',
-            'data_acquisition_resolution', 'data_acquisition_notes', 
-            'data_acquisition_min_valid_freq', 'data_acquisition_max_valid_freq',
-            'parameters_mean_min', 'parameters_mean_max',
-            'extras_score_penalty',
-            'specifications_sensitivity', 'specifications_impedance', 'specifications_weight',
-            'specifications_dispersion_horizontal', 'specifications_dispersion_vertical',
-            'specifications_size_height', 'specifications_size_width', 'specifications_size_depth',
-            'specifications_spl_peak', 'specifications_spl_continuous', 'specifications_spl_max',
-            'pref_rating_aad_on_axis', 'pref_rating_nbd_on_axis', 'pref_rating_nbd_listening_window',
-            'pref_rating_nbd_sound_power', 'pref_rating_nbd_pred_in_room', 'pref_rating_sm_pred_in_room',
-            'pref_rating_sm_sound_power', 'pref_rating_pref_score', 'pref_rating_pref_score_wsub',
-            'pref_rating_lfx_hz', 'pref_rating_lfq'
-        ];
-        
-        formFields.forEach(fieldId => {
-            this.setFieldValue(fieldId, '');
-        });
-        
-        // Clear checkboxes
-        this.setCheckboxValue('data_acquisition_air_absorbtion', false);
-        this.setCheckboxValue('extras_is_equed', false);
-    }
-    
-    addMeasurement() {
-        this.measurementCounter++;
-        const name = `measurement-${this.measurementCounter}`;
-        
-        if (!this.selectedSpeaker.measurements) {
-            this.selectedSpeaker.measurements = {};
-        }
-        
-        this.selectedSpeaker.measurements[name] = {
-            origin: '',
-            format: 'klippel',
-            quality: 'medium'
-        };
-        
-        this.addMeasurementTab(name);
-        this.switchToMeasurementTab(name);
-    }
-    
-    removeMeasurement(name) {
-        if (this.selectedSpeaker.measurements) {
-            delete this.selectedSpeaker.measurements[name];
-            this.renderMeasurements();
-        }
-    }
-    
-    saveMetadataForm() {
-        const form = document.getElementById('metadata-form');
-        if (!form) return;
-        
-        // Update speaker data from form
-        this.selectedSpeaker.brand = form.querySelector('[name="brand"]').value;
-        this.selectedSpeaker.model = form.querySelector('[name="model"]').value;
-        this.selectedSpeaker.type = form.querySelector('[name="type"]').value;
-        this.selectedSpeaker.shape = form.querySelector('[name="shape"]').value;
-        const priceField2 = form.querySelector('[name="price"]');
-        this.selectedSpeaker.price = priceField2 ? priceField2.value : '';
-        const amountField2 = form.querySelector('[name="amount"]');
-        this.selectedSpeaker.amount = amountField2 ? amountField2.value : '';
-        
-        // Save the current measurement data from the active form
-        if (this.currentMeasurement) {
-            // Initialize measurements object if needed
-            if (!this.selectedSpeaker.measurements) {
-                this.selectedSpeaker.measurements = {};
-            }
-            
-            // Get data for the current measurement
-            const measurementData = this.collectMeasurementData(this.currentMeasurement);
-            
-            // Save this measurement data
-            this.selectedSpeaker.measurements[this.currentMeasurement] = measurementData;
-            
-            // Set default measurement if not set
-            if (!this.selectedSpeaker.default_measurement && Object.keys(this.selectedSpeaker.measurements).length > 0) {
-                this.selectedSpeaker.default_measurement = this.currentMeasurement;
-            }
-        }
-
-        console.log('Saved speaker data:', this.selectedSpeaker);
-    }
-    
-    collectMeasurementData(measurementName) {
-        // Collect comprehensive measurement data for the specified measurement
-        const measurementData = {
-            // Required fields
-            origin: (document.getElementById(`origin-${measurementName}`) && document.getElementById(`origin-${measurementName}`).value) || '',
-            format: (document.getElementById(`format-${measurementName}`) && document.getElementById(`format-${measurementName}`).value) || 'klippel',
-        };
-
-        // Add optional fields if they have values
-        const optionalFields = {
-            review: document.getElementById(`review-${measurementName}`) && document.getElementById(`review-${measurementName}`).value,
-            review_published: document.getElementById(`review_published-${measurementName}`) && document.getElementById(`review_published-${measurementName}`).value,
-            quality: document.getElementById(`quality-${measurementName}`) && document.getElementById(`quality-${measurementName}`).value,
-            notes: document.getElementById(`notes-${measurementName}`) && document.getElementById(`notes-${measurementName}`).value,
-            symmetry: document.getElementById(`symmetry-${measurementName}`) && document.getElementById(`symmetry-${measurementName}`).value,
-            sensitivity: this.parseNumber(document.getElementById(`sensitivity-${measurementName}`) && document.getElementById(`sensitivity-${measurementName}`).value),
-            scaled_flatness: this.parseNumber(document.getElementById(`scaled_flatness-${measurementName}`) && document.getElementById(`scaled_flatness-${measurementName}`).value)
-        }
-        };
-
-        // Add non-empty optional fields
-        var optionalKeys = Object.keys(optionalFields);
-        for (var i = 0; i < optionalKeys.length; i++) {
-            var key = optionalKeys[i];
-            if (optionalFields[key] !== undefined && optionalFields[key] !== '') {
-                measurementData[key] = optionalFields[key];
-            }
-        }
-
-        // Data acquisition
-        const dataAcquisition = {
-            via: document.getElementById(`data_acquisition_via-${measurementName}`) && document.getElementById(`data_acquisition_via-${measurementName}`).value,
-            distance: this.parseNumber(document.getElementById(`data_acquisition_distance-${measurementName}`) && document.getElementById(`data_acquisition_distance-${measurementName}`).value),
-            signal: document.getElementById(`data_acquisition_signal-${measurementName}`) && document.getElementById(`data_acquisition_signal-${measurementName}`).value,
-            air_absorbtion: document.getElementById(`data_acquisition_air_absorbtion-${measurementName}`) && document.getElementById(`data_acquisition_air_absorbtion-${measurementName}`).checked,
-            resolution: this.parseNumber(document.getElementById(`data_acquisition_resolution-${measurementName}`) && document.getElementById(`data_acquisition_resolution-${measurementName}`).value),
-            notes: document.getElementById(`data_acquisition_notes-${measurementName}`) && document.getElementById(`data_acquisition_notes-${measurementName}`).value,
-            min_valid_freq: this.parseNumber(document.getElementById(`data_acquisition_min_valid_freq-${measurementName}`) && document.getElementById(`data_acquisition_min_valid_freq-${measurementName}`).value),
-            max_valid_freq: this.parseNumber(document.getElementById(`data_acquisition_max_valid_freq-${measurementName}`) && document.getElementById(`data_acquisition_max_valid_freq-${measurementName}`).value)
-        };
-
-        // Only add data_acquisition if it has meaningful data
-        var cleanedDataAcquisition = {};
-        var dataAcqKeys = Object.keys(dataAcquisition);
-        for (var j = 0; j < dataAcqKeys.length; j++) {
-            var key = dataAcqKeys[j];
-            if (dataAcquisition[key] !== undefined && dataAcquisition[key] !== '' && dataAcquisition[key] !== false) {
-                cleanedDataAcquisition[key] = dataAcquisition[key];
-            }
-        }
-        if (Object.keys(cleanedDataAcquisition).length > 0) {
-            measurementData.data_acquisition = cleanedDataAcquisition;
-        }
-
-        // Parameters
-        const parameters = {
-            mean_min: this.parseNumber(document.getElementById(`parameters_mean_min-${measurementName}`) && document.getElementById(`parameters_mean_min-${measurementName}`).value, true),
-            mean_max: this.parseNumber(document.getElementById(`parameters_mean_max-${measurementName}`) && document.getElementById(`parameters_mean_max-${measurementName}`).value, true)
-        };
-        var cleanedParameters = {};
-        var paramKeys = Object.keys(parameters);
-        for (var k = 0; k < paramKeys.length; k++) {
-            var key = paramKeys[k];
-            if (parameters[key] !== undefined) {
-                cleanedParameters[key] = parameters[key];
-            }
-        };
-        if (Object.keys(cleanedParameters).length > 0) {
-            measurementData.parameters = cleanedParameters;
-        }
-
-        // Extras
-        var extras = {
-            is_equed: document.getElementById(`extras_is_equed-${measurementName}`) && document.getElementById(`extras_is_equed-${measurementName}`).checked,
-            score_penalty: this.parseNumber(document.getElementById(`extras_score_penalty-${measurementName}`) && document.getElementById(`extras_score_penalty-${measurementName}`).value)
-        };
-        var cleanedExtras = {};
-        var extrasKeys = Object.keys(extras);
-        for (var l = 0; l < extrasKeys.length; l++) {
-            var key = extrasKeys[l];
-            if (extras[key] !== undefined && extras[key] !== false && extras[key] !== '') {
-                cleanedExtras[key] = extras[key];
-            }
-        };
-        if (Object.keys(cleanedExtras).length > 0) {
-            measurementData.extras = cleanedExtras;
-        }
-
-        // Specifications
-        const specifications = {
-            sensitivity: this.parseNumber(document.getElementById(`specifications_sensitivity-${measurementName}`) && document.getElementById(`specifications_sensitivity-${measurementName}`).value),
-            impedance: this.parseNumber(document.getElementById(`specifications_impedance-${measurementName}`) && document.getElementById(`specifications_impedance-${measurementName}`).value),
-            weight: this.parseNumber(document.getElementById(`specifications_weight-${measurementName}`) && document.getElementById(`specifications_weight-${measurementName}`).value)
-        };
-
-        // Dispersion
-        var dispersion = {
-            horizontal: this.parseNumber(document.getElementById(`specifications_dispersion_horizontal-${measurementName}`) && document.getElementById(`specifications_dispersion_horizontal-${measurementName}`).value),
-            vertical: this.parseNumber(document.getElementById(`specifications_dispersion_vertical-${measurementName}`) && document.getElementById(`specifications_dispersion_vertical-${measurementName}`).value)
-        };
-        var cleanedDispersion = {};
-        var dispersionKeys = Object.keys(dispersion);
-        for (var m = 0; m < dispersionKeys.length; m++) {
-            var key = dispersionKeys[m];
-            if (dispersion[key] !== undefined && dispersion[key] !== '') {
-                cleanedDispersion[key] = dispersion[key];
-            }
-        };
-        if (Object.keys(cleanedDispersion).length > 0) {
-            specifications.dispersion = cleanedDispersion;
-        }
-
-        // Size
-        var size = {
-            height: this.parseNumber(document.getElementById(`specifications_size_height-${measurementName}`) && document.getElementById(`specifications_size_height-${measurementName}`).value),
-            width: this.parseNumber(document.getElementById(`specifications_size_width-${measurementName}`) && document.getElementById(`specifications_size_width-${measurementName}`).value),
-            depth: this.parseNumber(document.getElementById(`specifications_size_depth-${measurementName}`) && document.getElementById(`specifications_size_depth-${measurementName}`).value)
-        };
-        var cleanedSize = {};
-        var sizeKeys = Object.keys(size);
-        for (var n = 0; n < sizeKeys.length; n++) {
-            var key = sizeKeys[n];
-            if (size[key] !== undefined && size[key] !== '') {
-                cleanedSize[key] = size[key];
-            }
-        };
-        if (Object.keys(cleanedSize).length > 0) {
-            specifications.size = cleanedSize;
-        }
-
-        // SPL
-        var spl = {
-            peak: this.parseNumber(document.getElementById(`specifications_spl_peak-${measurementName}`) && document.getElementById(`specifications_spl_peak-${measurementName}`).value),
-            continuous: this.parseNumber(document.getElementById(`specifications_spl_continuous-${measurementName}`) && document.getElementById(`specifications_spl_continuous-${measurementName}`).value),
-            max: this.parseNumber(document.getElementById(`specifications_spl_max-${measurementName}`) && document.getElementById(`specifications_spl_max-${measurementName}`).value)
-        };
-        var cleanedSPL = {};
-        var splKeys = Object.keys(spl);
-        for (var p = 0; p < splKeys.length; p++) {
-            var key = splKeys[p];
-            if (spl[key] !== undefined && spl[key] !== '') {
-                cleanedSPL[key] = spl[key];
-            }
-        };
-        if (Object.keys(cleanedSPL).length > 0) {
-            specifications.SPL = cleanedSPL;
-        }
-
-        // Only add specifications if it has meaningful data
-        var cleanedSpecifications = {};
-        var specKeys = Object.keys(specifications);
-        for (var r = 0; r < specKeys.length; r++) {
-            var key = specKeys[r];
-            if (specifications[key] !== undefined && specifications[key] !== '' && 
-                (typeof specifications[key] !== 'object' || Object.keys(specifications[key]).length > 0)) {
-                cleanedSpecifications[key] = specifications[key];
-            }
-        }
-        if (Object.keys(cleanedSpecifications).length > 0) {
-            measurementData.specifications = cleanedSpecifications;
-        }
-
-        // Preference Rating
-        var ratings = {
-            bass: this.parseNumber(document.getElementById(`preference_rating_bass-${measurementName}`) && document.getElementById(`preference_rating_bass-${measurementName}`).value),
-            dynamics: this.parseNumber(document.getElementById(`preference_rating_dynamics-${measurementName}`) && document.getElementById(`preference_rating_dynamics-${measurementName}`).value),
-            highs: this.parseNumber(document.getElementById(`preference_rating_highs-${measurementName}`) && document.getElementById(`preference_rating_highs-${measurementName}`).value),
-            midrange: this.parseNumber(document.getElementById(`preference_rating_midrange-${measurementName}`) && document.getElementById(`preference_rating_midrange-${measurementName}`).value),
-            neutrality: this.parseNumber(document.getElementById(`preference_rating_neutrality-${measurementName}`) && document.getElementById(`preference_rating_neutrality-${measurementName}`).value),
-            preference_score: this.parseNumber(document.getElementById(`preference_rating_preference_score-${measurementName}`) && document.getElementById(`preference_rating_preference_score-${measurementName}`).value)
-        }
-        var cleanedRatings = {};
-        var ratingsKeys = Object.keys(ratings);
-        for (var q = 0; q < ratingsKeys.length; q++) {
-            var key = ratingsKeys[q];
-            if (ratings[key] !== undefined && ratings[key] !== '') {
-                cleanedRatings[key] = ratings[key];
-            }
-        };
-        if (Object.keys(cleanedRatings).length > 0) {
-            measurementData.pref_rating = cleanedRatings;
-        }
-        
-        return measurementData;
-    }
-
-    parseNumber(value, isInteger = false) {
-        if (!value || value === '') return undefined;
-        const num = isInteger ? parseInt(value) : parseFloat(value);
-        return isNaN(num) ? undefined : num;
-    }
-    
-    async generatePythonCode() {
-        if (!this.selectedSpeaker) return;
-        
-        const codePreview = document.getElementById('python-code');
-        const writeButton = document.getElementById('write-metadata-btn');
-        const validationDiv = document.getElementById('validation-status');
-        if (!codePreview) return;
-        
-        // Validate speaker data first
-        const validation = this.validateSpeakerData();
-        
-        // Show validation results
-        if (validationDiv) {
-            if (validation.valid) {
-                validationDiv.innerHTML = `
-                    <div class="notification is-success">
-                        <strong>✅ Validation Passed!</strong> All data is valid and ready to write.
-                    </div>
-                `;
-            } else {
-                const errorList = validation.errors.map(error => `<li>${error}</li>`).join('');
-                validationDiv.innerHTML = `
-                    <div class="notification is-warning">
-                        <strong>⚠️ Validation Issues Found:</strong>
-                        <ul style="margin-top: 10px;">${errorList}</ul>
-                        <p style="margin-top: 10px;"><em>Please fix these issues before writing to file.</em></p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Generate Python dictionary code for preview
-        const speakerCode = this.formatSpeakerAsPython(this.selectedSpeaker);
-        const speakerId = this.generateSpeakerId(this.selectedSpeaker.brand, this.selectedSpeaker.model);
-        const firstLetter = this.selectedSpeaker.brand[0].toLowerCase();
-        const metadataFile = `metadata_${firstLetter}.py`;
-        
-        codePreview.textContent = `# This will be written to ${metadataFile}\n\n"${speakerId}": ${speakerCode}`;
-        
-        // Set default commit message
-        const commitMessage = document.getElementById('commit-message');
-        if (commitMessage && !commitMessage.value.trim()) {
-            const action = this.isNewSpeaker ? 'Add' : 'Update';
-            commitMessage.value = `${action} speaker metadata for ${this.selectedSpeaker.brand} ${this.selectedSpeaker.model}`;
-        }
-        
-        // Enable/disable the write button based on validation
-        if (writeButton) {
-            writeButton.disabled = !validation.valid;
-            if (validation.valid) {
-                writeButton.textContent = this.isNewSpeaker ? 'Write New Speaker to File' : 'Update Speaker in File';
-                writeButton.classList.remove('is-danger');
-                writeButton.classList.add('is-primary');
-            } else {
-                writeButton.textContent = 'Fix Validation Errors First';
-                writeButton.classList.remove('is-primary');
-                writeButton.classList.add('is-danger');
-            }
-        }
-    }
-    
-    validateSpeakerData() {
-        if (!this.selectedSpeaker) return { valid: false, errors: ['No speaker selected'] };
-        
-        const errors = [];
-        const speaker = this.selectedSpeaker;
-        const speakerId = this.generateSpeakerId(speaker.brand, speaker.model);
-        
-        // Basic speaker validation
-        if (!speaker.brand || speaker.brand.trim() === '') {
-            errors.push('Brand is required');
-        } else if (speaker.brand.endsWith(' ')) {
-            errors.push('Brand has suspicious trailing space');
-        }
-        
-        if (!speaker.model || speaker.model.trim() === '') {
-            errors.push('Model is required');
-        } else if (speaker.model.startsWith(' ')) {
-            errors.push('Model has suspicious leading space');
-        }
-        
-        // Check if speaker ID starts with brand
-        if (speaker.brand && !speakerId.startsWith(speaker.brand)) {
-            errors.push(`Speaker ID "${speakerId}" should start with brand "${speaker.brand}"`);
-        }
-        
-        // Check if speaker ID ends with model
-        if (speaker.model && !speakerId.endsWith(speaker.model)) {
-            errors.push(`Speaker ID "${speakerId}" should end with model "${speaker.model}"`);
-        }
-        
-        // Type validation
-        const validTypes = ['active', 'passive'];
-        if (!speaker.type || !validTypes.includes(speaker.type)) {
-            errors.push(`Type must be one of: ${validTypes.join(', ')}`);
-        }
-        
-        // Shape validation
-        const validShapes = [
-            'floorstanders', 'bookshelves', 'center', 'surround', 'omnidirectional',
-            'columns', 'cbt', 'outdoor', 'panel', 'inwall', 'soundbar',
-            'liveportable', 'toursound', 'cinema'
-        ];
-        if (!speaker.shape || !validShapes.includes(speaker.shape)) {
-            errors.push(`Shape must be one of: ${validShapes.join(', ')}`);
-        }
-        
-        // Amount validation
-        const validAmounts = ['each', 'pair'];
-        if (speaker.amount && !validAmounts.includes(speaker.amount)) {
-            errors.push(`Amount must be one of: ${validAmounts.join(', ')}`);
-        }
-        
-        // Measurements validation
-        if (!speaker.measurements || Object.keys(speaker.measurements).length === 0) {
-            errors.push('At least one measurement is required');
-        } else {
-            for (const [version, measurement] of Object.entries(speaker.measurements)) {
-                const measurementErrors = this.validateMeasurement(speakerId, version, measurement);
-                errors.push(...measurementErrors);
-            }
-        }
-        
-        // Default measurement validation
-        if (speaker.default_measurement && speaker.measurements && 
-            !speaker.measurements[speaker.default_measurement]) {
-            errors.push(`Default measurement "${speaker.default_measurement}" not found in measurements`);
-        }
-        
-        return { valid: errors.length === 0, errors };
-    }
-    
-    validateMeasurement(speakerId, version, measurement) {
-        const errors = [];
-        
-        // Required fields
-        if (!measurement.origin || measurement.origin.trim() === '') {
-            errors.push(`Measurement "${version}": Origin is required`);
-        }
-        
-        if (!measurement.format || measurement.format.trim() === '') {
-            errors.push(`Measurement "${version}": Format is required`);
-        } else {
-            const validFormats = ['klippel', 'princeton', 'webplotdigitizer', 'rew_text_dump', 'spl_hv_txt', 'gll_hv_txt'];
-            if (!validFormats.includes(measurement.format)) {
-                errors.push(`Measurement "${version}": Format must be one of: ${validFormats.join(', ')}`);
-            }
-        }
-        
-        // Quality validation
-        if (measurement.quality) {
-            const validQualities = ['unknown', 'low', 'medium', 'high'];
-            if (!validQualities.includes(measurement.quality)) {
-                errors.push(`Measurement "${version}": Quality must be one of: ${validQualities.join(', ')}`);
-            }
-        }
-        
-        // Symmetry validation
-        if (measurement.symmetry) {
-            const validSymmetries = ['coaxial', 'horizontal', 'vertical'];
-            if (!validSymmetries.includes(measurement.symmetry)) {
-                errors.push(`Measurement "${version}": Symmetry must be one of: ${validSymmetries.join(', ')}`);
-            }
-        }
-        
-        // Specifications validation
-        if (measurement.specifications) {
-            const specErrors = this.validateSpecifications(speakerId, version, measurement.specifications);
-            errors.push(...specErrors);
-        }
-        
-        // Review published date validation
-        if (measurement.review_published) {
-            if (measurement.review_published.length !== 8) {
-                errors.push(`Measurement "${version}": Review published date should be 8 characters (YYYYMMDD)`);
-            } else {
-                try {
-                    const year = parseInt(measurement.review_published.substring(0, 4));
-                    const month = parseInt(measurement.review_published.substring(4, 6));
-                    const day = parseInt(measurement.review_published.substring(6, 8));
-                    const date = new Date(year, month - 1, day);
-                    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-                        errors.push(`Measurement "${version}": Review published date is not a valid date`);
-                    }
-                } catch (e) {
-                    errors.push(`Measurement "${version}": Review published date is not a valid date`);
-                }
-            }
-        }
-        
-        return errors;
-    }
-    
-    validateSpecifications(speakerId, version, specs) {
-        const errors = [];
-        const validSpecKeys = ['dispersion', 'sensitivity', 'impedance', 'SPL', 'size', 'weight'];
-        
-        for (const [key, value] of Object.entries(specs)) {
-            if (!validSpecKeys.includes(key)) {
-                errors.push(`Measurement "${version}": Specification key "${key}" is not valid. Valid keys: ${validSpecKeys.join(', ')}`);
-                continue;
-            }
-            
-            switch (key) {
-                case 'dispersion':
-                    if (typeof value === 'object' && value !== null) {
-                        for (const [direction, angle] of Object.entries(value)) {
-                            if (!['horizontal', 'vertical'].includes(direction)) {
-                                errors.push(`Measurement "${version}": Dispersion direction "${direction}" must be horizontal or vertical`);
-                            }
-                            const angleNum = parseFloat(angle);
-                            if (isNaN(angleNum) || angleNum < 0 || angleNum > 180) {
-                                errors.push(`Measurement "${version}": Dispersion angle "${angle}" must be between 0 and 180 degrees`);
-                            }
-                        }
-                    }
-                    break;
-                    
-                case 'sensitivity':
-                    const sensitivity = parseFloat(value);
-                    if (isNaN(sensitivity) || sensitivity < 20 || sensitivity >= 150) {
-                        errors.push(`Measurement "${version}": Sensitivity "${value}" must be between 20 and 150 dB`);
-                    }
-                    break;
-                    
-                case 'impedance':
-                    const impedance = parseFloat(value);
-                    if (isNaN(impedance) || impedance <= 0 || impedance >= 50) {
-                        errors.push(`Measurement "${version}": Impedance "${value}" must be between 0 and 50 ohms`);
-                    }
-                    break;
-                    
-                case 'SPL':
-                    if (typeof value === 'object' && value !== null) {
-                        const validSPLKeys = ['max', 'continuous', 'peak', 'm_noise', 'b_noise', 'pink_noise'];
-                        for (const [state, spl] of Object.entries(value)) {
-                            if (!validSPLKeys.includes(state)) {
-                                errors.push(`Measurement "${version}": SPL parameter "${state}" must be one of: ${validSPLKeys.join(', ')}`);
-                            }
-                            const splNum = parseFloat(spl);
-                            if (isNaN(splNum) || splNum < 0 || splNum >= 160) {
-                                errors.push(`Measurement "${version}": SPL "${spl}" must be between 0 and 160 dB`);
-                            }
-                        }
-                    }
-                    break;
-                    
-                case 'size':
-                    if (typeof value === 'object' && value !== null) {
-                        const validDims = ['height', 'width', 'depth'];
-                        for (const [dim, measurement] of Object.entries(value)) {
-                            if (!validDims.includes(dim)) {
-                                errors.push(`Measurement "${version}": Size dimension "${dim}" must be one of: ${validDims.join(', ')}`);
-                            }
-                            const dimNum = parseFloat(measurement);
-                            if (isNaN(dimNum) || dimNum < 0 || dimNum > 2500) {
-                                errors.push(`Measurement "${version}": Size "${measurement}" must be between 0 and 2500 mm`);
-                            }
-                        }
-                    }
-                    break;
-                    
-                case 'weight':
-                    const weight = parseFloat(value);
-                    if (isNaN(weight) || weight < 0 || weight > 500) {
-                        errors.push(`Measurement "${version}": Weight "${value}" must be between 0 and 500 kg`);
-                    }
-                    break;
-            }
-        }
-        
-        return errors;
-    }
-
-    async writeMetadataToFile() {
-        if (!this.selectedSpeaker) return;
-        
-        const writeButton = document.getElementById('write-metadata-btn');
-        const statusDiv = document.getElementById('write-status');
-        
-        // Validate speaker data first
-        const validation = this.validateSpeakerData();
-        if (!validation.valid) {
-            if (statusDiv) {
-                const errorList = validation.errors.map(error => `<li>${error}</li>`).join('');
-                statusDiv.innerHTML = `
-                    <div class="notification is-danger">
-                        <strong>Validation Failed!</strong> Please fix the following errors:
-                        <ul style="margin-top: 10px;">${errorList}</ul>
-                    </div>
-                `;
-            }
-            return;
-        }
-        
-        try {
-            // Show loading state
-            if (writeButton) {
-                writeButton.disabled = true;
-                writeButton.textContent = 'Writing...';
-            }
-            
-            if (statusDiv) {
-                statusDiv.innerHTML = '<div class="notification is-info">Writing metadata to file...</div>';
-            }
-            
-            // Call the backend API to write metadata
-            const response = await fetch('/api/write-metadata', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    speaker: this.selectedSpeaker,
-                    is_update: !this.isNewSpeaker
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                if (statusDiv) {
-                    statusDiv.innerHTML = `
-                        <div class="notification is-success">
-                            <strong>Success!</strong> ${result.message}
-                            <br><strong>File:</strong> ${result.file}
-                            <br><strong>Speaker ID:</strong> ${result.speaker_id}
-                        </div>
-                    `;
-                }
+            if (key && origin && format) {
+                const measurement = {
+                    origin: origin,
+                    format: format
+                };
                 
-                if (writeButton) {
-                    writeButton.textContent = 'Metadata Written Successfully!';
-                    writeButton.classList.remove('is-primary');
-                    writeButton.classList.add('is-success');
-                }
+                // Basic fields
+                const quality = panel.querySelector('.measurement-quality').value;
+                const notes = panel.querySelector('.measurement-notes').value;
+                const review = panel.querySelector('.measurement-review').value;
+                const reviewPublished = panel.querySelector('.measurement-review-published').value;
+                const symmetry = panel.querySelector('.measurement-symmetry').value;
                 
-                // Enable git commit button
-                const commitButton = document.getElementById('commit-btn');
-                if (commitButton) {
-                    commitButton.disabled = false;
-                }
-                
-            } else {
-                throw new Error(result.error || 'Failed to write metadata');
-            }
-            
-        } catch (error) {
-            console.error('Error writing metadata:', error);
-            
-            if (statusDiv) {
-                statusDiv.innerHTML = `
-                    <div class="notification is-danger">
-                        <strong>Error:</strong> ${error.message}
-                    </div>
-                `;
-            }
-            
-            if (writeButton) {
-                writeButton.disabled = false;
-                writeButton.textContent = this.isNewSpeaker ? 'Write New Speaker to File' : 'Update Speaker in File';
-            }
-        }
-    }
-    
-    formatSpeakerAsPython(speaker) {
-        const indent = '    ';
-        let code = '{\n';
-        
-        code += `${indent}"brand": "${speaker.brand}",\n`;
-        code += `${indent}"model": "${speaker.model}",\n`;
-        code += `${indent}"type": "${speaker.type}",\n`;
-        code += `${indent}"shape": "${speaker.shape}",\n`;
-        
-        if (speaker.price) {
-            code += `${indent}"price": "${speaker.price}",\n`;
-        }
-        
-        if (speaker.amount) {
-            code += `${indent}"amount": "${speaker.amount}",\n`;
-        }
-        
-        if (speaker.default_measurement) {
-            code += `${indent}"default_measurement": "${speaker.default_measurement}",\n`;
-        }
-        
-        if (speaker.measurements && Object.keys(speaker.measurements).length > 0) {
-            code += `${indent}"measurements": {\n`;
-            Object.entries(speaker.measurements).forEach(([name, data]) => {
-                code += `${indent}${indent}"${name}": {\n`;
-                
-                // Basic measurement fields
-                if (data.origin) code += `${indent}${indent}${indent}"origin": "${data.origin}",\n`;
-                if (data.format) code += `${indent}${indent}${indent}"format": "${data.format}",\n`;
-                if (data.review) code += `${indent}${indent}${indent}"review": "${data.review}",\n`;
-                if (data.review_published) code += `${indent}${indent}${indent}"review_published": "${data.review_published}",\n`;
-                if (data.quality) code += `${indent}${indent}${indent}"quality": "${data.quality}",\n`;
-                if (data.notes) code += `${indent}${indent}${indent}"notes": "${data.notes}",\n`;
-                if (data.symmetry) code += `${indent}${indent}${indent}"symmetry": "${data.symmetry}",\n`;
-                if (data.sensitivity !== undefined) code += `${indent}${indent}${indent}"sensitivity": ${data.sensitivity},\n`;
-                if (data.scaled_flatness !== undefined) code += `${indent}${indent}${indent}"scaled_flatness": ${data.scaled_flatness},\n`;
+                if (quality) measurement.quality = quality;
+                if (notes) measurement.notes = notes;
+                if (review) measurement.review = review;
+                if (reviewPublished) measurement.review_published = reviewPublished;
+                if (symmetry && symmetry !== 'none') measurement.symmetry = symmetry;
                 
                 // Data acquisition
-                if (data.data_acquisition && Object.keys(data.data_acquisition).length > 0) {
-                    code += `${indent}${indent}${indent}"data_acquisition": {\n`;
-                    const da = data.data_acquisition;
-                    if (da.via) code += `${indent}${indent}${indent}${indent}"via": "${da.via}",\n`;
-                    if (da.distance !== undefined) code += `${indent}${indent}${indent}${indent}"distance": ${da.distance},\n`;
-                    if (da.signal) code += `${indent}${indent}${indent}${indent}"signal": "${da.signal}",\n`;
-                    if (da.air_absorbtion !== undefined) code += `${indent}${indent}${indent}${indent}"air_absorbtion": ${da.air_absorbtion},\n`;
-                    if (da.resolution !== undefined) code += `${indent}${indent}${indent}${indent}"resolution": ${da.resolution},\n`;
-                    if (da.notes) code += `${indent}${indent}${indent}${indent}"notes": "${da.notes}",\n`;
-                    if (da.min_valid_freq !== undefined) code += `${indent}${indent}${indent}${indent}"min_valid_freq": ${da.min_valid_freq},\n`;
-                    if (da.max_valid_freq !== undefined) code += `${indent}${indent}${indent}${indent}"max_valid_freq": ${da.max_valid_freq},\n`;
-                    code += `${indent}${indent}${indent}},\n`;
-                }
+                const dataAcquisition = {};
+                const daVia = panel.querySelector('.measurement-da-via').value;
+                const daDistance = panel.querySelector('.measurement-da-distance').value;
+                const daSignal = panel.querySelector('.measurement-da-signal').value;
+                const daResolution = panel.querySelector('.measurement-da-resolution').value;
+                const daMinFreq = panel.querySelector('.measurement-da-min-freq').value;
+                const daMaxFreq = panel.querySelector('.measurement-da-max-freq').value;
+                const daAirAbsorption = panel.querySelector('.measurement-da-air-absorption').checked;
+                const daNotes = panel.querySelector('.measurement-da-notes').value;
                 
-                // Parameters
-                if (data.parameters && Object.keys(data.parameters).length > 0) {
-                    code += `${indent}${indent}${indent}"parameters": {\n`;
-                    const params = data.parameters;
-                    if (params.mean_min !== undefined) code += `${indent}${indent}${indent}${indent}"mean_min": ${params.mean_min},\n`;
-                    if (params.mean_max !== undefined) code += `${indent}${indent}${indent}${indent}"mean_max": ${params.mean_max},\n`;
-                    code += `${indent}${indent}${indent}},\n`;
+                if (daVia) dataAcquisition.via = daVia;
+                if (daDistance) dataAcquisition.distance = parseFloat(daDistance);
+                if (daSignal) dataAcquisition.signal = daSignal;
+                if (daResolution) dataAcquisition.resolution = parseFloat(daResolution);
+                if (daMinFreq) dataAcquisition.min_valid_freq = parseFloat(daMinFreq);
+                if (daMaxFreq) dataAcquisition.max_valid_freq = parseFloat(daMaxFreq);
+                if (daAirAbsorption) dataAcquisition.air_absorbtion = true;
+                if (daNotes) dataAcquisition.notes = daNotes;
+                
+                if (Object.keys(dataAcquisition).length > 0) {
+                    measurement.data_acquisition = dataAcquisition;
                 }
                 
                 // Extras
-                if (data.extras && Object.keys(data.extras).length > 0) {
-                    code += `${indent}${indent}${indent}"extras": {\n`;
-                    const extras = data.extras;
-                    if (extras.is_equed !== undefined) code += `${indent}${indent}${indent}${indent}"is_equed": ${extras.is_equed},\n`;
-                    if (extras.score_penalty !== undefined) code += `${indent}${indent}${indent}${indent}"score_penalty": ${extras.score_penalty},\n`;
-                    code += `${indent}${indent}${indent}},\n`;
+                const extras = {};
+                const extrasEqued = panel.querySelector('.measurement-extras-equed').checked;
+                const extrasPenalty = panel.querySelector('.measurement-extras-penalty').value;
+                
+                if (extrasEqued) extras.is_equed = true;
+                if (extrasPenalty) extras.score_penalty = parseFloat(extrasPenalty);
+                
+                if (Object.keys(extras).length > 0) {
+                    measurement.extras = extras;
                 }
                 
                 // Specifications
-                if (data.specifications && Object.keys(data.specifications).length > 0) {
-                    code += `${indent}${indent}${indent}"specifications": {\n`;
-                    const specs = data.specifications;
-                    if (specs.sensitivity !== undefined) code += `${indent}${indent}${indent}${indent}"sensitivity": ${specs.sensitivity},\n`;
-                    if (specs.impedance !== undefined) code += `${indent}${indent}${indent}${indent}"impedance": ${specs.impedance},\n`;
-                    if (specs.weight !== undefined) code += `${indent}${indent}${indent}${indent}"weight": ${specs.weight},\n`;
-                    
-                    // Dispersion
-                    if (specs.dispersion && Object.keys(specs.dispersion).length > 0) {
-                        code += `${indent}${indent}${indent}${indent}"dispersion": {\n`;
-                        if (specs.dispersion.horizontal !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"horizontal": ${specs.dispersion.horizontal},\n`;
-                        if (specs.dispersion.vertical !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"vertical": ${specs.dispersion.vertical},\n`;
-                        code += `${indent}${indent}${indent}${indent}},\n`;
-                    }
-                    
-                    // Size
-                    if (specs.size && Object.keys(specs.size).length > 0) {
-                        code += `${indent}${indent}${indent}${indent}"size": {\n`;
-                        if (specs.size.height !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"height": ${specs.size.height},\n`;
-                        if (specs.size.width !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"width": ${specs.size.width},\n`;
-                        if (specs.size.depth !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"depth": ${specs.size.depth},\n`;
-                        code += `${indent}${indent}${indent}${indent}},\n`;
-                    }
-                    
-                    // SPL
-                    if (specs.SPL && Object.keys(specs.SPL).length > 0) {
-                        code += `${indent}${indent}${indent}${indent}"SPL": {\n`;
-                        if (specs.SPL.peak !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"peak": ${specs.SPL.peak},\n`;
-                        if (specs.SPL.continuous !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"continuous": ${specs.SPL.continuous},\n`;
-                        if (specs.SPL.max !== undefined) code += `${indent}${indent}${indent}${indent}${indent}"max": ${specs.SPL.max},\n`;
-                        code += `${indent}${indent}${indent}${indent}},\n`;
-                    }
-                    
-                    code += `${indent}${indent}${indent}},\n`;
+                const specifications = {};
+                const specSensitivity = panel.querySelector('.measurement-spec-sensitivity').value;
+                const specImpedance = panel.querySelector('.measurement-spec-impedance').value;
+                const specWeight = panel.querySelector('.measurement-spec-weight').value;
+                
+                if (specSensitivity) specifications.sensitivity = parseFloat(specSensitivity);
+                if (specImpedance) specifications.impedance = parseFloat(specImpedance);
+                if (specWeight) specifications.weight = parseFloat(specWeight);
+                
+                // Size
+                const specHeight = panel.querySelector('.measurement-spec-height').value;
+                const specWidth = panel.querySelector('.measurement-spec-width').value;
+                const specDepth = panel.querySelector('.measurement-spec-depth').value;
+                
+                if (specHeight || specWidth || specDepth) {
+                    specifications.size = {};
+                    if (specHeight) specifications.size.height = parseFloat(specHeight);
+                    if (specWidth) specifications.size.width = parseFloat(specWidth);
+                    if (specDepth) specifications.size.depth = parseFloat(specDepth);
                 }
                 
-                // Preference Rating
-                if (data.pref_rating && Object.keys(data.pref_rating).length > 0) {
-                    code += `${indent}${indent}${indent}"pref_rating": {\n`;
-                    const pref = data.pref_rating;
-                    if (pref.aad_on_axis !== undefined) code += `${indent}${indent}${indent}${indent}"aad_on_axis": ${pref.aad_on_axis},\n`;
-                    if (pref.nbd_on_axis !== undefined) code += `${indent}${indent}${indent}${indent}"nbd_on_axis": ${pref.nbd_on_axis},\n`;
-                    if (pref.nbd_listening_window !== undefined) code += `${indent}${indent}${indent}${indent}"nbd_listening_window": ${pref.nbd_listening_window},\n`;
-                    if (pref.nbd_sound_power !== undefined) code += `${indent}${indent}${indent}${indent}"nbd_sound_power": ${pref.nbd_sound_power},\n`;
-                    if (pref.nbd_pred_in_room !== undefined) code += `${indent}${indent}${indent}${indent}"nbd_pred_in_room": ${pref.nbd_pred_in_room},\n`;
-                    if (pref.sm_pred_in_room !== undefined) code += `${indent}${indent}${indent}${indent}"sm_pred_in_room": ${pref.sm_pred_in_room},\n`;
-                    if (pref.sm_sound_power !== undefined) code += `${indent}${indent}${indent}${indent}"sm_sound_power": ${pref.sm_sound_power},\n`;
-                    if (pref.pref_score !== undefined) code += `${indent}${indent}${indent}${indent}"pref_score": ${pref.pref_score},\n`;
-                    if (pref.pref_score_wsub !== undefined) code += `${indent}${indent}${indent}${indent}"pref_score_wsub": ${pref.pref_score_wsub},\n`;
-                    if (pref.lfx_hz !== undefined) code += `${indent}${indent}${indent}${indent}"lfx_hz": ${pref.lfx_hz},\n`;
-                    if (pref.lfq !== undefined) code += `${indent}${indent}${indent}${indent}"lfq": ${pref.lfq},\n`;
-                    code += `${indent}${indent}${indent}},\n`;
+                // SPL
+                const splPeak = panel.querySelector('.measurement-spec-spl-peak').value;
+                const splContinuous = panel.querySelector('.measurement-spec-spl-continuous').value;
+                const splMax = panel.querySelector('.measurement-spec-spl-max').value;
+                
+                if (splPeak || splContinuous || splMax) {
+                    specifications.SPL = {};
+                    if (splPeak) specifications.SPL.peak = parseFloat(splPeak);
+                    if (splContinuous) specifications.SPL.continuous = parseFloat(splContinuous);
+                    if (splMax) specifications.SPL.max = parseFloat(splMax);
                 }
                 
-                code += `${indent}${indent}},\n`;
-            });
-            code += `${indent}},\n`;
-        }
-        
-        code += '}';
-        return code;
+                // Dispersion
+                const dispHorizontal = panel.querySelector('.measurement-spec-disp-horizontal').value;
+                const dispVertical = panel.querySelector('.measurement-spec-disp-vertical').value;
+                
+                if (dispHorizontal || dispVertical) {
+                    specifications.dispersion = {};
+                    if (dispHorizontal) specifications.dispersion.horizontal = parseFloat(dispHorizontal);
+                    if (dispVertical) specifications.dispersion.vertical = parseFloat(dispVertical);
+                }
+                
+                if (Object.keys(specifications).length > 0) {
+                    measurement.specifications = specifications;
+                }
+                
+                this.currentSpeakerData.measurements[key] = measurement;
+                
+                // Set first measurement as default if not set
+                if (!this.currentSpeakerData.default_measurement) {
+                    this.currentSpeakerData.default_measurement = key;
+                }
+            }
+        });
     }
-    
-    generateSpeakerId(brand, model) {
-        return `${brand} ${model}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    }
-    
-    async createGitCommit() {
-        const commitMessage = document.getElementById('commit-message').value.trim();
-        if (!commitMessage) {
-            this.showNotification('Please enter a commit message', 'error');
-            return;
-        }
+
+    async validateSpeakerData() {
+        const statusDiv = document.getElementById('validation-status');
+        const resultsDiv = document.getElementById('validation-results');
         
-        const commitBtn = document.getElementById('create-commit-btn');
-        const originalText = commitBtn.textContent;
-        commitBtn.textContent = 'Creating commit...';
-        commitBtn.disabled = true;
+        statusDiv.classList.remove('hidden');
+        resultsDiv.classList.add('hidden');
         
         try {
-            // Prepare the export data
-            const exportData = {
-                changes: [['add', this.selectedSpeaker]],
-                commitMessage: commitMessage
-            };
-            
-            const response = await fetch('/api/export-metadata', {
+            const response = await fetch('/api/v1/validate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(exportData)
+                body: JSON.stringify(this.currentSpeakerData)
             });
             
-            const result = await response.json();
+            const validationResult = await response.json();
             
-            if (result.success) {
-                this.showNotification('Git commit created successfully!', 'success');
-                
-                // Show result
-                const commitResult = document.getElementById('commit-result');
-                if (commitResult) {
-                    commitResult.innerHTML = `
-                        <div class="notification is-success">
-                            <h4 class="title is-5">Commit Created Successfully!</h4>
-                            <p><strong>Branch:</strong> ${result.data.branch || 'N/A'}</p>
-                            <p><strong>Commit:</strong> ${result.data.commit || 'N/A'}</p>
-                            ${result.data.pr_url ? `<p><strong>Pull Request:</strong> <a href="${result.data.pr_url}" target="_blank">${result.data.pr_url}</a></p>` : ''}
-                        </div>
-                    `;
-                    commitResult.style.display = 'block';
-                }
-            } else {
-                throw new Error(result.message || 'Failed to create commit');
-            }
+            statusDiv.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+            
+            this.displayValidationResults(validationResult);
+            this.generateExportCode();
+            
+            return validationResult;
+            
         } catch (error) {
-            console.error('Failed to create commit:', error);
-            this.showNotification('Failed to create commit: ' + error.message, 'error');
-        } finally {
-            commitBtn.textContent = originalText;
-            commitBtn.disabled = false;
+            console.error('Validation error:', error);
+            statusDiv.innerHTML = `
+                <div class="notification is-warning">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Validation service unavailable. Proceeding with export...
+                </div>
+            `;
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+                resultsDiv.classList.remove('hidden');
+                this.displayValidationResults({ valid: true, messages: [] });
+                this.generateExportCode();
+            }, 2000);
         }
     }
-    
-    startOver() {
-        this.selectedSpeaker = null;
-        this.isNewSpeaker = false;
-        this.measurementCounter = 0;
+
+    displayValidationResults(result) {
+        const messagesDiv = document.getElementById('validation-messages');
         
-        // Clear form inputs
-        document.getElementById('new-brand').value = '';
-        document.getElementById('new-model').value = '';
-        document.getElementById('speaker-search').value = '';
-        document.getElementById('commit-message').value = '';
+        if (result.valid) {
+            messagesDiv.innerHTML = `
+                <div class="notification is-success">
+                    <i class="fas fa-check mr-2"></i>
+                    All parameters are valid!
+                </div>
+            `;
+        } else {
+            let messagesHtml = `
+                <div class="notification is-danger">
+                    <i class="fas fa-times mr-2"></i>
+                    Validation failed. Please fix the following issues:
+                </div>
+            `;
+            
+            if (result.messages && result.messages.length > 0) {
+                messagesHtml += '<div class="content"><ul>';
+                result.messages.forEach(message => {
+                    messagesHtml += `<li>${message}</li>`;
+                });
+                messagesHtml += '</ul></div>';
+            }
+            
+            messagesDiv.innerHTML = messagesHtml;
+        }
+    }
+
+    generateExportCode() {
+        const speakerKey = `${this.currentSpeakerData.brand} ${this.currentSpeakerData.model}`;
+        const codeDiv = document.getElementById('export-code');
         
-        // Clear selections
-        document.querySelectorAll('.speaker-item').forEach(item => {
-            item.classList.remove('selected');
+        // Clean up undefined values
+        const cleanData = JSON.parse(JSON.stringify(this.currentSpeakerData, (key, value) => {
+            return value === undefined ? null : value;
+        }));
+        
+        // Remove null values
+        Object.keys(cleanData).forEach(key => {
+            if (cleanData[key] === null || cleanData[key] === '') {
+                delete cleanData[key];
+            }
         });
         
-        // Disable continue button
-        const continueBtn = document.getElementById('continue-step-1');
-        if (continueBtn) {
-            continueBtn.disabled = true;
+        const code = `# Generated speaker metadata for ${speakerKey}
+"${speakerKey}": ${JSON.stringify(cleanData, null, 4).replace(/"/g, '"')}`;
+        
+        codeDiv.textContent = code;
+    }
+
+    downloadCode() {
+        const code = document.getElementById('export-code').textContent;
+        const speakerKey = `${this.currentSpeakerData.brand}_${this.currentSpeakerData.model}`.replace(/\s+/g, '_');
+        
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${speakerKey}_metadata.py`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        URL.revokeObjectURL(url);
+    }
+
+    async copyCode() {
+        const code = document.getElementById('export-code').textContent;
+        
+        try {
+            await navigator.clipboard.writeText(code);
+            this.showSuccess('Code copied to clipboard!');
+        } catch (error) {
+            console.error('Failed to copy:', error);
+            this.showError('Failed to copy code to clipboard.');
+        }
+    }
+
+    goToStep(step) {
+        // Hide all steps
+        document.querySelectorAll('.step-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        
+        // Show target step
+        document.getElementById(`step-${step}`).classList.remove('hidden');
+        
+        this.currentStep = step;
+        this.updateStepIndicator();
+    }
+
+    updateStepIndicator() {
+        // Skip DOM updates in test environment
+        if (typeof window === 'undefined' || !document.querySelectorAll) {
+            return;
         }
         
-        // Go back to step 1
-        this.showStep(1);
-        this.renderSpeakerList();
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            if (index + 1 === this.currentStep) {
+                step.classList.add('is-active');
+            } else {
+                step.classList.remove('is-active');
+            }
+        });
     }
-    
-    showNotification(message, type = 'info') {
-        // Create a simple notification
+
+    startOver() {
+        this.currentSpeakerData = {};
+        this.measurementCounter = 0;
+        
+        // Reset form
+        document.getElementById('speaker-search').value = '';
+        document.getElementById('speaker-list').value = '';
+        document.getElementById('brand-list').value = '';
+        document.getElementById('new-brand').value = '';
+        document.getElementById('speaker-name').value = '';
+        document.querySelector('input[name="speaker-option"][value="existing"]').checked = true;
+        this.toggleSpeakerOption('existing');
+        
+        this.goToStep(1);
+    }
+
+    showError(message) {
+        // Simple error notification
         const notification = document.createElement('div');
-        notification.className = `notification is-${type === 'error' ? 'danger' : type}`;
+        notification.className = 'notification is-danger is-fixed';
+        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;';
         notification.innerHTML = `
             <button class="delete"></button>
+            <i class="fas fa-exclamation-triangle mr-2"></i>
             ${message}
         `;
         
-        // Add to page
         document.body.appendChild(notification);
         
-        // Position it
-        notification.style.position = 'fixed';
-        notification.style.top = '20px';
-        notification.style.right = '20px';
-        notification.style.zIndex = '9999';
-        notification.style.maxWidth = '400px';
+        notification.querySelector('.delete').addEventListener('click', () => {
+            notification.remove();
+        });
         
-        // Auto remove after 5 seconds
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+                notification.remove();
             }
         }, 5000);
+    }
+
+    showSuccess(message) {
+        // Simple success notification
+        const notification = document.createElement('div');
+        notification.className = 'notification is-success is-fixed';
+        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;';
+        notification.innerHTML = `
+            <button class="delete"></button>
+            <i class="fas fa-check mr-2"></i>
+            ${message}
+        `;
         
-        // Add click to close
-        const deleteBtn = notification.querySelector('.delete');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', () => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            });
-        }
+        document.body.appendChild(notification);
+        
+        notification.querySelector('.delete').addEventListener('click', () => {
+            notification.remove();
+        });
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 3000);
     }
 }
 
-// Initialize the metadata manager when the page loads
-const manager = new SimpleMetadataManager();
+// Initialize the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new SpeakerMetadataManager();
+});
 
-export default SimpleMetadataManager;
+// Export for testing
+export { SpeakerMetadataManager };
