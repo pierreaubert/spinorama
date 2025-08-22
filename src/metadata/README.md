@@ -40,6 +40,17 @@ The parameters are defined in Python in the file ./datas/__init__.py.
 
 Since we can have multiple measurements, they will be displayed as a list Bulma pannel.
 
+For each measurement, we need to add all the fields. Do not forget:
+- reviews,
+- review_published (which is a date and by default is the today),
+- notes,
+- data_acquisition,
+- extras,
+- symmetry (default is none),
+- specifications. 
+
+If a user select type active, then the sensitivity and impendance in the specification block should be gray out.
+
 ### Parameter validation
 
 The parameters will be validated by sending the proposed set of parameters to the the API.
