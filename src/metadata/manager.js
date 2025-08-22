@@ -52,6 +52,18 @@ class SpeakerMetadataManager {
         document.getElementById('copy-code')?.addEventListener('click', () => this.copyCode());
     }
 
+    formatDateForInput(dateString) {
+        // Convert YYYYMMDD format to YYYY-MM-DD for HTML date input
+        if (!dateString || dateString.length !== 8) return '';
+        return `${dateString.substring(0, 4)}-${dateString.substring(4, 6)}-${dateString.substring(6, 8)}`;
+    }
+
+    formatDateForPython(dateString) {
+        // Convert YYYY-MM-DD format to YYYYMMDD for Python dict
+        if (!dateString || dateString.length !== 10) return '';
+        return dateString.replace(/-/g, '');
+    }
+
     async loadInitialData() {
         try {
             // Load speakers
@@ -202,18 +214,34 @@ class SpeakerMetadataManager {
     }
 
     populateForm() {
+        // Skip DOM updates in test environment
+        if (typeof window === 'undefined' || !document.getElementById) {
+            return;
+        }
+        
         const data = this.currentSpeakerData;
         
-        document.getElementById('form-speaker-name').value = `${data.brand} ${data.model}`;
-        document.getElementById('form-brand').value = data.brand || '';
-        document.getElementById('form-model').value = data.model || '';
-        document.getElementById('form-type').value = data.type || '';
-        document.getElementById('form-shape').value = data.shape || '';
-        document.getElementById('form-price').value = data.price || '';
-        document.getElementById('form-amount').value = data.amount || '';
+        const formSpeakerName = document.getElementById('form-speaker-name');
+        const formBrand = document.getElementById('form-brand');
+        const formModel = document.getElementById('form-model');
+        const formType = document.getElementById('form-type');
+        const formShape = document.getElementById('form-shape');
+        const formPrice = document.getElementById('form-price');
+        const formAmount = document.getElementById('form-amount');
+        
+        if (formSpeakerName) formSpeakerName.value = `${data.brand} ${data.model}`;
+        if (formBrand) formBrand.value = data.brand || '';
+        if (formModel) formModel.value = data.model || '';
+        if (formType) formType.value = data.type || '';
+        if (formShape) formShape.value = data.shape || '';
+        if (formPrice) formPrice.value = data.price || '';
+        if (formAmount) formAmount.value = data.amount || '';
         
         // Clear existing measurements
-        document.getElementById('measurements-container').innerHTML = '';
+        const measurementsContainer = document.getElementById('measurements-container');
+        if (measurementsContainer) {
+            measurementsContainer.innerHTML = '';
+        }
         this.measurementCounter = 0;
         
         // Add existing measurements
@@ -240,7 +268,7 @@ class SpeakerMetadataManager {
         measurementPanel.innerHTML = `
             <article class="panel is-primary">
                 <p class="panel-heading">
-                    Measurement ${this.measurementCounter}
+                    ${measurementKey || `Measurement ${this.measurementCounter}`}
                     <button type="button" class="button is-small is-danger is-pulled-right remove-measurement">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -317,7 +345,7 @@ class SpeakerMetadataManager {
                                 <div class="field">
                                     <label class="label">Review Published Date</label>
                                     <div class="control">
-                                        <input class="input measurement-review-published" type="date" value="${measurementData.review_published || today}">
+                                        <input class="input measurement-review-published" type="date" value="${this.formatDateForInput(measurementData.review_published) || ''}">
                                     </div>
                                 </div>
                             </div>
@@ -580,7 +608,9 @@ class SpeakerMetadataManager {
         });
         
         // Update speaker type dependent fields
-        this.updateSpeakerTypeDependentFields();
+        if (this.updateSpeakerTypeDependentFields) {
+            this.updateSpeakerTypeDependentFields();
+        }
     }
 
     goToStep3() {
@@ -628,7 +658,7 @@ class SpeakerMetadataManager {
                 if (quality) measurement.quality = quality;
                 if (notes) measurement.notes = notes;
                 if (review) measurement.review = review;
-                if (reviewPublished) measurement.review_published = reviewPublished;
+                if (reviewPublished) measurement.review_published = this.formatDateForPython(reviewPublished);
                 if (symmetry && symmetry !== 'none') measurement.symmetry = symmetry;
                 
                 // Data acquisition
@@ -772,6 +802,9 @@ class SpeakerMetadataManager {
     displayValidationResults(result) {
         const messagesDiv = document.getElementById('validation-messages');
         
+        // Skip DOM updates in test environment
+        if (!messagesDiv) return;
+        
         if (result.valid) {
             messagesDiv.innerHTML = `
                 <div class="notification is-success">
@@ -896,31 +929,34 @@ class SpeakerMetadataManager {
     }
 
     showError(message) {
-        // Simple error notification
+        // Simple error notification - check if DOM is available
+        if (typeof document === 'undefined' || !document.createElement) {
+            console.error('Error:', message);
+            return;
+        }
+        
         const notification = document.createElement('div');
         notification.className = 'notification is-danger is-fixed';
-        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;';
-        notification.innerHTML = `
-            <button class="delete"></button>
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-            ${message}
-        `;
+        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+        notification.textContent = message;
         
         document.body.appendChild(notification);
         
-        notification.querySelector('.delete').addEventListener('click', () => {
-            notification.remove();
-        });
-        
+        // Auto-remove after 5 seconds
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.remove();
+                notification.parentNode.removeChild(notification);
             }
         }, 5000);
     }
 
     showSuccess(message) {
-        // Simple success notification
+        // Simple success notification - check if DOM is available
+        if (typeof document === 'undefined' || !document.createElement) {
+            console.log('Success:', message);
+            return;
+        }
+        
         const notification = document.createElement('div');
         notification.className = 'notification is-success is-fixed';
         notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px;';
