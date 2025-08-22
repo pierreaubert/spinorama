@@ -9,11 +9,12 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 import yaml
 
-from fastapi import FastAPI, Query, Depends
+from fastapi import FastAPI, Query, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse, FileResponse, Response
 
 from datas.metadata import speakers_info
+from datas.checks import validate_speaker_data
 
 API_VERSION = "v1"
 CURRENT_VERSION = 0
@@ -256,3 +257,37 @@ async def get_speaker_measurements_data(
         return FileResponse(measurement_file)
 
     return {"error": "fetching measurements failed format {measurement_format} is unknown!"}
+
+
+@app.post(f"/{API_VERSION}/validate", tags=["validation"])
+async def validate_speaker_metadata(request: Request):
+    """Validate speaker metadata according to Spinorama standards."""
+    try:
+        speaker_data = await request.json()
+
+        # Extract speaker name from the data or generate one
+        brand = speaker_data.get("brand", "Unknown")
+        model = speaker_data.get("model", "Unknown")
+        speaker_name = f"{brand} {model}"
+
+        # Validate the speaker data
+        validation_result = validate_speaker_data(speaker_name, speaker_data)
+
+        return {
+            "valid": validation_result.valid,
+            "messages": validation_result.messages,
+            "speaker_name": speaker_name,
+        }
+
+    except json.JSONDecodeError:
+        return {
+            "valid": False,
+            "messages": ["ERROR: Invalid JSON format"],
+            "speaker_name": "Unknown",
+        }
+    except Exception as e:
+        return {
+            "valid": False,
+            "messages": [f"ERROR: Validation failed - {str(e)}"],
+            "speaker_name": "Unknown",
+        }
