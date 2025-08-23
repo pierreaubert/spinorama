@@ -29,7 +29,7 @@ vi.mock('plotly.js-dist-min', () => ({
 
 // Mock plot.js
 vi.mock('./plot.js', () => ({
-    setGraph: vi.fn().mockImplementation(() => {
+    setPlotForMeasurement: vi.fn().mockImplementation((_measurementName, _speakerNames, _speakerGraphs, _w, _h, _n) => {
         return [
             {
                 data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
@@ -64,7 +64,7 @@ vi.mock('./plot-config.js', () => ({
 
 // Import after mocking
 import { displayGraph } from './graph.js';
-import { setGraph } from './plot.js';
+import { setPlotForMeasurement } from './plot.js';
 import Plotly from 'plotly.js-dist-min';
 
 describe('Graph Display', () => {
@@ -123,7 +123,7 @@ describe('Graph Display', () => {
         delete global.localStorage;
     });
 
-    test('displayGraph calls setGraph with correct parameters', async () => {
+    test('displayGraph calls setPlotForMeasurement with correct parameters', async () => {
         // Create a sample graph spec
         const graphSpec = {
             layout: {
@@ -135,8 +135,8 @@ describe('Graph Display', () => {
         // Call displayGraph
         await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec);
 
-        // Check if setGraph was called with correct parameters
-        expect(setGraph).toHaveBeenCalledWith('On Axis', ['Test Graph'], [graphSpec], 1024, 768, 1);
+        // Check if setPlotForMeasurement was called with correct parameters
+        expect(setPlotForMeasurement).toHaveBeenCalledWith('On Axis', ['Test Graph'], [graphSpec], 1024, 768, 1);
     });
 
     test('displayGraph calls Plotly.newPlot with correct parameters', async () => {
@@ -218,8 +218,8 @@ describe('Graph Display', () => {
         // Call displayGraph
         await displayGraph('Different Plot', 'different.json', 'test-graph', graphSpec);
 
-        // Check if setGraph was called with the new parameters
-        expect(setGraph).toHaveBeenCalledWith('Different Plot', ['Different Graph'], [graphSpec], 1024, 768, 1);
+        // Check if setPlotForMeasurement was called with the new parameters
+        expect(setPlotForMeasurement).toHaveBeenCalledWith('Different Plot', ['Different Graph'], [graphSpec], 1024, 768, 1);
 
         // Check if Plotly.newPlot was called
         expect(Plotly.newPlot).toHaveBeenCalled();
