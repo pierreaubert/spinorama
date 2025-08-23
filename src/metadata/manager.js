@@ -512,9 +512,9 @@ class SpeakerMetadataManager {
                                 <div class="columns">
                                     <div class="column">
                                         <div class="field">
-                                            <label class="label is-small">Resolution (Hz)</label>
+                                            <label class="label is-small">Resolution (degrees)</label>
                                             <div class="control">
-                                                <input class="input is-small measurement-da-resolution" type="number" step="0.1" value="${measurementData.data_acquisition?.resolution || ''}" placeholder="e.g., 0.1">
+                                                <input class="input is-small measurement-da-resolution" type="number" step="0.5" value="${measurementData.data_acquisition?.resolution || ''}" placeholder="e.g., 2.5, 5, 10">
                                             </div>
                                         </div>
                                     </div>
