@@ -57,3 +57,5 @@ recompute_eqs.sh
 .aider*
 .env
 .scannerwork
+*.egg-info
+target
