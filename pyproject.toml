@@ -3,10 +3,11 @@ requires = ["setuptools", "wheel", "Cython"]
 
 [project]
 name = "spinorama"
+version = "0.1.0"
 description = "Spinorama computes speaker measurements"
 readme = "README.md"
-requires-python = "==3.12"
-license = "GPL"
+requires-python = ">=3.12,<3.14"
+license = "GPL-3.0-or-later"
 authors = [
     { name = "Pierre Aubert", email = "pierre@spinorama.org" },
 ]
@@ -15,6 +16,12 @@ authors = [
 Homepage = "https://www.spinorama.org"
 API = "https://api.spinorama.org"
 Documentation = "https://github.com/pierreaubert/spinorama/tree/master/tutorial"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pyright]
 include = [".", "src", "tests"]

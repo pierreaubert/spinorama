@@ -180,6 +180,7 @@ cpdef c_score_peq(
     cdef spl_v_peq = np.zeros_like(spl_v)
     for i in range(spl_h.shape[0]):
         spl_h_peq[i] = np.add(spl_h[i], peq)
+    for i in range(spl_v.shape[0]):
         spl_v_peq[i] = np.add(spl_v[i], peq)
     cdef spl = np.concatenate((spl_h_peq, spl_v_peq), axis=0)
     cdef spin = c_cea2034(spl, idx, weigths)
@@ -198,8 +199,8 @@ cpdef c_score_peq_approx(
     return c_score(
         freq,
         intervals,
-        np.add(on,peq),        # on
-        np.add(spin[0], peq),  # lw
-        np.add(spin[-2], peq), # sp
-        np.add(spin[-1], peq)  # pir
+        np.add(on, peq),  # on with PEQ
+        spin[0],          # lw unchanged
+        spin[-2],         # sp unchanged
+        spin[-1]          # pir unchanged
     )
