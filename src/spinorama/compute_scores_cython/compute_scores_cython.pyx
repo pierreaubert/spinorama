@@ -189,7 +189,6 @@ cpdef c_score_peq(
 
 cpdef c_score_peq_approx(
     const double[:] freq,
-    idx,
     intervals,
     const double [:,:] spin,
     const double [:] on,
