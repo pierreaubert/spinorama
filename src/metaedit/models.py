@@ -199,7 +199,11 @@ def export_speaker_metadata(sm: SpeakerMetadata) -> Dict[str, Any]:
             "data_acquisition",
             "specifications",
         ]
-        return order_keys(meas, pref)
+        result = order_keys(meas, pref)
+        # Omit quality field if it's 'high' (default value)
+        if result.get("quality") == "high":
+            result.pop("quality", None)
+        return result
 
     # Build top-level with desired order
     out: Dict[str, Any] = {}

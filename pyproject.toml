@@ -63,3 +63,8 @@ lint.unfixable = []
 [tool.sonar]
 projectKey = "spinorama"
 sources = "src"
+
+[tool.pytest.ini_options]
+markers = [
+    "qt: marks tests that use Qt",
+]
