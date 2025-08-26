@@ -3,6 +3,7 @@ flammkuchen
 frozendict
 kaleido
 mako
+maturin
 more_itertools
 nptyping
 numpy>1.26.4
@@ -11,11 +12,3 @@ plotly>=6.0.0
 scipy>=1.14.1
 wand
 
-# Web scraping and CLI for spec scraper
-requests>=2.32.0
-requests-cache>=1.2.0
-beautifulsoup4>=4.12.3
-lxml>=5.2.2
-tenacity>=8.5.0
-typer>=0.12.3
-pydantic>=2.8.2

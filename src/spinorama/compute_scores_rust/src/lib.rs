@@ -439,7 +439,7 @@ fn c_score_peq_approx(
 }
 
 #[pymodule]
-fn spinorama_cscore(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
+fn compute_scores_rust(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(c_cea2034, m)?)?;
     m.add_function(wrap_pyfunction!(c_nbd, m)?)?;
     m.add_function(wrap_pyfunction!(c_lfx, m)?)?;

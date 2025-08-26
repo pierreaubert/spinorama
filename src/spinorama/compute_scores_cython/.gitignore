@@ -1,0 +1,4 @@
+compute_scores_cython.o
+compute_scores_cython.c
+*.so
+#*.*#
