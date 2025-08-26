@@ -14,8 +14,8 @@ from metaedit.style import apply_app_style, read_theme_from_settings, write_them
 class TestStyle(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        # Use offscreen platform for headless CI
-        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        # Use minimal platform for headless CI (more reliable than offscreen on macOS)
+        os.environ.setdefault("QT_QPA_PLATFORM", "minimal")
 
     def test_apply_app_style_is_idempotent_and_sets_stylesheet(self) -> None:
         app = cast(QApplication, QApplication.instance() or QApplication([]))
