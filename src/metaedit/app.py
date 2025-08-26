@@ -6,32 +6,37 @@ import argparse
 import sys
 import os
 import shutil
+import json
 
 from PySide6 import QtWidgets  # type: ignore[reportMissingImports]
 from PySide6.QtCore import Qt, QSize, QCoreApplication  # type: ignore[reportMissingImports]
-from PySide6.QtGui import QPixmap, QIcon, QAction, QActionGroup  # type: ignore[reportMissingImports]
-
+from PySide6.QtGui import QPixmap, QIcon, QAction, QActionGroup, QFont, QTextOption  # type: ignore[reportMissingImports]
 from PySide6.QtWidgets import (  # type: ignore[reportMissingImports]
     QApplication,
     QButtonGroup,
-    QComboBox,
-    QFormLayout,
-    QHBoxLayout,
     QCheckBox,
+    QComboBox,
     QDateEdit,
-    QLineEdit,
-    QLabel,
-    QFrame,
-    QMainWindow,
     QDialog,
-    QFileDialog,
+    QDoubleSpinBox,
+    QFormLayout,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QMenu,
+    QMenuBar,
     QMessageBox,
     QPushButton,
-    QToolButton,
     QRadioButton,
-    QTextEdit,
-    QScrollArea,
+    QSizePolicy,
+    QSpacerItem,
+    QSpinBox,
     QStackedWidget,
+    QTabWidget,
+    QTextEdit,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -61,9 +66,10 @@ class SelectSpeakerPage(QWidget):
         title.setObjectName("pageTitle")
         layout.addWidget(title)
 
-        # Existing vs New
+        # Existing vs New (at top but will be moved to bottom visually)
         self.opt_group = QButtonGroup(self)
         opt_row = QHBoxLayout()
+        opt_row.addStretch(1)  # Add stretch to center the buttons
         self.rb_existing = QRadioButton("Existing")
         self.rb_new = QRadioButton("New")
         # Make the primary choice controls visually prominent
@@ -75,14 +81,19 @@ class SelectSpeakerPage(QWidget):
         self.opt_group.addButton(self.rb_new)
         opt_row.addWidget(self.rb_existing)
         opt_row.addWidget(self.rb_new)
-        opt_row.addStretch(1)
+        opt_row.addStretch(1)  # Add stretch to center the buttons
+        # Add a spacer widget to push the radio buttons to the bottom later
         layout.addLayout(opt_row)
 
-        # Existing speaker selection (grouped so we can hide/show cleanly)
+        # Existing speaker selection with search (grouped so we can hide/show cleanly)
         self.speakers_cb = QComboBox()
         self.speakers_cb.setObjectName("cb_speakers")
+        self.speakers_search = QLineEdit()
+        self.speakers_search.setPlaceholderText("Search speakers...")
+        self.speakers_search.setObjectName("le_speakers_search")
         self.existing_group = QWidget()
         existing_form = QFormLayout(self.existing_group)
+        existing_form.addRow("Search:", self.speakers_search)
         existing_form.addRow("Speaker:", self.speakers_cb)
         layout.addWidget(self.existing_group)
 
@@ -98,7 +109,33 @@ class SelectSpeakerPage(QWidget):
         new_form.addRow("Brand (select):", self.brands_cb)
         new_form.addRow("Brand (new):", self.new_brand)
         new_form.addRow("Model:", self.new_speaker_model)
+
+        # Toggle visibility on radio change
+        def _toggle():
+            is_existing = self.rb_existing.isChecked()
+            # Hide irrelevant controls for a cleaner UI
+            self.existing_group.setVisible(is_existing)
+            self.new_group.setVisible(not is_existing)
+            # Force update
+            QApplication.processEvents()
+
+        self.rb_existing.toggled.connect(_toggle)  # type: ignore[arg-type]
+        self.rb_new.toggled.connect(_toggle)  # type: ignore[arg-type]
+        layout.addWidget(self.existing_group)
         layout.addWidget(self.new_group)
+
+        # Move the radio buttons row to the bottom by adding a stretch
+        layout.addStretch(1)
+        # Add the radio buttons at the bottom
+        layout.addLayout(opt_row)
+
+        # Set initial state after widgets are added to layout
+        # Show existing speaker options by default since it's the default selection
+        self.existing_group.setVisible(True)
+        self.new_group.setVisible(False)
+        # Force layout update
+        self.existing_group.adjustSize()
+        self.new_group.adjustSize()
 
         # Navigation
         nav = QHBoxLayout()
@@ -107,17 +144,6 @@ class SelectSpeakerPage(QWidget):
         self.next_btn.setObjectName("btn_next_select")
         nav.addWidget(self.next_btn)
         layout.addLayout(nav)
-
-        # Toggle visibility on radio change
-        def _toggle():
-            is_existing = self.rb_existing.isChecked()
-            # Hide irrelevant controls for a cleaner UI
-            self.existing_group.setVisible(is_existing)
-            self.new_group.setVisible(not is_existing)
-
-        self.rb_existing.toggled.connect(_toggle)  # type: ignore[arg-type]
-        self.rb_new.toggled.connect(_toggle)  # type: ignore[arg-type]
-        _toggle()
 
 
 class EditMetadataPage(QWidget):
@@ -141,6 +167,13 @@ class EditMetadataPage(QWidget):
         self.form_amount.setObjectName("form_amount")
         self.form_amount.addItems(["each", "pair"])
 
+        # Create a container with visual separation for the top area
+        top_container = QFrame()
+        top_container.setFrameShape(QFrame.Shape.StyledPanel)
+        top_container.setFrameShadow(QFrame.Shadow.Raised)
+        top_container_layout = QVBoxLayout(top_container)
+        top_container_layout.setContentsMargins(10, 10, 10, 10)
+        
         top_grid = QtWidgets.QGridLayout()
         # Two form columns
         form_col1 = QFormLayout()
@@ -181,10 +214,16 @@ class EditMetadataPage(QWidget):
         top_grid.setColumnStretch(0, 1)
         top_grid.setColumnStretch(1, 1)
         top_grid.setColumnStretch(2, 0)
-        outer.addLayout(top_grid)
+        top_container_layout.addLayout(top_grid)
+        outer.addWidget(top_container)
 
         # Measurements area: default selector at top + tabs
-        outer.addWidget(QLabel("Measurements"))
+        # Create a container with visual separation for the measurements area
+        meas_container = QFrame()
+        meas_container.setFrameShape(QFrame.Shape.StyledPanel)
+        meas_container.setFrameShadow(QFrame.Shadow.Raised)
+        meas_container_layout = QVBoxLayout(meas_container)
+        meas_container_layout.setContentsMargins(10, 10, 10, 10)
 
         # Default measurement selector (now at top of measurements area) with inline Add button
         self.default_meas_cb = QComboBox()
@@ -199,14 +238,34 @@ class EditMetadataPage(QWidget):
         dm_row_lay.addWidget(self.add_meas_btn)
         dm_row_lay.addStretch(1)
         dm_form.addRow("Default measurement:", dm_row)
-        outer.addLayout(dm_form)
+        meas_container_layout.addLayout(dm_form)
 
-        # Tabs for measurements
+        # Tabs for measurements (centered with enhanced visibility for selected tab)
         from PySide6.QtWidgets import QTabWidget  # type: ignore[reportMissingImports]
 
         self.measurements_tabs = QTabWidget()
         self.measurements_tabs.setObjectName("meas_tabs")
-        outer.addWidget(self.measurements_tabs, 1)
+        # Center the tab bar
+        self.measurements_tabs.tabBar().setStyleSheet("""
+            QTabBar::tab {
+                padding: 8px 16px;
+                margin: 2px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background: #f0f0f0;
+            }
+            QTabBar::tab:selected {
+                background: #007acc;
+                color: white;
+                font-weight: bold;
+                border-color: #005a9e;
+            }
+            QTabBar::tab:hover:!selected {
+                background: #d0d0d0;
+            }
+        """)
+        meas_container_layout.addWidget(self.measurements_tabs, 1)
+        outer.addWidget(meas_container, 1)
 
         # Navigation buttons
         btns = QHBoxLayout()
@@ -240,12 +299,15 @@ class ReviewExportPage(QWidget):
         self.export_btn = QPushButton("Copy JSON to Clipboard")
         self.apply_btn = QPushButton("Apply to repository")
         self.start_over_btn = QPushButton("Start Over")
+        self.exit_btn = QPushButton("Exit")
+        self.exit_btn.setObjectName("btn_exit_review")
         btns.addWidget(self.back_btn)
         btns.addStretch(1)
         btns.addWidget(self.diff_btn)
         btns.addWidget(self.export_btn)
         btns.addWidget(self.apply_btn)
         btns.addWidget(self.start_over_btn)
+        btns.addWidget(self.exit_btn)
         layout.addLayout(btns)
 
 
@@ -282,6 +344,9 @@ class MetadataMainWindow(QMainWindow):
         self.page_review.export_btn.clicked.connect(self._copy_export)  # type: ignore[arg-type]
         self.page_review.diff_btn.clicked.connect(self._show_diff)  # type: ignore[arg-type]
         self.page_review.apply_btn.clicked.connect(self._apply_merge)  # type: ignore[arg-type]
+        self.page_review.exit_btn.clicked.connect(self.close)  # type: ignore[arg-type]
+        # Wire search functionality
+        self.page_select.speakers_search.textChanged.connect(self._filter_speakers)  # type: ignore[arg-type]
         self.page_edit.add_meas_btn.clicked.connect(self._add_measurement_panel)  # type: ignore[arg-type]
         self.page_review.start_over_btn.clicked.connect(self._start_over)  # type: ignore[arg-type]
         # Picture choose handler
@@ -304,6 +369,29 @@ class MetadataMainWindow(QMainWindow):
     speakers: list[str] = []
     brands: list[str] = []
     current: Optional[SpeakerMetadata] = None
+
+    def _filter_speakers(self, search_text: str) -> None:
+        """Filter the speakers combobox based on search text."""
+        # Clear current items
+        self.page_select.speakers_cb.clear()
+        
+        # If search text is empty, show all speakers
+        if not search_text.strip():
+            self.page_select.speakers_cb.addItems([""] + self.speakers)
+            return
+        
+        # Filter speakers based on search text (case insensitive)
+        search_text = search_text.lower()
+        filtered_speakers = [speaker for speaker in self.speakers if search_text in speaker.lower()]
+        
+        # Add filtered speakers to combobox
+        self.page_select.speakers_cb.addItems([""] + filtered_speakers)
+        
+        # If there's only one match and it's an exact match, select it
+        if len(filtered_speakers) == 1 and filtered_speakers[0].lower() == search_text:
+            index = self.page_select.speakers_cb.findText(filtered_speakers[0])
+            if index >= 0:
+                self.page_select.speakers_cb.setCurrentIndex(index)
 
     def _load_initial(self) -> None:
         # Simple blocking load to keep it minimal; could be threaded.
@@ -1118,6 +1206,8 @@ class MetadataMainWindow(QMainWindow):
             da_toggle.setArrowType(Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow)
 
         da_toggle.toggled.connect(_toggle_da)  # type: ignore[arg-type]
+        # Ensure container is hidden by default
+        da_container.setVisible(False)
 
         # Extras section (collapsible, hidden by default), 2 columns
         ex_toggle = QToolButton()
@@ -1180,6 +1270,8 @@ class MetadataMainWindow(QMainWindow):
             ex_toggle.setArrowType(Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow)
 
         ex_toggle.toggled.connect(_toggle_ex)  # type: ignore[arg-type]
+        # Ensure container is hidden by default
+        ex_container.setVisible(False)
 
         # Specifications section on 3 columns (expanded fields)
         sp_box = QFrame()
@@ -1388,7 +1480,8 @@ class MetadataMainWindow(QMainWindow):
                 return
         if not brand or not model:
             self.page_edit.picture_label.setText("No image")
-            self.page_edit.picture_label.setPixmap(None)  # type: ignore[arg-type]
+            # Use an empty QPixmap instead of None to avoid TypeError
+            self.page_edit.picture_label.setPixmap(QPixmap())
             return
         base_names = [f"{brand} {model}", f"{brand}_{model}"]
         search_dirs = [ICONS_DIR, PICTURES_DIR]
@@ -1417,7 +1510,8 @@ class MetadataMainWindow(QMainWindow):
                 self.page_edit.picture_label.setText("")
                 return
         self.page_edit.picture_label.setText("No image")
-        self.page_edit.picture_label.setPixmap(None)  # type: ignore[arg-type]
+        # Use an empty QPixmap instead of None to avoid TypeError
+        self.page_edit.picture_label.setPixmap(QPixmap())
 
     def _choose_picture(self) -> None:
         # Allow user to select an image and copy it into datas/icons as "Brand Model.ext"

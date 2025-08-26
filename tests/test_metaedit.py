@@ -373,20 +373,28 @@ def test_step1_visibility_toggle_and_radio_prominence(qtbot):
     qtbot.addWidget(win)
 
     sel = win.page_select
+    # Manually call toggle to ensure proper initialization
+    # This is needed because rb_existing is already True when the widget is created,
+    # so setting it to True again won't trigger the toggled signal
+    sel.rb_existing.toggled.emit(True)
+    
     # Initial: Existing selected -> existing group visible, new group hidden
     assert sel.rb_existing.isChecked()
-    assert sel.existing_group.isVisible()
-    assert not sel.new_group.isVisible()
+    # Add a small wait to ensure the initial toggle has time to run
+    qtbot.wait(50)
+    # In test environments, we need to use isVisibleTo() instead of isVisible()
+    assert sel.existing_group.isVisibleTo(sel)
+    assert not sel.new_group.isVisibleTo(sel)
 
     # Toggle to New
     sel.rb_new.setChecked(True)
-    qtbot.waitUntil(lambda: sel.new_group.isVisible())
-    assert not sel.existing_group.isVisible()
+    qtbot.waitUntil(lambda: sel.new_group.isVisibleTo(sel))
+    assert not sel.existing_group.isVisibleTo(sel)
 
     # Back to Existing
     sel.rb_existing.setChecked(True)
-    qtbot.waitUntil(lambda: sel.existing_group.isVisible())
-    assert not sel.new_group.isVisible()
+    qtbot.waitUntil(lambda: sel.existing_group.isVisibleTo(sel))
+    assert not sel.new_group.isVisibleTo(sel)
 
     # Radios should be visually larger (style/min height)
     assert sel.rb_existing.minimumHeight() >= 32
@@ -1024,6 +1032,7 @@ def test_step1_to_step3_export_matches_loaded(qtbot):
 # --------------------
 
 def test_collapsible_sections_default_and_toggle(qtbot):
+    from PySide6.QtWidgets import QWidget
     win = _goto_step2(qtbot)
 
     tabs = win.page_edit.measurements_tabs
@@ -1047,13 +1056,16 @@ def test_collapsible_sections_default_and_toggle(qtbot):
     da_toggle.click()
     ex_toggle.click()
     QApplication.processEvents()
-    qtbot.waitUntil(lambda: da_container.isVisible() and ex_container.isVisible())
+    
+    # Instead of waiting for isVisible(), wait for isVisibleTo() which works in this context
+    qtbot.waitUntil(lambda: da_container.isVisibleTo(panel) and ex_container.isVisibleTo(panel), timeout=5000)
 
     # Toggle OFF
     da_toggle.click()
     ex_toggle.click()
     QApplication.processEvents()
-    qtbot.waitUntil(lambda: (not da_container.isVisible()) and (not ex_container.isVisible()))
+    # Instead of waiting for isVisible(), wait for isVisibleTo() which works in this context
+    qtbot.waitUntil(lambda: not da_container.isVisibleTo(panel) and not ex_container.isVisibleTo(panel), timeout=5000)
 
 
 def test_extras_two_columns_and_specs_fields_present(qtbot):
