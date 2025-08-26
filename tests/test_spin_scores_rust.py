@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 
 # Skip tests if the Rust module isn't available yet
-spinorama_c = pytest.importorskip("spinorama.c_compute_scores")
-spinorama_rust = pytest.importorskip("spinorama_cscore")
+spinorama_c = pytest.importorskip("spinorama.compute_scores_cython.compute_scores_cython")
+spinorama_rust = pytest.importorskip("compute_scores_rust")
 
 
 def _make_intervals(freq: np.ndarray) -> List[Tuple[int, int]]:
