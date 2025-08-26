@@ -11,18 +11,14 @@ pytestmark = pytest.mark.skipif(
     reason="Set SPINORAMA_BENCH=1 to run performance benchmarks",
 )
 
-spinorama_c = pytest.importorskip("spinorama.c_compute_scores")
-spinorama_rust = pytest.importorskip("spinorama_cscore")
+spinorama_c = pytest.importorskip("spinorama.compute_scores_cython.compute_scores_cython")
+spinorama_rust = pytest.importorskip("spinorama.compute_scores_rust")
 
 
 def _make_intervals(freq: np.ndarray) -> List[Tuple[int, int]]:
     edges = np.geomspace(freq[0], freq[-1], 12)
     idxs = np.searchsorted(freq, edges)
-    return [
-        (int(idxs[i]), int(idxs[i + 1]))
-        for i in range(len(idxs) - 1)
-        if idxs[i + 1] > idxs[i]
-    ]
+    return [(int(idxs[i]), int(idxs[i + 1])) for i in range(len(idxs) - 1) if idxs[i + 1] > idxs[i]]
 
 
 def _make_idx(nh: int, nv: int) -> List[List[int]]:
@@ -71,12 +67,8 @@ def test_perf_cython_vs_rust(n_freq: int, nh: int, nv: int) -> None:
     )
 
     # Bench full PEQ path
-    t_c_peq = _bench(
-        spinorama_c.c_score_peq, freq, idx, intervals, weights, spl_h, spl_v, peq
-    )
-    t_r_peq = _bench(
-        spinorama_rust.c_score_peq, freq, idx, intervals, weights, spl_h, spl_v, peq
-    )
+    t_c_peq = _bench(spinorama_c.c_score_peq, freq, idx, intervals, weights, spl_h, spl_v, peq)
+    t_r_peq = _bench(spinorama_rust.c_score_peq, freq, idx, intervals, weights, spl_h, spl_v, peq)
 
     # Sanity: functions run and return finite values (use existing parity test for strictness)
     assert t_c > 0 and t_r > 0 and t_c_peq > 0 and t_r_peq > 0
@@ -84,6 +76,4 @@ def test_perf_cython_vs_rust(n_freq: int, nh: int, nv: int) -> None:
     # Optional: log metrics for CI output
     speedup_score = t_c / t_r
     speedup_peq = t_c_peq / t_r_peq
-    print(
-        f"score path speedup: {speedup_score:.2f}x | peq path speedup: {speedup_peq:.2f}x"
-    )
+    print(f"score path speedup: {speedup_score:.2f}x | peq path speedup: {speedup_peq:.2f}x")

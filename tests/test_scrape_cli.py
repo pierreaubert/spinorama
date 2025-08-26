@@ -7,7 +7,7 @@ from typing import Any, Dict, Tuple
 import typer
 from typer.testing import CliRunner
 
-import specscraper.cli as cli
+import metahint.cli as cli
 
 
 runner = CliRunner()
@@ -87,7 +87,7 @@ def test_scrape_cli_aggregates_and_calls_llm(monkeypatch):
 
 def test_fetcher_requests_engine(monkeypatch):
     # Test that fetch_url with requests engine uses requests.get
-    import specscraper.fetcher as fetcher
+    import metahint.fetcher as fetcher
 
     class DummyResp:
         def __init__(self):

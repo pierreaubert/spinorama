@@ -10,7 +10,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 import typer
 from typer.testing import CliRunner
 
-from specscraper.cli import app as scrape_app
+from metahint.cli import app as scrape_app
 
 # Ground truth database
 from datas.metadata import speakers_info  # type: ignore
@@ -129,7 +129,7 @@ def _run_scrape(brand: str, model: str, engine: str, port: int) -> Optional[Dict
         return None
 
 
-app = typer.Typer(help="Benchmark specscraper accuracy against vetted metadata")
+app = typer.Typer(help="Benchmark metahint accuracy against vetted metadata")
 
 
 @app.command()

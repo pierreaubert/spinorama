@@ -15,6 +15,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fd1289c04a9ea8cb22300a459a72a385d7c73d3259e2ed7dcb2af674838cfa9"
 
 [[package]]
+name = "compute_scores_rust"
+version = "0.1.0"
+dependencies = [
+ "ndarray",
+ "ndarray-stats",
+ "num-traits",
+ "numpy",
+ "pyo3",
+ "rayon",
+]
+
+[[package]]
 name = "crossbeam-deque"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -361,18 +373,6 @@ name = "rustc-hash"
 version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "357703d41365b4b27c590e3ed91eabb1b663f07c4c084095e60cbed4362dff0d"
-
-[[package]]
-name = "spinorama_cscore"
-version = "0.1.0"
-dependencies = [
- "ndarray",
- "ndarray-stats",
- "num-traits",
- "numpy",
- "pyo3",
- "rayon",
-]
 
 [[package]]
 name = "syn"

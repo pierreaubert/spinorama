@@ -33,7 +33,7 @@ from spinorama.misc import graph_melt
 from autoeq.auto_misc import have_full_measurements
 
 # cython import
-from spinorama.c_compute_scores import c_cea2034, c_score_peq_approx
+from spinorama.compute_scores_cython.compute_scores_cython import c_cea2034, c_score_peq_approx
 
 # ------------------------------------------------------------------------------
 # lots of variables for the fast computations on scores in python

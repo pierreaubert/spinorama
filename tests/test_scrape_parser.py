@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from textwrap import dedent
 
-from specscraper.parsers.html_parser import parse_spec_key_values
-from specscraper.parsers.normalizer import assemble_specs, normalize_raw_map
+from metahint.parsers.html_parser import parse_spec_key_values
+from metahint.parsers.normalizer import assemble_specs, normalize_raw_map
 
 
 def test_parse_and_normalize_basic_spec_list() -> None:

@@ -1,10 +1,10 @@
 [package]
-name = "spinorama_cscore"
+name = "compute_scores_rust"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "spinorama_cscore"
+name = "compute_scores_rust"
 crate-type = ["cdylib"]
 
 [dependencies]

@@ -193,5 +193,5 @@ gll_data_acquisition_std: DataAcquisition = {
     "via": "gll",
     "distance": 10,
     "signal": "aes 20Hz-20kHz",
-    "resolution": 2.5,
+    "resolution": 5.0,
 }

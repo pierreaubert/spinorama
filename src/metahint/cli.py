@@ -7,11 +7,11 @@ from typing import Dict, List, Optional, Tuple
 
 import typer
 
-from specscraper.discovery import discover_urls
-from specscraper.fetcher import fetch_url
-from specscraper.parsers.html_parser import parse_spec_key_values
-from specscraper.parsers.normalizer import assemble_specs, normalize_raw_map
-from specscraper.schema import ConfidenceValue
+from metahint.discovery import discover_urls
+from metahint.fetcher import fetch_url
+from metahint.parsers.html_parser import parse_spec_key_values
+from metahint.parsers.normalizer import assemble_specs, normalize_raw_map
+from metahint.schema import ConfidenceValue
 import time
 import contextlib
 import requests

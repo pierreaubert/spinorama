@@ -148,7 +148,7 @@ def process_single_measurement(
     except Exception as e:
         logger.exception("Error processing %s/%s/%s", speaker, origin, mversion)
     else:
-        return False, speaker, origin, mversion, {}, e
+        return False, speaker, origin, mversion, {}
 
 
 def process_measurements_parallel(
