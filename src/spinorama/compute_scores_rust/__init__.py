@@ -6,6 +6,7 @@ falls back to the top-level `compute_scores_rust` wheel installed in the
 active environment. This ensures tests importing `spinorama.compute_scores_rust`
 get the correct Rust-accelerated functions regardless of installation mode.
 """
+
 from __future__ import annotations
 
 # Prefer a local extension built into this package directory (e.g.,
@@ -16,6 +17,7 @@ try:
 except Exception:
     # Fallback: proxy everything from the installed extension module.
     from compute_scores_rust import *  # noqa: F401,F403
+
     try:  # Build a stable __all__ for introspection and linting
         import compute_scores_rust as _ext2  # type: ignore
 
