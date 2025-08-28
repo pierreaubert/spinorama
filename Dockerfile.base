@@ -2,12 +2,12 @@
 
 FROM ubuntu:latest AS base
 
-LABEL org.opencontainers.image.authors="pierre@spinorama.org" version="0.3"
+LABEL org.opencontainers.image.authors="pierre@spinorama.org" version="0.4"
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dash \
-    gcc-13 gcc-13-aarch64-linux-gnu \
+    gcc-15 gcc-15-aarch64-linux-gnu \
     libc-bin \
     openssh-server \
     python3.12 \
