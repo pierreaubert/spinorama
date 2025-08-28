@@ -53,6 +53,15 @@ KNOWN_MEASUREMENTS = set(
     ]
 )
 
+ALIAS_MEASUREMENTS = {
+    "ON": "On Axis",
+    "On-Axis": "On Axis",
+    "LW": "Listening Window",
+    "ER": "Early Reflections",
+    "PIR": "Estimated In-Room Response",
+    "Predicted In-Room Response": "Estimated In-Room Response",
+}
+
 KNOWN_FORMATS = set(["jpeg", "jpg", "json", "png", "webp"])
 
 

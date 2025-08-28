@@ -173,7 +173,7 @@ class EditMetadataPage(QWidget):
         top_container.setFrameShadow(QFrame.Shadow.Raised)
         top_container_layout = QVBoxLayout(top_container)
         top_container_layout.setContentsMargins(10, 10, 10, 10)
-        
+
         top_grid = QtWidgets.QGridLayout()
         # Two form columns
         form_col1 = QFormLayout()
@@ -374,19 +374,19 @@ class MetadataMainWindow(QMainWindow):
         """Filter the speakers combobox based on search text."""
         # Clear current items
         self.page_select.speakers_cb.clear()
-        
+
         # If search text is empty, show all speakers
         if not search_text.strip():
             self.page_select.speakers_cb.addItems([""] + self.speakers)
             return
-        
+
         # Filter speakers based on search text (case insensitive)
         search_text = search_text.lower()
         filtered_speakers = [speaker for speaker in self.speakers if search_text in speaker.lower()]
-        
+
         # Add filtered speakers to combobox
         self.page_select.speakers_cb.addItems([""] + filtered_speakers)
-        
+
         # If there's only one match and it's an exact match, select it
         if len(filtered_speakers) == 1 and filtered_speakers[0].lower() == search_text:
             index = self.page_select.speakers_cb.findText(filtered_speakers[0])
