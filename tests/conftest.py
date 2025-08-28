@@ -3,6 +3,7 @@
 For headless CI on macOS, the 'offscreen' platform can hang. Force the
 'minimal' platform before any Qt modules are imported.
 """
+
 from __future__ import annotations
 
 import os

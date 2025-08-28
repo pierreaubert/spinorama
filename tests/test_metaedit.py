@@ -39,6 +39,7 @@ if TYPE_CHECKING:
 # Shared helpers
 # --------------------
 
+
 def _pick_sample_speaker():
     from datas.metadata import speakers_info
 
@@ -80,7 +81,9 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
 
     # Convert legacy 'review' to 'reviews'
     measurements: Dict[str, Any] = (
-        cast(Dict[str, Any], data.get("measurements")) if isinstance(data.get("measurements"), dict) else {}
+        cast(Dict[str, Any], data.get("measurements"))
+        if isinstance(data.get("measurements"), dict)
+        else {}
     )
     for k, m in list(measurements.items()):
         if isinstance(m, dict) and ("review" in m) and ("reviews" not in m):
@@ -125,7 +128,9 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
         em["reviews"] = reviews if isinstance(reviews, dict) else {}
         # Data Acquisition
         da: Dict[str, Any] = (
-            cast(Dict[str, Any], m.get("data_acquisition")) if isinstance(m.get("data_acquisition"), dict) else {}
+            cast(Dict[str, Any], m.get("data_acquisition"))
+            if isinstance(m.get("data_acquisition"), dict)
+            else {}
         )
         em["data_acquisition"] = {
             "via": (cast(str, da.get("via")) if isinstance(da.get("via"), str) else None),
@@ -135,7 +140,9 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
             "min_valid_freq": _to_float(da.get("min_valid_freq")),
             "max_valid_freq": _to_float(da.get("max_valid_freq")),
             # UI default: unchecked => False (kept in export)
-            "air_absorbtion": bool(da.get("air_absorbtion")) if da.get("air_absorbtion") is not None else False,
+            "air_absorbtion": bool(da.get("air_absorbtion"))
+            if da.get("air_absorbtion") is not None
+            else False,
             "notes": (cast(str, da.get("notes")) if isinstance(da.get("notes"), str) else None),
         }
 
@@ -154,7 +161,9 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
         if _block_empty(em["data_acquisition"]):
             em["data_acquisition"] = None
         # Extras
-        ex: Dict[str, Any] = cast(Dict[str, Any], m.get("extras")) if isinstance(m.get("extras"), dict) else {}
+        ex: Dict[str, Any] = (
+            cast(Dict[str, Any], m.get("extras")) if isinstance(m.get("extras"), dict) else {}
+        )
         em["extras"] = {
             # UI default is unchecked -> False (kept)
             "is_equed": bool(ex.get("is_equed")) if ex.get("is_equed") is not None else False,
@@ -164,9 +173,13 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
             em["extras"] = None
         # Specifications (support nested SPL)
         sp: Dict[str, Any] = (
-            cast(Dict[str, Any], m.get("specifications")) if isinstance(m.get("specifications"), dict) else {}
+            cast(Dict[str, Any], m.get("specifications"))
+            if isinstance(m.get("specifications"), dict)
+            else {}
         )
-        size: Dict[str, Any] = cast(Dict[str, Any], sp.get("size")) if isinstance(sp.get("size"), dict) else {}
+        size: Dict[str, Any] = (
+            cast(Dict[str, Any], sp.get("size")) if isinstance(sp.get("size"), dict) else {}
+        )
         spl = cast(Dict[str, Any], sp.get("SPL")) if isinstance(sp.get("SPL"), dict) else None
         spl_peak = sp.get("spl_peak", None)
         spl_long = sp.get("spl_long_term", None)
@@ -233,6 +246,7 @@ def _goto_step2(qtbot):
 # --------------------
 # App UI tests
 # --------------------
+
 
 def test_window_creation(qtbot):
     from metaedit.app import MetadataMainWindow
@@ -377,7 +391,7 @@ def test_step1_visibility_toggle_and_radio_prominence(qtbot):
     # This is needed because rb_existing is already True when the widget is created,
     # so setting it to True again won't trigger the toggled signal
     sel.rb_existing.toggled.emit(True)
-    
+
     # Initial: Existing selected -> existing group visible, new group hidden
     assert sel.rb_existing.isChecked()
     # Add a small wait to ensure the initial toggle has time to run
@@ -500,6 +514,7 @@ def test_step3_back_does_not_invoke_to_edit(qtbot, monkeypatch):
 # CLI tests
 # --------------------
 
+
 def test_cli_missing_speaker_exits_with_warning():
     # Run the module with a clearly missing speaker key
     cmd = [sys.executable, "-m", "metaedit.app", "--speaker", "__nonexistent__"]
@@ -514,6 +529,7 @@ def test_cli_missing_speaker_exits_with_warning():
 # --------------------
 # Export tests
 # --------------------
+
 
 def test_top_level_order_min_diff() -> None:
     from metaedit.models import (
@@ -628,6 +644,7 @@ def test_measurement_order_and_prune() -> None:
 # GitOps tests
 # --------------------
 
+
 def test_plan_pr_requires_develop_and_uptodate() -> None:
     from metaedit.gitops import plan_pr_actions
 
@@ -700,6 +717,7 @@ def test_sanitize_ref() -> None:
 # --------------------
 # Merger tests
 # --------------------
+
 
 def test_strip_app_only_fields(tmp_path: Path) -> None:
     from metaedit import merger
@@ -809,6 +827,7 @@ def test_apply_merge_runs_ruff_format(tmp_path: Path, monkeypatch: "MonkeyPatch"
 # Models tests
 # --------------------
 
+
 def test_convert_legacy_reviews_single_field():
     from metaedit.models import SpeakerMetadata
 
@@ -835,6 +854,7 @@ def test_date_formatting_roundtrip():
 # --------------------
 # Picture tests
 # --------------------
+
 
 def test_choose_picture_copies_and_exports(qtbot, tmp_path, monkeypatch):
     # Prepare a tiny valid PNG using QPixmap
@@ -910,6 +930,7 @@ def test_choose_picture_copies_and_exports(qtbot, tmp_path, monkeypatch):
 # --------------------
 # Prefill tests
 # --------------------
+
 
 def test_prefill_existing_speaker(qtbot):
     from metaedit.app import MetadataMainWindow
@@ -992,6 +1013,7 @@ def test_prefill_existing_speaker(qtbot):
 # Qt export tests
 # --------------------
 
+
 def test_step1_to_step3_export_matches_loaded(qtbot):
     from metaedit.app import MetadataMainWindow
 
@@ -1031,8 +1053,10 @@ def test_step1_to_step3_export_matches_loaded(qtbot):
 # Sections and layout tests
 # --------------------
 
+
 def test_collapsible_sections_default_and_toggle(qtbot):
     from PySide6.QtWidgets import QWidget
+
     win = _goto_step2(qtbot)
 
     tabs = win.page_edit.measurements_tabs
@@ -1056,16 +1080,21 @@ def test_collapsible_sections_default_and_toggle(qtbot):
     da_toggle.click()
     ex_toggle.click()
     QApplication.processEvents()
-    
+
     # Instead of waiting for isVisible(), wait for isVisibleTo() which works in this context
-    qtbot.waitUntil(lambda: da_container.isVisibleTo(panel) and ex_container.isVisibleTo(panel), timeout=5000)
+    qtbot.waitUntil(
+        lambda: da_container.isVisibleTo(panel) and ex_container.isVisibleTo(panel), timeout=5000
+    )
 
     # Toggle OFF
     da_toggle.click()
     ex_toggle.click()
     QApplication.processEvents()
     # Instead of waiting for isVisible(), wait for isVisibleTo() which works in this context
-    qtbot.waitUntil(lambda: not da_container.isVisibleTo(panel) and not ex_container.isVisibleTo(panel), timeout=5000)
+    qtbot.waitUntil(
+        lambda: not da_container.isVisibleTo(panel) and not ex_container.isVisibleTo(panel),
+        timeout=5000,
+    )
 
 
 def test_extras_two_columns_and_specs_fields_present(qtbot):

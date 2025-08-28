@@ -12,8 +12,6 @@ from metahint.parsers.html_parser import parse_spec_key_values
 from metahint.parsers.normalizer import assemble_specs, normalize_raw_map
 
 
-
-
 runner = CliRunner()
 
 
@@ -146,4 +144,3 @@ def test_parse_and_normalize_basic_spec_list() -> None:
     weight_each = specs.weight["each"].value
     assert weight_each["lb"].value == 79.1
     assert weight_each["kg"].value == 35.9
-
