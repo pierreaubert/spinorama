@@ -424,9 +424,9 @@ fn c_score_peq_approx(
         let on = on.as_array();
         let peq = peq.as_array();
         let on2 = &on.to_owned() + &peq;
-        let lw = spin.row(0).to_owned();
-        let sp = spin.row(spin.shape()[0]-2).to_owned();
-        let pir = spin.row(spin.shape()[0]-1).to_owned();
+        let lw = spin.row(0).to_owned()+ &peq;
+        let sp = spin.row(spin.shape()[0]-2).to_owned()+&peq;
+        let pir = spin.row(spin.shape()[0]-1).to_owned()+&peq;
         c_score(
             freq,
             intervals,
