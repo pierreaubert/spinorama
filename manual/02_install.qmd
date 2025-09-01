@@ -78,4 +78,3 @@ Before committing, please check that the various checks are fine:
 
 Most of the checks are enforced in the pre-submit which means that
 you cannot commit new codes without passing tests and checks.
-
