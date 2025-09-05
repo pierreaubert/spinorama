@@ -68,7 +68,7 @@ def get_freq(df_speaker_data, optim_config):
         columns = {"Freq"}.union(local_curves)
         if "CEA2034_unmelted" in df_speaker_data:
             local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
-        else:
+        elif "CEA2034" in df_speaker_data:
             df_tmp = df_speaker_data["CEA2034"]
             try:
                 df_pivoted = graph_unmelt(df_tmp)
@@ -79,6 +79,8 @@ def get_freq(df_speaker_data, optim_config):
             except KeyError as key_error:
                 logger.debug("columns %s %s", columns, key_error)
                 return None, None, None
+        else:
+            return None, None, None
 
     if with_pir:
         pir_source = df_speaker_data["Estimated In-Room Response"]

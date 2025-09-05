@@ -33,7 +33,11 @@ from spinorama.misc import graph_melt
 from autoeq.auto_misc import have_full_measurements
 
 # cython import
-from spinorama.c_compute_scores import c_cea2034, c_score_peq_approx
+try:
+    from compute_scores_rust import c_cea2034, c_score_peq_approx
+except:
+    from spinorama.compute_scores_cython.compute_scores_cython import c_cea2034, c_score_peq_approx
+
 
 # ------------------------------------------------------------------------------
 # lots of variables for the fast computations on scores in python
@@ -474,7 +478,6 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
 
     score = c_score_peq_approx(
         freq=np.asarray(pre_computed["freq"]),
-        idx=pre_computed["idx"],
         intervals=pre_computed["intervals"],
         spin=pre_computed["spin"],
         on=np.asarray(pre_computed["on"]),

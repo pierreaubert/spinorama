@@ -16,118 +16,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
-usage: generate_peqs.py \
- [--curve-peak-only] \
- [--curves=<curve_name>] \
- [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
- [--disable-ray] \
- [--fitness=<function>] \
- [--force] \
- [--generate-images-only] \
- [--graphic-eq-list] \
- [--graphic-eq=<eq_name>] \
- [--help] \
- [--log-level=<level>] \
- [--max-Q=<maxQ>] \
- [--max-dB=<maxdB>] \
- [--max-freq=<maxFreq>] \
- [--max-iter=<maxiter>] \
- [--max-peq=<count>] \
- [--mformat=<mformat>] \
- [--min-Q=<minQ>] \
- [--min-dB=<mindB>] \
- [--min-freq=<minFreq>] \
- [--mversion=<mversion>] \
- [--optimisation=<options>] \
- [--origin=<origin>] \
- [--output-dir=<path>] \
- [--ray-local] \
- [--ray-cluster=<host_ip>] \
- [--slope-early-reflections=<s_er>] \
- [--slope-er=<s_lw>] \
- [--slope-estimated-inroom=<s_pir>] \
- [--slope-listening-window=<s_lw>] \
- [--slope-lw=<s_lw>] \
- [--slope-on-axis=<s_on>] \
- [--slope-on=<s_on>] \
- [--slope-pir=<s_pir>] \
- [--slope-sound-power=<s_sp>] \
- [--slope-sp=<s_sp>] \
- [--smoke-test] \
- [--smooth-measurements=<window_size>] \
- [--smooth-order=<order>] \
- [--speaker=<speaker>] \
- [--target-max-freq=<tmaxf>] \
- [--target-min-freq=<tminf>] \
- [--use-all-biquad] \
- [--use-only-pk] \
- [--version] \
- [-v|--verbose]
-
-Options:
-  --curve-peak-only        Optimise both for peaks and valleys on a curve
-  --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
-  --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
-  --dash-port=<dash-port>  Port for the ray dashbboard
-  --disable-ray            Disable ray
-  --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
-  --force                  Force generation of eq even if already computed
-  --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
-  --graphic-eq-list        List the known graphic eq and exit
-  --graphic-eq=<eq_name>   Result is tailored for graphic_eq "name".
-  --help                   Display usage()
-  --log-level=<level>      Default is WARNING, options are DEBUG or INFO or ERROR.
-  --max-Q=<maxQ>           Maximum value for Q
-  --max-dB=<maxdB>         Maximum value for dBGain
-  --max-freq=<maxFreq>     Optimisation will happen below max freq
-  --max-iter=<maxiter>     Maximum number of iterations
-  --max-peq=<count>        Maximum allowed number of Biquad
-  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
-  --min-Q=<minQ>           Minumum value for Q
-  --min-dB=<mindB>         Minumum value for dBGain
-  --min-freq=<minFreq>     Optimisation will happen above min freq
-  --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
-  --origin=<origin>        Restrict to a specific origin
-  --output-dir=<path>      If specified all the pictures and eq txt files will be generated there
-  --ray-cluster=<ip_port>  Set to ip:port if you want to join an existing cluster
-  --ray-local              If present, ray will run locally, it is usefull for debugging
-  --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
-  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
-  --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
-  --slope-lw=<s_lw>        Same as above (shortcut)
-  --slope-on-axis=<s_on>   Slope of the ideal target for On Axis, default is 0, as in flat anechoic
-  --slope-on=<s_lw>        Same as above (shortcut)
-  --slope-pir=<s_pir>      Same as above (shortcut)
-  --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
-  --slope-sp=<s_sp>        Same as above (shortcut)
-  --slopw-er=<s_er>        Same as above (shortcut)
-  --smoke-test             Test the optimiser with a small amount of variables
-  --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
-  --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
-  --target-max-freq=<tmaxf> targets will not be important after max freq
-  --target-min-freq=<tminf> targets will be flat up to min freq
-  --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
-  --use-only-pk            force PEQ to be only PK / Peak
-  --verbose                Print some informations
-  --version                Script version number
-"""
 
 import sys
-
-from docopt import docopt
+import argparse
 import pandas as pd
-
-try:
-    import ray
-except ModuleNotFoundError:
-    try:
-        import src.miniray as ray
-    except ModuleNotFoundError:
-        print("Did you run env.sh?")
-        sys.exit(-1)
 
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
@@ -135,14 +27,12 @@ from datas.grapheq import vendor_info as grapheq_info
 from generate_common import (
     get_custom_logger,
     args2level,
-    custom_ray_init,
     cache_load,
-    cache_load_seq,
 )
-from autoeq.auto_save import optim_save_peq, optim_save_peq_seq
+from autoeq.auto_save import optim_save_peq
 
 
-VERSION = "0.26"
+VERSION = "0.28"
 
 
 def print_items(aggregated_results):
@@ -186,26 +76,54 @@ def print_scores(aggregated_scores):
     df_scores.to_csv("build/results_scores.csv", index=False)
 
 
-def queue_speakers(df_all_speakers, optim_config, speaker_name):
-    """Add all speakers to the queue"""
-    ray_ids = {}
+def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
+    """Queue all speakers for EQ computation"""
+    if filters is None:
+        filters = {}
+
+    results = {}
     for current_speaker_name in df_all_speakers:
+        # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
-        default = None
-        default_origin = None
+
+        # Skip if speaker is filtered out by any filter criteria
+        skip = False
+        for key, value in filters.items():
+            if key == "speaker_name" and current_speaker_name != value:
+                skip = True
+                break
+        if skip:
+            logger.debug("Skipping %s because of filter criteria", current_speaker_name)
+            continue
+
+        # skip
         if (
-            current_speaker_name in metadata
-            and "default_measurement" in metadata[current_speaker_name]
+            current_speaker_name not in metadata
+            or "default_measurement" not in metadata[current_speaker_name]
         ):
-            default = metadata[current_speaker_name]["default_measurement"]
-            default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
-        else:
             logger.error("no default_measurement for %s", current_speaker_name)
             continue
+
+        default = metadata[current_speaker_name]["default_measurement"]
+        default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
+
         if default_origin not in df_all_speakers[current_speaker_name]:
-            logger.error("default origin %s not in %s", default_origin, current_speaker_name)
+            logger.error(
+                "default origin %s not in %s (known origins are: %s)",
+                default_origin,
+                current_speaker_name,
+                ", ".join(df_all_speakers[current_speaker_name]),
+            )
             continue
+        else:
+            logger.debug(
+                "default origin %s for %s is %s",
+                default_origin,
+                current_speaker_name,
+                df_all_speakers[current_speaker_name][default_origin],
+            )
+
         if default not in df_all_speakers[current_speaker_name][default_origin]:
             logger.error(
                 "default %s not in default origin %s for %s",
@@ -214,7 +132,16 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
                 current_speaker_name,
             )
             continue
+        else:
+            logger.debug(
+                "default %s for %s is %s",
+                default,
+                current_speaker_name,
+                df_all_speakers[current_speaker_name][default_origin][default],
+            )
+
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
+
         if not (
             ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
             or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
@@ -225,45 +152,41 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
                 ", ".join(df_speaker),
             )
             continue
+        else:
+            logger.debug("processing %s", current_speaker_name)
 
-        current_id = optim_save_peq.remote(
+        # Process EQ computation directly
+        results[current_speaker_name] = optim_save_peq(
             current_speaker_name,
             default_origin,
             df_speaker,
             optim_config,
         )
-        ray_ids[current_speaker_name] = current_id
 
-    logger.info("Queing %d speakers for EQ computations", len(ray_ids))
-    return ray_ids
+    logger.info("Processed %d speakers for EQ computations", len(results))
+    return results
 
 
-def compute_peqs(ray_ids):
-    """Process EQ when it is available from the queue"""
-    done_ids = set()
+def compute_stats(results):
+    """Process EQ results and generates some statistic"""
     aggregated_results = {}
     aggregated_scores = {}
-    scores = None
-    while 1:
-        ids = [current_id for current_id in ray_ids.values() if current_id not in done_ids]
-        num_returns = min(len(ids), 16)
-        ready_ids, remaining_ids = ray.wait(ray_waitables=ids, num_returns=num_returns)
+    processed = 0
+    total = len(results)
 
-        for current_id in ready_ids:
-            get_results = ray.get(current_id)
-            if get_results is None:
-                continue
-            status, (current_speaker_name, results_iter, scores) = get_results
-            if status and results_iter is not None:
-                aggregated_results[current_speaker_name] = results_iter
-            if status and scores is not None:
-                aggregated_scores[current_speaker_name] = scores
-            done_ids.add(current_id)
+    for current_speaker_name, result in results.items():
+        if result is None:
+            continue
 
-        if len(remaining_ids) == 0:
-            break
+        status, (speaker_name, results_iter, scores) = result
+        if status and results_iter is not None:
+            aggregated_results[speaker_name] = results_iter
+        if status and scores is not None:
+            aggregated_scores[current_speaker_name] = scores
 
-        logger.info("State: %d ready IDs %d remainings IDs ", len(ready_ids), len(remaining_ids))
+        processed += 1
+        if processed % 10 == 0 or processed == total:
+            logger.info("Processed %d/%d speakers", processed, total)
 
     print_items(aggregated_results)
     print_scores(aggregated_scores)
@@ -271,51 +194,226 @@ def compute_peqs(ray_ids):
     return 0
 
 
-def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
-    for current_speaker_name in df_all_speakers:
-        if speaker_name is not None and current_speaker_name != speaker_name:
-            continue
-        default = None
-        default_origin = None
-        if (
-            current_speaker_name in metadata
-            and "default_measurement" in metadata[current_speaker_name]
-        ):
-            default = metadata[current_speaker_name]["default_measurement"]
-            default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
-        else:
-            logger.error("no default_measurement for %s", current_speaker_name)
-            continue
-        if default_origin not in df_all_speakers[current_speaker_name]:
-            logger.error("default origin %s not in %s", default_origin, current_speaker_name)
-            continue
-        if default not in df_all_speakers[current_speaker_name][default_origin]:
-            logger.error(
-                "default %s not in default origin %s for %s",
-                default,
-                default_origin,
-                current_speaker_name,
-            )
-            continue
-        df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
-        if not (
-            ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
-            or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
-        ):
-            logger.info(
-                "not enough data for %s known measurements are (%s)",
-                current_speaker_name,
-                ", ".join(df_speaker),
-            )
-            continue
+def get_argument_parser():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--curve-peak-only",
+        action="store_true",
+        help="Optimise both for peaks and valleys on a curve",
+    )
+    parser.add_argument(
+        "--curves",
+        type=str,
+        help="Curve name: must be one of 'ON', 'LW', 'PIR', 'ER' or 'SP' or a combination separated by a comma. Ex: 'PIR,LW' is valid",
+    )
 
-        logger.debug("starting optim for %s", current_speaker_name)
-        status, (_, results_iter, scores) = optim_save_peq_seq(
-            current_speaker_name,
-            default_origin,
-            df_speaker,
-            optim_config,
-        )
+    parser.add_argument(
+        "--fitness",
+        type=str,
+        help="Fit function: must be one of 'Flat', 'Score', 'LeastSquare', 'FlatPir', 'Combine'.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force generation of eq even if already computed",
+    )
+    parser.add_argument(
+        "--generate-images-only",
+        action="store_true",
+        help="Do not compute EQs but use the current ones to generate the various pictures",
+    )
+    parser.add_argument(
+        "--graphic-eq-list",
+        action="store_true",
+        help="List the known graphic eq and exit",
+    )
+    parser.add_argument(
+        "--graphic-eq",
+        type=str,
+        help="Result is tailored for graphic_eq 'name'.",
+    )
+    parser.add_argument(
+        "--log-level",
+        type=str,
+        help="Default is WARNING, options are DEBUG or INFO or ERROR.",
+    )
+    parser.add_argument(
+        "--max-Q",
+        type=float,
+        help="Maximum value for Q",
+    )
+    parser.add_argument(
+        "--max-dB",
+        type=float,
+        help="Maximum value for dBGain",
+    )
+    parser.add_argument(
+        "--max-freq",
+        type=int,
+        help="Optimisation will happen below max freq",
+    )
+    parser.add_argument(
+        "--max-iter",
+        type=int,
+        help="Maximum number of iterations",
+    )
+    parser.add_argument(
+        "--max-peq",
+        type=int,
+        help="Maximum allowed number of Biquad",
+    )
+    parser.add_argument(
+        "--mformat",
+        type=str,
+        help="Restrict to a specific format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)",
+    )
+    parser.add_argument(
+        "--min-Q",
+        type=float,
+        help="Minimum value for Q",
+    )
+    parser.add_argument(
+        "--min-dB",
+        type=float,
+        help="Minimum value for dBGain",
+    )
+    parser.add_argument(
+        "--min-freq",
+        type=int,
+        help="Optimisation will happen above min freq",
+    )
+    parser.add_argument(
+        "--mversion",
+        type=str,
+        help="Restrict to a specific mversion (for a given origin you can have multiple measurements)",
+    )
+    parser.add_argument(
+        "--optimisation",
+        type=str,
+        help="Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.",
+    )
+    parser.add_argument(
+        "--origin",
+        type=str,
+        help="Restrict to a specific origin",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        help="If specified all the pictures and eq txt files will be generated there",
+    )
+
+    parser.add_argument(
+        "--slope-early-reflections",
+        type=float,
+        help="Slope of early reflections, default is -5dB",
+    )
+    parser.add_argument(
+        "--slope-estimated-inroom",
+        type=float,
+        help="Slope of estimated in-room response, default is -8dB",
+    )
+    parser.add_argument(
+        "--slope-listening-window",
+        type=float,
+        help="Slope of listening window, default is -0.5dB",
+    )
+    parser.add_argument(
+        "--slope-on-axis",
+        type=float,
+        dest="slope_on_axis",
+        help="Slope of the ideal target for On Axis, default is 0, as in flat anechoic",
+    )
+
+    # Aliases for named slope flags (all take a float value)
+    parser.add_argument(
+        "--slope-on",
+        dest="slope_on_axis",
+        type=float,
+        help="Alias for --slope-on-axis. Slope of the ideal target for On Axis.",
+    )
+    parser.add_argument(
+        "--slope-lw",
+        dest="slope_listening_window",
+        type=float,
+        help="Alias for --slope-listening-window. Slope of listening window.",
+    )
+    parser.add_argument(
+        "--slope-er",
+        dest="slope_early_reflections",
+        type=float,
+        help="Alias for --slope-early-reflections. Slope of early reflections.",
+    )
+    parser.add_argument(
+        "--slope-pir",
+        dest="slope_estimated_inroom",
+        type=float,
+        help="Alias for --slope-estimated-inroom. Slope of estimated in-room response.",
+    )
+    parser.add_argument(
+        "--slope-sp",
+        dest="slope_sound_power",
+        type=float,
+        help="Alias for --slope-sound-power. Slope of sound power.",
+    )
+
+    parser.add_argument(
+        "--slope-sound-power",
+        type=float,
+        dest="slope_sound_power",
+        help="Slope of sound power, default is -8dB",
+    )
+    parser.add_argument(
+        "--smoke-test",
+        action="store_true",
+        help="Test the optimiser with a small amount of variables",
+    )
+    parser.add_argument(
+        "--smooth-measurements",
+        type=int,
+        help="If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing",
+    )
+    parser.add_argument(
+        "--smooth-order",
+        type=int,
+        help="Order of the interpolation, 3 by default for Savitzky-Golay filter.",
+    )
+    parser.add_argument(
+        "--speaker",
+        type=str,
+        help="Restrict to a specific speaker, if not specified it will optimise all speakers",
+    )
+    parser.add_argument(
+        "--target-max-freq",
+        type=int,
+        help="targets will not be important after max freq",
+    )
+    parser.add_argument(
+        "--target-min-freq",
+        type=int,
+        help="targets will be flat up to min freq",
+    )
+    parser.add_argument(
+        "--use-all-biquad",
+        action="store_true",
+        help="PEQ can be any kind of biquad (by default it uses only PK, PeaK)",
+    )
+    parser.add_argument(
+        "--use-only-pk",
+        action="store_true",
+        help="force PEQ to be only PK / Peak",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print some informations",
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Script version number",
+    )
+    return parser
 
 
 def main():
@@ -393,7 +491,7 @@ def main():
     # define other parameters for the optimisation algorithms
     # MAX_STEPS_XXX are usefull for grid search when the algorithm is looking
     # for random values (or trying all) across a range
-    if smoke_test:
+    if args.smoke_test:
         current_optim_config["MAX_NUMBER_PEQ"] = 5
         current_optim_config["MAX_STEPS_FREQ"] = 3
         current_optim_config["MAX_STEPS_DBGAIN"] = 3
@@ -416,80 +514,127 @@ def main():
     current_optim_config["MAX_Q"] = 3
 
     # do we override optim default?
-    if args["--max-peq"] is not None:
-        max_number_peq = int(args["--max-peq"])
+    if args.max_peq is not None:
+        max_number_peq = int(args.max_peq)
         current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
         if max_number_peq < 1:
             print("ERROR: max_number_peq is {} which is below 1".format(max_number_peq))
             parameter_error = True
-    if args["--max-iter"] is not None:
-        max_iter = int(args["--max-iter"])
+    if args.max_iter is not None:
+        max_iter = int(args.max_iter)
         current_optim_config["MAX_ITER"] = max_iter
         if max_iter < 1:
             print("ERROR: max_iter is {} which is below 1".format(max_iter))
             parameter_error = True
-    if args["--min-freq"] is not None:
-        min_freq = int(args["--min-freq"])
+    if args.min_freq is not None:
+        min_freq = int(args.min_freq)
         current_optim_config["freq_reg_min"] = min_freq
         if min_freq <= 20:
             print("ERROR: min_freq is {} which is below 20Hz".format(min_freq))
             parameter_error = True
-    if args["--max-freq"] is not None:
-        max_freq = int(args["--max-freq"])
+    if args.max_freq is not None:
+        max_freq = int(args.max_freq)
         current_optim_config["freq_reg_max"] = max_freq
         if max_freq >= 20000:
             print("ERROR: max_freq is {} which is above 20kHz".format(max_freq))
             parameter_error = True
 
-    if args["--min-Q"] is not None:
-        min_q = float(args["--min-Q"])
+    if args.min_Q is not None:
+        min_q = float(args.min_Q)
         current_optim_config["MIN_Q"] = min_q
-    if args["--max-Q"] is not None:
-        max_q = float(args["--max-Q"])
+    if args.max_Q is not None:
+        max_q = float(args.max_Q)
         current_optim_config["MAX_Q"] = max_q
-    if args["--min-dB"] is not None:
-        min_db = float(args["--min-dB"])
+    if args.min_dB is not None:
+        min_db = float(args.min_dB)
         current_optim_config["MIN_DBGAIN"] = min_db
-    if args["--max-dB"] is not None:
-        max_db = float(args["--max-dB"])
+    if args.max_dB is not None:
+        max_db = float(args.max_dB)
         current_optim_config["MAX_DBGAIN"] = max_db
 
-    if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
+    if args.use_all_biquad:
         current_optim_config["use_all_biquad"] = True
-    if args["--use-only-pk"] is not None and args["--use-only-pk"] is True:
+    if args.use_only_pk:
         current_optim_config["use_all_biquad"] = False
-    if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
+    if args.curve_peak_only:
         current_optim_config["plus_and_minus"] = False
 
-    if args["--target-min-freq"] is not None:
-        target_min_freq = int(args["--target-min-freq"])
+    if args.target_min_freq is not None:
+        target_min_freq = int(args.target_min_freq)
         current_optim_config["target_min_freq"] = target_min_freq
-    if args["--target-max-freq"] is not None:
-        target_max_freq = int(args["--target-max-freq"])
+    if args.target_max_freq is not None:
+        target_max_freq = int(args.target_max_freq)
         current_optim_config["target_max_freq"] = target_max_freq
 
-    for slope_name, slope_key in (
+    slope_params = (
+        # Numeric flags (value derived from name if arg is True)
+        ("--0.5", "slope_0_5"),
+        ("--0.6", "slope_0_6"),
+        ("--0.9", "slope_0_9"),
+        ("--1.2", "slope_1_2"),
+        # Primary named flags (value is float from arg)
         ("--slope-on-axis", "slope_on_axis"),
         ("--slope-listening-window", "slope_listening_window"),
         ("--slope-early-reflections", "slope_early_reflections"),
-        ("--slope-sound-power", "slope_sound_power"),
         ("--slope-estimated-inroom", "slope_estimated_inroom"),
+        ("--slope-sound-power", "slope_sound_power"),
+        # Aliases for named flags (value is float from arg, dest matches primary)
+        # Included here if we want to iterate them by their alias name, though argparse handles the dest mapping.
+        # The processing loop's is_numeric_style_flag correctly distinguishes these from true numeric flags.
         ("--slope-on", "slope_on_axis"),
         ("--slope-lw", "slope_listening_window"),
         ("--slope-er", "slope_early_reflections"),
-        ("--slope-sp", "slope_sound_power"),
         ("--slope-pir", "slope_estimated_inroom"),
-    ):
-        if args[slope_name] is not None:
-            try:
-                slope = float(args[slope_name])
-                current_optim_config[slope_key] = slope
-            except ValueError:
-                print("{} is not a float".format(args[slope_name]))
+        ("--slope-sp", "slope_sound_power"),
+    )
+
+    for slope_name, slope_key in slope_params:
+        arg_value = getattr(args, slope_key, None)
+
+        if arg_value is not None:
+            actual_slope_value = None
+            is_numeric_style_flag = (
+                slope_name.startswith("--") and len(slope_name) > 2 and slope_name[2].isdigit()
+            )
+
+            if arg_value is True:
+                if is_numeric_style_flag:
+                    try:
+                        actual_slope_value = -float(slope_name[2:])  # e.g., "--0.5" -> -0.5
+                    except ValueError:
+                        logger.exception("Cannot parse slope from numeric flag name %s", slope_name)
+                        sys.exit(1)
+                else:
+                    logger.warning(
+                        "Flag %s (dest: %s) resolved to True but is not a numeric-style flag. Check argparse definition. Skipping this slope argument.",
+                        slope_name,
+                        slope_key,
+                    )
+                    continue
+            elif isinstance(arg_value, (float, int)):
+                actual_slope_value = float(arg_value)
+            else:
+                logger.error(
+                    "Unexpected type for argument %s: %s. Value: %s. Check argparse definition.",
+                    slope_key,
+                    type(arg_value),
+                    arg_value,
+                )
                 sys.exit(1)
 
-    if args["--smooth-measurements"] is not None:
-        window_size = int(args["--smooth-measurements"])
+            if actual_slope_value is not None:
+                current_optim_config[slope_key] = actual_slope_value
+                if "slope" not in current_optim_config:
+                    current_optim_config["slope"] = actual_slope_value
+
+    if "slope" not in current_optim_config:
+        current_optim_config["slope"] = -0.5
+        default_slope_key = f"slope_{str(abs(-0.5)).replace('.', '_')}"
+        if default_slope_key not in current_optim_config:
+            current_optim_config[default_slope_key] = -0.5
+
+    if args.smooth_measurements is not None:
+        window_size = int(args.smooth_measurements)
         current_optim_config["smooth_measurements"] = True
         current_optim_config["smooth_window_size"] = window_size
         current_optim_config["smooth_window_order"] = 3
@@ -497,16 +642,16 @@ def main():
             print("ERROR: window size is {} which is below 2".format(window_size))
             parameter_error = True
 
-    if args["--smooth-order"] is not None:
-        order = int(args["--smooth-order"])
+    if args.smooth_order is not None:
+        order = int(args.smooth_order)
         current_optim_config["smooth_order"] = order
         if order < 1 or order > 5:
             print("ERROR: Polynomial order {} is not between  is 1 and 5".format(order))
             parameter_error = True
 
     # which curve (measurement) to target?
-    if args["--curves"] is not None:
-        param_curve_names = args["--curves"].replace(" ", "").split(",")
+    if args.curves is not None:
+        param_curve_names = args.curves.replace(" ", "").split(",")
         param_curve_name_valid = {
             "ON": "On Axis",
             "LW": "Listening Window",
@@ -530,8 +675,8 @@ def main():
                 )
 
     # do we build EQ for a HW graphic one?
-    if args["--graphic-eq"] is not None:
-        grapheq_name = args["--graphic-eq"]
+    if args.graphic_eq is not None:
+        grapheq_name = args.graphic_eq
         if grapheq_name not in grapheq_info:
             print(
                 "ERROR: EQ name {} is not known. Please select on in {}".format(
@@ -543,16 +688,16 @@ def main():
         current_optim_config["grapheq_name"] = grapheq_name
 
     # which optimisation algo?
-    if args["--optimisation"] is not None:
-        optimisation_name = args["--optimisation"]
+    if args.optimisation is not None:
+        optimisation_name = args.optimisation
         if optimisation_name == "greedy":
             current_optim_config["optimisation"] = "greedy"
         elif optimisation_name == "global":
             current_optim_config["optimisation"] = "global"
             # default is too low for global optim
-            if args["--max-iter"] is None:
+            if args.max_iter is None:
                 current_optim_config["MAX_ITER"] = 2500
-    elif not generate_images_only:
+    elif not args.generate_images_only and not args.graphic_eq:
         print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
         sys.exit(1)
 
@@ -564,8 +709,8 @@ def main():
         "LeastSquare": "leastsquare_loss",
         "FlatPir": "flat_pir",
     }
-    if args["--fitness"] is not None:
-        current_fitness_name = args["--fitness"]
+    if args.fitness is not None:
+        current_fitness_name = args.fitness
         if current_fitness_name not in param_fitness_name_valid:
             print(
                 "ERROR: {} is not known, acceptable values are {}".format(
@@ -575,7 +720,7 @@ def main():
             parameter_error = True
         else:
             current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
-    elif not generate_images_only:
+    elif not args.generate_images_only:
         print(
             "ERROR: fitness function is required: options are {}".format(
                 list(param_fitness_name_valid.keys())
@@ -585,20 +730,20 @@ def main():
 
     # name of speaker
     speaker_name = None
-    if args["--speaker"] is not None:
-        speaker_name = args["--speaker"]
+    if args.speaker is not None:
+        speaker_name = args.speaker.replace('"', "")
 
     origin = None
-    if args["--origin"] is not None:
-        origin = args["--origin"]
+    if args.origin is not None:
+        origin = args.origin
 
     mversion = None
-    if args["--mversion"] is not None:
-        mversion = args["--mversion"]
+    if args.mversion is not None:
+        mversion = args.mversion
 
     mformat = None
-    if args["--mformat"] is not None:
-        mformat = args["--mformat"]
+    if args.mformat is not None:
+        mformat = args.mformat
 
     # error in parameters
     if parameter_error:
@@ -620,10 +765,10 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        if disable_ray:
-            df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=smoke_test)
-        else:
-            df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test, level=level)
+        df_all_speakers = cache_load(filters=do_filters, smoke_test=args.smoke_test, level=level)
+        # print(df_all_speakers.keys())
+        # print(df_all_speakers[speaker_name].keys())
+        # print(df_all_speakers[speaker_name]["unknown"].keys())
     except ValueError as v_e:
         if speaker_name is not None:
             print(
@@ -635,47 +780,30 @@ def main():
             print(f"{v_e}")
         sys.exit(1)
 
-    # start ray
-    if not disable_ray:
-        custom_ray_init(args)
-
     # add global parameters into the config
-    current_optim_config["verbose"] = verbose
-    current_optim_config["smoke_test"] = smoke_test
-    current_optim_config["force"] = force
+    current_optim_config["verbose"] = args.verbose
+    current_optim_config["smoke_test"] = args.smoke_test
+    current_optim_config["force"] = args.force
     current_optim_config["version"] = VERSION
     current_optim_config["level"] = level
-    current_optim_config["generate_images_only"] = generate_images_only
-    current_optim_config["output_dir"] = output_dir
+    current_optim_config["generate_images_only"] = args.generate_images_only
+    current_optim_config["output_dir"] = args.output_dir
 
-    if disable_ray:
-        compute_peqs_sequential(df_all_speakers, current_optim_config, speaker_name)
-    else:
-        ids = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
-        compute_peqs(ids)
+    results = compute_eqs(df_all_speakers, current_optim_config, speaker_name)
+    compute_stats(results)
 
     sys.exit(0)
 
 
 if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_peqs.py version {}".format(VERSION),
-        options_first=True,
-    )
+    parser = get_argument_parser()
+    args = parser.parse_args()
 
     level = args2level(args)
     logger = get_custom_logger(level=level, duplicate=True)
 
-    force = args["--force"]
-    verbose = args["--verbose"]
-    smoke_test = args["--smoke-test"]
-    disable_ray = args["--disable-ray"]
-    generate_images_only = args["--generate-images-only"]
-    output_dir = args["--output-dir"]
-
-    if args["--graphic-eq-list"]:
-        print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))
+    if args.graphic_eq_list:
+        print("INFO: The list of known graphical EQ is: {}".format(list(grapheq_info.keys())))
         sys.exit(0)
 
     main()

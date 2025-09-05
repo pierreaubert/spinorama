@@ -16,6 +16,40 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Cambridge Audio Minx MIN12": {
+        "brand": "Cambridge Audio",
+        "model": "Minx MIN12",
+        "type": "passive",
+        "price": "70",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "akr": "",
+                },
+                "review_published": "20251012",
+                "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 78,
+                        "width": 78,
+                        "depth": 85,
+                    },
+                    "weight": 0.43,
+                },
+            },
+        },
+    },
     "Cambridge Audio Minx XL": {
         "brand": "Cambridge Audio",
         "model": "Minx XL",
@@ -153,6 +187,36 @@ speakers_info_c: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/chane-a1-5-review-bookshelf-speaker.26078/",
                 "review_published": "20210825",
+            },
+        },
+    },
+    "Chesky Audio LC1": {
+        "brand": "Chesky Audio",
+        "model": "LC1",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/chesky_lc1/",
+                    "yt": "https://youtu.be/nUOSTOkFCvU",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 254,
+                        "width": 203,
+                        "depth": 254,
+                    },
+                    "weight": 8.2,
+                },
             },
         },
     },

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
@@ -52,6 +52,8 @@ pip3 install -U -r requirements.txt
 pip3 install -U -r requirements-test.txt
 pip3 install -U -r requirements-dev.txt
 pip3 install -U -r requirements-api.txt
+pip3 install -U -r requirements-meta.txt
+pip3 install -U -r requirements-scrape.txt
 
 # update pip to prevent extra warning
 pip install -U pip
@@ -62,14 +64,24 @@ npm install .
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv
 
-# compile
-rm -f src/spinorama/c_compute_scores.cpython-*.so
-PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
-
 # install deepsource
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
 
 # install 3rd parties
 ./scripts/update_3rdparties.sh
 
+# create some directories
+mkdir -p build dist
+
+# compile cython
+PYTHONPATH=src cd src/spinorama/compute_scores_cython && \
+    python$PYVERSION setup.py build_ext && \
+    rm -f compute_scores_cython.so && \
+    ln -s compute_scores_cython.cpython-${PYVERSION/./}-darwin.so compute_scores_cython.so && \
+    cd ../../../
+
+# compile rust
+cd src/spinorama/compute_scores_rust && \
+    maturin build --release && \
+    cd ../../../
 

@@ -1,0 +1,14 @@
+EQ for Chesky Audio LC1 computed from ErinsAudioCorner data
+Preference Score 3.57 with EQ 5.66
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-09-14:34:08
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    56 Hz Gain +2.11 dB Q 1.16
+Filter  2: ON PK Fc   102 Hz Gain +2.98 dB Q 0.25
+Filter  3: ON PK Fc   105 Hz Gain -6.30 dB Q 1.10
+Filter  4: ON PK Fc   540 Hz Gain +2.12 dB Q 2.84
+Filter  5: ON PK Fc   910 Hz Gain -5.02 dB Q 1.94
+Filter  6: ON PK Fc  1121 Hz Gain +2.99 dB Q 2.95
+Filter  7: ON PK Fc  2964 Hz Gain -1.90 dB Q 1.00

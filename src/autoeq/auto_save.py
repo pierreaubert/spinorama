@@ -24,9 +24,7 @@ import os
 import re
 import pathlib
 
-import ray
-
-from spinorama import logger, ray_setup_logger
+from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.misc import measurements_complete_spl, measurements_complete_freq
@@ -118,6 +116,7 @@ def print_auto_graphs_seq(
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
 
+        # print('DEBUG: local_freq=', freq)
         graphs = auto_graph_results(
             speaker_name,
             speaker_origin,
@@ -155,6 +154,7 @@ def print_auto_graphs_seq(
             graph_filename += ".png"
             logger.debug("writing graph %s", graph_filename)
             force = not optim_config["generate_images_only"]
+            # print('{} {} {}'.format(graph_filename, graph.layout.width, graph.layout.height))
             write_multiformat(chart=graph, filename=graph_filename, force=force)
 
 
@@ -198,14 +198,19 @@ def smoke_test_cea2034(
 ) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
     if "CEA2034_unmelted" not in df_speaker and "CEA2034" not in df_speaker:
         # this should not happen
-        logger.error(
-            "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
-        )
+        if current_speaker_origin == "Princeton":
+            logger.debug(
+                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
+            )
+        else:
+            logger.error(
+                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
+            )
         return False, ("", (0, 0, 0), [])
     return True, ("", (0, 0, 0), [])
 
 
-def optim_save_peq_seq(
+def optim_save_peq(
     current_speaker_name: str,
     current_speaker_origin: str,
     df_speaker: DataSpeaker,
@@ -224,7 +229,7 @@ def optim_save_peq_seq(
         logger.debug("Skipping %s since EQ already exist!", current_speaker_name)
         return False, ("", (0, 0, 0), [])
 
-    # do we have CEA2034 data
+    # do we have CEA2034 data (temporary test, should be much smarter)
     smoke_test, smoke_empty = smoke_test_cea2034(
         current_speaker_name, current_speaker_origin, df_speaker
     )
@@ -233,17 +238,18 @@ def optim_save_peq_seq(
 
     # do we have the full data?
     use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker
-    if use_score:
-        if not measurements_complete_spl(
+    if use_score and (
+        not measurements_complete_spl(
             df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        ) or not measurements_complete_freq(
+        )
+        or not measurements_complete_freq(
             df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        ):
-            use_score = False
+        )
+    ):
+        use_score = False
     # maybe we only have partial data but enough to compute the Spin
-    if not use_score:
-        if "CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker:
-            use_score = True
+    if not use_score and ("CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker):
+        use_score = True
 
     # don't optimise below the minimum freq found in measurements
     if current_speaker_origin == "Princeton":
@@ -356,17 +362,3 @@ def optim_save_peq_seq(
         print_small_summary(current_speaker_name, score, auto_score)
 
     return True, (current_speaker_name, auto_results, scores)
-
-
-@ray.remote
-def optim_save_peq(
-    current_speaker_name: str,
-    current_speaker_origin: str,
-    df_speaker: DataSpeaker,
-    optim_config: dict,
-) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
-    """Compute and then save PEQ for this speaker"""
-    ray_setup_logger(optim_config["level"])
-    return optim_save_peq_seq(
-        current_speaker_name, current_speaker_origin, df_speaker, optim_config
-    )

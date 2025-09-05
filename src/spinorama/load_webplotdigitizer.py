@@ -212,7 +212,7 @@ def parse_graph_freq_webplotdigitizer(filename: str) -> StatusOr[tuple[str, pd.D
                 m_df.dB.max(),
             )
             # compute mins
-            m_df_expended = expended(m_df)
+            m_df_expended = expended(m_df).drop_duplicates(subset=["Freq", "Measurements"])
             return True, ("CEA2034", m_df_expended)
     except IOError:
         logger.exception("Cannot not open: ")

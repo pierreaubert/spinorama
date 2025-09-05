@@ -109,6 +109,8 @@ class PrefRating(TypedDict, total=False):
 
 
 class Measurement(MeasurementRequired, total=False):
+    sensitivity: float
+    computed_sensitivity: dict[str, float]
     review: str
     reviews: dict[str, str]
     review_published: str
@@ -121,10 +123,12 @@ class Measurement(MeasurementRequired, total=False):
     parameters: Parameters
     estimates: dict[str, float]
     estimates_eq: dict[str, float]
+    scaled_flatness: float
     pref_rating: PrefRating
+    pref_rating_eq: PrefRating
+    scaled_flatness: float
     scaled_pref_rating: PrefRating
-    pref_rating_eq: dict[str, float]
-    sensitivity: float
+    scaled_pref_rating_eq: PrefRating
 
 
 class Peq(TypedDict, total=False):
@@ -138,7 +142,7 @@ class Peq(TypedDict, total=False):
 class EQ(TypedDict, total=False):
     display_name: str
     filename: str
-    pream_gain: float
+    preamp_gain: float
     type: str
     peq: list[Peq]
 
@@ -177,7 +181,6 @@ class Speaker(SpeakerRequired, total=False):
     price: str
     amount: str
     skip: bool
-    sensitivity: float
     default_eq: str
     eqs: dict[str, EQ]
     nearest: list[tuple[float, str]]
@@ -190,5 +193,5 @@ gll_data_acquisition_std: DataAcquisition = {
     "via": "gll",
     "distance": 10,
     "signal": "aes 20Hz-20kHz",
-    "resolution": 2.5,
+    "resolution": 5.0,
 }

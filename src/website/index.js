@@ -21,7 +21,7 @@
 const flagCounters = false;
 
 import { getMetadataHead, getMetadataTail } from './download.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
+import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews, getSensitivity, getSPL } from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
@@ -63,9 +63,12 @@ function getContext(key, index, value) {
         id: getID(value.brand, value.model),
         brand: value.brand,
         model: value.model,
+        type: value.type,
         price: price,
         priceAsDollar: getDollar(price),
         shape: value.shape,
+        sensitivity: getSensitivity(value),
+        splinfo: getSPL(value),
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -79,7 +82,7 @@ function getContext(key, index, value) {
 }
 
 function isShort(values) {
-    const max_len = 25;
+    const max_len = 29;
     let len = 0;
     for (const value of values) {
         if (value.origin) {
@@ -111,7 +114,7 @@ function footerHtml(id, reviews) {
         return reviews
             .flatMap(
                 (review) => `
-            <a class="card-footer-item" href="${review.url}">${review.origin}</a>
+            <a class="card-footer-item" href="${review.url}">${review.originLong}</a>
         `
             )
             .join(' ');
@@ -134,11 +137,11 @@ function footerHtml(id, reviews) {
                    <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
                </button>
              </div>
-             <div class="dropdown-menu" id="dropdown-menu-reviews-${id}" role="menu">
-                <div class="dropdown-content">
-                  ${dropdown}
-                </div>
-             </div>
+             <div class="dropdown-menu" id="dropdown-menu-reviews-${id}" role="menu" style="min-width: 300px; left: 50%; transform: translateX(-50%);">
+                 <div class="dropdown-content" style="min-width: 300px;">
+                   ${dropdown}
+                 </div>
+              </div>
            </div>
         </div>
     `;
@@ -186,12 +189,33 @@ function scoreHtml(shape, score) {
     }
 }
 
+function sensitivityHtml(stype, sensitivity) {
+    if (stype === 'active') {
+        return 'Active';
+    }
+    if (sensitivity !== '0') {
+        return `Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>`;
+    }
+    return 'Sensitivity: <b>?</b>&nbsp;dB</span>';
+}
+
+function splHtml(splinfo, splvalue) {
+    if (splinfo === '***' || splinfo === '0') {
+        return 'SPL ? dB';
+    }
+    return `${splinfo} SPL: <b>${splvalue}</b>&nbsp;dB</span>`;
+}
+
 function contextHtml(context) {
     const brand = context.brand;
     const model = context.model;
+    const stype = context.type;
     const img = context.img;
     const score = context.score;
     const price = context.price;
+    const sensitivity = sensitivityHtml(stype, context.sensitivity);
+    const [splinfo, splvalue] = [...context.splinfo];
+    const spl = splHtml(splinfo, splvalue);
     const dollar = context.priceAsDollar;
     const iconLFX = '#icon-volume-info-' + iconValue(score.lfxScaled);
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
@@ -218,39 +242,32 @@ function contextHtml(context) {
                  <span class="icon">${dollar}</span>
                  <span>Price: <b>${price}</b></span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                  <a href="/help.html#priceDefinition">
-                     <svg width="20px" height="20px"><use href="#icon-circle-question"/></svg>
-                  </a>
-               </span>
--->
                <br/>
                ${html_score}
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
-                 <span>Bass extension: <b>${score.lfx}</b>Hz</span>
+                 <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                 <a href="/help.html#bassExtensionDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a>
-               </span>
--->
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="rating"><use href="${iconFlatness}"/></svg></span>
-                 <span>Flatness: <b>&plusmn;${score.flatness}</b>dB</span>
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${iconFlatness}"/></svg></span>
+                 <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
                </span>
-<!--
-               <span class="icon is-pulled-right">
-                  <a href="/help.html#flatnessDefinition">
-                     <svg width="20px" height="20px">
-                        <use href="#icon-circle-question"/>
-                     </svg>
-                  </a>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
+                 <span>${sensitivity}</span>
                </span>
--->
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success">
+                   <svg width="20px" height="20px" alt="spl">
+                    <use href="#icon-circle-dot"/>
+                   </svg>
+                 </span>
+                 <span>${spl}</span>
+               </span>
              </div>
            </div>
            <footer class="card-footer">

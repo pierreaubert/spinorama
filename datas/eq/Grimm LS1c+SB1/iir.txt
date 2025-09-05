@@ -1,0 +1,14 @@
+EQ for Grimm LS1c+SB1 computed from ASR data
+Preference Score 5.46 with EQ 7.00
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-05-20-10:49:53
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    34 Hz Gain +2.95 dB Q 0.32
+Filter  2: ON PK Fc   130 Hz Gain -1.18 dB Q 1.84
+Filter  3: ON PK Fc   409 Hz Gain +1.31 dB Q 2.93
+Filter  4: ON PK Fc   439 Hz Gain -1.70 dB Q 2.82
+Filter  5: ON PK Fc  1532 Hz Gain +1.84 dB Q 2.11
+Filter  6: ON PK Fc  1586 Hz Gain -0.81 dB Q 2.92
+Filter  7: ON PK Fc  5536 Hz Gain -1.20 dB Q 0.50

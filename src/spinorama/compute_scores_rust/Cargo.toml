@@ -1,0 +1,16 @@
+[package]
+name = "compute_scores_rust"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "compute_scores_rust"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.25", features = ["extension-module"] }
+numpy = "0.25"
+ndarray = { version = "0.15", features = ["rayon"] }
+ndarray-stats = "0.5"
+num-traits = "0.2"
+rayon = "1.10"

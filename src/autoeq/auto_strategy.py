@@ -44,18 +44,18 @@ def optim_eval_strategy(
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, float]]:
     """Find the best EQ for this speaker"""
     # shortcut
-    curves = optim_config["curve_names"]
+    curve_names = optim_config["curve_names"]
 
     # get freq and targets
-    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
-    if data_frame is None or freq is None or auto_target is None:
+    curve_data, curve_freq, curve_target = get_freq(df_speaker, optim_config)
+    if curve_data is None or curve_freq is None or curve_target is None:
         logger.error("Cannot compute freq for %s", current_speaker_name)
         return False, ({}, (0, 0, 0), [], 0.0)
 
-    auto_target_interp = []
-    for curve in curves:
-        target = get_target(data_frame, freq, curve, optim_config)
-        auto_target_interp.append(target)
+    curve_target_interp = []
+    for curve in curve_names:
+        target = get_target(curve_data, curve_freq, curve, optim_config)
+        curve_target_interp.append(target)
 
     logger.debug(
         "eval strategy config {%s}",
@@ -64,9 +64,9 @@ def optim_eval_strategy(
     auto_status, (auto_results, auto_peq) = optim_multi_steps(
         current_speaker_name,
         df_speaker,
-        freq,
-        auto_target,
-        auto_target_interp,
+        curve_freq,
+        curve_target,
+        curve_target_interp,
         optim_config,
         use_score,
     )

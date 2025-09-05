@@ -4,9 +4,7 @@ project:
 
 website:
   title: "Spinorama"
-  #image: ".jpeg"
-  #favicon: "favicon.png"
-  #google-analytics: "G-FV9Z7SDZ0M"
+  # favicon: "images/favicon.png"
   open-graph: true
   twitter-card: true
   site-url: https://docs.spinorama.org
@@ -15,19 +13,9 @@ website:
   repo-actions: [edit, issue]
   page-navigation: true
   bread-crumbs: true
-  #announcement:
-  #   content: "🎉 Spinorama has a new documentation website"
-  #   position: below-navbar
-  #   dismissable: true
-  #search:
-  #  show-item-context: true
-  #  type: overlay
-  #  algolia:
-  #    index-name: prod_QUARTO
-  #    application-id: ZPJB5I1QN7
-  #    search-only-api-key: 41be6c1e0a7fea4a51b107810facf577
-  #    analytics-events: true
-  #    show-logo: true
+  search:
+    location: navbar
+    type: overlay
   page-footer:
     left: |
       Proudly GPL
@@ -43,8 +31,6 @@ website:
         aria-label: Spinorama GitHub
   navbar:
     background: light
-    #logo: quarto.png
-    #logo-alt: "Quarto logo."
     title: false
     collapse-below: lg
     left:
@@ -95,16 +81,22 @@ bibliography: audio.bib
 format:
   html:
     toc: true
-    #theme:
-    #  light: [cosmo, theme.scss]
+    toc-depth: 3
+    toc-title: "On this page"
+    toc-location: right
+    theme:
+      light: [cosmo]
     code-copy: true
     code-overflow: wrap
-    #css: styles.css
-    #include-after-body: js.html
+    highlight-style: github
+    anchor-sections: true
+    link-external-icon: true
+    link-external-newwindow: true
+    footnotes-hover: true
+    citations-hover: true
     grid:
       sidebar-width: 0px
       body-width: 900px
       margin-width: 300px
 
 freeze: true
-

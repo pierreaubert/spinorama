@@ -431,6 +431,44 @@ speakers_info_t: SpeakerDatabase = {
             },
         },
     },
+    "Topping MA4": {
+        "brand": "Topping",
+        "model": "MA4",
+        "type": "active",
+        "price": "800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v1-20250810",
+        "measurements": {
+            "vendor-v1-20250810": {
+                "origin": "Vendors-Topping",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/topping-ma4-review.64592/",
+                },
+                "notes": "origin measurement done by a Klippel NFS",
+                "review_published": "20250807",
+                "specifications": {
+                    "SPL": {
+                        "peak": 105,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 140,
+                        "depth": 288,
+                    },
+                    "weight": 3.78,
+                },
+            },
+            "vendor-v1-20250805": {
+                "origin": "Vendors-Topping",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "notes": "origin measurement done by a Klippel NFS",
+                "review_published": "20250805",
+            },
+        },
+    },
     "Totem Acoustic Kin One": {
         "brand": "Totem Acoustic",
         "model": "Kin One",
@@ -547,6 +585,36 @@ speakers_info_t: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-esprit-antal-ez-review-tower-speaker.22080/",
                 "review_published": "20210403",
+            },
+        },
+    },
+    "Triangle Esprit Titus EZ": {
+        "brand": "Triangle",
+        "model": "Esprit Titus EZ",
+        "type": "passive",
+        "price": "449",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-titus-ez-spinorama-measurements-cta-2034.64250/#post-2355524",
+                },
+                "review_published": "20250720",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 305,
+                        "width": 267,
+                        "depth": 168,
+                    },
+                    "weight": 5.9,
+                },
             },
         },
     },

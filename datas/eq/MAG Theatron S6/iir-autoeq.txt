@@ -1,0 +1,14 @@
+EQ for MAG Theatron S6 computed from ASR data
+Preference Score 2.22 with EQ 4.68
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-05-18:28:57
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc   102 Hz Gain +3.00 dB Q 1.75
+Filter  2: ON PK Fc   197 Hz Gain -1.44 dB Q 1.39
+Filter  3: ON PK Fc   560 Hz Gain +1.66 dB Q 2.98
+Filter  4: ON PK Fc  1244 Hz Gain -2.38 dB Q 2.99
+Filter  5: ON PK Fc  3177 Hz Gain -4.58 dB Q 1.98
+Filter  6: ON PK Fc  5732 Hz Gain -4.61 dB Q 1.49
+Filter  7: ON PK Fc 10341 Hz Gain +3.00 dB Q 0.25

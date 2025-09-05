@@ -17,25 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_stats.py [--help] [--version] [--dev] [--print=<what>]\
- [--sitedev=<http>]  [--log-level=<level>] [--push=<KEY>]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --print=<what>    print information. Options are 'eq_txt' or 'eq_csv'
-  --push=<KEY>      push data to Google sheet
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-"""
-
 import json
 import sys
 
-from docopt import docopt
-
+import argparse
 from generate_common import get_custom_logger, args2level, find_metadata_file
-
 
 VERSION = 0.7
 DEBUG_TYPE = False
@@ -64,10 +50,10 @@ structured = [
     ("Properties", " -6", " -6", "Hz", "{:2f}"),
     ("Properties", " -9", " -9", "Hz", "{:2f}"),
     ("Properties", " -12", "-12", "Hz", "{:2f}"),
-    ("Properties", "Directivity Constant", "Dir Con", "#", "{:3.1f}"),
+    ("Properties", "Ref", "Ref", "SPL", "{:4.1f}"),
+    ("Properties", "Directivity SPDI StdDev", "SPDI std", "#", "{:3.1f}"),
     ("Properties", "Directivity Horinzontal", "Dir Hor", "o", "{:3.1f}"),
     ("Properties", "Directivity Vertical", "Dir Vor", "o", "{:3.1f}"),
-    ("Properties", "Ref", "Ref", "SPL", "{:4.1f}"),
     ("Properties", "NBD On Axis", "NON", None, "{:3.1f}"),
     ("Properties", "NBD In-Room", "NIR", None, "{:3.1f}"),
     ("Properties", "LFX", "LFX", "Hz", "{:3.1f}"),
@@ -257,9 +243,9 @@ def print_eq(speakers, txt_format):
             estimates.get("ref_9dB", -1.0),
             estimates.get("ref_12dB", -1.0),
             estimates.get("ref_band", -1.0),
-            estimates.get("dir_constant", -1.0),
-            estimates.get("dir_horizontal", 0.0),
-            estimates.get("dir_vertical", 0.0),
+            estimates.get("directivity_spdi_stddev", -1.0),
+            estimates.get("directivity_horizontal_avg", 0.0),
+            estimates.get("directivity_vertical_avg", 0.0),
             pref.get("nbd_on_axis", -1.0),
             pref.get("nbd_pred_in_room", -1.0),
             pref.get("lfx_hz", -1.0),
@@ -305,8 +291,8 @@ def print_eq(speakers, txt_format):
 
 def main():
     print_what = None
-    if args["--print"] is not None:
-        print_what = args["--print"]
+    if args.print is not None:
+        print_what = args.print
 
     # TODO: wanted to push directly to GCP but you need a project id and so one
     # I will just generate an Excel file
@@ -346,10 +332,27 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(
-        str(__doc__),
-        version="./generate_stats.py version {:1.1f}".format(VERSION),
-        options_first=True,
+    parser = argparse.ArgumentParser(description="Generate statistics from speaker data.")
+    parser.add_argument(
+        "--version", action="version", version=f"./generate_stats.py version {VERSION:.1f}"
     )
+    parser.add_argument(
+        "--print",
+        metavar="WHAT",
+        choices=["eq_txt", "eq_csv"],
+        help="print information. Options are 'eq_txt' or 'eq_csv'",
+    )
+    parser.add_argument(
+        "--push", metavar="KEY", help="push data to Google sheet (currently not implemented)"
+    )
+    parser.add_argument(
+        "--log-level",
+        metavar="LEVEL",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Default is WARNING, options are DEBUG INFO ERROR.",
+    )
+
+    args = parser.parse_args()
+
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

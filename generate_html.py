@@ -17,21 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
- [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
-
-Options:
-  --help            display usage()
-  --version         script version number
-  --sitedev=<http>  default: http://localhost:8000/dist
-  --dev             if you want to generate the dev websites
-  --optim           if you want an optimised built
-  --sw              if you want a service worker to be generated
-  --skip-speakers   skip speaker html page generation (useful for debugging)
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-"""
-
 from glob import glob
 import json
 import os
@@ -41,7 +26,7 @@ import shutil
 import subprocess
 import sys
 
-from docopt import docopt
+import argparse
 
 from mako.lookup import TemplateLookup
 
@@ -118,7 +103,7 @@ def adapt_imports(jscode, versions: dict[str, str], js_files: list[str], mini: s
             " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
         ),
         (
-            "import Plotly from 'plotly-dist-min';",
+            "import Plotly from 'plotly.js-dist-min';",
             "",  # because module support is complicated :(
         ),
     ]
@@ -255,7 +240,15 @@ def generate_measurement(
 
 
 def generate_speaker(
-    dataframe, meta, site, use_search, versions, speaker_name, origins, speaker_html, graph_html
+    dataframe,
+    meta,
+    site,
+    use_search,
+    versions,
+    speaker_name,
+    origins,
+    speaker_html,
+    graph_html,
 ):
     for origin, measurements in origins.items():
         for key, dfs in measurements.items():
@@ -534,6 +527,7 @@ def main():
         "onload",
         "pagination",
         "plot",
+        "plot-config",
         "scores",
         "search",
         "similar",
@@ -678,21 +672,52 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(str(__doc__), version="update_html.py version 1.23", options_first=True)
-    flag_dev = args["--dev"]
-    flag_optim = args["--optim"]
-    flag_sw = args["--sw"]
-    site = SITEPROD
-    skip_speakers = False
-    if flag_dev:
-        site = SITEDEV
-        flag_optim = False
-        if args["--sitedev"] is not None:
-            site = args["--sitedev"]
-            if len(site) < 4 or site[0:4] != "http":
-                print("sitedev {} does not start with http!".format(site))
-                sys.exit(1)
-        skip_speakers = args["--skip-speakers"]
+    parser = argparse.ArgumentParser(description="Generate HTML website for spinorama data.")
+    parser.add_argument("--version", action="version", version="generate_html.py version 1.23")
+    parser.add_argument(
+        "--dev",
+        action="store_true",
+        help="Generate the dev website (disables optimizations unless overridden).",
+    )
+    parser.add_argument(
+        "--optim", action="store_true", help="Generate an optimised build (minification, etc.)."
+    )
+    parser.add_argument("--sw", action="store_true", help="Generate a service worker.")
+    parser.add_argument(
+        "--sitedev",
+        type=str,
+        help="Base URL for dev site (e.g., http://localhost:8000/dist). Used if --dev is active.",
+    )
+    parser.add_argument(
+        "--log-level",
+        default="WARNING",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Set the logging level (default: WARNING).",
+    )
+    parser.add_argument(
+        "--skip-speakers",
+        action="store_true",
+        help="Skip speaker HTML page generation (useful for debugging, only effective with --dev).",
+    )
 
-    logger = get_custom_logger(level=args2level(args), duplicate=True)
-    main()
+    parsed_args = parser.parse_args()
+
+    flag_dev = parsed_args.dev
+    flag_optim = parsed_args.optim
+    flag_sw = parsed_args.sw
+    site = SITEPROD  # Default site URL
+    skip_speakers = False  # Default for skipping speaker page generation
+
+    if flag_dev:
+        site = SITEDEV  # Default dev site URL
+        flag_optim = False  # Optimizations are typically off for dev unless explicitly re-enabled by other logic
+        if parsed_args.sitedev is not None:
+            site = parsed_args.sitedev
+            if not site.startswith("http"):
+                print(f"Error: --sitedev URL '{site}' must start with http:// or https://")
+                sys.exit(1)
+        skip_speakers = parsed_args.skip_speakers
+    # If not --dev, flag_optim remains as set by parsed_args.optim
+
+    logger = get_custom_logger(level=args2level(parsed_args), duplicate=True)
+    main()  # main() uses the module-level flags set above

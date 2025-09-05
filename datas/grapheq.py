@@ -13,6 +13,25 @@ def bandwidth2q(bw):
 
 
 vendor_info = {
+    "Denon AVR": {
+        "gain_p": 6,  # dB
+        "gain_m": -20,  # dB
+        "steps": 0.5,  # dB
+        "bands": [
+            63,
+            125,
+            250,
+            500,
+            1000,
+            2000,
+            4000,
+            8000,
+            16000,
+        ],
+        # 1 octave ?
+        # not found in manual
+        "fixed_q": bandwidth2q(1),
+    },
     "Altair EQ-215": {
         "gain_p": 6,  # dB
         "gain_m": -6,  # dB

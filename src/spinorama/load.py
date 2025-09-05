@@ -22,14 +22,9 @@ import sys
 import numpy as np
 import pandas as pd
 
-try:
-    import ray
-except ModuleNotFoundError:
-    import src.miniray as ray
-
 from datas import Parameters
 
-from spinorama import logger, ray_setup_logger
+from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
@@ -605,22 +600,22 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
     return mean_min, mean_max
 
 
-@ray.remote(num_cpus=1)
 def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
     speaker_name: str,
     speaker_parameters: dict,
+    log_level: int,
 ) -> dict:
+    setup_logger(level=log_level)
+
     mformat = speaker_parameters["mformat"]
     morigin = speaker_parameters["morigin"]
     mversion = speaker_parameters["mversion"]
     msymmetry = speaker_parameters["msymmetry"]
     mparameters = speaker_parameters["mparameters"]
-    level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
     shape = speaker_parameters["shape"]
-    ray_setup_logger(level)
     df_graph = None
     measurement_path = f"{speaker_path}"
     mean_min, mean_max = get_mean_min_max(mparameters)
@@ -669,6 +664,7 @@ def parse_graphs_speaker(
         # print('debug: after filter_graph {}'.format(df_graph['SPL Vertical_unmelted'].keys()))
     elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
+        df_even = None
         df_uneven = None
         if mformat == "webplotdigitizer":
             status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
@@ -677,8 +673,6 @@ def parse_graphs_speaker(
             if not status:
                 logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
                 return {}
-            # necessary to do first (most digitalize graphs are uneven in frequency)
-            df_uneven = graph_melt(unify_freq(df_uneven))
         elif mformat == "rew_text_dump":
             status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
@@ -687,18 +681,22 @@ def parse_graphs_speaker(
                 logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
                 return {}
 
-        nan_count = check_nan({"test": df_uneven})
+        # normalize frequency for all graphs
+        df_even = graph_melt(unify_freq(df_uneven))
+
+        # check NaN
+        nan_count = check_nan({"test": df_even})
         if nan_count > 0:
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
 
         logger.debug("DEBUG title: %s", title)
-        logger.debug("DEBUG df_uneven keys (%s)", ", ".join(df_uneven.keys()))
-        logger.debug("DEBUG df_uneven measurements (%s)", ", ".join(set(df_uneven.Measurements)))
+        logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+        logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
         try:
             if title == "CEA2034":
-                df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
+                df_full = spin_compute_di_eir(speaker_name, title, df_even)
             else:
-                df_full = {title: unify_freq(graph_melt(df_uneven))}
+                df_full = {title: unify_freq(graph_melt(df_even))}
             nan_count = check_nan(df_full)
             if nan_count > 0:
                 logger.error("df_full %s has %d NaNs", speaker_name, nan_count)
@@ -743,18 +741,17 @@ def parse_graphs_speaker(
     return df_graph
 
 
-@ray.remote(num_cpus=1)
 def parse_eq_speaker(
     speaker_path: str,
     speaker_name: str,
     df_ref: dict,
     speaker_parameters: dict,
+    log_level: int,
 ) -> tuple[Peq, DataSpeaker]:
+    setup_logger(level=log_level)
     mformat = speaker_parameters["mformat"]
     mparameters = speaker_parameters["mparameters"]
-    level = speaker_parameters["level"]
     distance = speaker_parameters["distance"]
-    ray_setup_logger(level)
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)

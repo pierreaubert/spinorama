@@ -33,7 +33,6 @@ CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
 # where the temporay files go
 CPATH_BUILD = f"{CPATH}/build"
 CPATH_BUILD_EQ = f"{CPATH_BUILD}/eq"
-CPATH_BUILD_RAY = f"{CPATH_BUILD}/eq"
 CPATH_BUILD_WEBSITE = f"{CPATH_BUILD}/website"
 CPATH_BUILD_MAKO = f"{CPATH_BUILD}/mako_modules"
 

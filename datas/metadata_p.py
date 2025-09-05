@@ -265,6 +265,39 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Perlisten a3m": {
+        "brand": "Perlisten",
+        "model": "a3m",
+        "type": "passive",
+        "price": "1500",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "rew_text_dump",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20250722",
+                "quality": "low",
+                "specifications": {
+                    "sensitivity": 87.4,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 111,
+                    },
+                    "size": {
+                        "height": 675,
+                        "width": 280,
+                        "depth": 350,
+                    },
+                },
+            },
+        },
+    },
     "Perlisten r4b": {
         "brand": "Perlisten",
         "model": "r4b",
@@ -1385,8 +1418,49 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/presonus_eris3.5_mk2/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?attachments/presonus-eris-3-5-gen-2-zip.462395/",
                 },
                 "review_published": "20231009",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20250711",
+            },
+        },
+    },
+    "Presonus Eris E5 BT": {
+        "brand": "Presonus",
+        "model": "Eris E5 BT",
+        "type": "active",
+        "price": "250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "quality": "low",
+                "format": "spl_hv_txt",
+                "reviews": {
+                    "akr": "https://audiore.kr/presonus-eris-e5-bt-%eb%a6%ac%eb%b7%b0/",
+                },
+                "review_published": "20250812",
+                "data_acquisition": {
+                    "min_valid_freq": 1000,
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 261,
+                        "width": 178,
+                        "depth": 200,
+                    },
+                    "weight": 6.3,
+                },
+                "notes": "Data is valid above ~1kHz. The On-Axis is correct below that",
             },
         },
     },
@@ -1404,6 +1478,53 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-e5-xt-active-speaker-review.13436/",
                 "review_published": "20200516",
+            },
+        },
+    },
+    "Presonus Eris E8 XT": {
+        "brand": "Presonus",
+        "model": "Eris E8 XT",
+        "type": "active",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/presonus-eris-e8-xt/conclusion",
+            },
+        },
+    },
+    "Presonus Spectre S6": {
+        "brand": "Presonus",
+        "model": "Spectre S6",
+        "type": "active",
+        "price": "900",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-sceptre-s6-monitor-review.64148/",
+                },
+                "review_published": "20250714",
+                "specifications": {
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 335,
+                        "width": 339,
+                        "depth": 301,
+                    },
+                    "weight": 8.5,
+                },
             },
         },
     },
@@ -1443,23 +1564,6 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
-    "Presonus Eris E8 XT": {
-        "brand": "Presonus",
-        "model": "Eris E8 XT",
-        "type": "active",
-        "price": "420",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/presonus-eris-e8-xt/conclusion",
-            },
-        },
-    },
     "PSB Alpha P3": {
         "brand": "PSB",
         "model": "Alpha P3",
@@ -1491,6 +1595,40 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/",
                 "review_published": "20200806",
+            },
+        },
+    },
+    "PSB Imagine C3": {
+        "brand": "PSB",
+        "model": "Imagine C3",
+        "type": "passive",
+        "price": "2000",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "ark": "",
+                },
+                "review_published": "20250812",
+                "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "size": {
+                        "height": 235,
+                        "width": 622,
+                        "depth": 346,
+                    },
+                    "weight": 15.2,
+                },
             },
         },
     },
@@ -1741,6 +1879,55 @@ speakers_info_p: SpeakerDatabase = {
                 },
                 "review_published": "20241210",
                 "symmetry": "horizontal",
+            },
+        },
+    },
+    "Pylon Jasper Monitor 18": {
+        "brand": "Pylon Jasper",
+        "model": "Monitor 18",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac-v1-0-degree",
+        "measurements": {
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/pylon_jasper_18/",
+                    "yt": "https://youtu.be/OxiymvZri3k",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 430,
+                        "width": 200,
+                        "depth": 413,
+                    },
+                    "weight": 13.5,
+                },
+            },
+            "eac-v1-30-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/pylon_jasper_18/",
+                    "yt": "https://youtu.be/OxiymvZri3k",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 430,
+                        "width": 200,
+                        "depth": 413,
+                    },
+                    "weight": 13.5,
+                },
             },
         },
     },

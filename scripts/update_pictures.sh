@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CONVERT=convert
+OS=$(uname)
+ARCH=$(uname -a | awk '{print $NF}')
 
+CONVERT=convert
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
-    CONVERT="magick convert"
+    CONVERT="/opt/homebrew/bin/magick"
 fi
 
 # convert is from imagemagick package

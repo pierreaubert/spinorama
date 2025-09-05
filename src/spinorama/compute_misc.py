@@ -48,80 +48,36 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     dfs: a spinorama stored into a panda DataFrame
     """
-    on = dfs[dfs.Measurements == "On Axis"].rename(columns={"dB": "ON"}).set_index("Freq")
-    lw = dfs[dfs.Measurements == "Listening Window"].rename(columns={"dB": "LW"}).set_index("Freq")
-    er = dfs[dfs.Measurements == "Early Reflections"].rename(columns={"dB": "ER"}).set_index("Freq")
-    sp = dfs[dfs.Measurements == "Sound Power"].rename(columns={"dB": "SP"}).set_index("Freq")
-    logger.debug(
-        "unify_freq: on.shape=%s lw.shape=%s er.shape=%s sp.shape=%s",
-        on.shape,
-        lw.shape,
-        er.shape,
-        sp.shape,
-    )
+    on = dfs[dfs.Measurements == "On Axis"].set_index("Freq")
+    lw = dfs[dfs.Measurements == "Listening Window"].set_index("Freq")
+    er = dfs[dfs.Measurements == "Early Reflections"].set_index("Freq")
+    sp = dfs[dfs.Measurements == "Sound Power"].set_index("Freq")
 
-    # align 2 by 2
-    align = on.align(lw, axis=0)
-    logger.debug("on+lw shape: %s", align[0].shape)
-    if er.shape[0] != 0:
-        align = align[0].align(er, axis=0)
-        logger.debug("+er shape: %s", align[0].shape)
-    else:
-        logger.debug("skipping ER")
-    all_on = align[0].align(sp, axis=0)
-    logger.debug("+sp shape: %s", all_on[0].shape)
-    # realigned with the largest frame
-    all_lw = pd.DataFrame()
-    if lw.shape[0] != 0:
-        all_lw = all_on[0].align(lw, axis=0)
-        logger.debug("Before call: %s and %s", er.shape, all_on[0].shape)
-    all_er = pd.DataFrame()
-    if er.shape[0] != 0:
-        all_er = all_on[0].align(er, axis=0)
-    all_sp = pd.DataFrame()
-    if sp.shape[0] != 0:
-        all_sp = all_on[0].align(sp, axis=0)
-    # expect all the same
-    logger.debug(
-        "Shapes ON %s LW %s ER %s SP %s",
-        all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
-        all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
-        all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
-        all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
-    )
-    # extract right parts and interpolate
-    a_on = all_on[0].drop("Measurements", axis=1).interpolate()
-    a_lw = pd.DataFrame()
-    if lw.shape[0] != 0:
-        a_lw = all_lw[1].drop("Measurements", axis=1).interpolate()
-    a_er = pd.DataFrame()
-    if er.shape[0] != 0:
-        a_er = all_er[1].drop("Measurements", axis=1).interpolate()
-    a_sp = pd.DataFrame()
-    if sp.shape[0] != 0:
-        a_sp = all_sp[1].drop("Measurements", axis=1).interpolate()
-    # expect all the same
-    logger.debug(
-        "Shapes: %s %s %s",
-        a_lw.shape if not a_lw.empty else "--",
-        a_er.shape if not a_er.empty else "--",
-        a_sp.shape if not a_sp.empty else "--",
-    )
-    # remove NaN numbers
-    data = {"Freq": a_on.index}
-    if a_on is not None and "ON" in a_on and len(a_on.ON) == len(a_on.index):
-        data["On Axis"] = a_on.ON
-    if a_lw is not None and "LW" in a_lw and len(a_lw.LW) == len(a_on.index):
-        data["Listening Window"] = a_lw.LW
-    if a_er is not None and "ER" in a_er and len(a_er.ER) == len(a_on.index):
-        data["Early Reflections"] = a_er.ER
-    if a_sp is not None and "SP" in a_sp and len(a_sp.SP) == len(a_on.index):
-        data["Sound Power"] = a_sp.SP
+    freq = sorted(set(on.index).union(set(lw.index)).union(set(er.index)).union(sp.index))
 
-    res2 = pd.DataFrame(data)
+    data = pd.DataFrame({"Freq": freq})
 
-    # print(res2.head())
-    return res2.dropna().reset_index(drop=True)
+    for key, df in (
+        ("On Axis", on),
+        ("Listening Window", lw),
+        ("Early Reflections", er),
+        ("Sound Power", sp),
+    ):
+        if df is None or len(df.dB) == 0:
+            return
+        if df.index.duplicated().any():
+            print("ERROR we have duplicates for key {}: {}".format(key, df.index.duplicated()))
+        df_align = df.reindex(freq)
+        # print(df_align)
+        df_interpolated = df_align.drop("Measurements", axis=1).interpolate(
+            method="slinear",
+            fill_value="extrapolate",
+        )
+        # print(df_interpolated)
+        # print(df_interpolated.keys())
+        data[key] = df_interpolated.to_numpy()
+
+    return data.dropna().reset_index(drop=True)
 
 
 def resample(df: pd.DataFrame, target_size: int) -> pd.DataFrame:

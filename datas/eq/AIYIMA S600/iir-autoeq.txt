@@ -1,0 +1,14 @@
+EQ for AIYIMA S600 computed from Misc data
+Preference Score 2.14 with EQ 6.23
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-12-16:27:25
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc   105 Hz Gain -3.46 dB Q 1.68
+Filter  2: ON PK Fc  1244 Hz Gain -5.45 dB Q 1.86
+Filter  3: ON PK Fc  1642 Hz Gain +3.00 dB Q 1.04
+Filter  4: ON PK Fc  1954 Hz Gain +3.00 dB Q 2.94
+Filter  5: ON PK Fc  3405 Hz Gain -3.16 dB Q 1.31
+Filter  6: ON PK Fc  8397 Hz Gain -5.24 dB Q 1.28
+Filter  7: ON PK Fc 16239 Hz Gain -4.26 dB Q 0.35

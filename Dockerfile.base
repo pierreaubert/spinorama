@@ -1,0 +1,38 @@
+# Dockerfile.base
+
+FROM ubuntu:latest AS base
+
+LABEL org.opencontainers.image.authors="pierre@spinorama.org" version="0.4"
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dash \
+    gcc-15 gcc-15-aarch64-linux-gnu \
+    libc-bin \
+    openssh-server \
+    python3.12 \
+    python3.12-venv \
+    npm && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set locale
+# RUN localedef -f UTF-8 -i en_US en_US.UTF-8
+
+# Create user 'spin' with password 'spin'
+RUN useradd -m -s /bin/bash spin && echo 'spin:spin' | chpasswd
+
+# Configure SSH server
+RUN mkdir /var/run/sshd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]
+
+
+
+
+

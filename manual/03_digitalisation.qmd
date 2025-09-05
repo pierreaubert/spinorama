@@ -2,7 +2,10 @@
 
 Digitization allows to convert an image of Spinorama meaurements into numeric data that can be used in any available analysis or visualization tools. That source Spinoramas can be found for example at a resource such as [https://speakerdata2034.blogspot.com](https://speakerdata2034.blogspot.com)
 
-When digitizing data it is important to follow the convention for naming the dataset (names of the 5 curves that you will digitize). The easiest way to do it and to also get many other settings already pre-set for you is to start from an existing "[template](template Spinorama.tar)" project.
+When digitizing data it is important to follow the convention for
+naming the dataset (names of the 5 curves that you will digitize). The
+easiest way to do it and to also get many other settings already
+pre-set for you is to start from an existing "[template](data/template Spinorama.tar)" project.
 
 ## Prepare source data
 
@@ -20,12 +23,12 @@ Because WebPlotDigitizer 4.2 does not allow to change the image without resettin
 
 2. Re-define the axis by:
 
-	- select "XY" under "Axes", then press
-	- "Delete" (or "Tweak Calibration if you prefer to make adjustments")
-	- "Add Calibration"
-	- "2D (X-Y) Plot"
-	- "Align Axes"
-	- and proceed according to instructions to step 3.
+- Select "XY" under "Axes", then press
+- "Delete" (or "Tweak Calibration if you prefer to make adjustments")
+- "Add Calibration"
+- "2D (X-Y) Plot"
+- "Align Axes"
+- And proceed according to instructions to step 3.
 
 3. See the image for recommended settings. Try to pick robust reference points, for example 20000Hz is often poorly defined, so I usually use 10000Hz mark as a reference.
 

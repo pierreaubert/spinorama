@@ -21,6 +21,7 @@ from typing import Any
 from numpy.typing import NDArray
 import scipy.optimize as opt
 import pandas as pd
+from scipy.stats import linregress
 
 from datas.grapheq import vendor_info as grapheq_db
 
@@ -36,9 +37,9 @@ from autoeq.auto_preflight import optim_preflight
 def optim_grapheq(
     speaker_name: str,
     df_speaker: dict[str, pd.DataFrame],
-    freq: Vector,
-    auto_target: list[Vector],
-    auto_target_interp: list[Vector],
+    curve_freq: Vector,
+    curve_target: list[Vector],
+    curve_target_interp: list[Vector],
     optim_config: dict,
     use_score,
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
@@ -46,7 +47,7 @@ def optim_grapheq(
 
     logger.debug("Starting optim graphEQ for %s", speaker_name)
 
-    if not optim_preflight(freq, auto_target, auto_target_interp, df_speaker):
+    if not optim_preflight(curve_freq, curve_target, curve_target_interp, df_speaker):
         logger.error("Preflight check failed!")
         return False, ((0, 0.0, -1000.0), [])
 
@@ -64,6 +65,9 @@ def optim_grapheq(
     auto_min = grapheq["gain_m"]
     # auto_step = grapheq.get("steps", 1)
 
+    # loss
+    which_loss = optim_config["loss"]
+
     # db is the only unknown, start with 0
     auto_db = np.zeros(len(auto_freq))
     auto_peq = [
@@ -72,14 +76,15 @@ def optim_grapheq(
     ]
 
     # compute initial target
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
+    peq_target = optim_compute_auto_target(
+        curve_freq, curve_target, curve_target_interp, auto_peq, optim_config
     )
-    pref_score = 1.0
+    pref_score = -10.0
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
+    initial_pref_score = pref_score
 
-    afreq = np.array(freq)
+    afreq = np.array(curve_freq)
 
     def fit(param: Vector) -> Peq:
         guess_db = []
@@ -87,40 +92,52 @@ def optim_grapheq(
             if f < afreq[0] or f > afreq[-1]:
                 db = 0.0
             else:
-                db = np.interp(f, afreq, np.negative(current_auto_target[0])) * np.array(param)
+                # interpolate
+                db = np.interp(f, afreq, peq_target[0]) * np.array(param)
+                # only 0.25 dB increment
                 db = round(float(db) * 4) / 4
-                db = max(auto_min, db)
-                db = min(auto_max, db)
+                # respect bounds
+                db = min(auto_max, db) if db > 0 else max(auto_min, db)
+                # dont make them too small
+                db = 0 if abs(db) < 1.0 else db
             guess_db.append(db)
         return [
             (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
             for f, db in zip(auto_freq, guess_db, strict=False)
         ]
 
-    def compute_delta(param: Vector) -> NDArray[Any]:
+    def loss(param: Vector) -> np.floating[Any]:
+        # compute peq and map it to correct frequencies
         current_peq = fit(param)
         peq_values = np.array(peq_spl(auto_freq, current_peq))
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in afreq]
-        delta = np.subtract(peq_expend, current_auto_target[0])
-        return delta
-
-    def compute_error(param: Vector) -> np.floating[Any]:
-        return np.linalg.norm(compute_delta(param))
+        # compute the difference between curve+eq - target
+        delta = np.add(peq_target[0], peq_expend)
+        if which_loss == "flat_loss":
+            return np.linalg.norm(delta, 2)
+        elif which_loss == "flat_pir":
+            _, _, r_value, _, _ = linregress(np.log10(afreq), delta)
+            return r_value**2
+        elif which_loss == "score_loss":
+            auto_score = score_loss(df_speaker, current_peq)
+            return auto_score
+        else:
+            print("ERROR loss function {} is not supported".format(which_loss))
 
     def find_best_param():
         res = opt.minimize(
-            fun=lambda x: compute_error(x[0]),
-            x0=0.2,
-            bounds=[(0.1, 1.4)],
+            fun=lambda x: loss(x[0]),
+            x0=1.0,
+            bounds=[(auto_min, auto_max)],
             method="Powell",
         )
         return res.x[0]
 
     opt_param = find_best_param()
     auto_peq = fit(opt_param)
-    opt_error = compute_error(opt_param)
+    opt_error = loss(opt_param)
 
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
-
+        print("pref_score {:4.2f} --> {:4.2f}".format(-initial_pref_score, -pref_score))
     return True, ((1, int(opt_error), -pref_score), auto_peq)

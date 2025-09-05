@@ -1,0 +1,14 @@
+EQ for Pylon Jasper Monitor 18 computed from ErinsAudioCorner data
+Preference Score 4.28 with EQ 6.90
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-14-10:37:54
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc    29 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc    92 Hz Gain -4.71 dB Q 1.12
+Filter  3: ON PK Fc   270 Hz Gain +1.34 dB Q 1.23
+Filter  4: ON PK Fc   560 Hz Gain +2.99 dB Q 1.20
+Filter  5: ON PK Fc   579 Hz Gain -3.07 dB Q 2.96
+Filter  6: ON PK Fc  1760 Hz Gain -3.12 dB Q 2.88
+Filter  7: ON PK Fc 13652 Hz Gain -3.75 dB Q 0.27

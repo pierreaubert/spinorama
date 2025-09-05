@@ -195,7 +195,7 @@ function paginationParameters2Sort(url) {
 
     if (url.searchParams.has('page')) {
         const page = parseInt(url.searchParams.get('page'));
-        if (!isNaN(page) || page < 0) {
+        if (!isNaN(page) && page > 0) {
             pagination.page = page;
             pagination.active = true;
         } else {
@@ -204,7 +204,7 @@ function paginationParameters2Sort(url) {
     }
     if (url.searchParams.has('count')) {
         const count = parseInt(url.searchParams.get('count'));
-        if (!isNaN(count) || count < 2) {
+        if (!isNaN(count) && count > 1) {
             pagination.count = count;
             pagination.active = true;
         } else {
@@ -221,7 +221,8 @@ export function urlParameters2Sort(url) {
     const pagination = paginationParameters2Sort(url);
 
     // if we have keywords to search for then give priority for search
-    if (keywords !== '') {
+    // but only if the sort parameter is not explicitly set to something other than 'date' (default)
+    if (keywords !== '' && sorter.by === 'date') {
         sorter.by = 'fullTextSearch';
         sorter.reverse = true;
     }
@@ -237,7 +238,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 const sa = score(a);
                 const sb = score(b);
                 if (sa === sb) {
-                    return a < b;
+                    return a < b ? -1 : a > b ? 1 : 0;
                 }
                 return sa - sb;
             });
@@ -246,7 +247,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 const sa = score(a);
                 const sb = score(b);
                 if (sa === sb) {
-                    return b < a;
+                    return b < a ? -1 : b > a ? 1 : 0;
                 }
                 return sb - sa;
             });
@@ -750,26 +751,22 @@ export function isSearch(key, results, minScore, keywords) {
     }
 
     const result = results.get(key);
-    // const imeta = result.item.speaker;
     const score = result.score;
 
-    if (minScore < Math.pow(10, -15)) {
-        // const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
-        // console.debug('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+    if (minScore < Math.pow(10, -6)) {
         // we have an exact match, only shouldShow other exact matches
-        if (score >= Math.pow(10, -15)) {
-            // || !isExact) {
+        if (score >= 0.01 && results.length > 5) {
             // console.debug('filtered out (minscore)' + score);
             shouldShow = false;
         }
     } else {
         // only partial match
-        if (score > minScore * 10) {
+        if (score > minScore * 100) {
             // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
-        } else {
-            // console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
-        }
+        } /* else {
+            console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
+        } */
     }
     return shouldShow;
 }
@@ -790,9 +787,27 @@ export function rank1(fuse, brands, models, word) {
 
 export function rank2(fuse, brands, models, words) {
     // perfect world
+    if (brands.has(words[0]) && brands.has(words[1])) {
+        const query_exact = {
+            $and: [{ 'speaker.brand': "'" + words[0] }, { 'speaker.brand': "'" + words[1] }],
+        };
+        const results_exact = fuse.search(query_exact);
+        if (results_exact.length > 0) {
+            return results_exact;
+        }
+    }
     if (brands.has(words[0]) && models.has(words[1])) {
         const query_exact = {
             $and: [{ 'speaker.brand': "'" + words[0] }, { 'speaker.model': "'" + words[1] }],
+        };
+        const results_exact = fuse.search(query_exact);
+        if (results_exact.length > 0) {
+            return results_exact;
+        }
+    }
+    if (models.has(words[0]) && models.has(words[1])) {
+        const query_exact = {
+            $and: [{ 'speaker.models': "'" + words[0] }, { 'speaker.model': "'" + words[1] }],
         };
         const results_exact = fuse.search(query_exact);
         if (results_exact.length > 0) {
@@ -809,12 +824,26 @@ export function rank2(fuse, brands, models, words) {
         return rank1(fuse, brands, models, concat2);
     }
     // try a normal query
-    const query = {
+    const queryBB = {
+        $and: [{ 'speaker.brand': words[0] }, { 'speaker.brands': words[1] }],
+    };
+    const resultsBB = fuse.search(queryBB);
+    if (resultsBB.length > 0) {
+        return resultsBB;
+    }
+    const queryMM = {
+        $and: [{ 'speaker.model': words[0] }, { 'speaker.model': words[1] }],
+    };
+    const resultsMM = fuse.search(queryMM);
+    if (resultsMM.length > 0) {
+        return resultsMM;
+    }
+    const queryBM = {
         $and: [{ 'speaker.brand': words[0] }, { 'speaker.model': words[1] }],
     };
-    const results = fuse.search(query);
-    if (results.length > 0) {
-        return results;
+    const resultsBM = fuse.search(queryBM);
+    if (resultsBM.length > 0) {
+        return resultsBM;
     }
     return fuse.search(words.join(' '));
 }

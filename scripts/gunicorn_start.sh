@@ -2,8 +2,8 @@
 
 NAME=spinorama-api
 DIR=/var/www/html/spinorama-api
-USER=spinorama-api-user
-GROUP=spinorama-api-user
+USER=spin
+GROUP=spin
 WORKERS=10
 WORKER_CLASS=uvicorn.workers.UvicornWorker
 VENV=$DIR/.venv/bin/activate

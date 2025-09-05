@@ -1,34 +1,33 @@
-# FROM ubuntu/python:3.12-24.04_stable as base
-FROM ubuntu:24.04_stable as base
-
-
-LABEL org.opencontainers.image.authors="pierre@spinorama.org"
-LABEL version="0.2"
+FROM spin-base:latest AS app
 
 WORKDIR /work
 
 COPY src .
 COPY scripts .
 COPY tests .
-COPY datas .
+COPY *.json .
+COPY *.py .
+COPY *.js .
+COPY *.mjs .
+COPY *.txt .
 
-RUN /usr/bin/apt install -y dash libc-bin
-RUN /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
+RUN /usr/bin/python3.12 -m venv .venv && \
+    . .venv/bin/activate && \
+    pip3 install -U -r ./requirements.txt && \
+    pip3 install -U -r ./requirements-test.txt && \
+    pip3 install -U -r ./requirements-dev.txt
 
-RUN /usr/bin/python3.12 -m venv venv
-RUN . venv/bin/activate
-RUN pip3 install -U -r ./requirements.txt
-RUN pip3 install -U -r ./requirements-test.txt
-RUN pip3 install -U -r ./requirements-dev.txt
-RUN pip3 install -U -r ./requirements-api.txt
-
-RUN npm install .
+RUN npm install
 
 ENV PYTHONPATH=/usr/src/spinorama/src:/usr/src/spinorama/src/website
 
-RUN cd /work/src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
-CMD cd /work/spinorama && pytest tests
-CMD cd /work/spinorama && vitest
-CMD cd /work/spinorama && ./update_website.sh
+RUN cd /work/src/spinorama/compute_scores_cython && \
+    python3.12 ./setup.py build_ext && \
+    rm -f c_compute_scores.so && \
+    ln -s c_compute_scores.cpython-*.so c_compute_scores.so
+
+RUN
+
+CMD ["bash", "-c", "cd /work/spinorama && pytest tests && vitest"]
 
 EXPOSE 80

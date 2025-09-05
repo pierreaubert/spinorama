@@ -1,0 +1,14 @@
+EQ for Danley ILE3 computed from Vendors-Danley data
+Preference Score 5.90 with EQ 7.67
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-05-18:25:20
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc   130 Hz Gain -1.65 dB Q 3.00
+Filter  2: ON PK Fc   260 Hz Gain +1.82 dB Q 3.00
+Filter  3: ON PK Fc  2491 Hz Gain -1.54 dB Q 1.97
+Filter  4: ON PK Fc  4342 Hz Gain -2.45 dB Q 1.24
+Filter  5: ON PK Fc  6361 Hz Gain -4.16 dB Q 0.94
+Filter  6: ON PK Fc 11476 Hz Gain +1.56 dB Q 1.48
+Filter  7: ON PK Fc 16239 Hz Gain +2.98 dB Q 0.29

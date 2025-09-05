@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
+from glob import glob
 import io
 import json
 import logging
 import os
 import sys
+from contextlib import asynccontextmanager
 from typing import Annotated
 import yaml
 
-from fastapi import FastAPI, Query, Depends
+from fastapi import FastAPI, Query, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse, FileResponse, Response
 
 from datas.metadata import speakers_info
+from datas.checks import validate_speaker_data
 
-API_VERSION = "v0"
-CURRENT_VERSION = 2
+API_VERSION = "v1"
+CURRENT_VERSION = 0
 SOFTWARE_VERSION = f"{API_VERSION}.{CURRENT_VERSION}"
 
-FILES = "/var/www/html/spinorama-prod"
-METADATA = f"{FILES}/assets/metadata.json"
+APIFILES = "/var/www/html/spinorama-api"
+SPINFILES = "/var/www/html/spinorama-prod/speakers"
+METADATA = f"{APIFILES}/assets/metadata.json"
 
 KNOWN_MEASUREMENTS = set(
     [
@@ -49,38 +53,60 @@ KNOWN_MEASUREMENTS = set(
     ]
 )
 
+ALIAS_MEASUREMENTS = {
+    "ON": "On Axis",
+    "On-Axis": "On Axis",
+    "LW": "Listening Window",
+    "ER": "Early Reflections",
+    "PIR": "Estimated In-Room Response",
+    "Predicted In-Room Response": "Estimated In-Room Response",
+}
+
 KNOWN_FORMATS = set(["jpeg", "jpg", "json", "png", "webp"])
 
 
+# Global variable to store metadata
+_metadata_cache = None
+
+
 def load_metadata():
+    """Load metadata for dependency injection."""
+    global _metadata_cache
+    if _metadata_cache is None:
+        if not os.path.exists(METADATA):
+            logging.error("Cannot find %s", METADATA)
+            sys.exit(1)
+
+        with open(METADATA, "r", encoding="utf8") as f:
+            _metadata_cache = json.load(f)
+
+    yield _metadata_cache
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for FastAPI startup/shutdown."""
+    # Startup: Load metadata into cache
+    global _metadata_cache
     if not os.path.exists(METADATA):
         logging.error("Cannot find %s", METADATA)
         sys.exit(1)
 
     with open(METADATA, "r", encoding="utf8") as f:
-        metadata = json.load(f)
-        yield metadata
+        _metadata_cache = json.load(f)
+
+    yield
+
+    # Shutdown: Clean up if needed
+    _metadata_cache = None
 
 
 app = FastAPI(
     debug=False,
     title="Spinorama API",
     version=SOFTWARE_VERSION,
-    on_startup=[load_metadata],
+    lifespan=lifespan,
 )
-
-
-@app.get("/.well-known/ai-plugin.json")
-async def get_ai_plugin():
-    return FileResponse("/var/www/html/spinorama-api/ai-plugin.json")
-
-
-@app.get("/openapi.yaml", include_in_schema=False)
-def read_openapi_yaml() -> Response:
-    openapi_json = app.openapi()
-    yaml_s = io.StringIO()
-    yaml.dump(openapi_json, yaml_s)
-    return Response(yaml_s.getvalue(), media_type="text/yaml")
 
 
 @app.get(f"/{API_VERSION}/brands", tags=["speaker"])
@@ -88,7 +114,7 @@ async def get_brand_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
     return sorted({v.get("brand") for _, v in metadata.items()})
 
 
-@app.get(f"/{API_VERSION}/speaker", tags=["speaker"])
+@app.get(f"/{API_VERSION}/speakers", tags=["speaker"])
 async def get_speaker_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
     return sorted(metadata.keys())
 
@@ -103,11 +129,69 @@ async def get_speaker_metadata(
     return JSONResponse(content=encoded)
 
 
+@app.get(f"/{API_VERSION}/speaker/{{speaker_name}}/versions", tags=["speaker"])
+async def get_speaker_versions(
+    speaker_name: str,
+    metadata: dict = Depends(load_metadata),  # noqa: B008
+):
+    if not speaker_name:
+        return {"error": "Speaker name is mandatory"}
+
+    if speaker_name not in metadata:
+        return {"error": f"Speaker {speaker_name} is not in our database!"}
+
+    if not isinstance(metadata[speaker_name]["measurements"], dict):
+        return {"error": "No measurement found for speaker {speaker_name}!"}
+
+    return list(metadata[speaker_name]["measurements"].keys())
+
+
+@app.get(
+    f"/{API_VERSION}/speaker/{{speaker_name}}/version/{{speaker_version}}/measurements",
+    tags=["speaker"],
+)
+async def get_speaker_measurements(speaker_name: str, speaker_version: str):
+    if not speaker_name:
+        return {"error": "Speaker name and measurement name are mandatory"}
+
+    if speaker_name not in speakers_info:
+        return {"error": f"Speaker {speaker_name} is not in our database!"}
+
+    if "/" in speaker_version or ".." in speaker_version:
+        return {"error": f"Invalid speaker_version {speaker_version}!"}
+
+    meta_data = speakers_info[speaker_name]
+
+    if speaker_version not in meta_data["measurements"]:
+        valid_keys = ", ".join(list(meta_data["measurements"].keys()))
+        return {
+            "error": f"Version {speaker_version} is not known for speaker {speaker_name}! Valid keys are ({valid_keys})."
+        }
+
+    origin = meta_data["measurements"][speaker_version]["origin"]
+    if origin[0:8] == "Vendors-":
+        origin = origin[8:]
+    upper_dir = f"{SPINFILES}/{speaker_name}"
+    dir_data = f"{upper_dir}/{origin}/{speaker_version}"
+
+    if not os.path.exists(upper_dir):
+        print(upper_dir)
+        return {"error": f"Speaker {speaker_name} does not have precomputed measurements!"}
+
+    if not os.path.exists(dir_data):
+        return {
+            "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {speaker_version}!"
+        }
+
+    m1 = [s.split("/")[-1] for s in glob(f"{dir_data}/*.*")]
+    return sorted(set([s.split(".")[0] for s in m1]))
+
+
 @app.get(
     f"/{API_VERSION}/speaker/{{speaker_name}}/version/{{speaker_version}}/measurements/{{measurement_name}}",
     tags=["speaker"],
 )
-async def get_speaker_measurements(
+async def get_speaker_measurements_data(
     speaker_name: str,
     speaker_version: str,
     measurement_name: str,
@@ -140,7 +224,7 @@ async def get_speaker_measurements(
     origin = meta_data["measurements"][speaker_version]["origin"]
     if origin[0:8] == "Vendors-":
         origin = origin[8:]
-    upper_dir = f"{FILES}/speakers/{speaker_name}"
+    upper_dir = f"{SPINFILES}/{speaker_name}"
     dir_data = f"{upper_dir}/{origin}/{speaker_version}"
 
     if not os.path.exists(upper_dir):
@@ -182,3 +266,37 @@ async def get_speaker_measurements(
         return FileResponse(measurement_file)
 
     return {"error": "fetching measurements failed format {measurement_format} is unknown!"}
+
+
+@app.post(f"/{API_VERSION}/validate", tags=["validation"])
+async def validate_speaker_metadata(request: Request):
+    """Validate speaker metadata according to Spinorama standards."""
+    try:
+        speaker_data = await request.json()
+
+        # Extract speaker name from the data or generate one
+        brand = speaker_data.get("brand", "Unknown")
+        model = speaker_data.get("model", "Unknown")
+        speaker_name = f"{brand} {model}"
+
+        # Validate the speaker data
+        validation_result = validate_speaker_data(speaker_name, speaker_data)
+
+        return {
+            "valid": validation_result.valid,
+            "messages": validation_result.messages,
+            "speaker_name": speaker_name,
+        }
+
+    except json.JSONDecodeError:
+        return {
+            "valid": False,
+            "messages": ["ERROR: Invalid JSON format"],
+            "speaker_name": "Unknown",
+        }
+    except Exception as e:
+        return {
+            "valid": False,
+            "messages": [f"ERROR: Validation failed - {str(e)}"],
+            "speaker_name": "Unknown",
+        }

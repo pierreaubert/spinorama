@@ -1,0 +1,14 @@
+EQ for Danley SH-62 computed from Vendors-Danley data
+Preference Score 1.58 with EQ 3.62
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-05-15:44:52
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc   190 Hz Gain -3.00 dB Q 3.00
+Filter  2: ON PK Fc   279 Hz Gain +3.00 dB Q 3.00
+Filter  3: ON PK Fc   395 Hz Gain -2.78 dB Q 1.80
+Filter  4: ON PK Fc  1083 Hz Gain +3.00 dB Q 3.00
+Filter  5: ON PK Fc  2245 Hz Gain -1.99 dB Q 2.00
+Filter  6: ON PK Fc  6585 Hz Gain -5.32 dB Q 0.81
+Filter  7: ON PK Fc 16239 Hz Gain +3.00 dB Q 0.36

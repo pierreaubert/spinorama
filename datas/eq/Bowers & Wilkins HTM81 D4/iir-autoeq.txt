@@ -1,0 +1,14 @@
+EQ for Bowers & Wilkins HTM81 D4 computed from ErinsAudioCorner data
+Preference Score 2.91 with EQ 6.12
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.27
+Dated: 2025-07-09-09:55:29
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc    29 Hz Gain +2.46 dB Q 2.66
+Filter  2: ON PK Fc   579 Hz Gain -2.30 dB Q 2.39
+Filter  3: ON PK Fc   910 Hz Gain +2.95 dB Q 0.44
+Filter  4: ON PK Fc   942 Hz Gain -5.83 dB Q 2.98
+Filter  5: ON PK Fc  1161 Hz Gain +2.99 dB Q 0.58
+Filter  6: ON PK Fc  1288 Hz Gain -5.91 dB Q 2.04
+Filter  7: ON PK Fc  8110 Hz Gain -5.45 dB Q 0.50

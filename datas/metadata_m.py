@@ -172,6 +172,78 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "MAG Theatron MC12-C": {
+        "brand": "MAG Theatron",
+        "model": "MC12-C",
+        "type": "passive",
+        "price": "2300",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-m12-c-speaker-review.64229/#post-2354858",
+                },
+                "review_published": "20250719",
+                "specifications": {
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 840,
+                        "width": 565,
+                        "depth": 250,
+                    },
+                    "weight": 32.2,
+                },
+            },
+        },
+    },
+    "MAG Theatron S6": {
+        "brand": "MAG Theatron",
+        "model": "S6",
+        "type": "passive",
+        "price": "950",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-s6-surround-speaker-review.64391/",
+                },
+                "review_published": "20250728",
+                "specifications": {
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 20,
+                    },
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 280,
+                        "depth": 100,
+                    },
+                    "weight": 6.0,
+                },
+            },
+        },
+    },
     "Magnepan LRS": {
         "brand": "Magnepan",
         "model": "LRS",
@@ -1829,9 +1901,9 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
-    "Monitor Audio Silver 100": {
+    "Monitor Audio Silver 100 6g": {
         "brand": "Monitor Audio",
-        "model": "Silver 100",
+        "model": "Silver 100 6g",
         "type": "passive",
         "price": "800",
         "shape": "bookshelves",
@@ -2151,6 +2223,36 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mp-65rt/conclusion",
+            },
+        },
+    },
+    "Moondrop M4P": {
+        "brand": "Moondrop",
+        "model": "M4P",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/moondrop_mrp/",
+                    "yt": "https://youtu.be/W6-7H0sGKKA",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 380,
+                        "width": 155,
+                        "depth": 185,
+                    },
+                    "weight": 6.2,
+                },
             },
         },
     },

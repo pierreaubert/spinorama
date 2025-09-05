@@ -21,12 +21,7 @@ import pathlib
 import copy
 import math
 
-try:
-    import ray
-except ModuleNotFoundError:
-    import src.miniray as ray
-
-from spinorama import logger, ray_setup_logger
+from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
 from spinorama.misc import measurements_valid_freq_range, write_multiformat
@@ -104,7 +99,7 @@ def _display_spinorama_common(
 ):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
-        logger.error(
+        logger.debug(
             "plot_spinorama failed, cannot get Spin with is_normalized=%s. Known keys are %s",
             str(is_normalized),
             ", ".join(df.keys()),
@@ -115,7 +110,7 @@ def _display_spinorama_common(
         spin, graph_params, slopes, is_normalized=is_normalized, valid_freq_range=valid_freq_range
     )
     if fig is None:
-        logger.error("plot_spinorama failed")
+        logger.info("plot_spinorama failed")
         return None
     return fig
 
@@ -141,7 +136,7 @@ def _display_inroom_common(
 ):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
-        logger.error("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
+        logger.debug("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
         return None
 
     if "Estimated In-Room Response_unmelted" not in df:
@@ -418,22 +413,21 @@ def print_a_graph(filename, chart, ext, force) -> int:
     return updated
 
 
-@ray.remote
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
     parameters: dict,
     origins_info: dict,
     force_print: bool,
+    log_level: int,
 ) -> int:
+    setup_logger(level=log_level)
     mformat = parameters["mformat"]
     version = parameters["mversion"]
     origin = parameters["morigin"]
     version_key = parameters.get("mversion_key", version)
     width = parameters["width"]
     height = parameters["height"]
-    level = parameters["level"]
-    ray_setup_logger(level)
     #
     df_speaker = {}
     iir = []

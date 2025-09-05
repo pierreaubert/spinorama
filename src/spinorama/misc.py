@@ -200,7 +200,10 @@ def write_multiformat(chart, filename, force):
         return
     if not filepath.is_file() or force:
         try:
-            chart.write_image(filename)
+            # print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
+            chart.write_image(
+                filename, format="png", width=chart.layout.width, height=chart.layout.height
+            )
         except RuntimeError as rt:
             logger.error("writing image %s crashed! %s", filename, rt)
             return
@@ -243,9 +246,9 @@ def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | 
     ):
         complete_spl = True
     if not complete_spl:
-        print("check spl : {}".format(complete_spl))
+        logger.debug("check spl : %s", str(complete_spl))
         if h_spl is not None and v_spl is not None:
-            print(measurements_missing_angles(h_spl, v_spl))
+            logger.info("missing angles : %s", measurements_missing_angles(h_spl, v_spl))
     return complete_spl
 
 
@@ -254,14 +257,23 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
         complete_freq = False
         if spl is not None:
             freq = spl["Freq"]
-            if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 100:
+            # 97 comes from some old ASR measurements that are good enough but only have 98 freq datapoints
+            # later on, ASR switched to 200 points
+            if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 97:
                 complete_freq = True
+            else:
+                logger.debug(
+                    "check freq failed: min=%fHz max=%fHz #=%d",
+                    freq.min(),
+                    freq.max(),
+                    freq.shape[0],
+                )
         return complete_freq
 
     complete = check(h_spl) and check(v_spl)
     if not complete:
-        print("check freq H: {}".format(check(h_spl)))
-        print("check freq V: {}".format(check(v_spl)))
+        logger.debug("check freq H: %s", check(h_spl))
+        logger.debug("check freq V: %s", check(v_spl))
     return complete
 
 

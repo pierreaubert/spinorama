@@ -815,6 +815,36 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Elac Debut 3.0 Floorstand DF63": {
+        "brand": "Elac",
+        "model": "Debut 3.0 Floorstand DF63",
+        "type": "passive",
+        "price": "1300",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_df63/",
+                    "yt": "https://youtu.be/NI8En4OhvMM",
+                },
+                "review_published": "20250709",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "size": {
+                        "height": 1094,
+                        "width": 195,
+                        "depth": 268,
+                    },
+                    "weight": 38.8,
+                },
+            },
+        },
+    },
     "Elac BS U5 Slim": {
         "brand": "Elac",
         "model": "BS U5 Slim",

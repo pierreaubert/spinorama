@@ -1,0 +1,14 @@
+EQ for Hedd Type 05 A-CORE computed from ASR data
+Preference Score 5.32 with EQ 6.35
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-07-22-11:41:18
+
+Preamp: -1.7 dB
+
+Filter  1: ON PK Fc  1954 Hz Gain +2.96 dB Q 1.49
+Filter  2: ON PK Fc    72 Hz Gain -2.14 dB Q 2.14
+Filter  3: ON PK Fc  1010 Hz Gain -1.17 dB Q 2.99
+Filter  4: ON PK Fc   579 Hz Gain +2.54 dB Q 2.99
+Filter  5: ON PK Fc  1532 Hz Gain -2.64 dB Q 0.25
+Filter  6: ON PK Fc   270 Hz Gain +1.83 dB Q 0.73
+Filter  7: ON PK Fc   879 Hz Gain +2.81 dB Q 2.97

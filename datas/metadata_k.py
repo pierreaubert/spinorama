@@ -1797,8 +1797,32 @@ speakers_info_k: SpeakerDatabase = {
         "price": "5500",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "vendor-v2-20230503",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_reference2_meta/",
+                    "yt": "https://youtu.be/LBLh4nfHkZY",
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-2-meta-measurements-and-review.46452/",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 205,
+                        "width": 630,
+                        "depth": 335,
+                    },
+                    "weight": 22.8,
+                },
+            },
             "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",

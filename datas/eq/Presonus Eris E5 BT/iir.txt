@@ -1,0 +1,14 @@
+EQ for Presonus Eris E5 BT computed from Misc data
+Preference Score 2.60 with EQ 5.63
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-08-12-17:02:57
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc    58 Hz Gain +2.99 dB Q 0.71
+Filter  2: ON PK Fc    95 Hz Gain -3.84 dB Q 1.09
+Filter  3: ON PK Fc   792 Hz Gain +2.31 dB Q 0.87
+Filter  4: ON PK Fc  1121 Hz Gain -2.99 dB Q 2.64
+Filter  5: ON PK Fc  1480 Hz Gain +2.87 dB Q 3.00
+Filter  6: ON PK Fc  4654 Hz Gain -4.52 dB Q 1.34
+Filter  7: ON PK Fc  9319 Hz Gain -3.92 dB Q 0.78
