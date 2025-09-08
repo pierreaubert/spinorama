@@ -7,16 +7,36 @@ LABEL org.opencontainers.image.authors="pierre@spinorama.org" version="0.4"
 # Install necessary packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dash \
-    gcc-15 gcc-15-aarch64-linux-gnu \
+    build-essential \
+    g++ \
     libc-bin \
+    locales \
     openssh-server \
     python3.12 \
     python3.12-venv \
-    npm && \
+    python3.12-dev \
+    python3-pip \
+    imagemagick \
+    wget \
+    curl \
+    git \
+    pkg-config \
+    libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
+# Install Node.js 22.x (needed by vite and other tooling)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get update && apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Rust (stable) via rustup to ensure a recent toolchain
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+ENV PATH=/root/.cargo/bin:$PATH
+
 # Set locale
-# RUN localedef -f UTF-8 -i en_US en_US.UTF-8
+RUN localedef -f UTF-8 -i en_US en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # Create user 'spin' with password 'spin'
 RUN useradd -m -s /bin/bash spin && echo 'spin:spin' | chpasswd
