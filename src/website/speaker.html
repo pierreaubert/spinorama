@@ -258,5 +258,56 @@
 
     <%include file="tabs_footer.html"/>
 
+    <script type="module">
+      import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+      import { isPlotlyEnabled } from "/js/misc-${versions['CACHE']}${min}.js";
+
+      // Check if plotly feature is enabled
+      const plotlyEnabled = isPlotlyEnabled();
+      
+      if (plotlyEnabled) {
+        // Replace all picture elements with plotly graphs
+        document.addEventListener('DOMContentLoaded', function() {
+          const pictures = document.querySelectorAll('picture');
+          pictures.forEach(function(picture) {
+            const link = picture.closest('a');
+            if (link && link.href.endsWith('.html')) {
+              replacePictureWithPlotly(picture, link);
+            }
+          });
+        });
+      }
+
+      function replacePictureWithPlotly(picture, link) {
+        // Extract graph name from the link href
+        const href = link.getAttribute('href');
+        const graphName = href.replace(/\.html$/, '').split('/').pop();
+        const jsonUrl = href.replace(/\.html$/, '.json');
+        
+        // Create a div to replace the entire link + picture structure
+        const plotDiv = document.createElement('div');
+        plotDiv.className = 'graph plotly-graph';
+        plotDiv.style.width = '1200px';
+        plotDiv.style.height = '800px';
+        plotDiv.style.maxWidth = '100%';
+        plotDiv.id = 'plotly-' + Math.random().toString(36).substr(2, 9);
+        
+        // Replace the entire link (which contains the picture) with the plot div
+        link.parentNode.insertBefore(plotDiv, link);
+        link.parentNode.removeChild(link);
+        
+        // Load and display the graph
+        fetch(jsonUrl)
+          .then(response => response.json())
+          .then(spec => {
+            displayGraph(graphName, jsonUrl, plotDiv.id, spec);
+          })
+          .catch(error => {
+            console.error('Error loading graph:', error);
+            plotDiv.innerHTML = '<p>Error loading graph: ' + graphName + '</p>';
+          });
+      }
+    </script>
+
   </body>
 </html>
