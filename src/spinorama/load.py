@@ -690,8 +690,13 @@ def parse_graphs_speaker(
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
 
         logger.debug("DEBUG title: %s", title)
-        logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
-        logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+        if df_even is not None:
+            logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+            logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+        else:
+            logger.info("INFO df_even is None")
+            return {}
+        
         try:
             if title == "CEA2034":
                 df_full = spin_compute_di_eir(speaker_name, title, df_even)
