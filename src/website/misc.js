@@ -510,3 +510,15 @@ export function getDecoding(key) {
     }
     return 'async';
 }
+
+// Get URL parameter value
+export function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// Check if feature flag is enabled
+export function isPlotlyEnabled() {
+    const plotlyFlag = getUrlParameter('plotly');
+    return plotlyFlag === 'true' || plotlyFlag === '1';
+}
