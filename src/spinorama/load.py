@@ -696,7 +696,7 @@ def parse_graphs_speaker(
         else:
             logger.info("INFO df_even is None")
             return {}
-        
+
         try:
             if title == "CEA2034":
                 df_full = spin_compute_di_eir(speaker_name, title, df_even)
