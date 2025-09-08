@@ -235,7 +235,6 @@ def validate_speaker_database(speakers: Dict[str, Dict[str, Any]]) -> Validation
     for speaker_name, speaker_data in speakers.items():
         speaker_result = validate_speaker_data(speaker_name, speaker_data)
 
-        # Merge results
         if not speaker_result.valid:
             result.valid = False
 
