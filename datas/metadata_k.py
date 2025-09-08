@@ -317,9 +317,9 @@ speakers_info_k: SpeakerDatabase = {
             }
         },
     },
-    "KEF KEF Ci3160RLM": {
+    "KEF Ci3160RLM-THX": {
         "brand": "KEF",
-        "model": "KEF Ci3160RLM",
+        "model": "Ci3160RLM-THX",
         "type": "passive",
         "price": "2230",
         "amount": "each",
@@ -336,12 +336,10 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 89.0,
                     "impedance": 4.0,
-                    "dispersion": {"horizontal": 75.0},
                     "SPL": {"max": 110.0},
                     "size": {"height": 680.0, "width": 230.0, "depth": 106.0},
                     "weight": 12.0,
                 },
-                "symmetry": "none",
             }
         },
     },
