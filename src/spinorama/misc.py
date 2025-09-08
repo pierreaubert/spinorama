@@ -41,6 +41,8 @@ def graph_melt(df_in: pd.DataFrame) -> pd.DataFrame:
         DataFrame with columns ['Freq', 'Measurements', 'dB']
     """
     # Ensure we have a clean index
+    if df_in is None:
+        return None
     df_out = df_in.copy()
     if not isinstance(df_in.index, pd.RangeIndex):
         df_out = df_out.reset_index(drop=True)
