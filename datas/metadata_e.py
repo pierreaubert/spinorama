@@ -2,6 +2,37 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_e: SpeakerDatabase = {
+    "EAW MKC120": {
+        "brand": "EAW",
+        "model": "MKC120",
+        "type": "passive",
+        "price": "3000",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gll_hv_txt",
+                "review_published": "20230325",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "sensitivity": 95,
+                    "impedance": 7.4,
+                    "SPL": {"continuous": 129, "peak": 135},
+                    "size": {"height": 569, "width": 367, "depth": 341},
+                    "weight": 16.8,
+                },
+            }
+        },
+    },
     "EAW MKC50": {
         "brand": "EAW",
         "model": "MKC50",
@@ -15,27 +46,22 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230325",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "medium",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 110,
-                        "vertical": 110,
-                    },
+                    "dispersion": {"horizontal": 110, "vertical": 110},
                     "sensitivity": 87,
                     "impedance": 6,
-                    "SPL": {
-                        "continuous": 115,
-                        "peak": 121,
-                    },
-                    "size": {
-                        "height": 235,
-                        "width": 165,
-                        "depth": 141,
-                    },
+                    "SPL": {"continuous": 115, "peak": 121},
+                    "size": {"height": 235, "width": 165, "depth": 141},
                     "weight": 3.3,
                 },
-            },
+            }
         },
     },
     "EAW MKC60": {
@@ -51,27 +77,22 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230325",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "medium",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 110,
-                        "vertical": 110,
-                    },
+                    "dispersion": {"horizontal": 110, "vertical": 110},
                     "sensitivity": 89,
                     "impedance": 6,
-                    "SPL": {
-                        "continuous": 119,
-                        "peak": 125,
-                    },
-                    "size": {
-                        "height": 324,
-                        "width": 208,
-                        "depth": 206,
-                    },
+                    "SPL": {"continuous": 119, "peak": 125},
+                    "size": {"height": 324, "width": 208, "depth": 206},
                     "weight": 4.9,
                 },
-            },
+            }
         },
     },
     "EAW MKC80": {
@@ -87,63 +108,22 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230325",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "medium",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 60,
-                    },
+                    "dispersion": {"horizontal": 90, "vertical": 60},
                     "sensitivity": 93,
                     "impedance": 7,
-                    "SPL": {
-                        "continuous": 126,
-                        "peak": 132,
-                    },
-                    "size": {
-                        "height": 422,
-                        "width": 255,
-                        "depth": 267,
-                    },
+                    "SPL": {"continuous": 126, "peak": 132},
+                    "size": {"height": 422, "width": 255, "depth": 267},
                     "weight": 10.0,
                 },
-            },
-        },
-    },
-    "EAW MKC120": {
-        "brand": "EAW",
-        "model": "MKC120",
-        "type": "passive",
-        "price": "3000",
-        "shape": "liveportable",
-        "amount": "pair",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-EAW",
-                "format": "gll_hv_txt",
-                "review_published": "20230325",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 60,
-                    },
-                    "sensitivity": 95,
-                    "impedance": 7.4,
-                    "SPL": {
-                        "continuous": 129,
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 569,
-                        "width": 367,
-                        "depth": 341,
-                    },
-                    "weight": 16.8,
-                },
-            },
+            }
         },
     },
     "EAW MKD1000": {
@@ -159,21 +139,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 120,
-                        "vertical": 60,
-                    },
-                    "SPL": {
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 680,
-                        "width": 370,
-                        "depth": 420,
-                    },
+                    "dispersion": {"horizontal": 120, "vertical": 60},
+                    "SPL": {"peak": 135},
+                    "size": {"height": 680, "width": 370, "depth": 420},
                     "weight": 27.3,
                 },
             },
@@ -181,21 +157,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 60,
-                    },
-                    "SPL": {
-                        "peak": 136,
-                    },
-                    "size": {
-                        "height": 680,
-                        "width": 370,
-                        "depth": 420,
-                    },
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "SPL": {"peak": 136},
+                    "size": {"height": 680, "width": 370, "depth": 420},
                     "weight": 27.3,
                 },
             },
@@ -203,21 +175,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 45,
-                    },
-                    "SPL": {
-                        "peak": 138,
-                    },
-                    "size": {
-                        "height": 680,
-                        "width": 370,
-                        "depth": 420,
-                    },
+                    "dispersion": {"horizontal": 60, "vertical": 45},
+                    "SPL": {"peak": 138},
+                    "size": {"height": 680, "width": 370, "depth": 420},
                     "weight": 27.3,
                 },
             },
@@ -236,21 +204,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 45,
-                    },
-                    "SPL": {
-                        "peak": 139,
-                    },
-                    "size": {
-                        "height": 680,
-                        "width": 370,
-                        "depth": 420,
-                    },
+                    "dispersion": {"horizontal": 90, "vertical": 45},
+                    "SPL": {"peak": 139},
+                    "size": {"height": 680, "width": 370, "depth": 420},
                     "weight": 47.2,
                 },
             },
@@ -258,21 +222,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 45,
-                    },
-                    "SPL": {
-                        "peak": 141,
-                    },
-                    "size": {
-                        "height": 680,
-                        "width": 370,
-                        "depth": 420,
-                    },
+                    "dispersion": {"horizontal": 60, "vertical": 45},
+                    "SPL": {"peak": 141},
+                    "size": {"height": 680, "width": 370, "depth": 420},
                     "weight": 27.3,
                 },
             },
@@ -291,21 +251,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 120,
-                        "vertical": 60,
-                    },
-                    "SPL": {
-                        "peak": 141,
-                    },
-                    "size": {
-                        "height": 602,
-                        "width": 602,
-                        "depth": 505,
-                    },
+                    "dispersion": {"horizontal": 120, "vertical": 60},
+                    "SPL": {"peak": 141},
+                    "size": {"height": 602, "width": 602, "depth": 505},
                     "weight": 43,
                 },
             },
@@ -313,21 +269,17 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 45,
-                    },
-                    "SPL": {
-                        "peak": 145,
-                    },
-                    "size": {
-                        "height": 602,
-                        "width": 602,
-                        "depth": 505,
-                    },
+                    "dispersion": {"horizontal": 60, "vertical": 45},
+                    "SPL": {"peak": 145},
+                    "size": {"height": 602, "width": 602, "depth": 505},
                     "weight": 43,
                 },
             },
@@ -335,65 +287,35 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 60,
-                    },
-                    "SPL": {
-                        "peak": 144,
-                    },
-                    "size": {
-                        "height": 602,
-                        "width": 602,
-                        "depth": 505,
-                    },
+                    "dispersion": {"horizontal": 60, "vertical": 60},
+                    "SPL": {"peak": 144},
+                    "size": {"height": 602, "width": 602, "depth": 505},
                     "weight": 43,
                 },
             },
-            #            "vendor-pattern-90x45": {
-            #                "origin": "Vendors-EAW",
-            #                "format": "gll_hv_txt",
-            #                "review_published": "20230326",
-            #                "data_acquisition": gll_data_acquisition_std,
-            #                "quality": "low",
-            #                "specifications": {
-            #                    "dispersion": {
-            #                        "horizontal": 90,
-            #                        "vertical": 45,
-            #                    },
-            #                    "SPL": {
-            #                        "peak": 143,
-            #                    },
-            #                    "size": {
-            #                        "height": 602,
-            #                        "width": 602,
-            #                        "depth": 505,
-            #                    },
-            #                    "weight": 43,
-            #                },
-            #            },
             "vendor-pattern-90x60": {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 60,
-                    },
-                    "SPL": {
-                        "peak": 142,
-                    },
-                    "size": {
-                        "height": 602,
-                        "width": 602,
-                        "depth": 505,
-                    },
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "SPL": {"peak": 142},
+                    "size": {"height": 602, "width": 602, "depth": 505},
                     "weight": 43,
                 },
             },
@@ -401,22 +323,435 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Vendors-EAW",
                 "format": "gll_hv_txt",
                 "review_published": "20230326",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "quality": "low",
                 "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 90,
-                    },
-                    "SPL": {
-                        "peak": 141,
-                    },
-                    "size": {
-                        "height": 602,
-                        "width": 602,
-                        "depth": 505,
-                    },
+                    "dispersion": {"horizontal": 90, "vertical": 90},
+                    "SPL": {"peak": 141},
+                    "size": {"height": 602, "width": 602, "depth": 505},
                     "weight": 43,
+                },
+            },
+        },
+    },
+    "EV EVC-1082": {
+        "brand": "EV",
+        "model": "EVC-1082",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230117",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "SPL": {"peak": 120},
+                    "size": {"height": 492, "width": 248, "depth": 277},
+                    "weight": 11.2,
+                },
+            }
+        },
+    },
+    "EV EVC-1122": {
+        "brand": "EV",
+        "model": "EVC-1122",
+        "type": "passive",
+        "price": "1400",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 55},
+                    "sensitivity": 95,
+                    "impedance": 7,
+                    "SPL": {"peak": 126},
+                    "size": {"height": 616, "width": 395, "depth": 401},
+                    "weight": 20.3,
+                },
+            }
+        },
+    },
+    "EV EVC-1152": {
+        "brand": "EV",
+        "model": "EVC-1152",
+        "type": "passive",
+        "price": "1500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230118",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 55},
+                    "sensitivity": 98,
+                    "impedance": 7,
+                    "SPL": {"peak": 129},
+                    "size": {"height": 684, "width": 433, "depth": 451},
+                    "weight": 27.7,
+                },
+            }
+        },
+    },
+    "EV EVID-S4.2": {
+        "brand": "EV",
+        "model": "EVID-S4.2",
+        "type": "passive",
+        "price": "240",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230117",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 110},
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {"continuous": 103, "peak": 109},
+                    "size": {"height": 193, "width": 140, "depth": 118},
+                    "weight": 1.5,
+                },
+            }
+        },
+    },
+    "EV EVID-S5.2": {
+        "brand": "EV",
+        "model": "EVID-S5.2",
+        "type": "passive",
+        "price": "390",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 90},
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {"continuous": 103, "peak": 109},
+                    "size": {"height": 255, "width": 180, "depth": 151},
+                    "weight": 2.7,
+                },
+            }
+        },
+    },
+    "EV EVID-S5.2X": {
+        "brand": "EV",
+        "model": "EVID-S5.2X",
+        "type": "passive",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 90},
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {"continuous": 109, "peak": 115},
+                    "size": {"height": 255, "width": 180, "depth": 151},
+                    "weight": 2.7,
+                },
+            }
+        },
+    },
+    "EV EVID-S8.2": {
+        "brand": "EV",
+        "model": "EVID-S8.2",
+        "type": "passive",
+        "price": "560",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 90},
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {"continuous": 110, "peak": 116},
+                    "size": {"height": 390, "width": 223, "depth": 151},
+                    "weight": 5.1,
+                },
+            }
+        },
+    },
+    "EV MFX-12MC": {
+        "brand": "EV",
+        "model": "MFX-12MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 40},
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {"peak": 135},
+                    "size": {"height": 500, "width": 420, "depth": 298},
+                    "weight": 19,
+                },
+            },
+            "vendor-pattern-40x60": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 40, "vertical": 60},
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {"peak": 135},
+                    "size": {"height": 500, "width": 420, "depth": 298},
+                    "weight": 19,
+                },
+            },
+        },
+    },
+    "EV MFX-15MC": {
+        "brand": "EV",
+        "model": "MFX-15MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 40},
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {"peak": 135},
+                    "size": {"height": 600, "width": 500, "depth": 339},
+                    "weight": 23,
+                },
+            },
+            "vendor-pattern-40x60": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 40, "vertical": 60},
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {"peak": 135},
+                    "size": {"height": 600, "width": 500, "depth": 339},
+                    "weight": 23,
+                },
+            },
+        },
+    },
+    "EV MTS-4153": {
+        "brand": "EV",
+        "model": "MTS-4153",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 40},
+                    "impedance": 6,
+                    "SPL": {"peak": 151},
+                    "size": {"height": 1092, "width": 1092, "depth": 1096},
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {"horizontal": 40, "vertical": 30},
+                    "impedance": 6,
+                    "SPL": {"peak": 151},
+                    "size": {"height": 1092, "width": 1092, "depth": 1491},
+                    "weight": 196,
+                },
+            },
+        },
+    },
+    "EV MTS-6154": {
+        "brand": "EV",
+        "model": "MTS-6154",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 40},
+                    "impedance": 6,
+                    "SPL": {"peak": 151},
+                    "size": {"height": 1092, "width": 1092, "depth": 1096},
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230118",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {"horizontal": 40, "vertical": 30},
+                    "impedance": 6,
+                    "SPL": {"peak": 151},
+                    "size": {"height": 1092, "width": 1092, "depth": 1494},
+                    "weight": 213,
                 },
             },
         },
@@ -435,7 +770,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/airpulse-a100-review-powered-speaker.27425/",
                 "review_published": "20211019",
-            },
+            }
         },
     },
     "Edifier MR3BT": {
@@ -451,27 +786,13 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "quality": "high",
-                "reviews": {
-                    "yt": "https://youtu.be/Inpgge093o0",
-                },
+                "reviews": {"yt": "https://youtu.be/Inpgge093o0"},
                 "review_published": "20250320",
                 "specifications": {
-                    "size": {
-                        "height": 2230,
-                        "width": 125,
-                        "depth": 185,
-                    },
+                    "size": {"height": 2230, "width": 125, "depth": 185},
                     "weight": 3.85,
                 },
-            },
-            # TODO: what happens to the data?
-            #            "misc-audiolabinsight": {
-            #                "origin": "Misc",
-            #                "format": "klippel",
-            #                "quality": "high",
-            #                "review": "https://audiolabinsight.com/t/edifier-mr3bt-mesearment-and-review/342",
-            #                "review_published": "20241214",
-            #            },
+            }
         },
     },
     "Edifier MR4": {
@@ -518,7 +839,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-r1280t-powered-speaker-review.16112/",
                 "review_published": "20200920",
-            },
+            }
         },
     },
     "Edifier R1700BT Plus": {
@@ -535,22 +856,16 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "low",
                 "review_published": "20250125",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
                 "reviews": {
-                    "audiorekr": "https://audiore.kr/edifier-r1700bt-plus-%eb%a6%ac%eb%b7%b0/",
+                    "audiorekr": "https://audiore.kr/edifier-r1700bt-plus-%eb%a6%ac%eb%b7%b0/"
                 },
                 "notes": "Data is valid above ~200Hz.",
                 "specifications": {
-                    "size": {
-                        "height": 254,
-                        "width": 154,
-                        "depth": 214,
-                    },
+                    "size": {"height": 254, "width": 154, "depth": 214},
                     "weight": 6.6,
                 },
-            },
+            }
         },
     },
     "Edifier S2000 Mk III": {
@@ -567,7 +882,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
                 "quality": "low",
-            },
+            }
         },
     },
     "Edifier S2000 Pro": {
@@ -584,7 +899,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-s2000-pro-review-powered-monitor.24255/",
                 "review_published": "20210616",
-            },
+            }
         },
     },
     "Elac Adante AS-61": {
@@ -600,7 +915,7 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-adante-as-61-speaker-review.11507/#post-329527",
-            },
+            }
         },
     },
     "Elac BS 314": {
@@ -615,20 +930,20 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
-                "reviews": {
-                    "dci": "",
-                },
-                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave. Sealed measurement",
+                "reviews": {"dci": ""},
+                "notes": "Data gated at 5ms so valid above "
+                "200Hz/300Hz and smoothed 1/24th "
+                "of octave. Sealed measurement",
                 "review_published": "20220925",
             },
             "misc-nuyes-ported": {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
-                "reviews": {
-                    "dci": "",
-                },
-                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave. Ported measurement",
+                "reviews": {"dci": ""},
+                "notes": "Data gated at 5ms so valid above "
+                "200Hz/300Hz and smoothed 1/24th "
+                "of octave. Ported measurement",
                 "review_published": "20220925",
             },
         },
@@ -650,42 +965,83 @@ speakers_info_e: SpeakerDatabase = {
                     "yt": "https://youtu.be/aU_3cidukOE?si=aXuAKkVI8DvE1LHQ",
                 },
                 "review_published": "20240916",
-            },
+            }
         },
     },
-    "Elac Debut Reference DBR-62": {
+    "Elac BS U5 Slim": {
         "brand": "Elac",
-        "model": "Debut Reference DBR-62",
+        "model": "BS U5 Slim",
         "type": "passive",
-        "price": "600",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-bs-u5-slim-3-way-coaxial-speaker-review.13735/",
+            }
+        },
+    },
+    "Elac Carina BS243.4": {
+        "brand": "Elac",
+        "model": "Carina BS243.4",
+        "type": "passive",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-carina-bs243-4-review-bookshelf-speaker.34398/",
+                "review_published": "20220528",
+            }
+        },
+    },
+    "Elac Debut 2.0 A4.2": {
+        "brand": "Elac",
+        "model": "Debut 2.0 A4.2",
+        "type": "passive",
+        "price": "500",
+        "shape": "surround",
+        "default_measurement": "misc-archimago",
+        "measurements": {
+            "misc-archimago": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://archimago.blogspot.com/2021/01/measurements-elac-debut-20-a42-atmos.html",
+                "quality": "low",
+            }
+        },
+    },
+    "Elac Debut 2.0 B5.2": {
+        "brand": "Elac",
+        "model": "Debut 2.0 B5.2",
+        "type": "passive",
+        "price": "430",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_dbr62/",
-                    "yt": "https://youtu.be/VCY_CDu5Xas",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
-                },
-                "review_published": "20231221",
-                "specifications": {
-                    "sensitivity": 86,
-                    "impedance": 6,
-                    "size": {
-                        "height": 275,
-                        "width": 207,
-                        "depth": 363,
-                    },
-                    "weight": 8.2,
-                },
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/elac_db52/",
+                "review_published": "20221116",
             },
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
-                "review_published": "20200325",
+            "misc-nuyes": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265694"
+                },
+                "notes": "Data gated at 5ms so valid "
+                "above 200Hz/300Hz and smoothed "
+                "1/24th of octave",
+                "review_published": "20220901",
             },
         },
     },
@@ -734,57 +1090,10 @@ speakers_info_e: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 6,
-                    "size": {
-                        "height": 339,
-                        "width": 195,
-                        "depth": 298,
-                    },
+                    "size": {"height": 339, "width": 195, "depth": 298},
                     "weight": 7.85,
                 },
-            },
-        },
-    },
-    "Elac Debut 2.0 B5.2": {
-        "brand": "Elac",
-        "model": "Debut 2.0 B5.2",
-        "type": "passive",
-        "price": "430",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/elac_db52/",
-                "review_published": "20221116",
-            },
-            "misc-nuyes": {
-                "origin": "Misc",
-                "format": "spl_hv_txt",
-                "quality": "low",
-                "reviews": {
-                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265694",
-                },
-                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave",
-                "review_published": "20220901",
-            },
-        },
-    },
-    "Elac Debut 2.0 A4.2": {
-        "brand": "Elac",
-        "model": "Debut 2.0 A4.2",
-        "type": "passive",
-        "price": "500",
-        "shape": "surround",
-        "default_measurement": "misc-archimago",
-        "measurements": {
-            "misc-archimago": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "review": "https://archimago.blogspot.com/2021/01/measurements-elac-debut-20-a42-atmos.html",
-                "quality": "low",
-            },
+            }
         },
     },
     "Elac Debut 3.0 Bookshelf": {
@@ -805,14 +1114,10 @@ speakers_info_e: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 6,
-                    "size": {
-                        "height": 339,
-                        "width": 195,
-                        "depth": 298,
-                    },
+                    "size": {"height": 339, "width": 195, "depth": 298},
                     "weight": 17.3,
                 },
-            },
+            }
         },
     },
     "Elac Debut 3.0 Floorstand DF63": {
@@ -830,50 +1135,54 @@ speakers_info_e: SpeakerDatabase = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_df63/",
                     "yt": "https://youtu.be/NI8En4OhvMM",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-df63-floor-standing-speaker-review.65613/",
                 },
-                "review_published": "20250709",
+                "review_published": "20250908",
                 "specifications": {
-                    "sensitivity": 87,
-                    "impedance": 6,
-                    "size": {
-                        "height": 1094,
-                        "width": 195,
-                        "depth": 268,
-                    },
+                    "sensitivity": 87.5,
+                    "impedance": 6.0,
+                    "size": {"height": 1094.0, "width": 195.0, "depth": 268.0},
                     "weight": 38.8,
                 },
+                "symmetry": "none",
             },
-        },
-    },
-    "Elac BS U5 Slim": {
-        "brand": "Elac",
-        "model": "BS U5 Slim",
-        "type": "passive",
-        "price": "",
-        "shape": "bookshelves",
-        "default_measurement": "asr",
-        "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-bs-u5-slim-3-way-coaxial-speaker-review.13735/",
+                "review_published": "20250908",
+                "symmetry": "none",
             },
         },
     },
-    "Elac Carina BS243.4": {
+    "Elac Debut Reference DBR-62": {
         "brand": "Elac",
-        "model": "Carina BS243.4",
+        "model": "Debut Reference DBR-62",
         "type": "passive",
-        "price": "1000",
-        "amount": "pair",
+        "price": "600",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_dbr62/",
+                    "yt": "https://youtu.be/VCY_CDu5Xas",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {"height": 275, "width": 207, "depth": 363},
+                    "weight": 8.2,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-carina-bs243-4-review-bookshelf-speaker.34398/",
-                "review_published": "20220528",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
+                "review_published": "20200325",
             },
         },
     },
@@ -889,7 +1198,7 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-uni-fi-2-0-review-bookshelf-speaker.19216/",
-            },
+            }
         },
     },
     "Elac Uni-Fi 2.0 UC52 Center": {
@@ -930,7 +1239,7 @@ speakers_info_e: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_ubr62/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-ubr62-speaker-review.24585/",
                 },
-            },
+            }
         },
     },
     "Elac Uni-Fi Reference UCR52": {
@@ -947,7 +1256,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-reference-ucr52-review-center-speaker.27200/",
                 "review_published": "20211009",
-            },
+            }
         },
     },
     "Elac Vela BS 403": {
@@ -970,14 +1279,10 @@ speakers_info_e: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
-                    "size": {
-                        "height": 362,
-                        "width": 191,
-                        "depth": 240,
-                    },
+                    "size": {"height": 362, "width": 191, "depth": 240},
                     "weight": 7.1,
                 },
-            },
+            }
         },
     },
     "Emotiva Airmotiv 6s": {
@@ -993,7 +1298,7 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/emotiva-airmotiv-6s-powered-speaker-review.11185/",
-            },
+            }
         },
     },
     "Emotiva Airmotiv B1+": {
@@ -1039,30 +1344,10 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b2plus/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b2plus/"
                 },
                 "review_published": "20220806",
-            },
-        },
-    },
-    "Emotiva Airmotiv C2+": {
-        "brand": "Emotiva",
-        "model": "Airmotiv C2+",
-        "type": "passive",
-        "price": "399",
-        "shape": "center",
-        "amount": "each",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_c2plus/",
-                    "yt": "",
-                },
-                "review_published": "20211212",
-            },
+            }
         },
     },
     "Emotiva Airmotiv C1+": {
@@ -1082,7 +1367,27 @@ speakers_info_e: SpeakerDatabase = {
                     "yt": "",
                 },
                 "review_published": "20220217",
-            },
+            }
+        },
+    },
+    "Emotiva Airmotiv C2+": {
+        "brand": "Emotiva",
+        "model": "Airmotiv C2+",
+        "type": "passive",
+        "price": "399",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_c2plus/",
+                    "yt": "",
+                },
+                "review_published": "20211212",
+            }
         },
     },
     "Emotiva Airmotiv T2+": {
@@ -1102,7 +1407,7 @@ speakers_info_e: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=ulFplRqEd2U",
                 },
                 "review_published": "20211122",
-            },
+            }
         },
     },
     "Endow Audio Bravura 7": {
@@ -1122,7 +1427,7 @@ speakers_info_e: SpeakerDatabase = {
                     "yt": "https://youtu.be/tPW8Y4f4sPs",
                 },
                 "review_published": "20221116",
-            },
+            }
         },
     },
     "Epos ES14N": {
@@ -1148,15 +1453,13 @@ speakers_info_e: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4.3,
-                    "size": {
-                        "height": 491,
-                        "width": 250,
-                        "depth": 385,
-                    },
+                    "size": {"height": 491, "width": 250, "depth": 385},
                     "weight": 16,
                 },
-                "notes": "data is Klippel generated, voltage is 2.83V and results are smoothed at 1/12 octave which may increase the score a bit",
-            },
+                "notes": "data is Klippel generated, voltage is 2.83V "
+                "and results are smoothed at 1/12 octave "
+                "which may increase the score a bit",
+            }
         },
     },
     "Essence Electrostatic Model 1600": {
@@ -1173,488 +1476,7 @@ speakers_info_e: SpeakerDatabase = {
                 "symmetry": "horizontal",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
-            },
-        },
-    },
-    "EV EVID-S4.2": {
-        "brand": "EV",
-        "model": "EVID-S4.2",
-        "type": "passive",
-        "price": "240",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230117",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 110,
-                        "vertical": 110,
-                    },
-                    "sensitivity": 87,
-                    "impedance": 6,
-                    "SPL": {
-                        "continuous": 103,
-                        "peak": 109,
-                    },
-                    "size": {
-                        "height": 193,
-                        "width": 140,
-                        "depth": 118,
-                    },
-                    "weight": 1.5,
-                },
-            },
-        },
-    },
-    "EV EVID-S5.2": {
-        "brand": "EV",
-        "model": "EVID-S5.2",
-        "type": "passive",
-        "price": "390",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "quality": "medium",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230117",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 90,
-                    },
-                    "sensitivity": 90,
-                    "impedance": 6,
-                    "SPL": {
-                        "continuous": 103,
-                        "peak": 109,
-                    },
-                    "size": {
-                        "height": 255,
-                        "width": 180,
-                        "depth": 151,
-                    },
-                    "weight": 2.7,
-                },
-            },
-        },
-    },
-    "EV EVID-S5.2X": {
-        "brand": "EV",
-        "model": "EVID-S5.2X",
-        "type": "passive",
-        "price": "420",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230117",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 90,
-                    },
-                    "sensitivity": 90,
-                    "impedance": 6,
-                    "SPL": {
-                        "continuous": 109,
-                        "peak": 115,
-                    },
-                    "size": {
-                        "height": 255,
-                        "width": 180,
-                        "depth": 151,
-                    },
-                    "weight": 2.7,
-                },
-            },
-        },
-    },
-    "EV EVID-S8.2": {
-        "brand": "EV",
-        "model": "EVID-S8.2",
-        "type": "passive",
-        "price": "560",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230117",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 90,
-                    },
-                    "sensitivity": 90,
-                    "impedance": 6,
-                    "SPL": {
-                        "continuous": 110,
-                        "peak": 116,
-                    },
-                    "size": {
-                        "height": 390,
-                        "width": 223,
-                        "depth": 151,
-                    },
-                    "weight": 5.1,
-                },
-            },
-        },
-    },
-    "EV EVC-1082": {
-        "brand": "EV",
-        "model": "EVC-1082",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-90x60",
-        "measurements": {
-            "vendor-pattern-90x60": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230117",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 60,
-                    },
-                    "sensitivity": 91,
-                    "impedance": 6,
-                    "SPL": {
-                        "peak": 120,
-                    },
-                    "size": {
-                        "height": 492,
-                        "width": 248,
-                        "depth": 277,
-                    },
-                    "weight": 11.2,
-                },
-            },
-        },
-    },
-    "EV EVC-1122": {
-        "brand": "EV",
-        "model": "EVC-1122",
-        "type": "passive",
-        "price": "1400",
-        "amount": "each",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-90x55",
-        "measurements": {
-            "vendor-pattern-90x55": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230118",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 55,
-                    },
-                    "sensitivity": 95,
-                    "impedance": 7,
-                    "SPL": {
-                        "peak": 126,
-                    },
-                    "size": {
-                        "height": 616,
-                        "width": 395,
-                        "depth": 401,
-                    },
-                    "weight": 20.3,
-                },
-            },
-        },
-    },
-    "EV EVC-1152": {
-        "brand": "EV",
-        "model": "EVC-1152",
-        "type": "passive",
-        "price": "1500",
-        "amount": "each",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-90x55",
-        "measurements": {
-            "vendor-pattern-90x55": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230118",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 90,
-                        "vertical": 55,
-                    },
-                    "sensitivity": 98,
-                    "impedance": 7,
-                    "SPL": {
-                        "peak": 129,
-                    },
-                    "size": {
-                        "height": 684,
-                        "width": 433,
-                        "depth": 451,
-                    },
-                    "weight": 27.7,
-                },
-            },
-        },
-    },
-    "EV MFX-12MC": {
-        "brand": "EV",
-        "model": "MFX-12MC",
-        "type": "active",
-        "price": "6000",
-        "amount": "pair",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-60x40",
-        "measurements": {
-            "vendor-pattern-60x40": {  # FOH FR Biamp
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230115",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 40,
-                    },
-                    "sensitivity": 97,
-                    "impedance": 8,
-                    "SPL": {
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 500,
-                        "width": 420,
-                        "depth": 298,
-                    },
-                    "weight": 19,
-                },
-            },
-            "vendor-pattern-40x60": {  # MON FR Biamp
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230115",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 40,
-                        "vertical": 60,
-                    },
-                    "sensitivity": 97,
-                    "impedance": 8,
-                    "SPL": {
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 500,
-                        "width": 420,
-                        "depth": 298,
-                    },
-                    "weight": 19,
-                },
-            },
-        },
-    },
-    "EV MFX-15MC": {
-        "brand": "EV",
-        "model": "MFX-15MC",
-        "type": "active",
-        "price": "6000",
-        "amount": "pair",
-        "shape": "liveportable",
-        "default_measurement": "vendor-pattern-60x40",
-        "measurements": {
-            "vendor-pattern-60x40": {  # FOH FR BiAmp
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230115",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 40,
-                    },
-                    "sensitivity": 97,
-                    "impedance": 8,
-                    "SPL": {
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 600,
-                        "width": 500,
-                        "depth": 339,
-                    },
-                    "weight": 23,
-                },
-            },
-            "vendor-pattern-40x60": {  # MON FR BiAmp
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230115",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 40,
-                        "vertical": 60,
-                    },
-                    "sensitivity": 97,
-                    "impedance": 8,
-                    "SPL": {
-                        "peak": 135,
-                    },
-                    "size": {
-                        "height": 600,
-                        "width": 500,
-                        "depth": 339,
-                    },
-                    "weight": 23,
-                },
-            },
-        },
-    },
-    "EV MTS-4153": {
-        "brand": "EV",
-        "model": "MTS-4153",
-        "type": "active",
-        "price": "",
-        "amount": "pair",
-        "shape": "toursound",
-        "default_measurement": "vendor-pattern-60x40",
-        "measurements": {
-            "vendor-pattern-60x40": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "quality": "medium",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230118",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 40,
-                    },
-                    "impedance": 6,
-                    "SPL": {
-                        "peak": 151,
-                    },
-                    "size": {
-                        "height": 1092,
-                        "width": 1092,
-                        "depth": 1096,
-                    },
-                    "weight": 160,
-                },
-            },
-            "vendor-pattern-40x30": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230118",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 40,
-                        "vertical": 30,
-                    },
-                    "impedance": 6,
-                    "SPL": {
-                        "peak": 151,
-                    },
-                    "size": {
-                        "height": 1092,
-                        "width": 1092,
-                        "depth": 1491,
-                    },
-                    "weight": 196,
-                },
-            },
-        },
-    },
-    "EV MTS-6154": {
-        "brand": "EV",
-        "model": "MTS-6154",
-        "type": "active",
-        "price": "",
-        "amount": "pair",
-        "shape": "toursound",
-        "default_measurement": "vendor-pattern-60x40",
-        "measurements": {
-            "vendor-pattern-60x40": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "medium",
-                "review_published": "20230118",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 60,
-                        "vertical": 40,
-                    },
-                    "impedance": 6,
-                    "SPL": {
-                        "peak": 151,
-                    },
-                    "size": {
-                        "height": 1092,
-                        "width": 1092,
-                        "depth": 1096,
-                    },
-                    "weight": 160,
-                },
-            },
-            "vendor-pattern-40x30": {
-                "origin": "Vendors-EV",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20230118",
-                "quality": "medium",
-                "specifications": {
-                    "dispersion": {
-                        "horizontal": 40,
-                        "vertical": 30,
-                    },
-                    "impedance": 6,
-                    "SPL": {
-                        "peak": 151,
-                    },
-                    "size": {
-                        "height": 1092,
-                        "width": 1092,
-                        "depth": 1494,
-                    },
-                    "weight": 213,
-                },
-            },
+            }
         },
     },
     "Eve Audio SC305": {
@@ -1670,7 +1492,7 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/eve-audio-sc305-studio-monitor-review.37752/",
                 "review_published": "20220924",
-            },
+            }
         },
     },
     "Ex-Machina Pulsar MKII": {
@@ -1686,21 +1508,15 @@ speakers_info_e: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ex_machina_pulsar_mkii/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ex_machina_pulsar_mkii/"
                 },
                 "specifications": {
-                    "SPL": {
-                        "peak": 110,
-                    },
-                    "size": {
-                        "height": 483,
-                        "width": 289,
-                        "depth": 345,
-                    },
+                    "SPL": {"peak": 110},
+                    "size": {"height": 483, "width": 289, "depth": 345},
                     "weight": 23,
                 },
                 "review_published": "20230312",
-            },
+            }
         },
     },
 }
