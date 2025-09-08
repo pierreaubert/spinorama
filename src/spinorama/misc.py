@@ -21,9 +21,7 @@ import pathlib
 
 import numpy as np
 import pandas as pd
-
-from wand.image import Image as Wim
-from wand.exceptions import CoderError
+import plotly.io
 
 from datas import Measurement
 from datas.metadata import speakers_info
@@ -203,8 +201,15 @@ def write_multiformat(chart, filename, force):
     if not filepath.is_file() or force:
         try:
             # print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
-            chart.write_image(
-                filename, format="png", width=chart.layout.width, height=chart.layout.height
+            plotly.io.write_images(
+                [chart, chart, chart],
+                file=[
+                    filename,
+                    filename.replace("_large.png", ".jpg"),
+                    filename.replace("_large.png", ".webp"),
+                ],
+                default_width=chart.layout.width,
+                default_height=chart.layout.height,
             )
         except RuntimeError as rt:
             logger.error("writing image %s crashed! %s", filename, rt)
@@ -213,20 +218,6 @@ def write_multiformat(chart, filename, force):
         logger.warning("Saving %s failed!", filename)
         return
     logger.info("Saving %s", filename)
-
-    try:
-        # print("wim {}".format(filename))
-        with Wim(filename=filename) as pict:
-            filename = filename.replace("_large", "")
-            webp = "{}.webp".format(filename[:-4])
-            if not pathlib.Path(webp).is_file() or force:
-                pict.convert("webp").save(filename=webp)
-            pict.compression_quality = 75
-            jpg = "{}.jpg".format(filename[:-4])
-            if not pathlib.Path(jpg).is_file() or force:
-                pict.convert("jpg").save(filename=jpg)
-    except CoderError as ce:
-        logger.exception("Saving picture %s failed with %s", filename, ce)
 
 
 def expected_measurements(spl: pd.DataFrame) -> bool:
