@@ -123,14 +123,10 @@ const graphMarginRightSmall = 5;
 const graphMarginTopSmall = 30;
 const graphMarginBottomSmall = 40;
 
-const graphTitle = 40;
-const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
 const graphExtraPadding = 40;
 
 const graphLegendWidth = 164;
 
-const fontSizeH1 = 16;
-const fontSizeH2 = 14;
 const fontSizeH3 = 12;
 const fontSizeH4 = 11;
 const fontSizeH5 = 10;
@@ -184,6 +180,7 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
             }
         }
     }
+    /*
     console.info(
         'vertical=' +
             isVertical +
@@ -205,7 +202,7 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
             ') #=' +
             nbGraphs
     );
-
+*/
     return [width, height];
 }
 
@@ -698,7 +695,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.legend.y = 0;
                 layout.legend.entrywidth = graphLegendWidth;
                 layout.legend.entrywidthmode = 'pixels';
-                traceorder: ('grouped', console.log('debug Horizontal Legend x=', layout.legend.x, ' y=', layout.legend.y));
             }
         } else {
             layout.legend.xref = 'paper';
@@ -720,7 +716,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.legend.y = 0;
                 layout.legend.entrywidth = graphLegendWidth;
                 layout.legend.entrywidthmode = 'pixels';
-                traceorder: ('grouped', console.log('debug Horizontal Legend x=', layout.legend.x, ' y=', layout.legend.y));
             }
         }
         // how many columns in legend?
@@ -730,7 +725,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 groups.add(datas[k].legendgroup);
             }
         }
-        const countColumns = Array.from(groups).length;
         if (outputNumberGraphs === 1 && isVertical) {
             for (let k = 0; k < datas.length; k++) {
                 datas[k].legendgroup = null;
@@ -960,6 +954,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         // should be a pop up
         console.log('Error: No graph is available');
     }
+    /*
     console.log(
         'margin = {t: ' +
             layout.margin.t +
@@ -971,13 +966,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.margin.r +
             '}'
     );
+*/
     return { data: datas, layout: layout, config: config };
 }
 
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
     let legendShift = 0;
-    const isCompact = isDisplayCompact();
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)

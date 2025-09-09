@@ -21,10 +21,9 @@
 import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
+import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
 import {
-    colorPalettes,
-    contourColorscales,
     loadConfigFromStorage,
     saveConfigToStorage,
     createConfigMenu,
@@ -65,15 +64,21 @@ getMetadata()
         let config = loadConfigFromStorage();
         let currentGraphOptions = [];
 
-        // Create configuration menu - add it to the form container
-        createConfigMenu(formContainer, config, (updatedConfig) => {
-            config = updatedConfig;
-            saveConfigToStorage(config);
-            // Re-plot with updated configuration if we have existing graph options
-            if (currentGraphOptions.length > 0) {
-                applyConfigAndPlot();
-            }
-        });
+        // Create configuration menu - add it to the form container (only if not compact with ploty=1)
+        const plotyFlag = getUrlParameter('ploty');
+        const graphSmall = 550; // Same as plot.js
+        const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
+
+        if (!(plotyFlag === '1' && isCompact)) {
+            createConfigMenu(formContainer, config, (updatedConfig) => {
+                config = updatedConfig;
+                saveConfigToStorage(config);
+                // Re-plot with updated configuration if we have existing graph options
+                if (currentGraphOptions.length > 0) {
+                    applyConfigAndPlot();
+                }
+            });
+        }
 
         // Helper function to apply configuration and re-plot
         function applyConfigAndPlot() {
@@ -157,18 +162,38 @@ getMetadata()
                         // Store the original graph options for later configuration updates
                         currentGraphOptions[i] = graphOptions;
 
+                        // Helper function to configure options for compact mode
+                        function configureCompactOptions(opts) {
+                            if (plotyFlag === '1' && isCompact) {
+                                if (!opts.config) {
+                                    opts.config = {};
+                                }
+                                opts.config.displayModeBar = false;
+                                opts.config.staticPlot = true;
+                                opts.config.editable = false;
+                                opts.config.scrollZoom = false;
+                                opts.config.doubleClick = false;
+                                opts.config.showTips = false;
+                            }
+                            return opts;
+                        }
+
                         if (graphOptions?.length === 1) {
                             let options = applyConfig(graphOptions[0], config);
+                            options = configureCompactOptions(options);
                             Plotly.newPlot('plot' + i, options);
                         } else if (graphOptions?.length === 2) {
                             if (i === 0) {
                                 let options0 = applyConfig(graphOptions[0], config);
-                                Plotly.newPlot('plot0', options0);
                                 let options1 = applyConfig(graphOptions[1], config);
+                                options0 = configureCompactOptions(options0);
+                                options1 = configureCompactOptions(options1);
+                                Plotly.newPlot('plot0', options0);
                                 Plotly.newPlot('plot1', options1);
                             } else {
                                 const pos = i + 1;
                                 let options = applyConfig(graphOptions[1], config);
+                                options = configureCompactOptions(options);
                                 Plotly.newPlot('plot' + pos, options);
                             }
                         }
