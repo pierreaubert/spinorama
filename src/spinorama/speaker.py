@@ -638,10 +638,12 @@ def print_graphs(
 
         filename_png = build_filename(speaker, origin, version_key, key, "png")
 
-        for ext in ('_large.png', '.jpg', '.webp'):
-            filename_ext = filename_png.replace('_large.png', ext)
-            if force_print or not os.path.exists(filename_ext) or (
-                    os.path.exists(filename_ext) and os.path.getsize(filename_ext) == 0
+        for ext in ("_large.png", ".jpg", ".webp"):
+            filename_ext = filename_png.replace("_large.png", ext)
+            if (
+                force_print
+                or not os.path.exists(filename_ext)
+                or (os.path.exists(filename_ext) and os.path.getsize(filename_ext) == 0)
             ):
                 graphs_to_print.append(graph)
                 filenames_to_print.append(filename_ext)

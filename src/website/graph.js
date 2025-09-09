@@ -21,6 +21,7 @@
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
 import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
+import { getUrlParameter } from './misc.js';
 
 const flagsEnableConfig = true;
 
@@ -48,7 +49,13 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
                 }
             }
 
-            if (flagsEnableConfig) {
+            // Check if we're in compact mode with ploty=1
+            const plotyFlag = getUrlParameter('ploty');
+            const graphSmall = 550; // Same as plot.js
+            const isCompact = w < graphSmall || h < graphSmall;
+            const shouldDisableInteraction = plotyFlag === '1' && isCompact;
+
+            if (flagsEnableConfig && !shouldDisableInteraction) {
                 options = applyConfig(options, config);
 
                 createConfigMenu(divName, config, (updatedConfig) => {
@@ -61,6 +68,27 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
                     }
                     Plotly.react(divName, updatedOptions.data, updatedOptions.layout, updatedOptions.config);
                 });
+            }
+
+            // Configure Plotly for compact non-interactive mode if needed
+            if (shouldDisableInteraction) {
+                if (!options.config) {
+                    options.config = {};
+                }
+                // Disable toolbar and interaction
+                options.config.displayModeBar = false;
+                options.config.staticPlot = true;
+                options.config.editable = false;
+                options.config.scrollZoom = false;
+                options.config.doubleClick = false;
+                options.config.showTips = false;
+                options.config.responsive = true;
+
+                // Remove fixed dimensions to let it be responsive
+                if (options.layout) {
+                    delete options.layout.width;
+                    delete options.layout.height;
+                }
             }
 
             const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;

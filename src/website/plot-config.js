@@ -19,6 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { labelShort, labelLong } from './plot.js';
+import { getUrlParameter } from './misc.js';
 
 // Color palettes for graphs
 export const colorPalettes = {
@@ -296,30 +297,24 @@ export function applyConfig(options, config) {
 
         // Apply font to layout
         if (Object.keys(fontConfig).length > 0 || (config.font && config.font.size !== 0)) {
-	    [
-		layout,
-		layout.xaxis,
-		layout.yaxis,
-		layout.zaxis,
-		layout.legend
-	    ].forEach((axis) => {
-		if (axis?.title?.font) {
-		    if (config.font ) {
-			if (config.font.size && typeof config.font.size === 'number') {
-			    if (axis.title.font.size) {
-				axis.title.font.size += config.font.size;
-			    }
-			}
-			if (config.font.family && config.font.family !== 'default') {
-			    axis.title.font.family = config.font.family;
-			}
-			if (config.font.color && config.font.color !== 'default') {
-			    axis.title.font.color = config.font.color;
-			}
-		    }
-		}
+            [layout, layout.xaxis, layout.yaxis, layout.zaxis, layout.legend].forEach((axis) => {
+                if (axis?.title?.font) {
+                    if (config.font) {
+                        if (config.font.size && typeof config.font.size === 'number') {
+                            if (axis.title.font.size) {
+                                axis.title.font.size += config.font.size;
+                            }
+                        }
+                        if (config.font.family && config.font.family !== 'default') {
+                            axis.title.font.family = config.font.family;
+                        }
+                        if (config.font.color && config.font.color !== 'default') {
+                            axis.title.font.color = config.font.color;
+                        }
+                    }
+                }
             });
-	}
+        }
 
         // Apply margins as deltas to existing margins
         if (config.margins) {
@@ -544,6 +539,15 @@ export function applyConfig(options, config) {
 
 // Create plot configuration menu
 export function createConfigMenu(divName, config, updateCallback) {
+    // Don't create menu if in compact mode with ploty=1 flag
+    const plotyFlag = getUrlParameter('ploty');
+    const graphSmall = 550; // Same as plot.js
+    const isCompact = window.innerWidth < graphSmall || window.innerHeight < graphSmall;
+
+    if (plotyFlag === '1' && isCompact) {
+        return;
+    }
+
     // Get the container element
     const container = typeof divName === 'string' ? document.getElementById(divName) : divName;
     if (!container) {

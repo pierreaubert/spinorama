@@ -220,7 +220,9 @@ def write_multiformat(chart, filename, force):
     logger.info("Saving %s", filename)
 
 
-def write_multiformat_batch(charts_and_files: list[tuple[object, str]], force: bool, chunk_size: int = 64) -> None:
+def write_multiformat_batch(
+    charts_and_files: list[tuple[object, str]], force: bool, chunk_size: int = 64
+) -> None:
     """Write many charts to png/jpg/webp in batches using plotly.io.write_images.
 
     charts_and_files: list of (chart, filename_png) - png filename

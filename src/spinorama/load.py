@@ -565,7 +565,12 @@ def symmetrise_speaker_measurements(
         logger.error("Symmetrisation cannot work with no measurement")
         return (None, None)
 
-    if symmetry is not None and symmetry.lower() not in ("coaxial", "vertical", "horizontal", "none"):
+    if symmetry is not None and symmetry.lower() not in (
+        "coaxial",
+        "vertical",
+        "horizontal",
+        "none",
+    ):
         logger.error("symmetry %s is unknown", symmetry)
         return (None, None)
 

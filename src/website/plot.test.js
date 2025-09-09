@@ -55,7 +55,6 @@ describe('computeDims', () => {
     const graphMarginRight = 30;
     const graphMarginTop = 60;
     const graphMarginBottom = 30;
-    const graphSpacer = graphMarginTop + graphMarginBottom + 40; // 40 is graphTitle
     const graphExtraPadding = 40;
     const graphLegendWidth = 164;
 
@@ -136,8 +135,11 @@ describe('computeDims', () => {
                         }
 
                         expectedWidth = ww / n;
-                        expectedHeight = Math.min(initialHeight_n1, expectedWidth / baseGraphRatio) +
-                            graphMarginTop + graphMarginBottom + graphExtraPadding;
+                        expectedHeight =
+                            Math.min(initialHeight_n1, expectedWidth / baseGraphRatio) +
+                            graphMarginTop +
+                            graphMarginBottom +
+                            graphExtraPadding;
                     } else {
                         const heightNoMargins = wh - graphMarginTop - graphMarginBottom;
                         const extra = graphLegendWidth + graphMarginLeft + graphMarginRight;
