@@ -1282,6 +1282,8 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf"
                 },
+                "review_published": "20250909",
+                "data_acquisition": {"min_valid_freq": 300},
             }
         },
     },
