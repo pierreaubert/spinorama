@@ -268,10 +268,11 @@
       if (plotlyEnabled) {
         // Replace all picture elements with plotly graphs
         document.addEventListener('DOMContentLoaded', function() {
-          const pictures = document.querySelectorAll('picture');
-          pictures.forEach(function(picture) {
-            const link = picture.closest('a');
-            if (link && link.href.endsWith('.html')) {
+          // Only select pictures that are inside anchor tags linking to .html files
+          const links = document.querySelectorAll('a[href$=".html"]');
+          links.forEach(function(link) {
+            const picture = link.querySelector('picture');
+            if (picture) {
               replacePictureWithPlotly(picture, link);
             }
           });
