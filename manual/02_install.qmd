@@ -76,3 +76,75 @@ Before committing, please check that the various checks are fine:
 Most of the checks are enforced in the pre-submit which means that
 you cannot commit new codes without passing tests and checks.
 
+
+
+## Docker
+
+Build and run the project using Docker. The setup mirrors `scripts/setup.sh` inside the images (Python venv, Node dependencies, third-party assets, Cython and Rust builds).
+
+### Build images
+
+1) Build the base image (installs system packages, Node 22.x, and a recent Rust toolchain):
+
+```bash
+docker build -f Dockerfile.base -t spin-base:latest .
+```
+
+2) Build the application image (installs Python/Node deps, compiles Cython/Rust, prefetches 3rd-party assets):
+
+```bash
+docker build -f Dockerfile -t spinorama:latest .
+```
+
+### Run tests (default CMD)
+
+The application image is configured to run Python unit tests and Vitest by default:
+
+```bash
+docker run --rm -it spinorama:latest
+```
+
+### Interactive development shell
+
+Start a shell inside the container, mount your working directory, and expose common ports:
+
+```bash
+docker run --rm -it \
+  -p 5173:5173 \
+  -v "$(pwd)":/work \
+  spinorama:latest bash
+```
+
+Inside the container:
+
+- Python venv is already on PATH. Run tests:
+
+```bash
+pytest -q tests
+```
+
+- Start the website dev server (Vite) and access it at http://localhost:5173/:
+
+```bash
+npx vite --host 0.0.0.0 --port 5173
+```
+
+- Build/update third-party assets (already done at image build time):
+
+```bash
+sh update_3rdparties.sh
+```
+
+- Build site assets (or use the existing scripts in `package.json`):
+
+```bash
+python generate_html.py --dev --sitedev=http://localhost:8888 --skip-speakers
+# or
+npm run build
+```
+
+### Notes
+
+- The first build may take a while (downloads Node 22.x and Rust toolchain, compiles dependencies).
+- If you change Python/Node dependencies, rebuild the application image.
+- The base image (`spin-base:latest`) is shared by the main `Dockerfile` to speed up rebuilds.

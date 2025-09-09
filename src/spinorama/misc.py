@@ -208,8 +208,8 @@ def write_multiformat(chart, filename, force):
                     filename.replace("_large.png", ".jpg"),
                     filename.replace("_large.png", ".webp"),
                 ],
-                default_width=chart.layout.width,
-                default_height=chart.layout.height,
+                width=chart.layout.width,
+                height=chart.layout.height,
             )
         except RuntimeError as rt:
             logger.error("writing image %s crashed! %s", filename, rt)

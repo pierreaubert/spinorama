@@ -21,6 +21,8 @@ import pathlib
 import copy
 import math
 
+import plotly.io
+
 from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
@@ -600,13 +602,62 @@ def print_graphs(
         )
 
     updated = 0
+    graphs_to_print = []
+    filenames_to_print = []
     for key, graph in graphs.items():
+        # print('debug: {} {}'.format(speaker, key))
         if graph is None:
+            # print('debug: {} graph empty'.format(speaker))
             continue
+
         # force_update = need_update()
         force_update = False
-        for ext in ("png", "json"):
-            filename = build_filename(speaker, origin, version_key, key, ext)
-            logger.debug("debug printing %s version_key=%s key=%s", filename, version_key, key)
-            updated += print_a_graph(filename, graph, ext, force_print or force_update)
+
+        filename_json = build_filename(speaker, origin, version_key, key, "json")
+
+        check = (
+            force_print
+            or not os.path.exists(filename_json)
+            or (os.path.exists(filename_json) and os.path.getsize(filename_json) == 0)
+        )
+
+        if not check:
+            # if os.path.exists(filename_json):
+            #     print('debug: {} {} already exist!'.format(speaker, filename_json))
+            continue
+
+        try:
+            content = graph.to_json()
+            with open(filename_json, "w", encoding="utf-8") as f_d:
+                f_d.write(content)
+                updated += 1
+                # print('debug: {} wrote {}'.format(speaker, filename_json))
+        except Exception:
+            logger.exception("Got unkown error for %s: %s", speaker, filename_json)
+            continue
+
+        filename_png = build_filename(speaker, origin, version_key, key, "png")
+
+        for ext in ('_large.png', '.jpg', '.webp'):
+            filename_ext = filename_png.replace('_large.png', ext)
+            if force_print or not os.path.exists(filename_ext) or (
+                    os.path.exists(filename_ext) and os.path.getsize(filename_ext) == 0
+            ):
+                graphs_to_print.append(graph)
+                filenames_to_print.append(filename_ext)
+
+    try:
+        if len(filenames_to_print) > 0:
+            # print('debug: calling plot io for speaker {} and graphs {}'.format(speaker, filenames_to_print))
+            plotly.io.write_images(
+                graphs_to_print,
+                filenames_to_print,
+                width=width,
+                height=height,
+            )
+            updated += 3
+    except RuntimeError as rt:
+        logger.error("writing image %s crashed! %s", filename_png, rt)
+        return
+
     return updated
