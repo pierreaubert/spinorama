@@ -24,6 +24,7 @@ import os
 import re
 import pathlib
 
+import plotly.io
 from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
@@ -34,7 +35,6 @@ from spinorama.filter_scores import (
     scores_apply_filter,
     scores_print,
 )
-from spinorama.speaker import write_multiformat
 from autoeq.auto_target import get_freq, get_target
 from autoeq.auto_plot import graph_results as auto_graph_results
 from autoeq.auto_strategy import optim_strategy
@@ -133,29 +133,69 @@ def print_auto_graphs_seq(
             auto_score,
         )
 
+        # Collect images to write (png, jpg, webp) and batch write using plotly.io
+        graphs_to_print: list = []
+        filenames_to_print = []
+        img_width: int | None = None
+        img_height: int | None = None
+
         for name, graph in graphs:
             origin = speaker_origin
             if "Vendors-" in origin:
                 origin = origin[8:]
-            graph_filename = "{}/{}/{}/filters_{}".format(
+            base_filename = "{}/{}/{}/filters_{}".format(
                 CPATH_DIST_SPEAKERS, speaker_name, origin, name
             )
             if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
-                graph_filename = "{}/filters_{}".format(
+                base_filename = "{}/filters_{}".format(
                     pathlib.Path(optim_config["output_dir"]).resolve(), name
                 )
 
             if optim_config["use_grapheq"]:
                 grapheq_name = optim_config["grapheq_name"]
                 short_name = grapheq_name.lower().replace(" ", "-")
-                graph_filename += short_name
+                base_filename += short_name
             if optim_config["smoke_test"]:
-                graph_filename += "_smoketest"
-            graph_filename += ".png"
-            logger.debug("writing graph %s", graph_filename)
+                base_filename += "_smoketest"
+
+            # Decide whether to write based on existing files and force flag
             force = not optim_config["generate_images_only"]
-            # print('{} {} {}'.format(graph_filename, graph.layout.width, graph.layout.height))
-            write_multiformat(chart=graph, filename=graph_filename, force=force)
+
+            for ext in (".png", ".jpg", ".webp"):
+                filename = f"{base_filename}{ext}"
+                # Ensure parent directory exists
+                pathlib.Path(filename).parent.mkdir(parents=True, exist_ok=True)
+
+                needs_write = (
+                    force
+                    or not os.path.exists(filename)
+                    or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+                )
+
+                if needs_write:
+                    if img_width is None or img_height is None:
+                        # Use the first graph's dimensions
+                        try:
+                            img_width = int(graph.layout.width)
+                            img_height = int(graph.layout.height)
+                        except Exception:
+                            # Fallback defaults if layout is missing dimensions
+                            img_width = 1600
+                            img_height = 1200
+                    graphs_to_print.append(graph)
+                    filenames_to_print.append(filename)
+                    logger.debug("queueing graph %s", filename)
+
+        if len(filenames_to_print) > 0:
+            try:
+                plotly.io.write_images(
+                    graphs_to_print,
+                    filenames_to_print,
+                    width=img_width,
+                    height=img_height,
+                )
+            except RuntimeError as rt:
+                logger.error("writing image(s) crashed! %s", rt)
 
 
 def print_small_summary(
