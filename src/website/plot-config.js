@@ -276,12 +276,26 @@ export function mergeConfigs(baseConf, deltaConf) {
 export function applyConfig(options, config) {
     if (!options || !config) return options;
 
+    // Build font configuration object from config
+    const fontConfig = {};
+    if (config.font) {
+        if (config.font.family && config.font.family !== 'default') {
+            fontConfig.family = config.font.family;
+        }
+        if (config.font.color && config.font.color !== 'default') {
+            fontConfig.color = config.font.color;
+        }
+        if (config.font.size && typeof config.font.size === 'number' && config.font.size !== 0) {
+            // Note: font size will be applied as deltas in the specific axis handling below
+        }
+    }
+
     // Apply options to layout if it exists
     if (options.layout) {
         const layout = options.layout;
 
         // Apply font to layout
-        if (Object.keys(fontConfig).length > 0) {
+        if (Object.keys(fontConfig).length > 0 || (config.font && config.font.size !== 0)) {
 	    [
 		layout,
 		layout.xaxis,
@@ -403,6 +417,7 @@ export function applyConfig(options, config) {
 
             // Apply legend font
             if (Object.keys(fontConfig).length > 0) {
+                if (!layout.legend.font) layout.legend.font = {};
                 layout.legend.font = { ...layout.legend.font, ...fontConfig };
             }
         }
@@ -452,11 +467,11 @@ export function applyConfig(options, config) {
                 }
             }
 
-            if (trace.marker && trace.marker.textfont) {
+            if (trace.marker && trace.marker.textfont && Object.keys(fontConfig).length > 0) {
                 trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
             }
 
-            if (trace.hoverlabel && trace.hoverlabel.font) {
+            if (trace.hoverlabel && trace.hoverlabel.font && Object.keys(fontConfig).length > 0) {
                 trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
             }
 
