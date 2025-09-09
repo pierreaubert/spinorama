@@ -282,7 +282,8 @@
       function replacePictureWithPlotly(picture, link) {
         // Extract graph name from the link href
         const href = link.getAttribute('href');
-        const graphName = href.replace(/\.html$/, '').split('/').pop();
+        const graphNameEncoded = href.replace(/\.html$/, '').split('/').pop();
+        const graphName = decodeURIComponent(graphNameEncoded);
         const jsonUrl = href.replace(/\.html$/, '.json');
         
         // Create a div to replace the entire link + picture structure
