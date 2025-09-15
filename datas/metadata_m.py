@@ -2036,6 +2036,27 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "MoFi SourcePoint 10 Master Edition": {
+        "brand": "MoFi",
+        "model": "SourcePoint 10 Master Edition",
+        "type": "passive",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "specifications": {
+                    "sensitivity": 91.0,
+                    "impedance": 6.2,
+                    "size": {"height": 572.0, "width": 368.0, "depth": 406.0},
+                    "weight": 21.0,
+                },
+                "symmetry": "none",
+            }
+        },
+    },
     "MoFi SourcePoint 8": {
         "brand": "MoFi",
         "model": "SourcePoint 8",
@@ -2100,30 +2121,6 @@ speakers_info_m: SpeakerDatabase = {
                     "size": {"height": 1070, "width": 320, "depth": 410},
                     "weight": 43,
                 },
-            }
-        },
-    },
-    "MoFi SourcePoint V10 Master Edition": {
-        "brand": "MoFi",
-        "model": "SourcePoint V10 Master Edition",
-        "type": "passive",
-        "price": "8000",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {"yt": "https://youtu.be/0-2OWJ0RmX8?si=4rqrqPU26nzoc3Xl"},
-                "review_published": "20250915",
-                "specifications": {
-                    "sensitivity": 91.0,
-                    "impedance": 4.5,
-                    "size": {"height": 1240.0, "width": 393.0, "depth": 505.0},
-                    "weight": 72.6,
-                },
-                "symmetry": "none",
             }
         },
     },
