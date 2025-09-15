@@ -32,7 +32,7 @@ speakers_info_c: SpeakerDatabase = {
                 "reviews": {
                     "akr": "",
                 },
-                "review_published": "20251012",
+                "review_published": "20250812",
                 "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
                 "data_acquisition": {
                     "min_valid_freq": 500,
