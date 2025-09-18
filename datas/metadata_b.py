@@ -1232,9 +1232,9 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
-    "Buchardt Audio Buchardt Audio E50": {
+    "Buchardt Audio E50": {
         "brand": "Buchardt Audio",
-        "model": "Buchardt Audio E50",
+        "model": "E50",
         "type": "passive",
         "price": "1975",
         "amount": "each",
