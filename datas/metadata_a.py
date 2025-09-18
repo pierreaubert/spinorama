@@ -1982,8 +1982,24 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "high",
                 "reviews": {
                     "vendor": "http://forum.ascendacoustics.com/showthread.php?7588-Introducing-the-Sierra-LX!!!",
+                    "yt": "https://youtu.be/SfB_4mABPJ8",
                 },
                 "review_published": "20220324",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 362,
+                        "width": 190,
+                        "depth": 26,
+                    },
+                    "weight": 9.5,
+                },
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20250918",
             },
         },
     },
