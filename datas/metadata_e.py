@@ -773,6 +773,33 @@ speakers_info_e: SpeakerDatabase = {
             }
         },
     },
+    "Edifier M60": {
+        "brand": "Edifier",
+        "model": "M60",
+        "type": "active",
+        "price": "170",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/27vZ-7l8ng8?si=TeZLx4jIpyYTgWTR",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "size": {
+                        "height": 168,
+                        "width": 100,
+                        "depth": 147,
+                    },
+                    "weight": 3.07,
+                },
+            },
+        },
+    },
     "Edifier MR3BT": {
         "brand": "Edifier",
         "model": "MR3BT",
@@ -1408,6 +1435,35 @@ speakers_info_e: SpeakerDatabase = {
                 },
                 "review_published": "20211122",
             }
+        },
+    },
+    "Emotiva Airmotiv XB2": {
+        "brand": "Emotiva",
+        "model": "Airmotiv XB2",
+        "type": "passive",
+        "price": "600",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 325,
+                        "width": 216,
+                        "depth": 292,
+                    },
+                    "weight": 8.1,
+                },
+            },
         },
     },
     "Endow Audio Bravura 7": {
