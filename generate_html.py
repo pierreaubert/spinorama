@@ -276,7 +276,7 @@ def generate_speaker(
                     )
                 )
                 print("Maybe you forgot to cache the computations? Try running:")
-                print("./generate_graph.py --speaker={} --use-cache".format(key_error))
+                print("./generate_graphs.py --speaker={} --uupdate-cache".format(key_error))
                 print("./generate_meta.py")
 
 
