@@ -491,6 +491,35 @@ speakers_info_f: SpeakerDatabase = {
             },
         },
     },
+    "Focal Aria Evo X No.2": {
+        "brand": "Focal",
+        "model": "Aria Evo X No.2",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/-VsUsGAwHd4?si=1fTvslnY9bbW6z7R",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 91.5,
+                    "impedance": 3,
+                    "size": {
+                        "height": 1035,
+                        "width": 371,
+                        "depth": 294,
+                    },
+                    "weight": 25,
+                },
+            },
+        },
+    },
     "Focal Chora 806": {
         "brand": "Focal",
         "model": "Chora 806",

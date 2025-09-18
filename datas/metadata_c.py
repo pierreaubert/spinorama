@@ -174,6 +174,35 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Cerwin Vega LA165": {
+        "brand": "Cerwin Vega",
+        "model": "LA165",
+        "type": "passive",
+        "price": "270",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/5LLEbOTBoCk?si=Y5WVEfV6ZEn6JjqB",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 347,
+                        "width": 203,
+                        "depth": 315,
+                    },
+                    "weight": 13.5,
+                },
+            },
+        },
+    },
     "Chane A1.5": {
         "brand": "Chane",
         "model": "A1.5",

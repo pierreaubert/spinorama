@@ -955,6 +955,38 @@ speakers_info_k: SpeakerDatabase = {
             }
         },
     },
+    "KEF Q8 Meta": {
+        "brand": "KEF",
+        "model": "Q8 Meta",
+        "type": "passive",
+        "price": "1400",
+        "amount": "pair",
+        "shape": "surround",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 176,
+                        "width": 180,
+                        "depth": 259,
+                    },
+                    "weight": 4.5,
+                },
+            },
+        },
+    },
     "KEF R11": {
         "brand": "KEF",
         "model": "R11",
