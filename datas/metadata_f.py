@@ -506,7 +506,7 @@ speakers_info_f: SpeakerDatabase = {
                 "reviews": {
                     "yt": "https://youtu.be/-VsUsGAwHd4?si=1fTvslnY9bbW6z7R",
                 },
-                "review_published": "202404xx",
+                "review_published": "20250918",
                 "specifications": {
                     "sensitivity": 91.5,
                     "impedance": 3,

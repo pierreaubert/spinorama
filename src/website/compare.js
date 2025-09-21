@@ -24,10 +24,7 @@ import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import {
-    loadConfigFromStorage,
-    applyConfig,
-} from './plot-config.js';
+import { loadConfigFromStorage, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = false;
 
@@ -110,7 +107,6 @@ getMetadata()
         const fieldsetVersionsSelector = [];
 
         let graphsConfigs = [];
-
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
