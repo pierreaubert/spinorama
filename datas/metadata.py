@@ -590,6 +590,15 @@ origins_info = {
         "logo-small": "dist/metadata/pioneer.png",
         "url": "https://www.pioneer.com",
     },
+    "Vendors-Pitt & Giblin": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "dist/metadata/pittgiblin.png",
+        "logo-small": "dist/metadata/pittgiblin.png",
+        "url": "https://www.pittandgiblin.com.au/",
+    },
     "Vendors-Perlisten": {
         "min hz": 20,
         "max hz": 20000,
