@@ -551,7 +551,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             br0 = inputGraphsData[0].layout.title.text.indexOf('<br>');
         }
         if (outputNumberGraphs === 1 && inputGraphsData[1] && inputGraphsData[1]?.layout.title.text) {
-            title = title.slice(0, br0) + '<br> v.s. ' + addInitialLetter(inputGraphsData[1].layout.title.text, 'B');
+            const titlePart = br0 === -1 ? title : title.slice(0, br0);
+            title = titlePart + '<br> v.s. ' + addInitialLetter(inputGraphsData[1].layout.title.text, 'B');
             const pos1for = inputGraphsData[1].layout.title.text.indexOf(' for ');
             const pos1by = inputGraphsData[1].layout.title.text.indexOf(' measured by ');
             const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);

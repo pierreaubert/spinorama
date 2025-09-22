@@ -105,7 +105,14 @@ describe('Graph Display', () => {
         global.Element = window.Element;
         global.Plotly = Plotly;
         global.localStorage = localStorageMock;
-        window.localStorage = localStorageMock;
+        
+        // Mock localStorage using Object.defineProperty since it's read-only
+        Object.defineProperty(window, 'localStorage', {
+            value: localStorageMock,
+            writable: true,
+            configurable: true,
+        });
+        
         window.innerWidth = 1024;
         window.innerHeight = 768;
 
