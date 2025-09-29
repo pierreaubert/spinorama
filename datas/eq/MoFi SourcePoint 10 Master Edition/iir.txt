@@ -1,0 +1,14 @@
+EQ for MoFi SourcePoint 10 Master Edition computed from ErinsAudioCorner data
+Preference Score 4.83 with EQ 5.88
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-17:14:14
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc    56 Hz Gain +2.40 dB Q 2.98
+Filter  2: ON PK Fc   310 Hz Gain +2.04 dB Q 2.99
+Filter  3: ON PK Fc   344 Hz Gain -3.71 dB Q 2.72
+Filter  4: ON PK Fc   470 Hz Gain +1.93 dB Q 0.41
+Filter  5: ON PK Fc   765 Hz Gain -2.54 dB Q 2.79
+Filter  6: ON PK Fc  2579 Hz Gain -1.73 dB Q 2.00
+Filter  7: ON PK Fc  7834 Hz Gain -0.94 dB Q 1.47

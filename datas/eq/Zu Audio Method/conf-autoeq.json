@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 69.6,
+    "target_min_freq": 120.8,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
@@ -48,5 +48,5 @@
     "version": "0.28",
     "level": 20,
     "generate_images_only": false,
-    "output_dir": "/Volumes/Pierre8/src/pierre/spinorama/build/eqs/Elac Debut 3.0 Floorstand DF63/Score-7-sw21o5-pk"
+    "output_dir": "/Volumes/Pierre8/src/pierre/spinorama/build/eqs/Zu Audio Method/Score-7-sw21o5-pk"
 }

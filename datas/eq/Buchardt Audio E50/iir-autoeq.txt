@@ -1,0 +1,13 @@
+EQ for Buchardt Audio E50 computed from ErinsAudioCorner data
+Preference Score 5.51 with EQ 6.70
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-18:07:02
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc    52 Hz Gain +2.95 dB Q 0.25
+Filter  2: ON PK Fc    85 Hz Gain -1.82 dB Q 0.76
+Filter  3: ON PK Fc  1700 Hz Gain -2.32 dB Q 2.56
+Filter  4: ON PK Fc  6361 Hz Gain +2.33 dB Q 0.48
+Filter  5: ON PK Fc  7059 Hz Gain -4.95 dB Q 1.48
+Filter  6: ON PK Fc 13186 Hz Gain -3.73 dB Q 1.49

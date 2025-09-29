@@ -1,0 +1,13 @@
+EQ for Pitt & Giblin Flare computed from Vendors-Pitt & Giblin data
+Preference Score 7.23 with EQ 7.69
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-18:26:53
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    37 Hz Gain +2.92 dB Q 0.62
+Filter  2: ON PK Fc    44 Hz Gain +2.54 dB Q 0.28
+Filter  3: ON PK Fc    51 Hz Gain -3.93 dB Q 0.88
+Filter  4: ON PK Fc   149 Hz Gain -2.35 dB Q 0.55
+Filter  5: ON PK Fc   260 Hz Gain +1.24 dB Q 2.96
+Filter  6: ON PK Fc  6818 Hz Gain -1.48 dB Q 0.26

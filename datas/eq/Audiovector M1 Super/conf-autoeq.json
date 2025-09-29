@@ -8,7 +8,7 @@
     "use_all_biquad": null,
     "elastic": 0.8,
     "fs": 48000,
-    "freq_reg_min": 20.5078,
+    "freq_reg_min": 20,
     "freq_reg_max": 20000,
     "freq_mean_min": 100,
     "freq_mean_max": 300,
@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 69.6,
+    "target_min_freq": 64.4,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
@@ -48,5 +48,5 @@
     "version": "0.28",
     "level": 20,
     "generate_images_only": false,
-    "output_dir": "/Volumes/Pierre8/src/pierre/spinorama/build/eqs/Elac Debut 3.0 Floorstand DF63/Score-7-sw21o5-pk"
+    "output_dir": "/Volumes/Pierre8/src/pierre/spinorama/build/eqs/Audiovector M1 Super/Score-7-sw21o5-pk"
 }
