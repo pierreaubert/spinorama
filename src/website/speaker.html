@@ -10,7 +10,7 @@
     <%namespace name="util" module="website.utils" import="*"/>
     <%include file="tabs_header.html"/>
 
-    <div class="tab-pane display:non" id="pane-1">
+    <div class="tab-pane display:none" id="pane-1">
       <div class="container">
 	<table>
           <tr>
@@ -274,7 +274,7 @@
           if (activeTab) {
             const links = activeTab.querySelectorAll('a[href$=".html"]');
             console.log('Found', links.length, 'graph links in active tab');
-            
+
             // Process graphs with a tiny delay to prevent DOM conflicts
             links.forEach(function(link, index) {
               const picture = link.querySelector('picture');
@@ -300,9 +300,9 @@
         const graphNameEncoded = href.replace(/\.html$/, '').split('/').pop();
         const graphName = decodeURIComponent(graphNameEncoded);
         const jsonUrl = href.replace(/\.html$/, '.json');
-        
+
         console.log('Processing:', graphName);
-        
+
         // Create a div to replace the entire link + picture structure
         const plotDiv = document.createElement('div');
         plotDiv.className = 'graph plotly-graph';
@@ -313,9 +313,9 @@
         const graphSmall = 550; // Same as plot.js
         const isCompact = window.innerWidth < graphSmall || window.innerHeight < graphSmall;
         const shouldUseResponsive = (plotyFlag === '1') && isCompact;
-        
+
         console.log('Debug - plotyFlag:', plotyFlag, 'window:', window.innerWidth, 'x', window.innerHeight, 'isCompact:', isCompact, 'shouldUseResponsive:', shouldUseResponsive);
-        
+
         if (shouldUseResponsive) {
           // Let CSS handle the sizing for responsive behavior
           plotDiv.style.width = '100%';
@@ -324,13 +324,13 @@
         } else {
           // Set dimensions based on orientation
           const isVertical = window.innerWidth <= window.innerHeight;
-          
+
           if (isVertical) {
             // Vertical mode: only set width, let height be determined by content
             plotDiv.style.width = window.innerWidth + 'px';
             // Don't set height - let it be auto-calculated
           } else {
-            // Horizontal mode: only set height, let width be determined by content  
+            // Horizontal mode: only set height, let width be determined by content
             plotDiv.style.height = window.innerHeight + 'px';
             // Don't set width - let it be auto-calculated
           }
@@ -341,7 +341,7 @@
         // Replace the entire link (which contains the picture) with the plot div
         link.parentNode.insertBefore(plotDiv, link);
         link.parentNode.removeChild(link);
-        
+
         // Load and display the graph
         fetch(jsonUrl)
           .then(response => response.json())
