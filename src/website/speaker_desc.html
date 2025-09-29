@@ -460,7 +460,7 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
     % endfor
     <tr>
       <td colspan="4" class="has-text-centered">
-        <a class="button is-link is-light" href="${dev}">Download</a>
+      <a class="button is-link is-light" href="${dev | space2url}">Download</a>
       </td>
     </tr>
   </tbody>
@@ -469,13 +469,12 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 
 <%def name="eqs_print_graph(graph, doc)">
 <%
-  origin = default_origin.replace('+', '%20').replace(' ', '%20')
+  origin = default_origin.replace('+', '%20').replace(' ', '%20').replace('&', '%26')
 %>
 <div class="box">
-  <picture class="image">
-    <source srcset="../${origin}/${graph | u}.webp" type="image/webp"></source>
-    <img src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
-  </picture>
+  <figure class="image">
+    <img class="has-ratio" src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" width="600px" height="450px">
+  </figure>
   <h4 class="title is-4">${doc}</h4>
 </div>
 </%def>
@@ -519,15 +518,15 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 
 <%def name="eqs_compare(eq)">
 <picture class="image">
-  <source srcset="../eq_compare.webp" type="image/webp"></source>
-  <img src="../eq_compare.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="500"/>
+  <source srcset="../eq_compare.webp" type="image/webp" >
+  <img src="../eq_compare.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="300" >
 </picture>
 </%def>
 
 <%def name="eqs_spider(eq)">
 <picture class="image">
-  <source srcset="../spider.webp" type="image/webp"></source>
-  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600"/>
+  <source srcset="../spider.webp" type="image/webp">
+  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600">
 </picture>
 </%def>
 
@@ -558,13 +557,23 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 	${eqs_compare(eq)}
 	<h4 class="title is-4">Comparison betweens various EQs</h4>
       </div>
+  </div>
+</article>
+% endif
+
+<article class="message is-info">
+  <div class="message-header">
+    Improvement mande my EQ
+  </div>
+  <div class="message-body">
+    <div class="content">
       <div class="content">
 	${eqs_spider(eq)}
-	<h4 class="title is-4">Improvements made by EQ</h4>
       </div>
   </div>
 </article>
 % endif
+
 </%def>
 
 
