@@ -135,7 +135,9 @@ def print_auto_graphs_seq(
 
         # Collect images to write (png, jpg, webp) and batch write using plotly.io
         graphs_to_print: list = []
-        filenames_to_print = []
+        filenames_to_print : list[str] = []
+        widths_to_print : list[int] = []
+        heights_to_print : list[int] = []
         img_width: int | None = None
         img_height: int | None = None
 
@@ -173,26 +175,27 @@ def print_auto_graphs_seq(
                 )
 
                 if needs_write:
-                    if img_width is None or img_height is None:
-                        # Use the first graph's dimensions
-                        try:
-                            img_width = int(graph.layout.width)
-                            img_height = int(graph.layout.height)
-                        except Exception:
-                            # Fallback defaults if layout is missing dimensions
-                            img_width = 1600
-                            img_height = 1200
+                    # Use the first graph's dimensions
+                    try:
+                        img_width = int(graph.layout.width)
+                        img_height = int(graph.layout.height)
+                    except Exception:
+                        # Fallback defaults if layout is missing dimensions
+                        graph.layout.width = 800
+                        graph.layout.height = 600
                     graphs_to_print.append(graph)
+                    widths_to_print.append(img_width)
+                    heights_to_print.append(img_height)
                     filenames_to_print.append(filename)
                     logger.debug("queueing graph %s", filename)
 
         if len(filenames_to_print) > 0:
             try:
                 plotly.io.write_images(
-                    graphs_to_print,
-                    filenames_to_print,
-                    width=img_width,
-                    height=img_height,
+                    fig=graphs_to_print,
+                    file=filenames_to_print,
+                    width=widths_to_print,
+                    height=heights_to_print,
                 )
             except RuntimeError as rt:
                 logger.error("writing image(s) crashed! %s", rt)
