@@ -1,0 +1,14 @@
+EQ for Zu Audio Method computed from ErinsAudioCorner data
+Preference Score 0.56 with EQ 2.40
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-17:33:48
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc   121 Hz Gain +3.00 dB Q 0.25
+Filter  2: ON PK Fc   424 Hz Gain -3.24 dB Q 0.55
+Filter  3: ON PK Fc  1288 Hz Gain -6.31 dB Q 3.00
+Filter  4: ON PK Fc  1532 Hz Gain +3.00 dB Q 3.00
+Filter  5: ON PK Fc  2862 Hz Gain +3.00 dB Q 0.25
+Filter  6: ON PK Fc  4051 Hz Gain -6.16 dB Q 1.50
+Filter  7: ON PK Fc 16239 Hz Gain -4.06 dB Q 0.47
