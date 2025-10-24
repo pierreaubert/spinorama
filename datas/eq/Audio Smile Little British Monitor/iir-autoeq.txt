@@ -1,0 +1,14 @@
+EQ for Audio Smile Little British Monitor computed from ASR data
+Preference Score 5.53 with EQ 5.98
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-10-24-17:16:47
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc    72 Hz Gain +1.59 dB Q 3.00
+Filter  2: ON PK Fc   579 Hz Gain -0.80 dB Q 1.64
+Filter  3: ON PK Fc  1010 Hz Gain +1.84 dB Q 2.59
+Filter  4: ON PK Fc  6585 Hz Gain +3.00 dB Q 1.50
+Filter  5: ON PK Fc  7059 Hz Gain -4.52 dB Q 0.78
+Filter  6: ON PK Fc 13652 Hz Gain -3.29 dB Q 1.49
+Filter  7: ON PK Fc 16239 Hz Gain +3.00 dB Q 0.25
