@@ -2275,6 +2275,134 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Audiofocus VENU 8a": {
+        "brand": "Audiofocus",
+        "model": "VENU 8a",
+        "type": "active",
+        "price": "2100",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 430,
+                        "width": 273,
+                        "depth": 291,
+                    },
+                    "weight": 11.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
+    "Audiofocus VENU 12a": {
+        "brand": "Audiofocus",
+        "model": "VENU 12a",
+        "type": "active",
+        "price": "2890",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 566,
+                        "width": 362,
+                        "depth": 357,
+                    },
+                    "weight": 18.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
+    "Audiofocus VENU 15a": {
+        "brand": "Audiofocus",
+        "model": "VENU 15a",
+        "type": "active",
+        "price": "3220",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 638,
+                        "width": 426,
+                        "depth": 412,
+                    },
+                    "weight": 22.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
+    "Audio Smile Little British Monitor": {
+        "brand": "Audio Smile",
+        "model": "Little British Monitor",
+        "type": "active",
+        "price": "530",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/audio-smile-lbm-monitor-review.66859/",
+                    "adh": "https://forums.audioholics.com/forums/threads/audiosmile-little-british-monitor-lbm-loudspeaker-review.129606/",
+                    "sos": "https://www.soundonsound.com/reviews/audiosmile-little-british-monitor",
+                },
+                "review_published": "20241024",
+                "specifications": {
+                    "size": {
+                        "height": 205,
+                        "width": 120,
+                        "depth": 135,
+                    },
+                    "weight": 1.7,
+                },
+            },
+        },
+    },
     "Audio Pro Addon T14": {
         "brand": "Audio Pro",
         "model": "Addon T14",
