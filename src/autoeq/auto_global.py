@@ -40,6 +40,14 @@ CONVERGENCE_TOLERANCE = 0.001
 # a type for variables to be optimised
 Encoded = list[float | int]
 
+def next_power_of_2(n):
+    if n <= 0:
+        return 1
+    # Find the exponent of the next power of 2
+    exponent = math.ceil(math.log2(n + 1))
+    # Raise 2 to that exponent
+    return 2**exponent
+
 
 def _resample(x1: list[float], x2: list[float], y1: list[float]) -> list[float]:
     # resample
@@ -562,7 +570,7 @@ class GlobalOptimizer(object):
         bounds = self._opt_bounds(self.max_peq)
         n_params = len(bounds)
         popsize = 15  # Default population size multiplier
-        sobol_size = popsize * n_params
+        sobol_size = next_power_of_2(popsize * n_params)
 
         # Generate Sobol sequence
         from scipy.stats import qmc
