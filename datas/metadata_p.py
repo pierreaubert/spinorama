@@ -744,7 +744,7 @@ speakers_info_p: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Pitt & Giblin",
                 "format": "webplotdigitizer",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "vendor": "https://www.pittandgiblin.com.au/flare",
                 },
@@ -775,7 +775,7 @@ speakers_info_p: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Pitt & Giblin",
                 "format": "webplotdigitizer",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "vendor": "https://www.pittandgiblin.com.au/superwax",
                 },
@@ -806,7 +806,7 @@ speakers_info_p: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Pitt & Giblin",
                 "format": "webplotdigitizer",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "vendor": "https://www.pittandgiblin.com.au/swmini",
                     "yt": "https://www.youtube.com/watch?v=Iu0GSZcqomE",

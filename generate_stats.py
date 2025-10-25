@@ -289,7 +289,7 @@ def print_eq(speakers, txt_format):
         try:
             print(format_string.format(*format_parameters))
         except TypeError:
-            logger.error('Typerror for {}'.format(format_parameters))
+            logger.error("Typerror for {}".format(format_parameters))
 
 
 def main():
