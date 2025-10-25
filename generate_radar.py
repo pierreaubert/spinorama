@@ -17,17 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import json
-import sys
-import pathlib
 import argparse
-
+import json
+import os
+import pathlib
 from pprint import pprint
-
+import sys
 
 import plotly.graph_objects as go
-
-from spinorama.speaker import write_multiformat
 
 from generate_common import (
     get_custom_logger,
@@ -116,7 +113,7 @@ def print_radar(meta_data, scale, speaker_data):
     if "pref_rating" not in measurement or "estimates" not in measurement:
         logger.debug("skipping measurement no pref_rating and no estimates")
         return
-    filename = "{}/{} {}/spider_large.png".format(
+    filename = "{}/{} {}/spider.json".format(
         CPATH_DIST_SPEAKERS, meta_data["brand"], meta_data["model"]
     )
     # TODO: to add check for dependancies
@@ -206,7 +203,11 @@ def print_radar(meta_data, scale, speaker_data):
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
         fig.update_layout(layout)
-        write_multiformat(chart=fig, filename=filename, force=True)
+        if not os.path.exists(filename) or os.path.getsize(filename) == 0:
+            content = fig.to_json()
+            if os.path.exists(os.path.dirname(filename)):
+                with open(filename, "w", encoding="utf-8") as f_d:
+                    f_d.write(content)
 
 
 def main(args):

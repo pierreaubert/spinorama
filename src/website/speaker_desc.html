@@ -473,8 +473,24 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 %>
 <div class="box">
   <figure class="image">
+<!--
     <img class="has-ratio" src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" width="${width}" height="${height}">
   </figure>
+-->
+  <div id="${origin}-${graph}"></div>
+  <script type="module">
+   import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+   let graph = "../${origin}/${graph | space2url}";
+   let graph_json = "./" + graph + ".json";
+   const spec = fetch(graph_json)
+     .then( (response) => response.json() )
+     .then( (spec) => {
+       spec.layout.title = {
+	 text: '${doc}'
+       }
+       displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, 2);
+     });
+  </script>
   <h6 class="title is-6">${doc}</h6>
 </div>
 </%def>
@@ -483,8 +499,8 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 <%def name="eqs_print_graphs(eq)">
 <%
   graphs_eq = [
-    ('filters_auto_eq', 'AutomaticEQ'),
-    ('filters_eq_full', 'Target v.s. EQ'),
+    ('filters_auto_eq', 'AutomaticEQ', 600, 400),
+    ('filters_eq_full', 'Target v.s. EQ', 600, 1200),
   ]
   graphs_spin = [
     ('filters_spin_noeq', 'Spinorama without EQ'),
@@ -510,24 +526,49 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
   ]
 %>
 
-% for graph, doc in graphs_eq:
-  ${eqs_print_graph(graph, doc)}
+% for graph, doc, width, height in graphs_eq:
+  ${eqs_print_graph(graph, doc, width, height)}
 % endfor
 
 </%def>
 
 <%def name="eqs_compare(eq)">
+<!--
 <picture class="image">
   <source srcset="../eq_compare.webp" type="image/webp" >
   <img src="../eq_compare.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="300" >
 </picture>
+-->
+<div id="eq_compare"></div>
+<script type="module">
+ import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+ const spec = fetch("../eq_compare.json")
+   .then( (response) => response.json() )
+   .then( (spec) => {
+     displayGraph("On Axis", "../eq_compare.json", "eq_compare", spec, false, 2);
+   });
+</script>
 </%def>
 
 <%def name="eqs_spider(eq)">
+<!--
 <picture class="image">
   <source srcset="../spider.webp" type="image/webp">
   <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600">
 </picture>
+-->
+<div id="spider"></div>
+<script type="module">
+ import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+ const spec = fetch("../spider.json")
+   .then( (response) => response.json() )
+   .then( (spec) => {
+       spec.layout.title = {
+	 text: 'Improvements made by EQ'
+       }
+     displayGraph("On Axis", "../spider.json", "spider", spec, false, 2);
+   });
+</script>
 </%def>
 
 <%def name="eqs_print_eqs(current_eqs)">
@@ -554,10 +595,16 @@ ${eqs_print_eqs(current_eqs)}
   </div>
   <div class="message-body">
     <div class="content">
+      <h5 class="is-5">EQ</h5>
+      ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 600, 400)}
+      </h5>
+      <h5 class="is-5">Target v.s. EQ</h5>
+      ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 600, 400)}
+      </h5>
       <h5 class="is-5">Histogram of errors</h5>
-      ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 300)}
-      ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 300)}
-      ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 300)}
+      ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200)}
+      ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200)}
+      ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200)}
     </div>
     <div class="content">
       ${eqs_spider(eq)}
@@ -574,7 +621,7 @@ ${eqs_print_eqs(current_eqs)}
   <div class="message-body">
     <div class="content">
       <div class="content">
-	${eqs_compare(eq)}
+	${eqs_print_graphs(eq)}
 	<h6 class="is-6">Comparison betweens various EQs</h6>
       </div>
   </div>

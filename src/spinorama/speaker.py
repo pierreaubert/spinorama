@@ -406,8 +406,6 @@ def print_a_graph(filename, chart, ext, force) -> int:
             content = chart.to_json()
             with open(filename, "w", encoding="utf-8") as f_d:
                 f_d.write(content)
-        else:
-            write_multiformat(chart, filename, force)
         updated += 1
     except Exception:
         logger.exception("Got unkown error for %s", filename)
@@ -648,18 +646,18 @@ def print_graphs(
                 graphs_to_print.append(graph)
                 filenames_to_print.append(filename_ext)
 
-    try:
-        if len(filenames_to_print) > 0:
-            # print('debug: calling plot io for speaker {} and graphs {}'.format(speaker, filenames_to_print))
-            plotly.io.write_images(
-                graphs_to_print,
-                filenames_to_print,
-                width=width,
-                height=height,
-            )
-            updated += 3
-    except RuntimeError as rt:
-        logger.error("writing image %s crashed! %s", filename_png, rt)
-        return
+    # try:
+    #     if len(filenames_to_print) > 0:
+    #         # print('debug: calling plot io for speaker {} and graphs {}'.format(speaker, filenames_to_print))
+    #         plotly.io.write_images(
+    #             graphs_to_print,
+    #             filenames_to_print,
+    #             width=width,
+    #             height=height,
+    #         )
+    #         updated += 3
+    # except RuntimeError as rt:
+    #     logger.error("writing image %s crashed! %s", filename_png, rt)
+    #     return
 
     return updated
