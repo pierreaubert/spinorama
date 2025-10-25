@@ -25,7 +25,8 @@ import { getUrlParameter } from './misc.js';
 
 const flagsEnableConfig = true;
 
-export function displayGraph(measurementName, jsonName, divName, graphSpec) {
+export function displayGraph(measurementName, jsonName, divName, graphSpec, withConfig, ratio) {
+
     if (typeof divName !== 'string' && !(divName instanceof HTMLElement)) {
         console.error('Error: divName must be a string ID or HTMLElement', divName);
         return Promise.reject(new Error('Invalid divName parameter'));
@@ -34,10 +35,13 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
     const config = loadConfigFromStorage(measurementName);
 
     async function run() {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
+        const w = window.innerWidth / ratio;
+        const h = window.innerHeight / ratio;
 
-        const title = graphSpec.layout.title.text;
+        let title = measurementName;
+	if ( graphSpec.layout && graphSpec.layout.title && graphSpec.layout.title.text ) {
+	    title = graphSpec.layout.title.text;
+	}
         let graphOptions = setPlotForMeasurement(measurementName, [title], [graphSpec], w, h, 1);
 
         if (graphOptions?.length >= 1) {
@@ -49,13 +53,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
                 }
             }
 
-            // Check if we're in compact mode with ploty=1
-            const plotyFlag = getUrlParameter('ploty');
-            const graphSmall = 550; // Same as plot.js
-            const isCompact = w < graphSmall || h < graphSmall;
-            const shouldDisableInteraction = plotyFlag === '1' && isCompact;
-
-            if (flagsEnableConfig && !shouldDisableInteraction) {
+            if (flagsEnableConfig && withConfig ) {
                 options = applyConfig(options, config);
 
                 createConfigMenu(divName, config, (updatedConfig) => {
@@ -71,7 +69,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
             }
 
             // Configure Plotly for compact non-interactive mode if needed
-            if (shouldDisableInteraction) {
+            if (!withConfig) {
                 if (!options.config) {
                     options.config = {};
                 }
@@ -84,12 +82,27 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
                 options.config.showTips = false;
                 options.config.responsive = true;
 
-                // Remove fixed dimensions to let it be responsive
-                if (options.layout) {
-                    delete options.layout.width;
-                    delete options.layout.height;
-                }
-            }
+		// reduce the size of title if ratio > 1
+		if (ratio > 1 && options.layout ) {
+		    const w = window.innerWidth;
+		    const d = w / 550;
+		    if ( options.layout.title && options.layout.title.font ) {
+			options.layout.title.font.size = 10+d;
+		    }
+		    if ( options.layout.xaxis && options.layout.xaxis.title && options.layout.xaxis.title.font ) {
+			options.layout.xaxis.title.font.size = 9+d;
+		    }
+		    if ( options.layout.xaxis && options.layout.xaxis.tickfont ) {
+			options.layout.xaxis.tickfont.size = 8+d;
+		    }
+		    if ( options.layout.yaxis && options.layout.yaxis.title && options.layout.yaxis.title.font ) {
+			options.layout.yaxis.title.font.size = 9+d;
+		    }
+		    if ( options.layout.yaxis && options.layout.yaxis.tickfont ) {
+			options.layout.yaxis.tickfont.size = 8+d;
+		    }
+		}
+	    }
 
             const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
             if (!targetElement) {

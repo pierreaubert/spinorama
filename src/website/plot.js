@@ -947,6 +947,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         console.log('Error: No graph is available');
     }
 
+/*
     console.log(
         'margin = {t: ' +
             layout.margin.t +
@@ -958,7 +959,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.margin.r +
             '}'
     );
-
+*/
     return { data: datas, layout: layout, config: config };
 }
 

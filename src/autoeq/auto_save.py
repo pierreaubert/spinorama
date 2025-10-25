@@ -163,7 +163,7 @@ def print_auto_graphs_seq(
             # Decide whether to write based on existing files and force flag
             force = not optim_config["generate_images_only"]
 
-            for ext in (".png", ".jpg", ".webp"):
+            for ext in (".json", ".png", ".jpg", ".webp"):
                 filename = f"{base_filename}{ext}"
                 # Ensure parent directory exists
                 pathlib.Path(filename).parent.mkdir(parents=True, exist_ok=True)
@@ -175,30 +175,35 @@ def print_auto_graphs_seq(
                 )
 
                 if needs_write:
-                    # Use the first graph's dimensions
-                    try:
-                        img_width = int(graph.layout.width)
-                        img_height = int(graph.layout.height)
-                    except Exception:
-                        # Fallback defaults if layout is missing dimensions
-                        graph.layout.width = 800
-                        graph.layout.height = 600
-                    graphs_to_print.append(graph)
-                    widths_to_print.append(img_width)
-                    heights_to_print.append(img_height)
-                    filenames_to_print.append(filename)
+                    if ext == ".json":
+                        content = graph.to_json()
+                        with open(filename, "w", encoding="utf-8") as f_d:
+                            f_d.write(content)
+                    else:
+                        # Use the first graph's dimensions
+                        try:
+                            img_width = int(graph.layout.width)
+                            img_height = int(graph.layout.height)
+                        except Exception:
+                            # Fallback defaults if layout is missing dimensions
+                            graph.layout.width = 800
+                            graph.layout.height = 600
+                        graphs_to_print.append(graph)
+                        widths_to_print.append(img_width)
+                        heights_to_print.append(img_height)
+                        filenames_to_print.append(filename)
                     logger.debug("queueing graph %s", filename)
 
-        if len(filenames_to_print) > 0:
-            try:
-                plotly.io.write_images(
-                    fig=graphs_to_print,
-                    file=filenames_to_print,
-                    width=widths_to_print,
-                    height=heights_to_print,
-                )
-            except RuntimeError as rt:
-                logger.error("writing image(s) crashed! %s", rt)
+        # if len(filenames_to_print) > 0:
+        #     try:
+        #         plotly.io.write_images(
+        #             fig=graphs_to_print,
+        #             file=filenames_to_print,
+        #             width=widths_to_print,
+        #             height=heights_to_print,
+        #         )
+        #     except RuntimeError as rt:
+        #         logger.error("writing image(s) crashed! %s", rt)
 
 
 def print_small_summary(

@@ -2391,7 +2391,7 @@ speakers_info_a: SpeakerDatabase = {
                     "adh": "https://forums.audioholics.com/forums/threads/audiosmile-little-british-monitor-lbm-loudspeaker-review.129606/",
                     "sos": "https://www.soundonsound.com/reviews/audiosmile-little-british-monitor",
                 },
-                "review_published": "20241024",
+                "review_published": "20251024",
                 "specifications": {
                     "size": {
                         "height": 205,

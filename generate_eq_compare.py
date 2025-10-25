@@ -28,7 +28,6 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.misc import need_update, write_multiformat_batch
 from spinorama.plot import plot_eqs
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -39,7 +38,7 @@ VERSION = 0.2
 def build_eq_figure_and_filename(data):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.png".format(CPATH_DIST_SPEAKERS, brand, model)
+    filename = "{}/{} {}/eq_compare.json".format(CPATH_DIST_SPEAKERS, brand, model)
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
@@ -75,16 +74,12 @@ def main(force, batch_size):
 
     for speaker_data in jsmeta.values():
         fig, filename, deps = build_eq_figure_and_filename(speaker_data)
-        recent = need_update(filename, dependencies=deps)
-        if force or recent:
-            batch.append((fig, filename))
-        # Flush batch periodically to limit memory
-        if len(batch) >= batch_size:
-            write_multiformat_batch(batch, force=True)
-            batch.clear()
 
-    if batch:
-        write_multiformat_batch(batch, force=True)
+        if not os.path.exists(filename) or os.path.getsize(filename) == 0 or force:
+            content = fig.to_json()
+            if os.path.exists(os.path.dirname(filename)):
+                with open(filename, "w", encoding="utf-8") as f_d:
+                    f_d.write(content)
 
     return 0
 
