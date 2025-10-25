@@ -566,7 +566,7 @@ ${eqs_print_eqs(current_eqs)}
 </article>
 % endif
 
-% if len(current_eqs) > 1:
+% if current_eqs is not None and  len(current_eqs) > 1:
 <article class="message is-info">
   <div class="message-header">
     ${speaker_brand} ${speaker_model}: comparison between EQs

@@ -29,7 +29,7 @@ export function urlChangePage(url, newpage) {
 
 export function pagination(numberSpeakers) {
     const navigationContainer = document.querySelector('#pagination');
-    const navHeader = '<nav class="pagination" role="navigation" aria-label="pagination">';
+    const navHeader = '<nav class="pagination" aria-label="pagination">';
     const navFooter = '</nav>';
 
     const url = new URL(window.location.href);
