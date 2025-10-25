@@ -56,5 +56,4 @@ speakers_info_z: SpeakerDatabase = {
             },
         },
     },
-
 }

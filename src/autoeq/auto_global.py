@@ -40,6 +40,7 @@ CONVERGENCE_TOLERANCE = 0.001
 # a type for variables to be optimised
 Encoded = list[float | int]
 
+
 def next_power_of_2(n):
     if n <= 0:
         return 1

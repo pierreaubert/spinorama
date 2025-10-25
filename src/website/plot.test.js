@@ -96,7 +96,7 @@ describe('computeDims', () => {
             // Use actual computed values as expected values since the code is correct
             const expectedValues = {
                 'iPhone SE, V, C, 1 graph': [375, 381],
-                'iPhone SE, V, C, 2 graphs': [375, 381], 
+                'iPhone SE, V, C, 2 graphs': [375, 381],
                 'iPhone SE landscape, H, C, 1 graph': [443, 275],
                 'iPhone SE landscape, H, C, 2 graphs': [443, 275],
                 'Tablet portrait, V, NC, 1 graph': [740, 595],
@@ -104,10 +104,13 @@ describe('computeDims', () => {
                 'Tablet landscape, H, NC, 1 graph': [1157, 700],
                 'Desktop 2k, H, NC, 1 graph': [1531, 980],
                 'Desktop 2k, H, NC, 2 graphs': [960, 860],
-                'Desktop 2k, H, NC, 3 graphs': [640, 620]
+                'Desktop 2k, H, NC, 3 graphs': [640, 620],
             };
-            
-            const [expectedWidth, expectedHeight] = expectedValues[desc] || [Math.round(computedWidth), Math.round(computedHeight)];
+
+            const [expectedWidth, expectedHeight] = expectedValues[desc] || [
+                Math.round(computedWidth),
+                Math.round(computedHeight),
+            ];
 
             expect(Math.round(computedWidth)).toBe(expectedWidth);
             expect(Math.round(computedHeight)).toBe(expectedHeight);
@@ -197,7 +200,9 @@ describe('setGraphOptions', () => {
             const graphData2 = createMockGraphData('Graph B for SpkB measured by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
             const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
-            expect(options.layout.title.text).toBe('(A) Graph A for SpkA measured by RevA<br> v.s. (B) Graph B for SpkB measured by RevB');
+            expect(options.layout.title.text).toBe(
+                '(A) Graph A for SpkA measured by RevA<br> v.s. (B) Graph B for SpkB measured by RevB'
+            );
         });
 
         it('should merge data when speakers are the same but versions differ when comparing', () => {
@@ -356,7 +361,7 @@ describe('setGraphOptions', () => {
             expect(options.data[0].legendgroup).toBeNull();
             const secondGraphDataStartIndex = graphData1[0].data.length;
             expect(options.data[secondGraphDataStartIndex].legendgroup).toBeNull();
-            
+
             // Names should have (A)/(B) prefixes added
             expect(options.data[0].name).toBe('(A) Trace 1');
             expect(options.data[secondGraphDataStartIndex].name).toBe('(B) Trace 1');
@@ -613,7 +618,9 @@ describe('setGraphOptions', () => {
             const graphData2 = createMockGraphData('Graph B for SpkB measured by RevB');
             const combinedInput = [graphData1[0], graphData2[0]];
             const options = setGraphOptions(combinedInput, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
-            expect(options.layout.title.text).toBe('(A) Graph A for SpkA measured by RevA<br> v.s. (B) Graph B for SpkB measured by RevB');
+            expect(options.layout.title.text).toBe(
+                '(A) Graph A for SpkA measured by RevA<br> v.s. (B) Graph B for SpkB measured by RevB'
+            );
         });
 
         it('should update legend group titles if speakers are the same but versions differ when comparing', () => {

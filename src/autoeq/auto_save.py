@@ -135,9 +135,9 @@ def print_auto_graphs_seq(
 
         # Collect images to write (png, jpg, webp) and batch write using plotly.io
         graphs_to_print: list = []
-        filenames_to_print : list[str] = []
-        widths_to_print : list[int] = []
-        heights_to_print : list[int] = []
+        filenames_to_print: list[str] = []
+        widths_to_print: list[int] = []
+        heights_to_print: list[int] = []
         img_width: int | None = None
         img_height: int | None = None
 
