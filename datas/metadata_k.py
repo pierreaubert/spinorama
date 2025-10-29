@@ -597,6 +597,37 @@ speakers_info_k: SpeakerDatabase = {
             }
         },
     },
+    "KEF Muo": {
+        "brand": "KEF",
+        "model": "Muo",
+        "type": "active",
+        "price": "269",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+		"quality": "low",
+                "reviews": {
+                },
+                "review_published": "20251029",
+                "data_acquisition": {"min_valid_freq": 350},
+                "specifications": {
+                    "SPL": {
+                        "peak": 90.0,
+                    },
+                    "size": {
+                        "height": 212,
+                        "width": 82,
+                        "depth": 59,
+                    },
+                    "weight": 0.74,
+                },
+            },
+        },
+    },
     "KEF Q Concerto Meta": {
         "brand": "KEF",
         "model": "Q Concerto Meta",
