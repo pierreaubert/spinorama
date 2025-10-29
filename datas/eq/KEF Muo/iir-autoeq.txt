@@ -1,0 +1,14 @@
+EQ for KEF Muo computed from Misc data
+Preference Score 5.19 with EQ 6.24
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-10-29-21:59:00
+
+Preamp: -1.8 dB
+
+Filter  1: ON PK Fc    40 Hz Gain +2.84 dB Q 2.67
+Filter  2: ON PK Fc    69 Hz Gain -2.30 dB Q 1.24
+Filter  3: ON PK Fc   134 Hz Gain -0.84 dB Q 0.37
+Filter  4: ON PK Fc   540 Hz Gain +1.62 dB Q 1.71
+Filter  5: ON PK Fc  1121 Hz Gain -1.05 dB Q 2.23
+Filter  6: ON PK Fc  6144 Hz Gain +2.42 dB Q 1.49
+Filter  7: ON PK Fc  9989 Hz Gain -5.70 dB Q 1.23
