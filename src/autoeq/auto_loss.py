@@ -319,6 +319,22 @@ def compute_scores_prep_full(
     freq = spl_h["Freq"].to_numpy()
     spl_h = spl_h.drop("Freq", axis=1)
     spl_v = spl_v.drop("Freq", axis=1)
+    
+    # Filter out angles that are not multiples of 10 (e.g., 5°, 15°, -5°, -15°)
+    def is_multiple_of_10(angle_str: str) -> bool:
+        """Check if angle string represents a multiple of 10 degrees"""
+        try:
+            # Extract numeric value from strings like "10°", "-20°", "On Axis"
+            if angle_str == "On Axis":
+                return True  # Keep On Axis
+            angle_value = int(angle_str.rstrip('°'))
+            return angle_value % 10 == 0
+        except (ValueError, AttributeError):
+            return True  # Keep non-numeric columns like "On Axis"
+    
+    # Filter columns in both DataFrames
+    spl_h = spl_h[[col for col in spl_h.columns if is_multiple_of_10(col)]]
+    spl_v = spl_v[[col for col in spl_v.columns if is_multiple_of_10(col)]]
     spl_keys = [f"H{k}" for k in spl_h] + [f"V{k}" for k in spl_v]
     weigths = np.asarray(
         [sp_weigths[k] for k in spl_h if k in sp_weigths]
