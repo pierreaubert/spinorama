@@ -2275,6 +2275,40 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Audio First Design Cadentia": {
+        "brand": "Audio First Design",
+        "model": "Cadentia",
+        "type": "passive",
+        "price": "2500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audio First Design",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "reviews": {
+                    "vendor": "https://audiofirstdesigns.uk/cadentia-3",
+                },
+                "review_published": "20251030",
+                "specifications": {
+                    "sensitivity": 3.1,
+                    "impedance": 88,
+                    "dispersion": {
+                        "horizontal": 70,
+                    },
+                    "size": {
+                        "height": 590,
+                        "width": 300,
+                        "depth": 433,
+                    },
+                    "weight": 20.8,
+                },
+            },
+        },
+    },
+
     "Audiofocus VENU 8a": {
         "brand": "Audiofocus",
         "model": "VENU 8a",
