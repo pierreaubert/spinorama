@@ -413,10 +413,14 @@ export function getReviews(value) {
 
         // add an icon if we have one
         const icons = [
+            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd.png"/>'],
             ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
             ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
             ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
+            ["JBL", '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
             ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
+            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
+            ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],
             ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
         ];
 
