@@ -342,6 +342,33 @@ speakers_info_f: SpeakerDatabase = {
             },
         },
     },
+    "Fluid Audio C35BT": {
+        "brand": "Fluid Audio",
+        "model": "C35BT",
+        "type": "active",
+        "price": "139",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-c35bt-budget-monitor-review.66989/",
+                },
+                "review_published": "20251030",
+                "specifications": {
+                    "size": {
+                        "height": 185,
+                        "width": 125,
+                        "depth": 150,
+                    },
+                    "weight": 4.52,
+                },
+            },
+        },
+    },
     "Fluid Audio FX50": {
         "brand": "Fluid Audio",
         "model": "FX50",

@@ -2275,9 +2275,9 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
-    "Audio First Design Cadentia": {
+    "Audio First Design Cadentia 3": {
         "brand": "Audio First Design",
-        "model": "Cadentia",
+        "model": "Cadentia 3",
         "type": "passive",
         "price": "2500",
         "amount": "pair",
