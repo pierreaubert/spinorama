@@ -1072,10 +1072,10 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
     return fig
 
 
-def plot_graph_onaxis(df, params, minmax_slopes, is_normalized, valid_freq_range):
+def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid_freq_range):
     fig_onaxis = make_subplots(specs=[[{"secondary_y": True}]])
 
-    curve = df["On Axis_unmelted"]
+    curve = onaxis_df
     traces = plot_graph_regression_traces(curve, "On Axis", params, valid_freq_range)
     for trace in traces:
         fig_onaxis.add_trace(trace, secondary_y=False)
