@@ -177,7 +177,8 @@ def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAUL
         return None
 
     _, slopes = get_minmax_slopes(df, False)
-    fig = plot_graph_onaxis(df, graph_params, slopes, False, valid_freq_range)
+    # Pass the actual dataframe that contains the On Axis data, not the whole dict
+    fig = plot_graph_onaxis(onaxis, df, graph_params, slopes, False, valid_freq_range)
     return fig
 
 
