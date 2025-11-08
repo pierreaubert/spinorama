@@ -400,7 +400,7 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20231221",
                 "specifications": {
                     "SPL": {"peak": 106},
-                    "sensitivity": 65,
+                    "sensitivity": 85,
                     "impedance": 3.5,
                     "size": {"height": 302, "width": 200, "depth": 280},
                     "weight": 7.8,
@@ -419,7 +419,7 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20231221",
                 "specifications": {
                     "SPL": {"peak": 106},
-                    "sensitivity": 65,
+                    "sensitivity": 85,
                     "impedance": 3.5,
                     "size": {"height": 302, "width": 200, "depth": 280},
                     "weight": 7.8,
@@ -586,7 +586,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_lsx_ii_lt/",
-                    "yt": "https://youtu.be/Tcz905gti5A?si=GCiNCa1E-Rb-vJHi",
+
                 },
                 "review_published": "20240916",
                 "specifications": {

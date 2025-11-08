@@ -2293,8 +2293,8 @@ speakers_info_a: SpeakerDatabase = {
                 },
                 "review_published": "20251030",
                 "specifications": {
-                    "sensitivity": 3.1,
-                    "impedance": 88,
+                    "sensitivity": 88,
+                    "impedance": 3.1,
                     "dispersion": {
                         "horizontal": 70,
                     },
