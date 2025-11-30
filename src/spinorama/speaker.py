@@ -237,7 +237,13 @@ def display_reflection_vertical(
         return plot_graph(df["Vertical Reflections_unmelted"], graph_params, valid_freq_range)
 
 
-def display_spl(df, axis, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+def display_spl(
+    df,
+    axis,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
+):
     try:
         if axis not in df:
             return None
@@ -245,29 +251,51 @@ def display_spl(df, axis, graph_params=plot_params_default, valid_freq_range=DEF
         logger.warning("Display SPL failed with %s", ke)
         return None
     else:
-        return plot_graph_spl(df[axis], graph_params, valid_freq_range)
+        return plot_graph_spl(df[axis], graph_params, valid_freq_range, include_all_angles)
 
 
 def display_spl_horizontal(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Horizontal_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
-def display_spl_vertical(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
-    return display_spl(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
+def display_spl_vertical(
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
+):
+    return display_spl(
+        df, "SPL Vertical_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_spl_horizontal_normalized(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_spl_vertical_normalized(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_contour(
@@ -512,6 +540,27 @@ def print_graphs(
             ("Early Reflections", display_reflection_early),
             ("Horizontal Reflections", display_reflection_horizontal),
             ("Vertical Reflections", display_reflection_vertical),
+        ):
+            logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+            try:
+                graph = op_call(df_speaker, graph_params, valid_freq_range)
+                if graph is None:
+                    logger.info(
+                        "display %s failed for %s %s %s", op_title, speaker, version, origin
+                    )
+                    continue
+                graphs[op_title] = graph
+            except KeyError as ke:
+                logger.error(
+                    "display %s failed with a key error (%s) for %s %s %s",
+                    op_title,
+                    str(ke),
+                    speaker,
+                    version,
+                    origin,
+                )
+
+        for op_title, op_call in (
             ("SPL Horizontal", display_spl_horizontal),
             ("SPL Vertical", display_spl_vertical),
             ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
@@ -519,7 +568,9 @@ def print_graphs(
         ):
             logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
             try:
-                graph = op_call(df_speaker, graph_params, valid_freq_range)
+                graph = op_call(
+                    df_speaker, graph_params, valid_freq_range, include_all_angles=True
+                )
                 if graph is None:
                     logger.info(
                         "display %s failed for %s %s %s", op_title, speaker, version, origin
