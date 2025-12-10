@@ -19,10 +19,11 @@
 echo "Update starts"
 mkdir -p .cache
 mkdir -p build/website
+export THEPYTHON=python3.12
 export PYTHONPATH=src:src/website:src/spinorama:.
 
 # check meta
-command=$(python3 ./scripts/check_meta.py)
+command=$(${THEPYTHON} ./scripts/check_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO checking metadata ($status)";
@@ -35,7 +36,7 @@ fi
 ./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
-command=$(python3 ./generate_graphs.py --update-cache)
+command=$(${THEPYTHON} ./generate_graphs.py --update-cache)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate graph!"
@@ -48,7 +49,7 @@ fi
 rm -f dist/json/*
 
 # recompute metadata for all speakers
-command=$(python3 ./generate_meta.py)
+command=$(${THEPYTHON} ./generate_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate meta!"
@@ -61,7 +62,7 @@ fi
 ./scripts/update_pictures.sh
 
 # generate eq filters
-command=$(python3 ./generate_peqs.py --generate-images-only)
+command=$(${THEPYTHON} ./generate_peqs.py --generate-images-only)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate eq filters!"
@@ -71,7 +72,7 @@ else
 fi
 
 # generate radar
-command=$(python3 ./generate_radar.py)
+command=$(${THEPYTHON} ./generate_radar.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate radar!"
@@ -81,7 +82,7 @@ else
 fi
 
 # generate eq_compare
-command=$(python3 ./generate_eq_compare.py)
+command=$(${THEPYTHON} ./generate_eq_compare.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate EQ compare!"
@@ -91,7 +92,7 @@ else
 fi
 
 # generate status
-command=$(python3 ./generate_stats.py)
+command=$(${THEPYTHON} ./generate_stats.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics!"
@@ -102,7 +103,7 @@ fi
 
 # generate status
 today="$(date "+%Y-%m-%d")"
-command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
+command=$(${THEPYTHON} ./generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics in csv!"
@@ -112,7 +113,7 @@ else
 fi
 
 # generate list of svgs
-command=$(python3 ./scripts/svg2symbols.py > build/website/symbols.html)
+command=$(${THEPYTHON} ./scripts/svg2symbols.py > build/website/symbols.html)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after update symbols!"
@@ -144,7 +145,7 @@ else
     echo "OK after update reviewers"
 fi
 
-command=$(python3 ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
+command=$(${THEPYTHON} ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate HTML!"

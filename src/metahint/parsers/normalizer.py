@@ -8,7 +8,7 @@ from ..schema import ConfidenceValue, Range, SpeakerSpecs
 from .rules import canonicalize
 
 _NUM_RE = re.compile(r"-?\d+(?:[\.,]\d+)?")
-_RANGE_RE = re.compile(r"(\d+(?:[\.,]\d+)?)\s*(?:-|to|–|—)\s*(\d+(?:[\.,]\d+)?)", re.I)
+_RANGE_RE = re.compile(r"(\d+(?:[\.,]\d+)?)\s*[a-z]*\s*(?:-|to|–|—)\s*(\d+(?:[\.,]\d+)?)", re.I)
 
 
 def _to_float(s: str) -> float:
@@ -40,26 +40,27 @@ def _parse_range_hz(value: str) -> Range | None:
 
 def _parse_dims(value: str) -> Dict[str, ConfidenceValue]:
     # Expect patterns like: "320.7 x 1143.8 x 428.3mm  / 12.6 x 45 x 16.9 in"
-    parts = [p.strip() for p in re.split(r"<br\s*/?>|/|\\n", value, flags=re.I)]
+    # or "320.7 x 1143.8 x 428.3mm 12.6 x 45 x 16.9 in" (after HTML cleaning)
     out: Dict[str, ConfidenceValue] = {}
-    if parts:
-        # Attempt mm then inches
-        if "mm" in parts[0].lower():
-            nums = _NUM_RE.findall(parts[0])
-            if len(nums) >= 3:
-                w, h, d = map(_to_float, nums[:3])
-                out["mm"] = ConfidenceValue(
-                    value={"w": w, "h": h, "d": d}, confidence="high", source_hint="specs_html"
-                )
-        for p in parts[1:]:
-            if "in" in p.lower():
-                nums = _NUM_RE.findall(p)
-                if len(nums) >= 3:
-                    w, h, d = map(_to_float, nums[:3])
-                    out["in"] = ConfidenceValue(
-                        value={"w": w, "h": h, "d": d}, confidence="high", source_hint="specs_html"
-                    )
-                break
+
+    # Look for mm dimensions
+    mm_pattern = r"([\d.,]+)\s*x\s*([\d.,]+)\s*x\s*([\d.,]+)\s*mm"
+    mm_match = re.search(mm_pattern, value, re.I)
+    if mm_match:
+        w, h, d = map(_to_float, mm_match.groups())
+        out["mm"] = ConfidenceValue(
+            value={"w": w, "h": h, "d": d}, confidence="high", source_hint="specs_html"
+        )
+
+    # Look for inch dimensions
+    in_pattern = r"([\d.,]+)\s*x\s*([\d.,]+)\s*x\s*([\d.,]+)\s*in"
+    in_match = re.search(in_pattern, value, re.I)
+    if in_match:
+        w, h, d = map(_to_float, in_match.groups())
+        out["in"] = ConfidenceValue(
+            value={"w": w, "h": h, "d": d}, confidence="high", source_hint="specs_html"
+        )
+
     return out
 
 

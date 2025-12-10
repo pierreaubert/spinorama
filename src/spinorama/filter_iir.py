@@ -220,7 +220,7 @@ class Biquad:
     def log_result(self, f: float) -> float:
         try:
             result = 20 * math.log10(self.result(f))
-        except:
+        except (ValueError, ZeroDivisionError):
             result = -200
         return result
 
