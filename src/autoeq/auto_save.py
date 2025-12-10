@@ -116,7 +116,7 @@ def print_auto_graphs_seq(
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
 
-        print('DEBUG: #{} freq0={}'.format(len(freq), freq[0]))
+        # print('DEBUG: #{} freq0={}'.format(len(freq), freq[0]))
         graphs = auto_graph_results(
             speaker_name,
             speaker_origin,
@@ -173,7 +173,7 @@ def print_auto_graphs_seq(
                     or not os.path.exists(filename)
                     or (os.path.exists(filename) and os.path.getsize(filename) == 0)
                 )
-                print('1: {} {}'.format(filename, needs_write))
+                # print('1: {} {}'.format(filename, needs_write))
                 if needs_write:
                     if ext == ".json":
                         content = graph.to_json()
