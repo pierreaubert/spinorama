@@ -30,7 +30,7 @@ def test_parse_and_normalize_basic_spec_list() -> None:
     specs = assemble_specs(norm, source_url="https://example.com/product")
 
     # Key expectations
-    assert specs.sensitivity.value == 88
+    assert specs.sensitivity_db_2p83v_1m.value == 88
     assert specs.impedance["min_ohms"].value == 3.6
 
     dims_mm = specs.dimensions["mm"].value

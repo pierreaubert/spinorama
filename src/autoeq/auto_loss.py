@@ -35,7 +35,7 @@ from autoeq.auto_misc import have_full_measurements
 # cython import
 try:
     from compute_scores_rust import c_cea2034, c_score_peq_approx
-except:
+except ImportError:
     from spinorama.compute_scores_cython.compute_scores_cython import c_cea2034, c_score_peq_approx
 
 
@@ -323,14 +323,13 @@ def compute_scores_prep_full(
     # Filter out angles that are not multiples of 10 (e.g., 5°, 15°, -5°, -15°)
     def is_multiple_of_10(angle_str: str) -> bool:
         """Check if angle string represents a multiple of 10 degrees"""
-        try:
-            # Extract numeric value from strings like "10°", "-20°", "On Axis"
-            if angle_str == "On Axis":
-                return True  # Keep On Axis
-            angle_value = int(angle_str.rstrip('°'))
-            return angle_value % 10 == 0
-        except (ValueError, AttributeError):
-            return True  # Keep non-numeric columns like "On Axis"
+        import re
+        if angle_str == "On Axis":
+            return True
+        match = re.match(r'^(-?\d+)°$', angle_str)
+        if match:
+            return int(match.group(1)) % 10 == 0
+        return True  # Keep non-numeric columns
     
     # Filter columns in both DataFrames
     spl_h = spl_h[[col for col in spl_h.columns if is_multiple_of_10(col)]]
@@ -384,13 +383,13 @@ def compute_scores_prep_cea2034(
 
 
 def l2_loss(freq: Vector, local_target: list[Vector], peq: Peq) -> float:
-    # L2 norm
-    return np.linalg.norm(local_target + peq_spl(freq, peq), 2)
+    # L2 norm with explicit array conversion for numerical stability
+    return float(np.linalg.norm(np.asarray(local_target) + np.asarray(peq_spl(freq, peq)), 2))
 
 
 def leastsquare_loss(freq: Vector, local_target: list[Vector], peq: Peq, iterations: int) -> float:
-    # sum of L2 norms if we have multiple targets
-    return math.sqrt(np.square([l2_loss(freq, lt, peq) for lt in local_target]).sum())
+    # L2 norm of individual losses - more numerically stable than sqrt(sum(square()))
+    return float(np.linalg.norm([l2_loss(freq, lt, peq) for lt in local_target], 2))
 
 
 def flat_loss(
@@ -527,10 +526,9 @@ def loss(
     if which_loss == "score_loss":
         score = score_loss(df_speaker, peq)
         flatness = leastsquare_loss(freq, local_target, peq, iterations)
-        # flatness = l2_loss(freq, local_target[1], peq)
         # add flatness as a penalty or score optim goes crazy (pir parameter)
-        # print("debug: score {} flatness {}".format(score, flatness))
-        return score + flatness / 20.0
+        flatness_weight = optim_config.get("flatness_weight", 0.05)
+        return score + flatness * flatness_weight
     if which_loss == "combine_loss":
         weigths = optim_config["loss_weigths"]
         return (

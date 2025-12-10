@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 import unittest
+import threading
+import http.server
+import socketserver
+import os
+import time
+import socket
 
 known_measurements = [
     "CEA2034",
@@ -39,14 +45,67 @@ from selenium.webdriver.chrome.service import Service
 
 
 PROD = "https://www.spinorama.org"
-# DEV = "https://dev.spinorama.org"
-DEV = "http://localhost:8888"
 COMPARE = "/compare.html"
 SIMILAR = "/similar.html"
 SCORES = "/scores.html"
 
 
+def find_free_port():
+    """Find a free port to use for the test server"""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("", 0))
+        s.listen(1)
+        port = s.getsockname()[1]
+    return port
+
+
 class SpinoramaWebsiteTests(unittest.TestCase):
+    server = None
+    server_thread = None
+    DEV = None
+
+    @classmethod
+    def setUpClass(cls):
+        """Start HTTP server before all tests"""
+        # Get the project root directory
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        dist_dir = os.path.join(project_root, "dist")
+
+        if not os.path.exists(dist_dir):
+            raise RuntimeError(f"dist directory not found at {dist_dir}")
+
+        # Find a free port
+        port = find_free_port()
+        cls.DEV = f"http://localhost:{port}"
+
+        # Change to dist directory for serving
+        os.chdir(dist_dir)
+
+        # Create server with address reuse enabled
+        Handler = http.server.SimpleHTTPRequestHandler
+
+        class ReuseAddrTCPServer(socketserver.TCPServer):
+            allow_reuse_address = True
+
+        cls.server = ReuseAddrTCPServer(("localhost", port), Handler)
+
+        # Start server in a background thread
+        cls.server_thread = threading.Thread(target=cls.server.serve_forever)
+        cls.server_thread.daemon = True
+        cls.server_thread.start()
+
+        # Give server time to start
+        time.sleep(0.5)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Stop HTTP server after all tests"""
+        if cls.server:
+            cls.server.shutdown()
+            cls.server.server_close()
+        if cls.server_thread:
+            cls.server_thread.join(timeout=1)
+
     def setUp(self):
         service = Service()
         options = webdriver.ChromeOptions()
@@ -59,15 +118,17 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.driver.quit()
 
     def test_index_smoke(self):
-        self.driver.get(DEV)
+        self.driver.get(self.DEV)
         title = self.driver.title
         self.assertIn("collection", title)
 
     def test_index_search_elac(self):
-        self.driver.get("{}/{}".format(DEV, "?search=Elac"))
-        self.driver.implicitly_wait(2)
+        self.driver.get("{}/{}".format(self.DEV, "?search=Elac"))
 
-        elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+        # Wait for the Elac speaker to appear
+        elac = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_element_located((By.ID, "Elac-Carina-BS243-4"))
+        )
         self.assertIsNotNone(elac)
 
         with self.assertRaises(NoSuchElementException):
@@ -77,7 +138,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
             revel = self.driver.find_element(by=By.ID, value="Revel-F35")
 
     def test_index_search_elac_menu(self):
-        self.driver.get(DEV)
+        self.driver.get(self.DEV)
         self.driver.implicitly_wait(2)
 
         search_box = self.driver.find_element(by=By.ID, value="searchInput")
@@ -90,24 +151,29 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertIsNotNone(search_box)
 
     def test_index_search_genelec(self):
-        self.driver.get("{}/{}".format(DEV, "?search=Genelec"))
-        self.driver.implicitly_wait(2)
+        self.driver.get("{}/{}".format(self.DEV, "?search=Genelec"))
 
-        genelec = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        # Wait for the Genelec speaker to appear
+        genelec = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_element_located((By.ID, "Genelec-8361A"))
+        )
         self.assertIsNotNone(genelec)
 
         with self.assertRaises(NoSuchElementException):
             self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
 
     def test_filters_brand(self):
-        self.driver.get("{}?{}".format(DEV, "page=1&count=100&brand=Elac"))
-        self.driver.implicitly_wait(3)
-        elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+        self.driver.get("{}?{}".format(self.DEV, "page=1&count=100&brand=Elac"))
+
+        # Wait for the Elac speaker to appear
+        elac = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_element_located((By.ID, "Elac-Carina-BS243-4"))
+        )
         self.assertIsNotNone(elac)
         self.assertTrue(elac.is_displayed())
 
     def test_filters_brand_menu(self):
-        self.driver.get("{}?{}".format(DEV, "page=1&count=100"))
+        self.driver.get("{}?{}".format(self.DEV, "page=1&count=100"))
         self.driver.implicitly_wait(3)
 
         WebDriverWait(self.driver, 1).until(
@@ -124,15 +190,17 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertIsNotNone(brand_box)
 
     def test_filters_price(self):
-        self.driver.get("{}?{}".format(DEV, "count=10000&inputPriceMin=120&inputPriceMax=200"))
-        self.driver.implicitly_wait(2)
+        self.driver.get("{}?{}".format(self.DEV, "count=10000&inputPriceMin=120&inputPriceMax=200"))
 
-        a306 = self.driver.find_element(by=By.ID, value="Thomann-Swissonic-A306")
+        # Wait for the Thomann speaker to appear
+        a306 = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_element_located((By.ID, "Thomann-Swissonic-A306"))
+        )
         self.assertIsNotNone(a306)
         self.assertTrue(a306.is_displayed())
 
     def test_filters_price_menu(self):
-        self.driver.get("{}?{}".format(DEV, "count=10000"))
+        self.driver.get("{}?{}".format(self.DEV, "count=10000"))
         self.driver.implicitly_wait(2)
 
         WebDriverWait(self.driver, 1).until(
@@ -156,12 +224,12 @@ class SpinoramaWebsiteTests(unittest.TestCase):
 
     def test_compare_basic(self):
         compare_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor&speaker1=Neumann+KH+150&origin1=ASR&version1=asr&measurement=CEA2034"
-        self.driver.get("{}/{}?{}".format(DEV, COMPARE, compare_basic))
+        self.driver.get("{}/{}?{}".format(self.DEV, COMPARE, compare_basic))
         self.driver.implicitly_wait(2)
 
     def test_compare_measurements_without_low_freq(self):
         compare_basic = "speaker0=Genelec+8351A&origin0=Princeton&version0=princeton&measurement=CEA2034&speaker1=Polk+Audio+Legend+L200&origin1=Misc&version1=misc-audioholics"
-        self.driver.get("{}/{}?{}".format(DEV, COMPARE, compare_basic))
+        self.driver.get("{}/{}?{}".format(self.DEV, COMPARE, compare_basic))
         self.driver.implicitly_wait(2)
 
     def test_compare_allgraphs(self):
@@ -169,7 +237,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         for measurement in known_measurements:
             self.driver.get(
                 "{}/{}?{}&measurement={}".format(
-                    DEV, COMPARE, compare_basic, measurement.replace(" ", "+")
+                    self.DEV, COMPARE, compare_basic, measurement.replace(" ", "+")
                 )
             )
             self.driver.implicitly_wait(2)
@@ -178,7 +246,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         similar_basic = (
             "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor"
         )
-        self.driver.get("{}/{}?{}".format(DEV, SIMILAR, similar_basic))
+        self.driver.get("{}/{}?{}".format(self.DEV, SIMILAR, similar_basic))
         self.driver.implicitly_wait(2)
 
     def test_similar_allgraphs(self):
@@ -186,19 +254,19 @@ class SpinoramaWebsiteTests(unittest.TestCase):
             similar_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor"
             self.driver.get(
                 "{}/{}?{}&graphs={}".format(
-                    DEV, SIMILAR, similar_basic, measurement.replace(" ", "+")
+                    self.DEV, SIMILAR, similar_basic, measurement.replace(" ", "+")
                 )
             )
             self.driver.implicitly_wait(2)
 
     def test_scores_basic(self):
         scores_basic = "quality=High&sort=score&count=1000"
-        self.driver.get("{}/{}?{}".format(DEV, SCORES, scores_basic))
+        self.driver.get("{}/{}?{}".format(self.DEV, SCORES, scores_basic))
         self.driver.implicitly_wait(2)
 
     def test_scores_check_filters(self):
         scores_basic = "quality=High&sort=score&count=1000&weightMin=50"
-        self.driver.get("{}/{}?{}".format(DEV, SCORES, scores_basic))
+        self.driver.get("{}/{}?{}".format(self.DEV, SCORES, scores_basic))
         self.driver.implicitly_wait(2)
 
 
