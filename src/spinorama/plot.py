@@ -782,7 +782,7 @@ def plot_spinorama(
 
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
-    # # print('DI min={} max={}'.format(di_min, di_max))
+    # print('DI min={} max={}'.format(di_min, di_max))
 
     fig.add_traces(lines)
     for t in lines_di:
