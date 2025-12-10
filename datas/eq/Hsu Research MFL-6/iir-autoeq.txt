@@ -1,0 +1,14 @@
+EQ for Hsu Research MFL-6 computed from ASR data
+Preference Score 3.56 with EQ 5.94
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-12-10-11:15:10
+
+Preamp: -3.1 dB
+
+Filter  1: ON PK Fc    80 Hz Gain +4.83 dB Q 0.42
+Filter  2: ON PK Fc   144 Hz Gain -5.35 dB Q 0.80
+Filter  3: ON PK Fc   382 Hz Gain +1.01 dB Q 2.86
+Filter  4: ON PK Fc   487 Hz Gain -2.05 dB Q 2.11
+Filter  5: ON PK Fc  3405 Hz Gain +4.93 dB Q 1.32
+Filter  6: ON PK Fc  4654 Hz Gain -7.48 dB Q 1.33
+Filter  7: ON PK Fc  9648 Hz Gain -2.86 dB Q 1.39
