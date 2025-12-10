@@ -475,6 +475,34 @@ speakers_info_h: SpeakerDatabase = {
             },
         },
     },
+    "Hsu Research MFL-6": {
+        "brand": "Hsu Research",
+        "model": "MFL-6",
+        "type": "passive",
+        "price": "280",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-mfl-6-home-theater-speaker-review.67955/",
+                },
+                "review_published": "20251209",
+                "specifications": {
+                    "impedance": 8,
+                    "size": {
+                        "height": 390,
+                        "width": 203,
+                        "depth": 146,
+                    },
+                    "weight": 5.9,
+                },
+            },
+        },
+    },
     "HTD Level THREE": {
         "brand": "HTD",
         "model": "Level THREE",
