@@ -28,12 +28,23 @@ import os
 import pathlib
 import re
 import sys
+import resource
 from typing import Callable, Any
 import warnings
 
 import flammkuchen as fl
 
 import tables
+
+# Set file descriptor limit
+try:
+    soft_limit, hard_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+    desired_limit = 1000000
+    new_soft_limit = min(desired_limit, hard_limit)
+    if new_soft_limit > soft_limit:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (new_soft_limit, hard_limit))
+except Exception as e:
+    print(f"Warning: Could not set file descriptor limit: {e}", file=sys.stderr)
 
 import datas.metadata as metadata
 
