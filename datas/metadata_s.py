@@ -75,6 +75,38 @@ speakers_info_s: SpeakerDatabase = {
             # },
         },
     },
+    "Sigberg Audio SBS.1 Gen 2": {
+        "brand": "Sigberg Audio",
+        "model": "SBS.1 Gen 2",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v1",
+        "measurements": {
+            "vendor-v1": {
+                "origin": "Vendors-Sigberg Audio",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review_published": "20251216",
+                "notes": "Anechoic data measured by Seas with a subwoofer",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-development-thread-sigberg-audio-sbs-generation-2.65962",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 116,
+                    },
+                    "size": {
+                        "height": 410,
+                        "width": 190,
+                        "depth": 230,
+                    },
+                    "weight": 9.5,
+                },
+            },
+        },
+    },
     "Salk WoW1": {
         "brand": "Salk",
         "model": "WoW1",

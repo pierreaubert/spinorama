@@ -2196,7 +2196,7 @@ speakers_info_d: SpeakerDatabase = {
         },
     },
     "Dynaudio Contour 20i": {
-        "skip": true,
+        "skip": True,
         "brand": "Dynaudio",
         "model": "Contour 20i",
         "type": "passive",
