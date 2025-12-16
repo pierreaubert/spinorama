@@ -99,6 +99,16 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
                         freqs.append(current_freq)
                         dbs.append(float(words[1]))
                     continue
+                elif len(words) == 3:
+                    freq = words[0]
+                    db = words[1]
+                    phase = words[2]
+                    # skip first line
+                    if freq[0] != "F" and float(freq) >= 20 and float(freq) <= 20000:
+                        freqs.append(float(freq))
+                        dbs.append(float(db))
+                        phases.append(float(phase))
+                    continue
 
                 # freq db phase
                 words = l.split()
