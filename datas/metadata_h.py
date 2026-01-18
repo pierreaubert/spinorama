@@ -463,7 +463,7 @@ speakers_info_h: SpeakerDatabase = {
         "model": "CCB-8",
         "type": "passive",
         "price": "389",
-        "amount": "pair",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "asr",
         "measurements": {

@@ -2279,8 +2279,8 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "Audio First Design",
         "model": "Cadentia 3",
         "type": "passive",
-        "price": "2500",
-        "amount": "pair",
+        "price": "3800",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "vendor",
         "measurements": {
