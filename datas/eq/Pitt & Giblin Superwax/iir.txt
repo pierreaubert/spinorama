@@ -1,0 +1,13 @@
+EQ for Pitt & Giblin Superwax computed from Vendors-Pitt & Giblin data
+Preference Score 7.79 with EQ 8.03
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-18:46:35
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    27 Hz Gain +2.99 dB Q 0.77
+Filter  2: ON PK Fc    32 Hz Gain -4.99 dB Q 2.72
+Filter  3: ON PK Fc    34 Hz Gain +2.91 dB Q 0.50
+Filter  4: ON PK Fc    44 Hz Gain -4.51 dB Q 1.22
+Filter  5: ON PK Fc    92 Hz Gain -2.11 dB Q 0.75
+Filter  6: ON PK Fc  3650 Hz Gain -0.86 dB Q 0.29

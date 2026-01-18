@@ -413,10 +413,14 @@ export function getReviews(value) {
 
         // add an icon if we have one
         const icons = [
+            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd.png"/>'],
             ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
             ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
             ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
+            ["JBL", '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
             ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
+            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
+            ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],
             ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
         ];
 
@@ -509,4 +513,31 @@ export function getDecoding(key) {
         return 'sync';
     }
     return 'async';
+}
+
+// Get URL parameter value
+export function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// Check if feature flag is enabled
+export function isPlotlyEnabled() {
+    const plotlyFlag = getUrlParameter('plotly');
+    return plotlyFlag === 'true' || plotlyFlag === '1';
+}
+
+// Check if ploty flag is enabled AND we're in compact mode (mobile-like)
+export function shouldDisablePlotlyInteraction() {
+    const plotyFlag = getUrlParameter('ploty');
+    if (plotyFlag !== '1') {
+        return false;
+    }
+
+    // Use the same compact detection logic as the plotting code
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const graphSmall = 550; // Same constant as in plot.js
+
+    return windowWidth < graphSmall || windowHeight < graphSmall;
 }

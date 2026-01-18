@@ -276,7 +276,7 @@ def generate_speaker(
                     )
                 )
                 print("Maybe you forgot to cache the computations? Try running:")
-                print("./generate_graph.py --speaker={} --use-cache".format(key_error))
+                print("./generate_graphs.py --speaker={} --uupdate-cache".format(key_error))
                 print("./generate_meta.py")
 
 
@@ -365,9 +365,9 @@ def main():
                     continue
                 default_name = os.path.basename(default)
                 main_df[speaker_name][origin_name][default_name] = {}
-                graphs = glob(default + "/*_large.png")
+                graphs = glob(default + "/*.json")
                 for graph in graphs:
-                    g = os.path.basename(graph).replace("_large.png", "")
+                    g = os.path.basename(graph).replace(".json", "")
                     main_df[speaker_name][origin_name][default_name][g] = {}
 
     # configure Mako

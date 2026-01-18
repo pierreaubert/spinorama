@@ -32,7 +32,7 @@ speakers_info_c: SpeakerDatabase = {
                 "reviews": {
                     "akr": "",
                 },
-                "review_published": "20251012",
+                "review_published": "20250812",
                 "notes": "Data is valid above 500Hz; On Axis is valid below 500Hz.",
                 "data_acquisition": {
                     "min_valid_freq": 500,
@@ -171,6 +171,35 @@ speakers_info_c: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/purifi-spk5-speaker-review-prototype.17806/",
+            },
+        },
+    },
+    "Cerwin Vega LA165": {
+        "brand": "Cerwin Vega",
+        "model": "LA165",
+        "type": "passive",
+        "price": "270",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/5LLEbOTBoCk?si=Y5WVEfV6ZEn6JjqB",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "size": {
+                        "height": 347,
+                        "width": 203,
+                        "depth": 315,
+                    },
+                    "weight": 13.5,
+                },
             },
         },
     },

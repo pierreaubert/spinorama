@@ -74,11 +74,12 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .ve
 mkdir -p build dist
 
 # compile cython
-PYTHONPATH=src cd src/spinorama/compute_scores_cython && \
-    python$PYVERSION setup.py build_ext && \
+cd src/spinorama/compute_scores_cython && \
+    PYTHONPATH=../../.. python$PYVERSION setup.py build_ext --inplace && \
     rm -f compute_scores_cython.so && \
-    ln -s compute_scores_cython.cpython-${PYVERSION/./}-darwin.so compute_scores_cython.so && \
-    cd ../../../
+    SO_FILE=$(ls compute_scores_cython.cpython-*.so 2>/dev/null | head -1) && \
+    if [ -n "$SO_FILE" ]; then ln -s "$SO_FILE" compute_scores_cython.so; fi && \
+    cd ../../..
 
 # compile rust
 cd src/spinorama/compute_scores_rust && \

@@ -1,0 +1,14 @@
+EQ for Rockville RockTower 68B computed from ErinsAudioCorner data
+Preference Score -0.04 with EQ 4.44
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-17:24:52
+
+Preamp: -2.4 dB
+
+Filter  1: ON PK Fc    60 Hz Gain +3.00 dB Q 0.25
+Filter  2: ON PK Fc    83 Hz Gain -7.83 dB Q 2.06
+Filter  3: ON PK Fc   204 Hz Gain +3.00 dB Q 3.00
+Filter  4: ON PK Fc   299 Hz Gain -3.41 dB Q 1.05
+Filter  5: ON PK Fc   820 Hz Gain -2.75 dB Q 2.99
+Filter  6: ON PK Fc  1642 Hz Gain -3.84 dB Q 3.00
+Filter  7: ON PK Fc  7566 Hz Gain -6.71 dB Q 0.42

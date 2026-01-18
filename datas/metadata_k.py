@@ -1,353 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
-note_kef_data = "the off-axis average curves are truncated at 200Hz as this is close to the LF cut-off limit of our anechoic chamber. The on-axis LF response has been compensated using ground plane measurements carried out in free-field and is therefore valid only for that singular curve."
-
-
 speakers_info_k: SpeakerDatabase = {
-    "Kali IN-5": {
-        "brand": "Kali",
-        "model": "IN-5",
-        "type": "active",
-        "price": "700",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-5/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-in-5-studio-monitor-review.22487/",
-                },
-                "review_published": "20210415",
-                "specifications": {
-                    "size": {
-                        "height": 382,
-                        "width": 206,
-                        "depth": 286,
-                    },
-                    "weight": 8.4,
-                },
-            },
-            "vendor": {
-                "origin": "Vendors-Kali",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20240909",
-                "quality": "medium",
-            },
-        },
-    },
-    "Kali IN-8": {
-        "brand": "Kali",
-        "model": "IN-8",
-        "type": "active",
-        "price": "760",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v1/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v1-3-way-studio-monitor-review.24241/#post-818243",
-                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
-                },
-                "review_published": "20210615",
-                "specifications": {
-                    "size": {
-                        "height": 441,
-                        "width": 285,
-                        "depth": 254,
-                    },
-                    "weight": 10.4,
-                },
-            },
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
-                "review_published": "20200114",
-            },
-            "vendor": {
-                "origin": "Vendors-Kali",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20240909",
-                "quality": "medium",
-            },
-        },
-    },
-    "Kali IN-8v2": {
-        "brand": "Kali",
-        "model": "IN-8v2",
-        "type": "active",
-        "price": "760",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v2",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v2-second-wave-3-way-studio-monitor-review.24586/",
-                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
-                },
-                "review_published": "20210615",
-                "specifications": {
-                    "size": {
-                        "height": 441,
-                        "width": 285,
-                        "depth": 254,
-                    },
-                    "weight": 10.4,
-                },
-            },
-        },
-    },
-    "Kali LP-6": {
-        "brand": "Kali",
-        "model": "LP-6",
-        "type": "active",
-        "price": "300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/",
-            },
-        },
-    },
-    "Kali LP-6v2": {
-        "brand": "Kali",
-        "model": "LP-6v2",
-        "type": "active",
-        "price": "300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-6v2/",
-                    "yt": "https://www.youtube.com/watch?v=Wj47W9EP4tQ&t=2s",
-                },
-                "review_published": "20211025",
-                "specifications": {
-                    "size": {
-                        "height": 359,
-                        "width": 222,
-                        "depth": 260,
-                    },
-                    "weight": 7.01,
-                },
-            },
-        },
-    },
-    "Kali LP-8": {
-        "brand": "Kali",
-        "model": "LP-8",
-        "type": "active",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/kali-audio-lp-8/conclusion",
-            },
-        },
-    },
-    "Kali LP-8v2": {
-        "brand": "Kali",
-        "model": "LP-8v2",
-        "type": "active",
-        "price": "300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/",
-                },
-                "review_published": "20211114",
-                "specifications": {
-                    "size": {
-                        "height": 419,
-                        "width": 254,
-                        "depth": 286,
-                    },
-                    "weight": 9.0,
-                },
-            },
-        },
-    },
-    "Kali LP-UNF": {
-        "brand": "Kali",
-        "model": "LP-UNF",
-        "type": "active",
-        "price": "300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp_unf/",
-                    "yt": "https://youtu.be/hOkMVbW7Yts",
-                },
-                "review_published": "20240312",
-                "specifications": {
-                    "SPL": {
-                        "peak": 103,
-                    },
-                    "size": {
-                        "height": 254,
-                        "width": 164,
-                        "depth": 186,
-                    },
-                    "weight": 3.2,
-                },
-            },
-        },
-    },
-    "Kali SM-5": {
-        "brand": "Kali",
-        "model": "SM-5",
-        "type": "active",
-        "price": "1700",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "yt": "https://youtu.be/EMm5IV95X_U",
-                },
-                "review_published": "2024xxxx",
-                "specifications": {
-                    "SPL": {
-                        "peak": 117,
-                    },
-                    "size": {
-                        "height": 396,
-                        "width": 200,
-                        "depth": 248,
-                    },
-                    "weight": 9.5,
-                },
-            },
-        },
-    },
-    "Kanto ORA": {
-        "brand": "Kanto",
-        "model": "ORA",
-        "type": "active",
-        "price": "350",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "rew_text_dump",
-                "quality": "low",
-                "review": "https://www.audioholics.com/computer-speaker-reviews/kanto-living-ora",
-                "notes": "done by James Larson in free air",
-                "specifications": {
-                    "size": {
-                        "height": 254,
-                        "width": 227,
-                        "depth": 383,
-                    },
-                    "weight": 1.0,
-                },
-            },
-        },
-    },
-    "Kanto YU": {
-        "brand": "Kanto",
-        "model": "YU",
-        "type": "active",
-        "price": "280",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu-review-pc-speaker.22329/",
-                "review_published": "20210409",
-            },
-        },
-    },
-    "Kanto YU4": {
-        "brand": "Kanto",
-        "model": "YU4",
-        "type": "passive",
-        "price": "420",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kanto__yu4/",
-                    "yt": "https://youtu.be/aU_3cidukOE?si=29-suzrb4YdUd-ag",
-                },
-                "review_published": "20241117",
-                "specifications": {
-                    "size": {
-                        "height": 220,
-                        "width": 140,
-                        "depth": 190,
-                    },
-                    "weight": 2.5,
-                },
-            },
-        },
-    },
-    "Kanto YU6": {
-        "brand": "Kanto",
-        "model": "YU6",
-        "type": "active",
-        "price": "500",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu6-measurements-powered-monitor.27342/",
-                "review_published": "20211016",
-            },
-        },
-    },
     "K ARRAY Dragon KX12": {
         "brand": "K ARRAY",
         "model": "Dragon KX12",
@@ -360,28 +14,48 @@ speakers_info_k: SpeakerDatabase = {
             "vendor-configuration-onwall": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-1x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-2x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-3x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -400,26 +74,44 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated at "
+                "200Hz as this is close to "
+                "the LF cut-off limit of "
+                "our anechoic chamber. The "
+                "on-axis LF response has "
+                "been compensated using "
+                "ground plane measurements "
+                "carried out in free-field "
+                "and is therefore valid "
+                "only for that singular "
+                "curve.",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf"
                 },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average "
+                "curves are truncated at "
+                "200Hz as this is close to "
+                "the LF cut-off limit of "
+                "our anechoic chamber. The "
+                "on-axis LF response has "
+                "been compensated using "
+                "ground plane measurements "
+                "carried out in free-field "
+                "and is therefore valid "
+                "only for that singular "
+                "curve.",
                 "quality": "medium",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf"
                 },
             },
         },
@@ -446,16 +138,10 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20240327",
                 "specifications": {
-                    "SPL": {
-                        "peak": 116,
-                    },
+                    "SPL": {"peak": 116},
                     "sensitivity": 88,
                     "impedance": 3.2,
-                    "size": {
-                        "height": 1461,
-                        "width": 338,
-                        "depth": 475,
-                    },
+                    "size": {"height": 1461, "width": 338, "depth": 475},
                     "weight": 35.3,
                 },
             },
@@ -463,57 +149,44 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "notes": note_kef_data,
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "notes": "the off-axis average "
+                "curves are truncated at "
+                "200Hz as this is close to "
+                "the LF cut-off limit of "
+                "our anechoic chamber. The "
+                "on-axis LF response has "
+                "been compensated using "
+                "ground plane measurements "
+                "carried out in free-field "
+                "and is therefore valid "
+                "only for that singular "
+                "curve.",
+                "data_acquisition": {"min_valid_freq": 200},
                 "quality": "medium",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf"
                 },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated at "
+                "200Hz as this is close to "
+                "the LF cut-off limit of "
+                "our anechoic chamber. The "
+                "on-axis LF response has "
+                "been compensated using "
+                "ground plane measurements "
+                "carried out in free-field "
+                "and is therefore valid "
+                "only for that singular "
+                "curve.",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
-                },
-            },
-        },
-    },
-    "KEF CI50R": {
-        "brand": "KEF",
-        "model": "CI50R",
-        "type": "passive",
-        "price": "",
-        "amount": "each",
-        "shape": "inwall",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "gll_hv_txt",
-                "quality": "medium",
-                "review_published": "20250301",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                    "max_valid_freq": 15000,
-                },
-                "specifications": {
-                    "sensitivity": 82,
-                    "impedance": 6,
-                    "size": {
-                        "height": 80,
-                        "width": 80,
-                        "depth": 55,
-                    },
-                    "weight": 1.0,
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf"
                 },
             },
         },
@@ -532,21 +205,14 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "gll_hv_txt",
                 "quality": "medium",
                 "review_published": "20250301",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                    "max_valid_freq": 15000,
-                },
+                "data_acquisition": {"min_valid_freq": 200, "max_valid_freq": 15000},
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 8,
-                    "size": {
-                        "height": 194,
-                        "width": 194,
-                        "depth": 83,
-                    },
+                    "size": {"height": 194, "width": 194, "depth": 83},
                     "weight": 1.3,
                 },
-            },
+            }
         },
     },
     "KEF CI200RR-THX": {
@@ -563,37 +229,14 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "gll_hv_txt",
                 "quality": "medium",
                 "review_published": "20250301",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
                 "specifications": {
                     "sensitivity": 90,
                     "impedance": 4,
-                    "size": {
-                        "height": 290,
-                        "width": 290,
-                        "depth": 132,
-                    },
+                    "size": {"height": 290, "width": 290, "depth": 132},
                     "weight": 3.6,
                 },
-            },
-        },
-    },
-    "KEF Ci3160RL-THX": {
-        "brand": "KEF",
-        "model": "Ci3160RL-THX",
-        "type": "passive",
-        "price": "1400",
-        "amount": "each",
-        "shape": "inwall",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_ci3160rl-thx/",
-                "review_published": "20220514",
-            },
+            }
         },
     },
     "KEF CI250RRM-THX": {
@@ -613,18 +256,9 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 8,
-                    "dispersion": {
-                        "horizontal": 120,
-                        "vertical": 120,
-                    },
-                    "SPL": {
-                        "peak": 111,
-                    },
-                    "size": {
-                        "height": 175,
-                        "width": 346,
-                        "depth": 346,
-                    },
+                    "dispersion": {"horizontal": 120, "vertical": 120},
+                    "SPL": {"peak": 111},
+                    "size": {"height": 175, "width": 346, "depth": 346},
                     "weight": 6.0,
                 },
             },
@@ -634,10 +268,79 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20240527",
                 "reviews": {
-                    "white_paper": "https://images.salsify.com/image/upload/s--NpCBx-SO--/w9cbdm861tt4vimzda3g.pdf",
+                    "white_paper": "https://images.salsify.com/image/upload/s--NpCBx-SO--/w9cbdm861tt4vimzda3g.pdf"
                 },
-                "notes": "The speaker is optimised for being listen to off axis at 30 up to 60 degrees",
+                "notes": "The speaker is optimised for being "
+                "listen to off axis at 30 up to 60 "
+                "degrees",
             },
+        },
+    },
+    "KEF CI50R": {
+        "brand": "KEF",
+        "model": "CI50R",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20250301",
+                "data_acquisition": {"min_valid_freq": 200, "max_valid_freq": 15000},
+                "specifications": {
+                    "sensitivity": 82,
+                    "impedance": 6,
+                    "size": {"height": 80, "width": 80, "depth": 55},
+                    "weight": 1.0,
+                },
+            }
+        },
+    },
+    "KEF Ci3160RL-THX": {
+        "brand": "KEF",
+        "model": "Ci3160RL-THX",
+        "type": "passive",
+        "price": "1400",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_ci3160rl-thx/",
+                "review_published": "20220514",
+            }
+        },
+    },
+    "KEF Ci3160RLM-THX": {
+        "brand": "KEF",
+        "model": "Ci3160RLM-THX",
+        "type": "passive",
+        "price": "2230",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ci3160rlm-thx-in-wall-speaker-review.65587/"
+                },
+                "review_published": "20250908",
+                "specifications": {
+                    "sensitivity": 89.0,
+                    "impedance": 4.0,
+                    "SPL": {"max": 110.0},
+                    "size": {"height": 680.0, "width": 230.0, "depth": 106.0},
+                    "weight": 12.0,
+                },
+            }
         },
     },
     "KEF LS50": {
@@ -663,9 +366,7 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Princeton",
                 "format": "princeton",
                 "symmetry": "horizontal",
-                "data_acquisition": {
-                    "min_valid_freq": 500,
-                },
+                "data_acquisition": {"min_valid_freq": 500},
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
             },
@@ -698,16 +399,10 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20231221",
                 "specifications": {
-                    "SPL": {
-                        "peak": 106,
-                    },
-                    "sensitivity": 65,
+                    "SPL": {"peak": 106},
+                    "sensitivity": 85,
                     "impedance": 3.5,
-                    "size": {
-                        "height": 302,
-                        "width": 200,
-                        "depth": 280,
-                    },
+                    "size": {"height": 302, "width": 200, "depth": 280},
                     "weight": 7.8,
                 },
             },
@@ -723,16 +418,10 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20231221",
                 "specifications": {
-                    "SPL": {
-                        "peak": 106,
-                    },
-                    "sensitivity": 65,
+                    "SPL": {"peak": 106},
+                    "sensitivity": 85,
                     "impedance": 3.5,
-                    "size": {
-                        "height": 302,
-                        "width": 200,
-                        "depth": 280,
-                    },
+                    "size": {"height": 302, "width": 200, "depth": 280},
                     "weight": 7.8,
                 },
             },
@@ -792,7 +481,9 @@ speakers_info_k: SpeakerDatabase = {
                     "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265278&s_type=search_name&s_keyword=Nuyes&page=2",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50w-ii-measurements.36932/",
                 },
-                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave",
+                "notes": "Data gated at 5ms so valid "
+                "above 200Hz/300Hz and smoothed "
+                "1/24th of octave",
                 "review_published": "20220831",
             },
         },
@@ -818,14 +509,8 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20231218",
                 "specifications": {
-                    "SPL": {
-                        "peak": 111,
-                    },
-                    "size": {
-                        "height": 1090,
-                        "width": 212,
-                        "depth": 394,
-                    },
+                    "SPL": {"peak": 111},
+                    "size": {"height": 1090, "width": 212, "depth": 394},
                     "weight": 31.2,
                 },
             },
@@ -841,14 +526,8 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20231218",
                 "specifications": {
-                    "SPL": {
-                        "peak": 111,
-                    },
-                    "size": {
-                        "height": 1090,
-                        "width": 212,
-                        "depth": 394,
-                    },
+                    "SPL": {"peak": 111},
+                    "size": {"height": 1090, "width": 212, "depth": 394},
                     "weight": 31.2,
                 },
             },
@@ -863,14 +542,8 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20220909",
                 "specifications": {
-                    "SPL": {
-                        "peak": 111,
-                    },
-                    "size": {
-                        "height": 1090,
-                        "width": 212,
-                        "depth": 394,
-                    },
+                    "SPL": {"peak": 111},
+                    "size": {"height": 1090, "width": 212, "depth": 394},
                     "weight": 31.2,
                 },
             },
@@ -913,21 +586,121 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_lsx_ii_lt/",
-                    "yt": "https://youtu.be/Tcz905gti5A?si=GCiNCa1E-Rb-vJHi",
+
                 },
                 "review_published": "20240916",
                 "specifications": {
-                    "SPL": {
-                        "peak": 102,
-                    },
-                    "size": {
-                        "height": 240,
-                        "width": 155,
-                        "depth": 180,
-                    },
+                    "SPL": {"peak": 102},
+                    "size": {"height": 240, "width": 155, "depth": 180},
                     "weight": 6.8,
                 },
+            }
+        },
+    },
+    "KEF Muo": {
+        "brand": "KEF",
+        "model": "Muo",
+        "type": "active",
+        "price": "269",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+		"quality": "low",
+                "reviews": {
+                },
+                "review_published": "20251029",
+                "data_acquisition": {"min_valid_freq": 350},
+                "specifications": {
+                    "SPL": {
+                        "peak": 90.0,
+                    },
+                    "size": {
+                        "height": 212,
+                        "width": 82,
+                        "depth": 59,
+                    },
+                    "weight": 0.74,
+                },
             },
+        },
+    },
+    "KEF Q Concerto Meta": {
+        "brand": "KEF",
+        "model": "Q Concerto Meta",
+        "type": "passive",
+        "price": "1300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/O-7b6sqDOus",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 3.2,
+                    "SPL": {"peak": 108},
+                    "size": {"height": 415, "width": 210, "depth": 315},
+                    "weight": 9.5,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are "
+                "truncated at 200Hz as this is close "
+                "to the LF cut-off limit of our "
+                "anechoic chamber. The on-axis LF "
+                "response has been compensated using "
+                "ground plane measurements carried "
+                "out in free-field and is therefore "
+                "valid only for that singular "
+                "curve.",
+            },
+        },
+    },
+    "KEF Q1 Meta": {
+        "brand": "KEF",
+        "model": "Q1 Meta",
+        "type": "passive",
+        "price": "550",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {"peak": 108},
+                    "size": {"height": 302, "width": 180, "depth": 277},
+                    "weight": 6.1,
+                },
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF cut-off "
+                "limit of our anechoic chamber. The on-axis "
+                "LF response has been compensated using "
+                "ground plane measurements carried out in "
+                "free-field and is therefore valid only for "
+                "that singular curve.",
+            }
         },
     },
     "KEF Q100": {
@@ -943,6 +716,44 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-q100-speaker-review.11987/",
+            }
+        },
+    },
+    "KEF Q11 Meta": {
+        "brand": "KEF",
+        "model": "Q11 Meta",
+        "type": "passive",
+        "price": "2200",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20250114",
+                "reviews": {"yt": "https://youtu.be/dPIWppFirmk?feature=shared"},
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "SPL": {"peak": 113},
+                    "size": {"height": 1112, "width": 317, "depth": 380},
+                    "weight": 22.5,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF "
+                "cut-off limit of our anechoic chamber. The "
+                "on-axis LF response has been compensated "
+                "using ground plane measurements carried "
+                "out in free-field and is therefore valid "
+                "only for that singular curve.",
             },
         },
     },
@@ -963,7 +774,7 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=SiGslBHnK9c&t=3s",
                 },
                 "review_published": "20220225",
-            },
+            }
         },
     },
     "KEF Q250": {
@@ -995,6 +806,46 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Q3 Meta": {
+        "brand": "KEF",
+        "model": "Q3 Meta",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/GhyF1ZnebRY?si=ajJ4qHTN25ofBy1Y",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {"peak": 109},
+                    "size": {"height": 357, "width": 210, "depth": 305},
+                    "weight": 8.2,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF cut-off "
+                "limit of our anechoic chamber. The on-axis "
+                "LF response has been compensated using "
+                "ground plane measurements carried out in "
+                "free-field and is therefore valid only for "
+                "that singular curve.",
+            },
+        },
+    },
     "KEF Q350": {
         "brand": "KEF",
         "model": "Q350",
@@ -1016,123 +867,6 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
-    "KEF Q Concerto Meta": {
-        "brand": "KEF",
-        "model": "Q Concerto Meta",
-        "type": "passive",
-        "price": "1300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
-                    "yt": "https://youtu.be/O-7b6sqDOus",
-                },
-                "review_published": "20241117",
-                "specifications": {
-                    "sensitivity": 85,
-                    "impedance": 3.2,
-                    "SPL": {
-                        "peak": 108,
-                    },
-                    "size": {
-                        "height": 415,
-                        "width": 210,
-                        "depth": 315,
-                    },
-                    "weight": 9.5,
-                },
-            },
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
-        },
-    },
-    "KEF Q1 Meta": {
-        "brand": "KEF",
-        "model": "Q1 Meta",
-        "type": "passive",
-        "price": "550",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
-                "specifications": {
-                    "sensitivity": 86,
-                    "impedance": 4,
-                    "SPL": {
-                        "peak": 108,
-                    },
-                    "size": {
-                        "height": 302,
-                        "width": 180,
-                        "depth": 277,
-                    },
-                    "weight": 6.1,
-                },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
-        },
-    },
-    "KEF Q3 Meta": {
-        "brand": "KEF",
-        "model": "Q3 Meta",
-        "type": "passive",
-        "price": "800",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
-                    "yt": "https://youtu.be/GhyF1ZnebRY?si=ajJ4qHTN25ofBy1Y",
-                },
-                "review_published": "20241117",
-                "specifications": {
-                    "sensitivity": 87,
-                    "impedance": 4,
-                    "SPL": {
-                        "peak": 109,
-                    },
-                    "size": {
-                        "height": 357,
-                        "width": 210,
-                        "depth": 305,
-                    },
-                    "weight": 8.2,
-                },
-            },
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
-                "notes": note_kef_data,
-            },
-        },
-    },
     "KEF Q4 Meta": {
         "brand": "KEF",
         "model": "Q4 Meta",
@@ -1150,21 +884,19 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
-                    "SPL": {
-                        "peak": 108,
-                    },
-                    "size": {
-                        "height": 400,
-                        "width": 250,
-                        "depth": 142,
-                    },
+                    "SPL": {"peak": 108},
+                    "size": {"height": 400, "width": 250, "depth": 142},
                     "weight": 5.7,
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF cut-off "
+                "limit of our anechoic chamber. The on-axis "
+                "LF response has been compensated using "
+                "ground plane measurements carried out in "
+                "free-field and is therefore valid only for "
+                "that singular curve.",
+            }
         },
     },
     "KEF Q6 Meta": {
@@ -1184,97 +916,19 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
-                    "SPL": {
-                        "peak": 109,
-                    },
-                    "size": {
-                        "height": 210,
-                        "width": 629,
-                        "depth": 303,
-                    },
+                    "SPL": {"peak": 109},
+                    "size": {"height": 210, "width": 629, "depth": 303},
                     "weight": 14.1,
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
-        },
-    },
-    "KEF Q7 Meta": {
-        "brand": "KEF",
-        "model": "Q7 Meta",
-        "type": "passive",
-        "price": "1600",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
-                "specifications": {
-                    "sensitivity": 87,
-                    "impedance": 4,
-                    "SPL": {
-                        "peak": 110,
-                    },
-                    "size": {
-                        "height": 1001,
-                        "width": 317,
-                        "depth": 315,
-                    },
-                    "weight": 18.4,
-                },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
-        },
-    },
-    "KEF Q11 Meta": {
-        "brand": "KEF",
-        "model": "Q11 Meta",
-        "type": "passive",
-        "price": "2200",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review_published": "20250114",
-                "reviews": {
-                    "yt": "https://youtu.be/dPIWppFirmk?feature=shared",
-                },
-                "specifications": {
-                    "sensitivity": 89,
-                    "impedance": 4,
-                    "SPL": {
-                        "peak": 113,
-                    },
-                    "size": {
-                        "height": 1112,
-                        "width": 317,
-                        "depth": 380,
-                    },
-                    "weight": 22.5,
-                },
-            },
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
-            },
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF cut-off "
+                "limit of our anechoic chamber. The on-axis "
+                "LF response has been compensated using "
+                "ground plane measurements carried out in "
+                "free-field and is therefore valid only for "
+                "that singular curve.",
+            }
         },
     },
     "KEF Q650C": {
@@ -1298,6 +952,139 @@ speakers_info_k: SpeakerDatabase = {
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_q650c_center/",
                 "review_published": "20220126",
             },
+        },
+    },
+    "KEF Q7 Meta": {
+        "brand": "KEF",
+        "model": "Q7 Meta",
+        "type": "passive",
+        "price": "1600",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {"peak": 110},
+                    "size": {"height": 1001, "width": 317, "depth": 315},
+                    "weight": 18.4,
+                },
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average curves are truncated "
+                "at 200Hz as this is close to the LF cut-off "
+                "limit of our anechoic chamber. The on-axis "
+                "LF response has been compensated using "
+                "ground plane measurements carried out in "
+                "free-field and is therefore valid only for "
+                "that singular curve.",
+            }
+        },
+    },
+    "KEF Q8 Meta": {
+        "brand": "KEF",
+        "model": "Q8 Meta",
+        "type": "passive",
+        "price": "1400",
+        "amount": "pair",
+        "shape": "surround",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 176,
+                        "width": 180,
+                        "depth": 259,
+                    },
+                    "weight": 4.5,
+                },
+            },
+        },
+    },
+    "KEF R11": {
+        "brand": "KEF",
+        "model": "R11",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf"
+                },
+            }
+        },
+    },
+    "KEF R11 Meta": {
+        "brand": "KEF",
+        "model": "R11 Meta",
+        "type": "passive",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r11-meta-tower-speaker-review.53282/",
+                "review_published": "20240326",
+                "reviews": {
+                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf"
+                },
+            },
+            "vendor-v2": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "review_published": "20230503",
+                "quality": "medium",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
+                },
+                "data_acquisition": {"min_valid_freq": 200},
+            },
+        },
+    },
+    "KEF R2C Meta": {
+        "brand": "KEF",
+        "model": "R2C Meta",
+        "type": "passive",
+        "price": "1400",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "vendor-v2",
+        "measurements": {
+            "vendor-v2": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20230503",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
+                },
+            }
         },
     },
     "KEF R2c": {
@@ -1336,26 +1123,6 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "spd2034": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
                     "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf",
-                },
-            },
-        },
-    },
-    "KEF R2C Meta": {
-        "brand": "KEF",
-        "model": "R2C Meta",
-        "type": "passive",
-        "price": "1400",
-        "amount": "each",
-        "shape": "center",
-        "default_measurement": "vendor-v2",
-        "measurements": {
-            "vendor-v2": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20230503",
-                "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
                 },
             },
         },
@@ -1399,9 +1166,7 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
                     "yt": "https://www.youtube.com/watch?v=Gt96DBlQk8A",
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1468,11 +1233,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20230503",
                 "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1528,14 +1291,8 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4,
-                    "SPL": {
-                        "peak": 110,
-                    },
-                    "size": {
-                        "height": 1025,
-                        "width": 175,
-                        "depth": 344,
-                    },
+                    "SPL": {"peak": 110},
+                    "size": {"height": 1025, "width": 175, "depth": 344},
                     "weight": 24.5,
                 },
             },
@@ -1545,11 +1302,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20230503",
                 "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1568,12 +1323,10 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20230503",
                 "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-            },
+                "data_acquisition": {"min_valid_freq": 200},
+            }
         },
     },
     "KEF R7": {
@@ -1590,9 +1343,11 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf",
+                    "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf"
                 },
-            },
+                "review_published": "20250909",
+                "data_acquisition": {"min_valid_freq": 300},
+            }
         },
     },
     "KEF R7 Meta": {
@@ -1609,12 +1364,29 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "quality": "medium",
                 "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
+                "data_acquisition": {"min_valid_freq": 200},
+            }
+        },
+    },
+    "KEF R8 Meta": {
+        "brand": "KEF",
+        "model": "R8 Meta",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r8-meta-dolby-atmos-speaker-review.44520/"
                 },
-            },
+                "review_published": "20230509",
+            }
         },
     },
     "KEF R8a": {
@@ -1634,77 +1406,7 @@ speakers_info_k: SpeakerDatabase = {
                     "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf",
                 },
                 "review_published": "20210807",
-            },
-        },
-    },
-    "KEF R8 Meta": {
-        "brand": "KEF",
-        "model": "R8 Meta",
-        "type": "passive",
-        "price": "800",
-        "amount": "each",
-        "shape": "surround",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r8-meta-dolby-atmos-speaker-review.44520/",
-                },
-                "review_published": "20230509",
-            },
-        },
-    },
-    "KEF R11": {
-        "brand": "KEF",
-        "model": "R11",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf",
-                },
-            },
-        },
-    },
-    "KEF R11 Meta": {
-        "brand": "KEF",
-        "model": "R11 Meta",
-        "type": "passive",
-        "price": "6500",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r11-meta-tower-speaker-review.53282/",
-                "review_published": "20240326",
-                "reviews": {
-                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
-                },
-            },
-            "vendor-v2": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "review_published": "20230503",
-                "quality": "medium",
-                "reviews": {
-                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
-                },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-            },
+            }
         },
     },
     "KEF Reference 1 Meta": {
@@ -1740,19 +1442,28 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-                "notes": note_kef_data,
+                "data_acquisition": {"min_valid_freq": 200},
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that singular "
+                "curve.",
                 "quality": "medium",
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
                 "quality": "medium",
             },
         },
@@ -1777,17 +1488,11 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 4.2,
-                    "SPL": {
-                        "peak": 113,
-                    },
-                    "size": {
-                        "height": 1020,
-                        "width": 248,
-                        "depth": 405,
-                    },
+                    "SPL": {"peak": 113},
+                    "size": {"height": 1020, "width": 248, "depth": 405},
                     "weight": 26.5,
                 },
-            },
+            }
         },
     },
     "KEF Reference 2C Meta": {
@@ -1812,14 +1517,8 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 3.2,
-                    "SPL": {
-                        "peak": 113,
-                    },
-                    "size": {
-                        "height": 205,
-                        "width": 630,
-                        "depth": 335,
-                    },
+                    "SPL": {"peak": 113},
+                    "size": {"height": 205, "width": 630, "depth": 335},
                     "weight": 22.8,
                 },
             },
@@ -1827,11 +1526,22 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that "
+                "singular curve.",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1839,11 +1549,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220217",
                 "reviews": {
-                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1860,21 +1568,43 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that singular "
+                "curve.",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "quality": "medium",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that singular "
+                "curve.",
                 "review_published": "20220217",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1893,7 +1623,7 @@ speakers_info_k: SpeakerDatabase = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
                 "review_published": "20220118",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf"
                 },
             },
             "asr-horizontal": {
@@ -1902,7 +1632,7 @@ speakers_info_k: SpeakerDatabase = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
                 "review_published": "20220118",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf"
                 },
             },
         },
@@ -1920,20 +1650,29 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
-                "notes": note_kef_data,
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that "
+                "singular curve.",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -1950,12 +1689,10 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "reviews": {
-                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf"
                 },
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
-            },
+                "data_acquisition": {"min_valid_freq": 200},
+            }
         },
     },
     "KEF Reference 5 Meta": {
@@ -1972,20 +1709,42 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "quality": "medium",
                 "review_published": "20230428",
-                "notes": note_kef_data,
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that singular "
+                "curve.",
+                "data_acquisition": {"min_valid_freq": 200},
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "review_published": "20220217",
-                "notes": note_kef_data,
-                "data_acquisition": {
-                    "min_valid_freq": 200,
-                },
+                "notes": "the off-axis average "
+                "curves are truncated "
+                "at 200Hz as this is "
+                "close to the LF "
+                "cut-off limit of our "
+                "anechoic chamber. The "
+                "on-axis LF response "
+                "has been compensated "
+                "using ground plane "
+                "measurements carried "
+                "out in free-field and "
+                "is therefore valid "
+                "only for that singular "
+                "curve.",
+                "data_acquisition": {"min_valid_freq": 200},
             },
         },
     },
@@ -2003,7 +1762,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t101-review-thin-speaker.29574/",
                 "review_published": "20220103",
-            },
+            }
         },
     },
     "KEF T301C": {
@@ -2020,7 +1779,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t301c-review-ultra-thin-speaker.28743/",
                 "review_published": "20211205",
-            },
+            }
         },
     },
     "KEF Ventura 6": {
@@ -2040,23 +1799,585 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20250228",
                 "data_acquisition": {
                     "via": "",
-                    "distance": 10.0,  # m
+                    "distance": 10.0,
                     "air_absorbtion": False,
-                    "resolution": 10.0,  # deg
+                    "resolution": 10.0,
                     "min_valid_freq": 20,
                     "max_valid_freq": 20000,
                 },
                 "specifications": {
                     "sensitivity": 90,
                     "impedance": 6,
-                    "size": {
-                        "height": 300,
-                        "width": 226,
-                        "depth": 264,
-                    },
+                    "size": {"height": 300, "width": 226, "depth": 264},
                     "weight": 3.8,
                 },
+            }
+        },
+    },
+    "KLH 911B": {
+        "brand": "KLH",
+        "model": "911B",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {"vendor": {"origin": "Vendors-KLH", "format": "rew_text_dump"}},
+    },
+    "KLH Model Five": {
+        "brand": "KLH",
+        "model": "Model Five",
+        "type": "passive",
+        "price": "2500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac-v1-grilleon",
+        "measurements": {
+            "eac-v1-grilleon": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"eac": ""},
+                "review_published": "20220730",
+                "notes": "Measured with MID setting and with grille on",
+            }
+        },
+    },
+    "KME Sound ICS4": {
+        "brand": "KME Sound",
+        "model": "ICS4",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x40",
+        "measurements": {
+            "vendor-pattern-80x40": {
+                "origin": "Vendors-KME Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KME Sound VL15XTL": {
+        "brand": "KME Sound",
+        "model": "VL15XTL",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x60",
+        "measurements": {
+            "vendor-pattern-80x60": {
+                "origin": "Vendors-KME Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KRK Systems Classic 5": {
+        "brand": "KRK Systems",
+        "model": "Classic 5",
+        "type": "active",
+        "price": "150",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/krk-classic-5-review-studio-monitor.19031/",
+            }
+        },
+    },
+    "KRK Systems RoKit 5 G4": {
+        "brand": "KRK Systems",
+        "model": "RoKit 5 G4",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/krk-rokit-5-gen-4-review-studio-monitor.20711/",
+                "review_published": "20210224",
+            }
+        },
+    },
+    "KRK Systems RoKit 6 G2": {
+        "brand": "KRK Systems",
+        "model": "RoKit 6 G2",
+        "type": "active",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "princeton",
+        "measurements": {
+            "princeton": {
+                "origin": "Princeton",
+                "format": "princeton",
+                "symmetry": "horizontal",
+                "review": "https://www.princeton.edu/3D3A/Directivity.html",
+                "review_published": "20151001",
+            }
+        },
+    },
+    "KV2 Audio ES1.0": {
+        "brand": "KV2 Audio",
+        "model": "ES1.0",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x40",
+        "measurements": {
+            "vendor-pattern-90x40": {
+                "origin": "Vendors-KV2 Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KV2 Audio ESR212": {
+        "brand": "KV2 Audio",
+        "model": "ESR212",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x40",
+        "measurements": {
+            "vendor-pattern-90x40": {
+                "origin": "Vendors-KV2 Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KV2 Audio EX10": {
+        "brand": "KV2 Audio",
+        "model": "EX10",
+        "type": "active",
+        "price": "2900",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-100x80",
+        "measurements": {
+            "vendor-pattern-100x80": {
+                "origin": "Vendors-KV2 Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KV2 Audio EX12": {
+        "brand": "KV2 Audio",
+        "model": "EX12",
+        "type": "active",
+        "price": "3480",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x40",
+        "measurements": {
+            "vendor-pattern-80x40": {
+                "origin": "Vendors-KV2 Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "KV2 Audio EX15": {
+        "brand": "KV2 Audio",
+        "model": "EX15",
+        "type": "active",
+        "price": "6000",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x60",
+        "measurements": {
+            "vendor-pattern-80x60": {
+                "origin": "Vendors-KV2 Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+                "quality": "medium",
+            }
+        },
+    },
+    "Kali IN-5": {
+        "brand": "Kali",
+        "model": "IN-5",
+        "type": "active",
+        "price": "700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-5/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-in-5-studio-monitor-review.22487/",
+                },
+                "review_published": "20210415",
+                "specifications": {
+                    "size": {"height": 382, "width": 206, "depth": 286},
+                    "weight": 8.4,
+                },
             },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240909",
+                "quality": "medium",
+            },
+        },
+    },
+    "Kali IN-8": {
+        "brand": "Kali",
+        "model": "IN-8",
+        "type": "active",
+        "price": "760",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v1/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v1-3-way-studio-monitor-review.24241/#post-818243",
+                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
+                },
+                "review_published": "20210615",
+                "specifications": {
+                    "size": {"height": 441, "width": 285, "depth": 254},
+                    "weight": 10.4,
+                },
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
+                "review_published": "20200114",
+            },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240909",
+                "quality": "medium",
+            },
+        },
+    },
+    "Kali IN-8v2": {
+        "brand": "Kali",
+        "model": "IN-8v2",
+        "type": "active",
+        "price": "760",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v2",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v2-second-wave-3-way-studio-monitor-review.24586/",
+                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
+                },
+                "review_published": "20210615",
+                "specifications": {
+                    "size": {"height": 441, "width": 285, "depth": 254},
+                    "weight": 10.4,
+                },
+            }
+        },
+    },
+    "Kali LP-6": {
+        "brand": "Kali",
+        "model": "LP-6",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/",
+            }
+        },
+    },
+    "Kali LP-6v2": {
+        "brand": "Kali",
+        "model": "LP-6v2",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-6v2/",
+                    "yt": "https://www.youtube.com/watch?v=Wj47W9EP4tQ&t=2s",
+                },
+                "review_published": "20211025",
+                "specifications": {
+                    "size": {"height": 359, "width": 222, "depth": 260},
+                    "weight": 7.01,
+                },
+            }
+        },
+    },
+    "Kali LP-8": {
+        "brand": "Kali",
+        "model": "LP-8",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/kali-audio-lp-8/conclusion",
+            }
+        },
+    },
+    "Kali LP-8v2": {
+        "brand": "Kali",
+        "model": "LP-8v2",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/"},
+                "review_published": "20211114",
+                "specifications": {
+                    "size": {"height": 419, "width": 254, "depth": 286},
+                    "weight": 9.0,
+                },
+            }
+        },
+    },
+    "Kali LP-UNF": {
+        "brand": "Kali",
+        "model": "LP-UNF",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp_unf/",
+                    "yt": "https://youtu.be/hOkMVbW7Yts",
+                },
+                "review_published": "20240312",
+                "specifications": {
+                    "SPL": {"peak": 103},
+                    "size": {"height": 254, "width": 164, "depth": 186},
+                    "weight": 3.2,
+                },
+            }
+        },
+    },
+    "Kali SM-5": {
+        "brand": "Kali",
+        "model": "SM-5",
+        "type": "active",
+        "price": "1700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"yt": "https://youtu.be/EMm5IV95X_U"},
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "SPL": {"peak": 117},
+                    "size": {"height": 396, "width": 200, "depth": 248},
+                    "weight": 9.5,
+                },
+            }
+        },
+    },
+    "Kanto ORA": {
+        "brand": "Kanto",
+        "model": "ORA",
+        "type": "active",
+        "price": "350",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "rew_text_dump",
+                "quality": "low",
+                "review": "https://www.audioholics.com/computer-speaker-reviews/kanto-living-ora",
+                "notes": "done by James Larson in free air",
+                "specifications": {
+                    "size": {"height": 254, "width": 227, "depth": 383},
+                    "weight": 1.0,
+                },
+            }
+        },
+    },
+    "Kanto YU": {
+        "brand": "Kanto",
+        "model": "YU",
+        "type": "active",
+        "price": "280",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu-review-pc-speaker.22329/",
+                "review_published": "20210409",
+            }
+        },
+    },
+    "Kanto YU4": {
+        "brand": "Kanto",
+        "model": "YU4",
+        "type": "passive",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kanto__yu4/",
+                    "yt": "https://youtu.be/aU_3cidukOE?si=29-suzrb4YdUd-ag",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "size": {"height": 220, "width": 140, "depth": 190},
+                    "weight": 2.5,
+                },
+            }
+        },
+    },
+    "Kanto YU6": {
+        "brand": "Kanto",
+        "model": "YU6",
+        "type": "active",
+        "price": "500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu6-measurements-powered-monitor.27342/",
+                "review_published": "20211016",
+            }
+        },
+    },
+    "Kii Audio Three": {
+        "brand": "Kii Audio",
+        "model": "Three",
+        "type": "active",
+        "price": "13000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_three/"},
+                "review_published": "20211201",
+            }
         },
     },
     "King's Audio KingSound KS 3001": {
@@ -2072,78 +2393,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "princeton",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
-            },
-        },
-    },
-    "KLH 911B": {
-        "brand": "KLH",
-        "model": "911B",
-        "type": "passive",
-        "price": "",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-KLH",
-                "format": "rew_text_dump",
-            },
-        },
-    },
-    "KLH Model Five": {
-        "brand": "KLH",
-        "model": "Model Five",
-        "type": "passive",
-        "price": "2500",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "eac-v1-grilleon",
-        "measurements": {
-            "eac-v1-grilleon": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "",
-                },
-                "review_published": "20220730",
-                "notes": "Measured with MID setting and with grille on",
-            },
-        },
-    },
-    "Kii Audio Three": {
-        "brand": "Kii Audio",
-        "model": "Three",
-        "type": "active",
-        "price": "13000",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_three/",
-                },
-                "review_published": "20211201",
-            },
-        },
-    },
-    "Klipsch Forte IV": {
-        "brand": "Klipsch",
-        "model": "Forte IV",
-        "type": "passive",
-        "price": "6780",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_forte_iv/",
-                "review_published": "20211002",
-            },
+            }
         },
     },
     "Kling Freitag CA 106 Pro": {
@@ -2158,18 +2408,28 @@ speakers_info_k: SpeakerDatabase = {
             "vendor-fullrange-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221107",
                 "quality": "high",
                 "reviews": {
-                    "ps": "https://www.professional-system.de/tests/klassiker-in-der-2-generation-kling-freitag-ca-106-pro/",
+                    "ps": "https://www.professional-system.de/tests/klassiker-in-der-2-generation-kling-freitag-ca-106-pro/"
                 },
                 "notes": "generated from GLL file provided by Kling Freitag, full range mode",
             },
             "vendor-lowcut-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221107",
                 "quality": "high",
                 "notes": "generated from GLL file provided by Kling Freitag, low cut mode",
@@ -2177,7 +2437,12 @@ speakers_info_k: SpeakerDatabase = {
             "vendor-passive-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221107",
                 "quality": "high",
                 "notes": "generated from GLL file provided by Kling Freitag, passive mode",
@@ -2196,75 +2461,109 @@ speakers_info_k: SpeakerDatabase = {
             "vendor-bassreflex-narrow": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with narrow mode on",
+                "notes": "generated from "
+                "GLL file provided "
+                "by Kling Freitag, "
+                "configuration "
+                "bass reflex with "
+                "narrow mode on",
             },
             "vendor-bassreflex-medium": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with medium mode on",
+                "notes": "generated from "
+                "GLL file provided "
+                "by Kling Freitag, "
+                "configuration "
+                "bass reflex with "
+                "medium mode on",
             },
             "vendor-bassreflex-wide": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with wide mode on",
+                "notes": "generated from GLL "
+                "file provided by "
+                "Kling Freitag, "
+                "configuration bass "
+                "reflex with wide "
+                "mode on",
             },
             "vendor-cardioid-wide": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with wide mode on",
+                "notes": "generated from GLL "
+                "file provided by "
+                "Kling Freitag, "
+                "configuration cardiod "
+                "with wide mode on",
             },
             "vendor-cardioid-medium": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with medium mode on",
+                "notes": "generated from GLL "
+                "file provided by "
+                "Kling Freitag, "
+                "configuration "
+                "cardiod with medium "
+                "mode on",
             },
             "vendor-cardioid-narrow": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with narrow mode on",
-            },
-        },
-    },
-    "Kling Freitag Spectra": {
-        "brand": "Kling Freitag",
-        "model": "Spectra",
-        "type": "active",
-        "price": "6780",
-        "amount": "each",
-        "shape": "toursound",
-        "default_measurement": "vendor-wide",
-        "measurements": {
-            "vendor-wide": {
-                "origin": "Vendors-Kling Freitag",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221028",
-                "quality": "high",
-            },
-            "vendor-narrow": {
-                "origin": "Vendors-Kling Freitag",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221028",
-                "quality": "high",
+                "notes": "generated from GLL "
+                "file provided by "
+                "Kling Freitag, "
+                "configuration "
+                "cardiod with narrow "
+                "mode on",
             },
         },
     },
@@ -2280,13 +2579,95 @@ speakers_info_k: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
                 "review_published": "20221027",
                 "quality": "medium",
-                "parameters": {
-                    "mean_min": 50,
-                    "mean_max": 500,
+                "parameters": {"mean_min": 50, "mean_max": 500},
+            }
+        },
+    },
+    "Kling Freitag Spectra": {
+        "brand": "Kling Freitag",
+        "model": "Spectra",
+        "type": "active",
+        "price": "6780",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-wide",
+        "measurements": {
+            "vendor-wide": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
                 },
+                "review_published": "20221028",
+                "quality": "high",
+            },
+            "vendor-narrow": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221028",
+                "quality": "high",
+            },
+        },
+    },
+    "Klipsch Forte IV": {
+        "brand": "Klipsch",
+        "model": "Forte IV",
+        "type": "passive",
+        "price": "6780",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_forte_iv/",
+                "review_published": "20211002",
+            }
+        },
+    },
+    "Klipsch Heresy IV": {
+        "brand": "Klipsch",
+        "model": "Heresy IV",
+        "type": "passive",
+        "price": "2000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac-v2-20210926",
+        "measurements": {
+            "eac-v2-20210926": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/"
+                },
+                "review_published": "20210926",
+            },
+            "eac-v1-20201105": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-heresy-iv-speaker-review.17853/",
+                },
+                "review_published": "20201105",
             },
         },
     },
@@ -2304,7 +2685,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
-            },
+            }
         },
     },
     "Klipsch R41M": {
@@ -2320,35 +2701,7 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-r-41m-bookshelf-speaker-review.11566/",
-            },
-        },
-    },
-    "Klipsch Heresy IV": {
-        "brand": "Klipsch",
-        "model": "Heresy IV",
-        "type": "passive",
-        "price": "2000",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "eac-v2-20210926",
-        "measurements": {
-            "eac-v2-20210926": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
-                },
-                "review_published": "20210926",
-            },
-            "eac-v1-20201105": {
-                "origin": "ErinsAudioCorner",
-                "format": "webplotdigitizer",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-heresy-iv-speaker-review.17853/",
-                },
-                "review_published": "20201105",
-            },
+            }
         },
     },
     "Klipsch RP-404C II": {
@@ -2374,21 +2727,24 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
-    "Klipsch RP-500M": {
+    "Klipsch RP-5000F II": {
         "brand": "Klipsch",
-        "model": "RP-500M",
+        "model": "RP-5000F II",
         "type": "passive",
-        "price": "400",
-        "shape": "bookshelves",
+        "price": "1200",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500m_i/",
-                "review_published": "20220610",
-            },
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
+                "review_published": "20220711",
+            }
         },
     },
     "Klipsch RP-500C II": {
@@ -2414,6 +2770,23 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "Klipsch RP-500M": {
+        "brand": "Klipsch",
+        "model": "RP-500M",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500m_i/",
+                "review_published": "20220610",
+            }
+        },
+    },
     "Klipsch RP-500M II": {
         "brand": "Klipsch",
         "model": "RP-500M II",
@@ -2428,7 +2801,7 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500m_ii/",
                 "review_published": "20220610",
-            },
+            }
         },
     },
     "Klipsch RP-504C II": {
@@ -2452,6 +2825,26 @@ speakers_info_k: SpeakerDatabase = {
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_504cii/",
                 "review_published": "20220702",
             },
+        },
+    },
+    "Klipsch RP-6000F II": {
+        "brand": "Klipsch",
+        "model": "RP-6000F II",
+        "type": "passive",
+        "price": "1500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
+                "review_published": "20220711",
+            }
         },
     },
     "Klipsch RP-600M": {
@@ -2502,46 +2895,6 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
-    "Klipsch RP-5000F II": {
-        "brand": "Klipsch",
-        "model": "RP-5000F II",
-        "type": "passive",
-        "price": "1200",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
-                    "yt": "https://youtu.be/vmGTy5o5Xgc",
-                },
-                "review_published": "20220711",
-            },
-        },
-    },
-    "Klipsch RP-6000F II": {
-        "brand": "Klipsch",
-        "model": "RP-6000F II",
-        "type": "passive",
-        "price": "1500",
-        "shape": "floorstanders",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
-                    "yt": "https://youtu.be/vmGTy5o5Xgc",
-                },
-                "review_published": "20220711",
-            },
-        },
-    },
     "Klipsch RP-8000F II": {
         "brand": "Klipsch",
         "model": "RP-8000F II",
@@ -2559,7 +2912,7 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://youtu.be/vmGTy5o5Xgc",
                 },
                 "review_published": "20220711",
-            },
+            }
         },
     },
     "Klipsch Synergy SB-3 Monitor": {
@@ -2571,11 +2924,7 @@ speakers_info_k: SpeakerDatabase = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Klipsch",
-                "format": "rew_text_dump",
-                "review": "",
-            },
+            "vendor": {"origin": "Vendors-Klipsch", "format": "rew_text_dump", "review": ""}
         },
     },
     "Klipsch The Fives": {
@@ -2596,26 +2945,7 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20210428",
                 "notes": "Bass cut mode",
-            },
-        },
-    },
-    "Klipsch The Three": {
-        "brand": "Klipsch",
-        "model": "The Three",
-        "type": "active",
-        "price": "399",
-        "shape": "bookshelves",
-        "amount": "each",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-the-three-review-powered-speaker.23847/",
-                "review_published": "20210530",
-                "notes": "...performed over 700 measurement which resulted in error rate of less than 1% below about 7 kHz. Above that the error shot way up due to me setting the reference axis to the woofer center, not the tweeter. This severely disadvantaged the NFS system in computing the sound field as the tweeter took over more of the duty. I picked the woofer because I incorrectly assumed this was a mono speaker and dual tweeters were used for some kind of spatial effect...",
-                "quality": "medium",
-            },
+            }
         },
     },
     "Klipsch The Nines": {
@@ -2635,184 +2965,37 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://youtu.be/PxiUWhIeIeY",
                 },
                 "review_published": "20230602",
-            },
+            }
         },
     },
-    "KME Sound ICS4": {
-        "brand": "KME Sound",
-        "model": "ICS4",
+    "Klipsch The Three": {
+        "brand": "Klipsch",
+        "model": "The Three",
         "type": "active",
-        "price": "",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-80x40",
-        "measurements": {
-            "vendor-pattern-80x40": {
-                "origin": "Vendors-KME Sound",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
-        },
-    },
-    "KME Sound VL15XTL": {
-        "brand": "KME Sound",
-        "model": "VL15XTL",
-        "type": "active",
-        "price": "",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-80x60",
-        "measurements": {
-            "vendor-pattern-80x60": {
-                "origin": "Vendors-KME Sound",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
-        },
-    },
-    "KRK Systems Classic 5": {
-        "brand": "KRK Systems",
-        "model": "Classic 5",
-        "type": "active",
-        "price": "150",
+        "price": "399",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/krk-classic-5-review-studio-monitor.19031/",
-            },
-        },
-    },
-    "KRK Systems RoKit 5 G4": {
-        "brand": "KRK Systems",
-        "model": "RoKit 5 G4",
-        "type": "active",
-        "price": "300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/krk-rokit-5-gen-4-review-studio-monitor.20711/",
-                "review_published": "20210224",
-            },
-        },
-    },
-    "KRK Systems RoKit 6 G2": {
-        "brand": "KRK Systems",
-        "model": "RoKit 6 G2",
-        "type": "active",
-        "price": "400",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-                "symmetry": "horizontal",
-                "review": "https://www.princeton.edu/3D3A/Directivity.html",
-                "review_published": "20151001",
-            },
-        },
-    },
-    "KV2 Audio ES1.0": {
-        "brand": "KV2 Audio",
-        "model": "ES1.0",
-        "type": "active",
-        "price": "",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-90x40",
-        "measurements": {
-            "vendor-pattern-90x40": {
-                "origin": "Vendors-KV2 Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-the-three-review-powered-speaker.23847/",
+                "review_published": "20210530",
+                "notes": "...performed over 700 measurement which "
+                "resulted in error rate of less than 1% "
+                "below about 7 kHz. Above that the error "
+                "shot way up due to me setting the "
+                "reference axis to the woofer center, not "
+                "the tweeter. This severely disadvantaged "
+                "the NFS system in computing the sound "
+                "field as the tweeter took over more of "
+                "the duty. I picked the woofer because I "
+                "incorrectly assumed this was a mono "
+                "speaker and dual tweeters were used for "
+                "some kind of spatial effect...",
                 "quality": "medium",
-            },
-        },
-    },
-    "KV2 Audio ESR212": {
-        "brand": "KV2 Audio",
-        "model": "ESR212",
-        "type": "active",
-        "price": "",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-90x40",
-        "measurements": {
-            "vendor-pattern-90x40": {
-                "origin": "Vendors-KV2 Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
-        },
-    },
-    "KV2 Audio EX10": {
-        "brand": "KV2 Audio",
-        "model": "EX10",
-        "type": "active",
-        "price": "2900",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-100x80",
-        "measurements": {
-            "vendor-pattern-100x80": {
-                "origin": "Vendors-KV2 Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
-        },
-    },
-    "KV2 Audio EX12": {
-        "brand": "KV2 Audio",
-        "model": "EX12",
-        "type": "active",
-        "price": "3480",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-80x40",
-        "measurements": {
-            "vendor-pattern-80x40": {
-                "origin": "Vendors-KV2 Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
-        },
-    },
-    "KV2 Audio EX15": {
-        "brand": "KV2 Audio",
-        "model": "EX15",
-        "type": "active",
-        "price": "6000",
-        "shape": "liveportable",
-        "amount": "each",
-        "default_measurement": "vendor-pattern-80x60",
-        "measurements": {
-            "vendor-pattern-80x60": {
-                "origin": "Vendors-KV2 Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "review_published": "20221111",
-                "quality": "medium",
-            },
+            }
         },
     },
 }

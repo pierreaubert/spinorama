@@ -21,9 +21,7 @@ import pathlib
 
 import numpy as np
 import pandas as pd
-
-from wand.image import Image as Wim
-from wand.exceptions import CoderError
+import plotly.io
 
 from datas import Measurement
 from datas.metadata import speakers_info
@@ -41,6 +39,8 @@ def graph_melt(df_in: pd.DataFrame) -> pd.DataFrame:
         DataFrame with columns ['Freq', 'Measurements', 'dB']
     """
     # Ensure we have a clean index
+    if df_in is None:
+        return None
     df_out = df_in.copy()
     if not isinstance(df_in.index, pd.RangeIndex):
         df_out = df_out.reset_index(drop=True)
@@ -195,14 +195,21 @@ def write_if_different(new_content: str, filename: str, force: bool = False) -> 
 def write_multiformat(chart, filename, force):
     """Write a png file and then convert and save to jpg and webp"""
     filepath = pathlib.Path(filename)
+
     if not filepath.parent.exists():
-        logger.warning("%s does not exists!", filename)
+        logger.warning("%s parent dir does not exists!", filename)
         return
     if not filepath.is_file() or force:
         try:
-            # print("debug {} {} {}".format(filename, chart.layout.width, chart.layout.height))
-            chart.write_image(
-                filename, format="png", width=chart.layout.width, height=chart.layout.height
+            plotly.io.write_images(
+                [chart, chart, chart],
+                file=[
+                    filename,
+                    filename.replace("_large.png", ".jpg"),
+                    filename.replace("_large.png", ".webp"),
+                ],
+                width=chart.layout.width,
+                height=chart.layout.height,
             )
         except RuntimeError as rt:
             logger.error("writing image %s crashed! %s", filename, rt)
@@ -212,19 +219,82 @@ def write_multiformat(chart, filename, force):
         return
     logger.info("Saving %s", filename)
 
+
+def write_multiformat_batch(
+    charts_and_files: list[tuple[object, str]], force: bool, chunk_size: int = 64
+) -> None:
+    """Write many charts to png/jpg/webp in batches using plotly.io.write_images.
+
+    charts_and_files: list of (chart, filename_png) - png filename
+    force: bypass existing-file check in caller context
+    chunk_size: number of charts to process per batch
+    """
+    if not charts_and_files:
+        return
+
+    # Assume all charts share the same dimensions. Use the first one.
+    first_chart = charts_and_files[0][0]
     try:
-        # print("wim {}".format(filename))
-        with Wim(filename=filename) as pict:
-            filename = filename.replace("_large", "")
-            webp = "{}.webp".format(filename[:-4])
-            if not pathlib.Path(webp).is_file() or force:
-                pict.convert("webp").save(filename=webp)
-            pict.compression_quality = 75
-            jpg = "{}.jpg".format(filename[:-4])
-            if not pathlib.Path(jpg).is_file() or force:
-                pict.convert("jpg").save(filename=jpg)
-    except CoderError as ce:
-        logger.exception("Saving picture %s failed with %s", filename, ce)
+        width = first_chart.layout.width
+        height = first_chart.layout.height
+    except Exception:
+        width = None
+        height = None
+
+    # Process in chunks to limit memory usage
+    for i in range(0, len(charts_and_files), chunk_size):
+        batch = charts_and_files[i : i + chunk_size]
+        charts: list[object] = []
+        files: list[str] = []
+        # Prepare triplets for each chart (png, jpg, webp)
+        for chart, filename in batch:
+            filepath = pathlib.Path(filename)
+            if not filepath.parent.exists():
+                logger.warning("%s parent dir does not exists!", filename)
+                continue
+            if filepath.is_file() and not force:
+                # Skip if already exists and not forcing
+                continue
+            charts.extend([chart, chart, chart])
+            # Handle both _large.png and .png formats
+            if filename.endswith("_large.png"):
+                files.extend(
+                    [
+                        filename,
+                        filename.replace("_large.png", ".jpg"),
+                        filename.replace("_large.png", ".webp"),
+                    ]
+                )
+            elif filename.endswith(".png"):
+                base_filename = filename[:-4]  # Remove .png extension
+                files.extend(
+                    [
+                        filename,
+                        base_filename + ".jpg",
+                        base_filename + ".webp",
+                    ]
+                )
+            else:
+                logger.warning("Unexpected filename format: %s", filename)
+                continue
+        if not charts:
+            continue
+        try:
+            kwargs = {}
+            if width is not None and height is not None:
+                kwargs = {"width": width, "height": height}
+            plotly.io.write_images(charts, file=files, **kwargs)
+            # Log successful writes
+            for _, filename in batch:
+                logger.info("Saving %s", filename)
+        except RuntimeError as rt:
+            logger.error("batch write_images crashed! %s", rt)
+            # Fall back to single writes for this batch to continue progress
+            for chart, filename in batch:
+                try:
+                    write_multiformat(chart, filename, force)
+                except Exception:
+                    logger.exception("fallback write failed for %s", filename)
 
 
 def expected_measurements(spl: pd.DataFrame) -> bool:

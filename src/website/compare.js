@@ -22,15 +22,9 @@ import Plotly from 'plotly.js-dist-min';
 
 import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
+import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import {
-    colorPalettes,
-    contourColorscales,
-    loadConfigFromStorage,
-    saveConfigToStorage,
-    createConfigMenu,
-    applyConfig,
-} from './plot-config.js';
+import { loadConfigFromStorage, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = false;
 
@@ -114,47 +108,6 @@ getMetadata()
 
         let graphsConfigs = [];
 
-        // Helper function to apply configuration and re-plot
-        function applyConfigAndPlot() {
-            if (graphsConfigs.length > 0) {
-                // Apply configuration to existing graph configs
-                const configuredGraphs = graphsConfigs.map((graphConfig) => {
-                    if (graphConfig && flagGraphConfig) {
-                        return applyConfig(graphConfig, config);
-                    }
-                    return graphConfig;
-                });
-
-                // Re-render the plots with updated configuration
-                if (configuredGraphs.length === 1) {
-                    const graphConfig = configuredGraphs[0];
-                    if (graphConfig) {
-                        plot0Container.style.display = 'block';
-                        Plotly.react('plot0', graphConfig.data, graphConfig.layout, graphConfig.config);
-                    }
-                } else if (configuredGraphs.length === 2) {
-                    plot0Container.style.display = 'block';
-                    plot1Container.style.display = 'block';
-                    for (let i = 0; i < configuredGraphs.length; i++) {
-                        const graphConfig = configuredGraphs[i];
-                        if (graphConfig) {
-                            Plotly.react('plot' + i, graphConfig);
-                        }
-                    }
-                } else if (configuredGraphs.length === 3) {
-                    plot0Container.style.display = 'block';
-                    plot1Container.style.display = 'block';
-                    plot2Container.style.display = 'block';
-                    for (let i = 0; i < configuredGraphs.length; i++) {
-                        const graphConfig = configuredGraphs[i];
-                        if (graphConfig) {
-                            Plotly.react('plot' + i, graphConfig);
-                        }
-                    }
-                }
-            }
-        }
-
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
             async function run() {
@@ -204,8 +157,26 @@ getMetadata()
                     // Apply configuration to graphs before rendering
                     const configuredGraphs = graphsConfigs.map((graphConfig) => {
                         if (graphConfig && flagGraphConfig) {
-                            return applyConfig(graphConfig, config);
+                            graphConfig = applyConfig(graphConfig, config);
                         }
+
+                        // Configure for compact non-interactive mode if needed
+                        const plotyFlag = getUrlParameter('ploty');
+                        const graphSmall = 550; // Same as plot.js
+                        const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
+
+                        if (plotyFlag === '1' && isCompact && graphConfig) {
+                            if (!graphConfig.config) {
+                                graphConfig.config = {};
+                            }
+                            graphConfig.config.displayModeBar = false;
+                            graphConfig.config.staticPlot = true;
+                            graphConfig.config.editable = false;
+                            graphConfig.config.scrollZoom = false;
+                            graphConfig.config.doubleClick = false;
+                            graphConfig.config.showTips = false;
+                        }
+
                         return graphConfig;
                     });
 

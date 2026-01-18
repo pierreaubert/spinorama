@@ -19,6 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { labelShort, labelLong } from './plot.js';
+import { getUrlParameter } from './misc.js';
 
 // Color palettes for graphs
 export const colorPalettes = {
@@ -276,36 +277,44 @@ export function mergeConfigs(baseConf, deltaConf) {
 export function applyConfig(options, config) {
     if (!options || !config) return options;
 
+    // Build font configuration object from config
+    const fontConfig = {};
+    if (config.font) {
+        if (config.font.family && config.font.family !== 'default') {
+            fontConfig.family = config.font.family;
+        }
+        if (config.font.color && config.font.color !== 'default') {
+            fontConfig.color = config.font.color;
+        }
+        if (config.font.size && typeof config.font.size === 'number' && config.font.size !== 0) {
+            // Note: font size will be applied as deltas in the specific axis handling below
+        }
+    }
+
     // Apply options to layout if it exists
     if (options.layout) {
         const layout = options.layout;
 
         // Apply font to layout
-        if (Object.keys(fontConfig).length > 0) {
-	    [
-		layout,
-		layout.xaxis,
-		layout.yaxis,
-		layout.zaxis,
-		layout.legend
-	    ].forEach((axis) => {
-		if (axis?.title?.font) {
-		    if (config.font ) {
-			if (config.font.size && typeof config.font.size === 'number') {
-			    if (axis.title.font.size) {
-				axis.title.font.size += config.font.size;
-			    }
-			}
-			if (config.font.family && config.font.family !== 'default') {
-			    axis.title.font.family = config.font.family;
-			}
-			if (config.font.color && config.font.color !== 'default') {
-			    axis.title.font.color = config.font.color;
-			}
-		    }
-		}
+        if (Object.keys(fontConfig).length > 0 || (config.font && config.font.size !== 0)) {
+            [layout, layout.xaxis, layout.yaxis, layout.zaxis, layout.legend].forEach((axis) => {
+                if (axis?.title?.font) {
+                    if (config.font) {
+                        if (config.font.size && typeof config.font.size === 'number') {
+                            if (axis.title.font.size) {
+                                axis.title.font.size += config.font.size;
+                            }
+                        }
+                        if (config.font.family && config.font.family !== 'default') {
+                            axis.title.font.family = config.font.family;
+                        }
+                        if (config.font.color && config.font.color !== 'default') {
+                            axis.title.font.color = config.font.color;
+                        }
+                    }
+                }
             });
-	}
+        }
 
         // Apply margins as deltas to existing margins
         if (config.margins) {
@@ -403,6 +412,7 @@ export function applyConfig(options, config) {
 
             // Apply legend font
             if (Object.keys(fontConfig).length > 0) {
+                if (!layout.legend.font) layout.legend.font = {};
                 layout.legend.font = { ...layout.legend.font, ...fontConfig };
             }
         }
@@ -452,11 +462,11 @@ export function applyConfig(options, config) {
                 }
             }
 
-            if (trace.marker && trace.marker.textfont) {
+            if (trace.marker && trace.marker.textfont && Object.keys(fontConfig).length > 0) {
                 trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
             }
 
-            if (trace.hoverlabel && trace.hoverlabel.font) {
+            if (trace.hoverlabel && trace.hoverlabel.font && Object.keys(fontConfig).length > 0) {
                 trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
             }
 
@@ -529,6 +539,15 @@ export function applyConfig(options, config) {
 
 // Create plot configuration menu
 export function createConfigMenu(divName, config, updateCallback) {
+    // Don't create menu if in compact mode with ploty=1 flag
+    const plotyFlag = getUrlParameter('ploty');
+    const graphSmall = 550; // Same as plot.js
+    const isCompact = window.innerWidth < graphSmall || window.innerHeight < graphSmall;
+
+    if (plotyFlag === '1' && isCompact) {
+        return;
+    }
+
     // Get the container element
     const container = typeof divName === 'string' ? document.getElementById(divName) : divName;
     if (!container) {

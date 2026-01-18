@@ -565,9 +565,20 @@ def symmetrise_speaker_measurements(
         logger.error("Symmetrisation cannot work with no measurement")
         return (None, None)
 
-    if symmetry is not None and symmetry not in ("coaxial", "vertical", "horizontal", "None"):
+    if symmetry is not None and symmetry.lower() not in (
+        "coaxial",
+        "vertical",
+        "horizontal",
+        "none",
+    ):
         logger.error("symmetry %s is unknown", symmetry)
         return (None, None)
+
+    if symmetry is None or symmetry.lower() == "none":
+        return (
+            h_spl.copy() if h_spl is not None else None,
+            v_spl.copy() if v_spl is not None else None,
+        )
 
     if symmetry == "coaxial":
         if h_spl is not None:
@@ -583,10 +594,6 @@ def symmetrise_speaker_measurements(
     elif v_spl is not None and symmetry == "vertical":
         v_spl2 = symmetrise_measurement(v_spl)
         return (h_spl.copy() if h_spl is not None else None, v_spl2)
-    return (
-        h_spl.copy() if h_spl is not None else None,
-        v_spl.copy() if v_spl is not None else None,
-    )
 
 
 def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
@@ -690,8 +697,13 @@ def parse_graphs_speaker(
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
 
         logger.debug("DEBUG title: %s", title)
-        logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
-        logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+        if df_even is not None:
+            logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+            logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+        else:
+            logger.info("INFO df_even is None")
+            return {}
+
         try:
             if title == "CEA2034":
                 df_full = spin_compute_di_eir(speaker_name, title, df_even)

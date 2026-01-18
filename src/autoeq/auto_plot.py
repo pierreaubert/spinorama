@@ -65,9 +65,12 @@ def graph_eq(freq, peq):
     for i, (pos, biquad) in enumerate(peq):
         data_frame[f"{biquad.type2str_long()} {i}"] = peq_spl(freq, [(pos, biquad)])
 
+    # print('DEBUG: #{} freq[0]: {}'.format(len(freq), freq[0]))
     traces = []
     for i, key in enumerate(data_frame.keys()):
         if key != "Freq":
+            # print('DEBUG : #{} {}[0]: '.format(len(data_frame[key]), key, data_frame[key][0]))
+            # print(data_frame[key])
             traces.append(
                 go.Scatter(
                     x=data_frame.Freq,

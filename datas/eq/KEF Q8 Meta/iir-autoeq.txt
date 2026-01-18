@@ -1,0 +1,14 @@
+EQ for KEF Q8 Meta computed from ErinsAudioCorner data
+Preference Score 2.64 with EQ 5.22
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-17:53:55
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc   117 Hz Gain +2.99 dB Q 0.89
+Filter  2: ON PK Fc   139 Hz Gain +3.00 dB Q 0.25
+Filter  3: ON PK Fc   166 Hz Gain -5.90 dB Q 0.98
+Filter  4: ON PK Fc   739 Hz Gain -2.45 dB Q 1.08
+Filter  5: ON PK Fc  1333 Hz Gain +1.87 dB Q 2.99
+Filter  6: ON PK Fc  7059 Hz Gain -3.72 dB Q 1.49
+Filter  7: ON PK Fc 16239 Hz Gain -2.02 dB Q 1.50

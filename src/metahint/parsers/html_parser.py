@@ -19,6 +19,11 @@ def parse_spec_key_values(html: str) -> Tuple[Dict[str, str], List[str]]:
           <span class="value">88dB</span>
         </li>
       </ul>
+
+    Or tables:
+      <table>
+        <tr><th>Sensitivity</th><td>87 dB</td></tr>
+      </table>
     Returns a tuple of (mapping, notes).
     """
     soup = BeautifulSoup(html, "lxml")
@@ -55,6 +60,17 @@ def parse_spec_key_values(html: str) -> Tuple[Dict[str, str], List[str]]:
                     v = _clean_text(dd.get_text(" "))
                     if k:
                         out[k] = v
+
+    # Also try tables with th/td pairs
+    for table in soup.find_all("table"):
+        for row in table.find_all("tr"):
+            cells = row.find_all(["th", "td"])
+            if len(cells) == 2:
+                k = _clean_text(cells[0].get_text(" "))
+                v = _clean_text(cells[1].get_text(" "))
+                if k and v:
+                    out[k] = v
+
     if not out:
         notes.append("no_spec_list_found")
     return out, notes

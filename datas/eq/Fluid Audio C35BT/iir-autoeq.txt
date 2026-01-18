@@ -1,0 +1,14 @@
+EQ for Fluid Audio C35BT computed from ASR data
+Preference Score 2.53 with EQ 4.10
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-10-30-15:47:03
+
+Preamp: -1.9 dB
+
+Filter  1: ON PK Fc   121 Hz Gain -2.40 dB Q 1.35
+Filter  2: ON PK Fc   299 Hz Gain +1.97 dB Q 1.70
+Filter  3: ON PK Fc   409 Hz Gain +0.97 dB Q 3.83
+Filter  4: ON PK Fc   739 Hz Gain +1.52 dB Q 2.36
+Filter  5: ON PK Fc  1244 Hz Gain -3.41 dB Q 4.17
+Filter  6: ON PK Fc  4051 Hz Gain -2.01 dB Q 1.17
+Filter  7: ON PK Fc  9648 Hz Gain -3.85 dB Q 1.49

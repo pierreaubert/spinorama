@@ -24,6 +24,7 @@ import os
 import re
 import pathlib
 
+import plotly.io
 from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
@@ -34,7 +35,6 @@ from spinorama.filter_scores import (
     scores_apply_filter,
     scores_print,
 )
-from spinorama.speaker import write_multiformat
 from autoeq.auto_target import get_freq, get_target
 from autoeq.auto_plot import graph_results as auto_graph_results
 from autoeq.auto_strategy import optim_strategy
@@ -116,7 +116,7 @@ def print_auto_graphs_seq(
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
 
-        # print('DEBUG: local_freq=', freq)
+        # print('DEBUG: #{} freq0={}'.format(len(freq), freq[0]))
         graphs = auto_graph_results(
             speaker_name,
             speaker_origin,
@@ -133,29 +133,77 @@ def print_auto_graphs_seq(
             auto_score,
         )
 
+        # Collect images to write (png, jpg, webp) and batch write using plotly.io
+        graphs_to_print: list = []
+        filenames_to_print: list[str] = []
+        widths_to_print: list[int] = []
+        heights_to_print: list[int] = []
+        img_width: int | None = None
+        img_height: int | None = None
+
         for name, graph in graphs:
             origin = speaker_origin
             if "Vendors-" in origin:
                 origin = origin[8:]
-            graph_filename = "{}/{}/{}/filters_{}".format(
+            base_filename = "{}/{}/{}/filters_{}".format(
                 CPATH_DIST_SPEAKERS, speaker_name, origin, name
             )
             if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
-                graph_filename = "{}/filters_{}".format(
+                base_filename = "{}/filters_{}".format(
                     pathlib.Path(optim_config["output_dir"]).resolve(), name
                 )
 
             if optim_config["use_grapheq"]:
                 grapheq_name = optim_config["grapheq_name"]
                 short_name = grapheq_name.lower().replace(" ", "-")
-                graph_filename += short_name
+                base_filename += short_name
             if optim_config["smoke_test"]:
-                graph_filename += "_smoketest"
-            graph_filename += ".png"
-            logger.debug("writing graph %s", graph_filename)
+                base_filename += "_smoketest"
+
+            # Decide whether to write based on existing files and force flag
             force = not optim_config["generate_images_only"]
-            # print('{} {} {}'.format(graph_filename, graph.layout.width, graph.layout.height))
-            write_multiformat(chart=graph, filename=graph_filename, force=force)
+
+            for ext in (".json", ".png", ".jpg", ".webp"):
+                filename = f"{base_filename}{ext}"
+                # Ensure parent directory exists
+                pathlib.Path(filename).parent.mkdir(parents=True, exist_ok=True)
+
+                needs_write = (
+                    force
+                    or not os.path.exists(filename)
+                    or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+                )
+                # print('1: {} {}'.format(filename, needs_write))
+                if needs_write:
+                    if ext == ".json":
+                        content = graph.to_json()
+                        with open(filename, "w", encoding="utf-8") as f_d:
+                            f_d.write(content)
+                    else:
+                        # Use the first graph's dimensions
+                        try:
+                            img_width = int(graph.layout.width)
+                            img_height = int(graph.layout.height)
+                        except Exception:
+                            # Fallback defaults if layout is missing dimensions
+                            graph.layout.width = 800
+                            graph.layout.height = 600
+                        graphs_to_print.append(graph)
+                        widths_to_print.append(img_width)
+                        heights_to_print.append(img_height)
+                        filenames_to_print.append(filename)
+                    logger.debug("queueing graph %s", filename)
+
+        # if len(filenames_to_print) > 0:
+        #     try:
+        #         plotly.io.write_images(
+        #             fig=graphs_to_print,
+        #             file=filenames_to_print,
+        #             width=widths_to_print,
+        #             height=heights_to_print,
+        #         )
+        #     except RuntimeError as rt:
+        #         logger.error("writing image(s) crashed! %s", rt)
 
 
 def print_small_summary(

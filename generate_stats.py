@@ -286,7 +286,10 @@ def print_eq(speakers, txt_format):
                 else:
                     print("Parameter {} is {}".format(i, type(p)))
 
-        print(format_string.format(*format_parameters))
+        try:
+            print(format_string.format(*format_parameters))
+        except TypeError:
+            logger.error("Typerror for {}".format(format_parameters))
 
 
 def main():

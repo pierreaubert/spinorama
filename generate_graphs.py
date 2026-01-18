@@ -279,9 +279,11 @@ def main(log_level, args):
     )
 
     # Update cache if needed
-    if not filters:  # Only update cache if no filters are applied
+    if not filters:
+        # No filters - save complete cache
         cache_save(df_new)
-    elif args.update_cache:
+    else:
+        # Filters applied - update cache with new/changed measurements
         cache_update(df_new, filters, log_level)
 
     logger.info("Graph generation completed successfully")

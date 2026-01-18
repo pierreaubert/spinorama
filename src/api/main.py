@@ -62,9 +62,6 @@ ALIAS_MEASUREMENTS = {
     "Predicted In-Room Response": "Estimated In-Room Response",
 }
 
-KNOWN_FORMATS = set(["jpeg", "jpg", "json", "png", "webp"])
-
-
 # Global variable to store metadata
 _metadata_cache = None
 
@@ -244,9 +241,9 @@ async def get_speaker_measurements_data(
             "error": f"Version {measurement_name} is not known! Valid options are ({KNOWN_MEASUREMENTS})."
         }
 
-    if measurement_format and measurement_format not in KNOWN_FORMATS:
+    if measurement_format and measurement_format != "json":
         return {
-            "error": f"Version {measurement_format} is not known! Valid options are either None or({KNOWN_FORMATS})."
+            "error": f"Version {measurement_format} is not known! Only valid options is None or json."
         }
 
     measurement_file = f"{dir_data}/{measurement_name}.{measurement_format}"

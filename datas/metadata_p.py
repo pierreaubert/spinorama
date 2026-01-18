@@ -732,6 +732,100 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Pitt & Giblin Flare": {
+        "brand": "Pitt & Giblin",
+        "model": "Flare",
+        "type": "active",
+        "price": "7700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Pitt & Giblin",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "https://www.pittandgiblin.com.au/flare",
+                },
+                "review_published": "20250921",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "size": {
+                        "height": 550,
+                        "width": 295,
+                        "depth": 290,
+                    },
+                    "weight": 17,
+                },
+            },
+        },
+    },
+    "Pitt & Giblin Superwax": {
+        "brand": "Pitt & Giblin",
+        "model": "Superwax",
+        "type": "active",
+        "price": "14600",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Pitt & Giblin",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "https://www.pittandgiblin.com.au/superwax",
+                },
+                "review_published": "20250921",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "size": {
+                        "height": 1000,
+                        "width": 1000,
+                        "depth": 550,
+                    },
+                    "weight": 92,
+                },
+            },
+        },
+    },
+    "Pitt & Giblin Superwax Mini": {
+        "brand": "Pitt & Giblin",
+        "model": "Superwax Mini",
+        "type": "active",
+        "price": "8400",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Pitt & Giblin",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "https://www.pittandgiblin.com.au/swmini",
+                    "yt": "https://www.youtube.com/watch?v=Iu0GSZcqomE",
+                },
+                "review_published": "20250921",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "size": {
+                        "height": 715,
+                        "width": 460,
+                        "depth": 380,
+                    },
+                    "weight": 40,
+                },
+            },
+        },
+    },
     "Pioneer SP-EC73": {
         "brand": "Pioneer",
         "model": "SP-EC73",

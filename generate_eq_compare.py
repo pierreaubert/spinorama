@@ -28,8 +28,6 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.misc import need_update
-from spinorama.speaker import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -37,10 +35,10 @@ from spinorama.load_rew_eq import parse_eq_iir_rews
 VERSION = 0.2
 
 
-def print_eq_compare(data, force):
+def build_eq_figure_and_filename(data):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.png".format(CPATH_DIST_SPEAKERS, brand, model)
+    filename = "{}/{} {}/eq_compare.json".format(CPATH_DIST_SPEAKERS, brand, model)
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
@@ -55,11 +53,10 @@ def print_eq_compare(data, force):
             "yanchor": "bottom",
         }
     )
-    recent = need_update(filename, dependencies=eqs)
-    write_multiformat(fig, filename, force or recent)
+    return fig, filename, eqs
 
 
-def main(force):
+def main(force, batch_size):
     # load all metadata from generated json file
     json_filename, _ = find_metadata_file()
     if json_filename is None:
@@ -72,8 +69,17 @@ def main(force):
 
     logger.info("Data %s loaded (%d speakers!", json_filename, len(jsmeta))
 
+    # Collect figures that need to be (re)generated
+    batch: list[tuple[object, str]] = []
+
     for speaker_data in jsmeta.values():
-        print_eq_compare(speaker_data, force)
+        fig, filename, deps = build_eq_figure_and_filename(speaker_data)
+
+        if not os.path.exists(filename) or os.path.getsize(filename) == 0 or force:
+            content = fig.to_json()
+            if os.path.exists(os.path.dirname(filename)):
+                with open(filename, "w", encoding="utf-8") as f_d:
+                    f_d.write(content)
 
     return 0
 
@@ -87,6 +93,12 @@ if __name__ == "__main__":
         "--force", action="store_true", help="Regenerate pictures even if they already exist."
     )
     parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=64,
+        help="Number of figures to process per write_images batch (default: 64)",
+    )
+    parser.add_argument(
         "--log-level",
         default="WARNING",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
@@ -98,5 +110,6 @@ if __name__ == "__main__":
     logger = get_custom_logger(level=args2level(args), duplicate=True)
 
     FORCE = args.force
+    BATCH_SIZE = args.batch_size
 
-    sys.exit(main(FORCE))
+    sys.exit(main(FORCE, BATCH_SIZE))

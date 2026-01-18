@@ -1,0 +1,13 @@
+EQ for Focal Aria Evo X No.2 computed from ErinsAudioCorner data
+Preference Score 4.79 with EQ 6.33
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2025-09-28-17:36:21
+
+Preamp: -2.4 dB
+
+Filter  1: ON PK Fc    51 Hz Gain +2.99 dB Q 0.25
+Filter  2: ON PK Fc    92 Hz Gain -3.82 dB Q 1.18
+Filter  3: ON PK Fc   382 Hz Gain -1.47 dB Q 0.69
+Filter  4: ON PK Fc  4342 Hz Gain +2.99 dB Q 0.63
+Filter  5: ON PK Fc  5536 Hz Gain -3.88 dB Q 1.49
+Filter  6: ON PK Fc 11085 Hz Gain -5.28 dB Q 1.20

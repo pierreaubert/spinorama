@@ -19,4 +19,41 @@ speakers_info_z: SpeakerDatabase = {
             },
         },
     },
+    "Zu Audio Method": {
+        "brand": "Zu Audio",
+        "model": "Method",
+        "type": "passive",
+        "price": "700",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 381,
+                        "width": 222,
+                        "depth": 280,
+                    },
+                    "weight": 9,
+                },
+            },
+        },
+    },
 }

@@ -1,0 +1,10 @@
+AutoEQ Optimization Result
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    60 Hz Gain +3.00 dB Q 2.91
+Filter  2: ON PK Fc   254 Hz Gain +0.10 dB Q 3.00
+Filter  3: ON PK Fc   509 Hz Gain -1.32 dB Q 1.00
+Filter  4: ON PK Fc  1062 Hz Gain +1.59 dB Q 3.00
+Filter  5: ON PK Fc  2364 Hz Gain -1.00 dB Q 3.00
+Filter  6: ON PK Fc  5261 Hz Gain -2.17 dB Q 1.61
+Filter  7: ON PK Fc 14566 Hz Gain -1.63 dB Q 2.42

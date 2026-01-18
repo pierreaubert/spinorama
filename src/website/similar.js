@@ -21,15 +21,9 @@
 import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
+import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
-import {
-    colorPalettes,
-    contourColorscales,
-    loadConfigFromStorage,
-    saveConfigToStorage,
-    createConfigMenu,
-    applyConfig,
-} from './plot-config.js';
+import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -65,43 +59,10 @@ getMetadata()
         let config = loadConfigFromStorage();
         let currentGraphOptions = [];
 
-        // Create configuration menu - add it to the form container
-        createConfigMenu(formContainer, config, (updatedConfig) => {
-            config = updatedConfig;
-            saveConfigToStorage(config);
-            // Re-plot with updated configuration if we have existing graph options
-            if (currentGraphOptions.length > 0) {
-                applyConfigAndPlot();
-            }
-        });
-
-        // Helper function to apply configuration and re-plot
-        function applyConfigAndPlot() {
-            if (currentGraphOptions.length > 0) {
-                // Apply configuration to existing graph options
-                for (let i = 0; i < currentGraphOptions.length; i++) {
-                    const graphOptions = currentGraphOptions[i];
-                    if (graphOptions?.length === 1) {
-                        let options = applyConfig(graphOptions[0], config);
-                        options.layout.title = graphOptions[0].layout.title; // Preserve title
-                        Plotly.react('plot' + i, options.data, options.layout, options.config);
-                    } else if (graphOptions?.length === 2) {
-                        if (i === 0) {
-                            let options0 = applyConfig(graphOptions[0], config);
-                            options0.layout.title = graphOptions[0].layout.title;
-                            Plotly.react('plot0', options0.data, options0.layout, options0.config);
-                            let options1 = applyConfig(graphOptions[1], config);
-                            options1.layout.title = graphOptions[1].layout.title;
-                            Plotly.react('plot1', options1.data, options1.layout, options1.config);
-                        } else {
-                            let options = applyConfig(graphOptions[1], config);
-                            options.layout.title = graphOptions[1].layout.title;
-                            Plotly.react('plot' + (i + 1), options.data, options.layout, options.config);
-                        }
-                    }
-                }
-            }
-        }
+        // Create configuration menu - add it to the form container (only if not compact with ploty=1)
+        const plotyFlag = getUrlParameter('ploty');
+        const graphSmall = 550; // Same as plot.js
+        const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -110,11 +71,11 @@ getMetadata()
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
                     // Reset current graph options for this new plot
                     currentGraphOptions = [];
-
+                    const speakersName0 = speakersName[0];
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
                         const currentGraphs = [graphs[0], graphs[i + 1]];
-                        const currentNames = [speakersName[0] + '<br> v.s. ' + speakersName[i + 1], speakersName[i + 1]];
+                        const currentNames = [speakersName0, speakersName[i + 1]];
                         if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
                             graphOptions = setCEA2034(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
@@ -154,23 +115,8 @@ getMetadata()
                             graphOptions = setGlobe(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         }
 
-                        // Store the original graph options for later configuration updates
-                        currentGraphOptions[i] = graphOptions;
-
                         if (graphOptions?.length === 1) {
-                            let options = applyConfig(graphOptions[0], config);
-                            Plotly.newPlot('plot' + i, options);
-                        } else if (graphOptions?.length === 2) {
-                            if (i === 0) {
-                                let options0 = applyConfig(graphOptions[0], config);
-                                Plotly.newPlot('plot0', options0);
-                                let options1 = applyConfig(graphOptions[1], config);
-                                Plotly.newPlot('plot1', options1);
-                            } else {
-                                const pos = i + 1;
-                                let options = applyConfig(graphOptions[1], config);
-                                Plotly.newPlot('plot' + pos, options);
-                            }
+                            Plotly.newPlot('plot' + i, graphOptions[0]);
                         }
                     }
                     return null;

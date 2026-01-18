@@ -782,7 +782,7 @@ def plot_spinorama(
 
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
-    # # print('DI min={} max={}'.format(di_min, di_max))
+    # print('DI min={} max={}'.format(di_min, di_max))
 
     fig.add_traces(lines)
     for t in lines_di:
@@ -832,19 +832,35 @@ def plot_graph(
     return fig
 
 
+def _parse_angle(measurement: str) -> int | None:
+    """Parse angle from measurement string like '10°', '-30°', 'On Axis'."""
+    if measurement == "On Axis":
+        return 0
+    if measurement.endswith("°"):
+        try:
+            return int(measurement[:-1])
+        except ValueError:
+            pass
+    return None
+
+
 def plot_graph_spl(
     df,
     params,
     valid_freq_range: tuple[float, float],
+    include_all_angles: bool = False,
 ):
     layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df:
         if measurement != "Freq":
             visible = None
+            angle = _parse_angle(measurement)
             if measurement in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
                 visible = True
             elif measurement in ("-10°", "-20°", "-30°", "-40°", "-50°", "-60°"):
+                visible = "legendonly"
+            elif include_all_angles and angle is not None:
                 visible = "legendonly"
             else:
                 continue
@@ -854,7 +870,7 @@ def plot_graph_spl(
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
                 visible=visible,
                 showlegend=True,
-                legendrank=legend_rank[measurement],
+                legendrank=angle if angle is not None else 0,
             )
             if layout == "compact":
                 trace.name = label_short.get(measurement, measurement)
@@ -864,8 +880,6 @@ def plot_graph_spl(
                 trace.legendgrouptitle = {"text": "Measurements"}
             if measurement in UNIFORM_COLORS:
                 trace.marker = {"color": UNIFORM_COLORS[measurement]}
-            if measurement in legend_rank:
-                trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
     fig.update_xaxes(generate_xaxis())
@@ -1072,10 +1086,10 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
     return fig
 
 
-def plot_graph_onaxis(df, params, minmax_slopes, is_normalized, valid_freq_range):
+def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid_freq_range):
     fig_onaxis = make_subplots(specs=[[{"secondary_y": True}]])
 
-    curve = df["On Axis_unmelted"]
+    curve = onaxis_df
     traces = plot_graph_regression_traces(curve, "On Axis", params, valid_freq_range)
     for trace in traces:
         fig_onaxis.add_trace(trace, secondary_y=False)

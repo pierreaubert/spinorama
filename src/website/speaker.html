@@ -10,7 +10,7 @@
     <%namespace name="util" module="website.utils" import="*"/>
     <%include file="tabs_header.html"/>
 
-    <div class="tab-pane display:non" id="pane-1">
+    <div class="tab-pane display:none" id="pane-1">
       <div class="container">
 	<table>
           <tr>
@@ -36,21 +36,17 @@
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${freq | space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key}/${freq | space2url}.webp"
-                    width="1200"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${freq}"
-                    src="${g_key}/${freq | space2url}.jpg"
-                    width="1200"
-                    height="800"
-                  >
-                </picture>
+		<div id="${g_key}-${freq}"></div>
+		<script type="module">
+		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+		 let graph = "${g_key}/${freq | space2url}";
+		 let graph_json = "./" + graph + ".json";
+		 const spec = fetch(graph_json)
+		   .then( (response) => response.json() )
+		   .then( (spec) => {
+		     displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, false, 1);
+		   });
+		</script>
               </a>
             </div>
           </td>
@@ -61,46 +57,48 @@
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${contour | unmeltC, space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key}/${contour | unmeltC, space2url}.webp"
-                    width="1200"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${contour}"
-                    width="1200"
-                    height="800"
-                    src="${g_key}/${contour | unmeltC, space2url}.jpg"
-                  >
-                </picture>
+                %if '3D' not in contour:
+		<div id="${g_key}-${contour}"></div>
+		<script type="module">
+		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+		 let graph = "${g_key}/${contour | space2url}";
+		 let graph_json = "./" + graph + ".json";
+		 const spec = fetch(graph_json)
+		   .then( (response) => response.json() )
+		   .then( (spec) => {
+		     displayGraph("${contour}", graph_json, "${g_key}-${contour}", spec, false, 1);
+		   });
+		</script>
+                %endif
               </a>
             </div>
           </td>
         </tr>
         % endfor
+        <tr>
+          <td class="is-centered">
+            % for contour in g_contour:
+            %   if '3D' in contour:
+            <div class="box has-background-white-bis m-1 p-1">
+              <a href="${g_key}/${contour | unmeltC, space2url}.html">
+		<div id="${g_key}-${contour}">
+		  <div class="buttons">
+		    <button class="button is-info">
+		      Click for a 3D view of ${contour}!
+		    </button>
+		  </div>
+		</div>
+              </a>
+            </div>
+          %   endif
+          % endfor
+          </td>
+        </tr>
         % for radar in g_radar:
         <tr>
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${radar | unmeltR, space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key}/${radar | unmeltR, space2url}.webp"
-                    width="1000"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${radar}"
-                    src="${g_key}/${radar | unmeltR, space2url}.jpg"
-                    width="1000"
-                    height="800"
-                  >
-                </picture>
               </a>
             </div>
           </td>
@@ -115,13 +113,6 @@
     <div class="tab-pane display:none" id="pane-3">
       <div class="section">
       <table>
-<!--
-	<tr>
-	  <td>
-	    <%include file="speaker_tip.html"/>
-	  </td>
-	</tr>
--->
         % if g_eq is not None:
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
@@ -131,21 +122,17 @@
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${freq | space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key_eq}/${freq | space2url}.webp"
-                    width="1200"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${freq}"
-                    src="${g_key_eq}/${freq | space2url}.jpg"
-                    width="1200"
-                    height="800"
-                  >
-                </picture>
+		<div id="${g_key_eq}-${freq}"></div>
+		<script type="module">
+		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+		 let graph = "${g_key_eq}/${freq | space2url}";
+		 let graph_json = "./" + graph + ".json";
+		 const spec = fetch(graph_json)
+		   .then( (response) => response.json() )
+		   .then( (spec) => {
+		     displayGraph("${freq}", graph_json, "${g_key_eq}-${freq}", spec, false, 1);
+		   });
+		</script>
               </a>
             </div>
           </td>
@@ -156,21 +143,17 @@
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key_eq}/${contour | unmeltC, space2url}.webp"
-                    width="1200"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${contour}"
-                    width="1200"
-                    height="800"
-                    src="${g_key_eq}/${contour | unmeltC, space2url}.jpg"
-                  >
-                </picture>
+		<div id="${g_key_eq}-${contour}"></div>
+		<script type="module">
+		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+		 let graph = "${g_key_eq}/${contour | space2url}";
+		 let graph_json = "./" + graph + ".json";
+		 const spec = fetch(graph_json)
+		   .then( (response) => response.json() )
+		   .then( (spec) => {
+		     displayGraph("${contour}", graph_json, "${g_key_eq}-${contour}", spec, false, 1);
+		   });
+		</script>
               </a>
             </div>
           </td>
@@ -181,21 +164,6 @@
           <td>
             <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
-                <picture>
-                  <source
-                    srcset="${g_key_eq}/${radar | unmeltR, space2url}.webp"
-                    width="1000"
-                    height="800"
-                    type="image/webp"
-                  >
-                  <img
-                    class="graph"
-                    alt="${radar}"
-                    src="${g_key_eq}/${radar | unmeltR, space2url}.jpg"
-                    width="1000"
-                    height="800"
-                  >
-                </picture>
               </a>
             </div>
           </td>
@@ -217,38 +185,30 @@
         % for freq in g_freq:
         <tr>
           <td>
-            <picture>
-              <source
-                srcset="${g_key}/${freq | space2url}.webp"
-                width="1200"
-                height="800"
-                type="image/webp"
-              >
-              <img
-                class="graph"
-                alt="Frequency"
-                width="1200"
-                height="800"
-                src="${g_key}/${freq | space2url}.jpg"
-              >
-            </picture>
+	    <div id="comp-${g_key}-${freq}"></div>
+	    <script type="module">
+	     import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+	     let graph = "${g_key}/${freq | space2url}";
+	     let graph_json = "./" + graph + ".json";
+	     const spec = fetch(graph_json)
+	       .then( (response) => response.json() )
+	       .then( (spec) => {
+		 displayGraph("${freq}", graph_json, "comp-${g_key}-${freq}", spec, false, 2);
+	       });
+	    </script>
           </td>
           <td>
-            <picture>
-              <source
-                srcset="${g_key_eq}/${freq | space2url}.webp"
-                width="1200"
-                height="800"
-                type="image/webp"
-              >
-              <img
-                class="graph"
-                alt="Frequency with EQ"
-                width="1200"
-                height="800"
-                src="${g_key_eq}/${freq | space2url}.jpg"
-              >
-            </picture>
+	    <div id="comp-${g_key_eq}-${freq}"></div>
+	    <script type="module">
+	     import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+	     let graph = "${g_key_eq}/${freq | space2url}";
+	     let graph_json = "./" + graph + ".json";
+	     const spec = fetch(graph_json)
+	       .then( (response) => response.json() )
+	       .then( (spec) => {
+		 displayGraph("${freq}", graph_json, "comp-${g_key_eq}-${freq}", spec, false, 2);
+	       });
+	    </script>
           </td>
         </tr>
         % endfor

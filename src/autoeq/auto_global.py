@@ -41,31 +41,37 @@ CONVERGENCE_TOLERANCE = 0.001
 Encoded = list[float | int]
 
 
+def next_power_of_2(n):
+    if n <= 0:
+        return 1
+    # Find the exponent of the next power of 2
+    exponent = math.ceil(math.log2(n + 1))
+    # Raise 2 to that exponent
+    return 2**exponent
+
+
 def _resample(x1: list[float], x2: list[float], y1: list[float]) -> list[float]:
-    # resample
-    #   x1 array of x values
-    #   y1 array of y values
-    #   x2 new array of x values
-    #   return y2 which is a linear interpolation of
-    # Note:
-    # doesnt need to be fast since it is called only a few times
-    #
-    # x1    .   .   .  .  .
-    # x2      .   .  ..  . ...
-    # for x each element of x2
-    #  find i such that x1[i] <= x < x1[i+1]
-    #  y = linear interpolation of y1[i] and y1[i+1]
-    # --------------
-    # y2 = []
-    # for x in x2:
-    #    i = bisect.bisect_left(x1, x)
-    #    j = bisect.bisect_right(x1, x)
-    #    t = (y1[j]-y1[i])/(x1[j]-x1[i])
-    #    y2.append(t)
-    # return y2
-    # --------------
-    spline = InterpolatedUnivariateSpline(np.log10(x1), y1, k=3)
-    return spline(np.log10(x2))
+    """Resample y1 from x1 coordinates to x2 coordinates using log-scale spline interpolation.
+    
+    Args:
+        x1: Original frequency values (must be positive)
+        x2: Target frequency values (must be positive)
+        y1: Original y values corresponding to x1
+        
+    Returns:
+        Interpolated y values at x2 frequencies
+        
+    Raises:
+        ValueError: If any frequency values are <= 0
+    """
+    x1_arr = np.asarray(x1)
+    x2_arr = np.asarray(x2)
+    
+    if np.any(x1_arr <= 0) or np.any(x2_arr <= 0):
+        raise ValueError("Frequencies must be positive for log-scale interpolation")
+    
+    spline = InterpolatedUnivariateSpline(np.log10(x1_arr), y1, k=3)
+    return spline(np.log10(x2_arr))
 
 
 class GlobalOptimizer(object):
@@ -207,17 +213,15 @@ class GlobalOptimizer(object):
         peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
         flat_on = np.add(self.target_on, peq_freq)
-        # currently unsued
-        # flat_lw = np.add(self.target_lw, peq_freq)
         # split flatness of ON on various ranges
         flatness_on_bass_mid = np.linalg.norm(
             flat_on[self.freq_min_index : self.freq_midrange_index], ord=2
         )
         flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_midrange_index :], ord=2)
-        # this is black magic, why 10, 20, 40?
-        # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
-        # without the constraint optimising the score get crazy results
-        return score, score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
+        # configurable weights for flatness penalty (higher = more flexibility, less flat)
+        bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
+        mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
+        return score, score + float(flatness_on_bass_mid) / bass_mid_weight + float(flatness_on_mid_high) / mid_high_weight
 
     def _opt_peq_score_lw(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
@@ -225,12 +229,13 @@ class GlobalOptimizer(object):
         peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
         flat_lw = np.add(self.target_lw, peq_freq)
-        flatness_lw = np.linalg.norm(flat_lw, ord=2)
         flatness_lw_bass_mid = np.linalg.norm(
             flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2
         )
         flatness_lw_mid_high = np.linalg.norm(flat_lw[self.freq_midrange_index :], ord=2)
-        return score, score + float(flatness_lw_bass_mid) / 15 + float(flatness_lw_mid_high) / 50
+        bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
+        mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
+        return score, score + float(flatness_lw_bass_mid) / bass_mid_weight + float(flatness_lw_mid_high) / mid_high_weight
 
     def _opt_peq_score_pir(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
@@ -238,12 +243,13 @@ class GlobalOptimizer(object):
         peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
         flat_pir = np.add(self.target_pir, peq_freq)
-        flatness_pir = np.linalg.norm(flat_pir, ord=2)
         flatness_pir_bass_mid = np.linalg.norm(
             flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2
         )
         flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
-        return score, score + float(flatness_pir_bass_mid) / 15 + float(flatness_pir_mid_high) / 50
+        bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
+        mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
+        return score, score + float(flatness_pir_bass_mid) / bass_mid_weight + float(flatness_pir_mid_high) / mid_high_weight
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
@@ -374,15 +380,21 @@ class GlobalOptimizer(object):
         def _opt_constraints_q(x) -> int:
             # you don't need to re-check the Q since it done by the bounds
             # but we should reduce the Q with frequency since it is less and less detectable
-            # 3400Hz => 340 m/s / 3400 Hz == 10 cm
-            # assumption 10 cm movement -> above that very low q allowed only
+            # Based on psychoacoustic research: higher frequencies need lower Q for audibility
+            # Configurable thresholds for frequency-dependent Q limits
+            q_freq_threshold_1 = self.config.get("q_freq_threshold_1", 2000)
+            q_max_above_threshold_1 = self.config.get("q_max_above_threshold_1", 2.0)
+            q_freq_threshold_2 = self.config.get("q_freq_threshold_2", 3500)
+            q_max_above_threshold_2 = self.config.get("q_max_above_threshold_2", 1.5)
+            
             l = len(x) // 4
             for i in range(l):
                 _, f, q, _, _ = self._x2params(x, i)
                 if q > self.max_q or q < self.min_q:
                     return 1
                 f_hz = self._index2freq(f)
-                if (f_hz > 2000 and q > 2.0) or (f_hz > 3500 and q > 1.5):
+                if (f_hz > q_freq_threshold_1 and q > q_max_above_threshold_1) or \
+                   (f_hz > q_freq_threshold_2 and q > q_max_above_threshold_2):
                     return 1
             return -1
 
@@ -562,12 +574,13 @@ class GlobalOptimizer(object):
         bounds = self._opt_bounds(self.max_peq)
         n_params = len(bounds)
         popsize = 15  # Default population size multiplier
-        sobol_size = popsize * n_params
+        sobol_size = next_power_of_2(popsize * n_params)
 
-        # Generate Sobol sequence
+        # Generate Sobol sequence with optional seed for reproducibility
         from scipy.stats import qmc
 
-        sobol = qmc.Sobol(d=n_params, scramble=True)
+        random_seed = self.config.get("random_seed", None)
+        sobol = qmc.Sobol(d=n_params, scramble=True, seed=random_seed)
         sobol_samples = sobol.random(n=sobol_size)
 
         # Scale Sobol samples to bounds

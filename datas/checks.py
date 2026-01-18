@@ -34,6 +34,12 @@ VALID_FORMATS = (
 )
 VALID_QUALITIES = ("low", "medium", "high", "unknown")
 
+# Reasonable ranges for speaker specifications
+IMPEDANCE_MIN = 2.0  # Minimum reasonable impedance in ohms
+IMPEDANCE_MAX = 16.0  # Maximum reasonable impedance in ohms
+SENSITIVITY_MIN = 70.0  # Minimum reasonable sensitivity in dB
+SENSITIVITY_MAX = 120.0  # Maximum reasonable sensitivity in dB
+
 
 class ValidationResult:
     """Container for validation results."""
@@ -161,6 +167,32 @@ def validate_measurements(name: str, speaker: Dict[str, Any], result: Validation
         validate_measurement(name, measurement_key, measurement_data, result)
 
 
+def validate_impedance(name: str, measurement_key: str, impedance: Any, result: ValidationResult) -> None:
+    """Validate impedance value."""
+    if not isinstance(impedance, (int, float)):
+        result.add_error(f"Impedance must be a number for measurement '{measurement_key}' in {name}")
+        return
+    
+    if impedance < IMPEDANCE_MIN or impedance > IMPEDANCE_MAX:
+        result.add_warning(
+            f"Unlikely impedance value {impedance}Ω for measurement '{measurement_key}' in {name}. "
+            f"Expected range: {IMPEDANCE_MIN}-{IMPEDANCE_MAX}Ω"
+        )
+
+
+def validate_sensitivity(name: str, measurement_key: str, sensitivity: Any, result: ValidationResult) -> None:
+    """Validate sensitivity value."""
+    if not isinstance(sensitivity, (int, float)):
+        result.add_error(f"Sensitivity must be a number for measurement '{measurement_key}' in {name}")
+        return
+    
+    if sensitivity < SENSITIVITY_MIN or sensitivity > SENSITIVITY_MAX:
+        result.add_warning(
+            f"Unlikely sensitivity value {sensitivity}dB for measurement '{measurement_key}' in {name}. "
+            f"Expected range: {SENSITIVITY_MIN}-{SENSITIVITY_MAX}dB"
+        )
+
+
 def validate_measurement(
     name: str, measurement_key: str, measurement: Dict[str, Any], result: ValidationResult
 ) -> None:
@@ -183,6 +215,22 @@ def validate_measurement(
         result.add_error(
             f"Invalid quality '{measurement['quality']}' for measurement '{measurement_key}' in {name}. Valid qualities: {', '.join(VALID_QUALITIES)}"
         )
+    
+    # Validate specifications if present
+    if "specifications" in measurement:
+        specifications = measurement["specifications"]
+        if isinstance(specifications, dict):
+            # Validate impedance
+            if "impedance" in specifications:
+                validate_impedance(name, measurement_key, specifications["impedance"], result)
+            
+            # Validate sensitivity
+            if "sensitivity" in specifications:
+                validate_sensitivity(name, measurement_key, specifications["sensitivity"], result)
+    
+    # Validate measurement-level sensitivity (alternative location)
+    if "sensitivity" in measurement:
+        validate_sensitivity(name, measurement_key, measurement["sensitivity"], result)
 
 
 def validate_speaker_data(speaker_name: str, speaker_data: Dict[str, Any]) -> ValidationResult:
@@ -215,7 +263,7 @@ def validate_speaker_data(speaker_name: str, speaker_data: Dict[str, Any]) -> Va
         validate_measurements(speaker_name, speaker_data, result)
 
     except Exception as e:
-        result.add_error(f"Validation error: {str(e)}")
+        result.add_error(f"Validation error: {e!s}")
 
     return result
 
@@ -235,7 +283,6 @@ def validate_speaker_database(speakers: Dict[str, Dict[str, Any]]) -> Validation
     for speaker_name, speaker_data in speakers.items():
         speaker_result = validate_speaker_data(speaker_name, speaker_data)
 
-        # Merge results
         if not speaker_result.valid:
             result.valid = False
 

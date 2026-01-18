@@ -342,6 +342,33 @@ speakers_info_f: SpeakerDatabase = {
             },
         },
     },
+    "Fluid Audio C35BT": {
+        "brand": "Fluid Audio",
+        "model": "C35BT",
+        "type": "active",
+        "price": "139",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-c35bt-budget-monitor-review.66989/",
+                },
+                "review_published": "20251030",
+                "specifications": {
+                    "size": {
+                        "height": 185,
+                        "width": 125,
+                        "depth": 150,
+                    },
+                    "weight": 4.52,
+                },
+            },
+        },
+    },
     "Fluid Audio FX50": {
         "brand": "Fluid Audio",
         "model": "FX50",
@@ -488,6 +515,35 @@ speakers_info_f: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-aria-906-speaker-review.14085/",
                 "review_published": "20200614",
+            },
+        },
+    },
+    "Focal Aria Evo X No.2": {
+        "brand": "Focal",
+        "model": "Aria Evo X No.2",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/-VsUsGAwHd4?si=1fTvslnY9bbW6z7R",
+                },
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 91.5,
+                    "impedance": 3,
+                    "size": {
+                        "height": 1035,
+                        "width": 371,
+                        "depth": 294,
+                    },
+                    "weight": 25,
+                },
             },
         },
     },

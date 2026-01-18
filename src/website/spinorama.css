@@ -7,6 +7,6 @@
 }
 
 .card-min {
-    min-block-size: min(340px, 60%);
-    width: max(340px, 25%);
+    min-block-size: min(300px, 60%);
+    width: max(300px, 25%);
 }

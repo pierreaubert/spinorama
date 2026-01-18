@@ -105,7 +105,14 @@ describe('Graph Display', () => {
         global.Element = window.Element;
         global.Plotly = Plotly;
         global.localStorage = localStorageMock;
-        window.localStorage = localStorageMock;
+
+        // Mock localStorage using Object.defineProperty since it's read-only
+        Object.defineProperty(window, 'localStorage', {
+            value: localStorageMock,
+            writable: true,
+            configurable: true,
+        });
+
         window.innerWidth = 1024;
         window.innerHeight = 768;
 
@@ -133,7 +140,7 @@ describe('Graph Display', () => {
         };
 
         // Call displayGraph
-        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec);
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
 
         // Check if setPlotForMeasurement was called with correct parameters
         expect(setPlotForMeasurement).toHaveBeenCalledWith('On Axis', ['Test Graph'], [graphSpec], 1024, 768, 1);
@@ -149,7 +156,7 @@ describe('Graph Display', () => {
         };
 
         // Call displayGraph
-        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec);
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
 
         // Check if Plotly.newPlot was called
         expect(Plotly.newPlot).toHaveBeenCalled();
@@ -170,7 +177,7 @@ describe('Graph Display', () => {
         };
 
         // Call displayGraph with a 3D jsonName
-        await displayGraph('SPL Horizontal Contour 3D', 'test3D.json', 'test-graph', graphSpec);
+        await displayGraph('SPL Horizontal Contour 3D', 'test3D.json', 'test-graph', graphSpec, true, 1);
 
         // Check if shapes were removed
         const callArgs = Plotly.newPlot.mock.calls[0];
@@ -187,7 +194,7 @@ describe('Graph Display', () => {
         };
 
         // Call displayGraph
-        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec);
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
 
         // Check if Plotly.newPlot was called
         expect(Plotly.newPlot).toHaveBeenCalled();
@@ -203,7 +210,7 @@ describe('Graph Display', () => {
         };
 
         // This should not throw an error
-        await expect(displayGraph('On Axis', 'test.json', 'test-graph', graphSpec)).resolves.not.toThrow();
+        await expect(displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1)).resolves.not.toThrow();
     });
 
     test('displayGraph handles target element correctly', async () => {
@@ -216,7 +223,7 @@ describe('Graph Display', () => {
         };
 
         // Call displayGraph
-        await displayGraph('Different Plot', 'different.json', 'test-graph', graphSpec);
+        await displayGraph('Different Plot', 'different.json', 'test-graph', graphSpec, true, 1);
 
         // Check if setPlotForMeasurement was called with the new parameters
         expect(setPlotForMeasurement).toHaveBeenCalledWith('Different Plot', ['Different Graph'], [graphSpec], 1024, 768, 1);

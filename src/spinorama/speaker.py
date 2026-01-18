@@ -21,6 +21,8 @@ import pathlib
 import copy
 import math
 
+import plotly.io
+
 from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
@@ -175,7 +177,8 @@ def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAUL
         return None
 
     _, slopes = get_minmax_slopes(df, False)
-    fig = plot_graph_onaxis(df, graph_params, slopes, False, valid_freq_range)
+    # Pass the actual dataframe that contains the On Axis data, not the whole dict
+    fig = plot_graph_onaxis(onaxis, df, graph_params, slopes, False, valid_freq_range)
     return fig
 
 
@@ -234,7 +237,13 @@ def display_reflection_vertical(
         return plot_graph(df["Vertical Reflections_unmelted"], graph_params, valid_freq_range)
 
 
-def display_spl(df, axis, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+def display_spl(
+    df,
+    axis,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
+):
     try:
         if axis not in df:
             return None
@@ -242,29 +251,51 @@ def display_spl(df, axis, graph_params=plot_params_default, valid_freq_range=DEF
         logger.warning("Display SPL failed with %s", ke)
         return None
     else:
-        return plot_graph_spl(df[axis], graph_params, valid_freq_range)
+        return plot_graph_spl(df[axis], graph_params, valid_freq_range, include_all_angles)
 
 
 def display_spl_horizontal(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Horizontal_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
-def display_spl_vertical(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
-    return display_spl(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
+def display_spl_vertical(
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
+):
+    return display_spl(
+        df, "SPL Vertical_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_spl_horizontal_normalized(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_spl_vertical_normalized(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    df,
+    graph_params=plot_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    include_all_angles: bool = False,
 ):
-    return display_spl(df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range)
+    return display_spl(
+        df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+    )
 
 
 def display_contour(
@@ -404,8 +435,6 @@ def print_a_graph(filename, chart, ext, force) -> int:
             content = chart.to_json()
             with open(filename, "w", encoding="utf-8") as f_d:
                 f_d.write(content)
-        else:
-            write_multiformat(chart, filename, force)
         updated += 1
     except Exception:
         logger.exception("Got unkown error for %s", filename)
@@ -511,6 +540,27 @@ def print_graphs(
             ("Early Reflections", display_reflection_early),
             ("Horizontal Reflections", display_reflection_horizontal),
             ("Vertical Reflections", display_reflection_vertical),
+        ):
+            logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+            try:
+                graph = op_call(df_speaker, graph_params, valid_freq_range)
+                if graph is None:
+                    logger.info(
+                        "display %s failed for %s %s %s", op_title, speaker, version, origin
+                    )
+                    continue
+                graphs[op_title] = graph
+            except KeyError as ke:
+                logger.error(
+                    "display %s failed with a key error (%s) for %s %s %s",
+                    op_title,
+                    str(ke),
+                    speaker,
+                    version,
+                    origin,
+                )
+
+        for op_title, op_call in (
             ("SPL Horizontal", display_spl_horizontal),
             ("SPL Vertical", display_spl_vertical),
             ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
@@ -518,7 +568,9 @@ def print_graphs(
         ):
             logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
             try:
-                graph = op_call(df_speaker, graph_params, valid_freq_range)
+                graph = op_call(
+                    df_speaker, graph_params, valid_freq_range, include_all_angles=True
+                )
                 if graph is None:
                     logger.info(
                         "display %s failed for %s %s %s", op_title, speaker, version, origin
@@ -600,13 +652,64 @@ def print_graphs(
         )
 
     updated = 0
+    graphs_to_print = []
+    filenames_to_print = []
     for key, graph in graphs.items():
+        # print('debug: {} {}'.format(speaker, key))
         if graph is None:
+            # print('debug: {} graph empty'.format(speaker))
             continue
+
         # force_update = need_update()
         force_update = False
-        for ext in ("png", "json"):
-            filename = build_filename(speaker, origin, version_key, key, ext)
-            logger.debug("debug printing %s version_key=%s key=%s", filename, version_key, key)
-            updated += print_a_graph(filename, graph, ext, force_print or force_update)
+
+        filename_json = build_filename(speaker, origin, version_key, key, "json")
+
+        check = (
+            force_print
+            or not os.path.exists(filename_json)
+            or (os.path.exists(filename_json) and os.path.getsize(filename_json) == 0)
+        )
+
+        if not check:
+            # if os.path.exists(filename_json):
+            #     print('debug: {} {} already exist!'.format(speaker, filename_json))
+            continue
+
+        try:
+            content = graph.to_json()
+            with open(filename_json, "w", encoding="utf-8") as f_d:
+                f_d.write(content)
+                updated += 1
+                # print('debug: {} wrote {}'.format(speaker, filename_json))
+        except Exception:
+            logger.exception("Got unkown error for %s: %s", speaker, filename_json)
+            continue
+
+        filename_png = build_filename(speaker, origin, version_key, key, "png")
+
+        for ext in ("_large.png", ".jpg", ".webp"):
+            filename_ext = filename_png.replace("_large.png", ext)
+            if (
+                force_print
+                or not os.path.exists(filename_ext)
+                or (os.path.exists(filename_ext) and os.path.getsize(filename_ext) == 0)
+            ):
+                graphs_to_print.append(graph)
+                filenames_to_print.append(filename_ext)
+
+    # try:
+    #     if len(filenames_to_print) > 0:
+    #         # print('debug: calling plot io for speaker {} and graphs {}'.format(speaker, filenames_to_print))
+    #         plotly.io.write_images(
+    #             graphs_to_print,
+    #             filenames_to_print,
+    #             width=width,
+    #             height=height,
+    #         )
+    #         updated += 3
+    # except RuntimeError as rt:
+    #     logger.error("writing image %s crashed! %s", filename_png, rt)
+    #     return
+
     return updated
