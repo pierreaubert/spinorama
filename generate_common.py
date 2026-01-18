@@ -28,12 +28,23 @@ import os
 import pathlib
 import re
 import sys
+import resource
 from typing import Callable, Any
 import warnings
 
 import flammkuchen as fl
 
 import tables
+
+# Set file descriptor limit
+try:
+    soft_limit, hard_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+    desired_limit = 1000000
+    new_soft_limit = min(desired_limit, hard_limit)
+    if new_soft_limit > soft_limit:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (new_soft_limit, hard_limit))
+except Exception as e:
+    print(f"Warning: Could not set file descriptor limit: {e}", file=sys.stderr)
 
 import datas.metadata as metadata
 
@@ -165,14 +176,12 @@ def is_filtered(speaker: str, filters: dict):
 
 def cache_load_seq(filters, smoke_test):
     df_all = defaultdict()
-    cache_files = glob("{}/*.h5".format(CACHE_DIR))
-    # check if we are not a level below
+    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
         cache_files = glob("../{}/*.h5".format(CACHE_DIR))
-    # now that's an error
     if len(cache_files) == 0:
-        print("error: failed to find cached files! Did you run ./generate_graphs.py?")
-        return None
+        print("Cannot find cache directory or files! Did you run ./generate_graphs.py ?")
+        return df_all
     count = 0
     print("Found {} cache files".format(len(cache_files)))
     logging.debug("found %d cache files", len(cache_files))

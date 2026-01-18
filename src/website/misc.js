@@ -422,6 +422,7 @@ export function getReviews(value) {
             ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
             ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],
             ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
+            ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio.png"/>'],
         ];
 
         icons.map((icon) => {
