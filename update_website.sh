@@ -61,15 +61,15 @@ fi
 # generate all jpg if some are missing
 ./scripts/update_pictures.sh
 
-# # generate eq filters
-# command=$(${THEPYTHON} ./generate_peqs.py --generate-images-only)
-# status=$?
-# if [ $status -ne 0 ]; then
-#     echo "KO after generate eq filters!"
-#     exit 1;
-# else
-#     echo "OK after generate eq filters!"
-# fi
+# generate eq filters
+command=$(${THEPYTHON} ./generate_peqs.py --generate-images-only)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate eq filters!"
+    exit 1;
+else
+    echo "OK after generate eq filters!"
+fi
 
 # generate radar
 command=$(${THEPYTHON} ./generate_radar.py)

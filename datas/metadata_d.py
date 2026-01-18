@@ -2,6 +2,746 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_d: SpeakerDatabase = {
+    "Dali Oberon Vokal": {
+        "brand": "Dali",
+        "model": "Oberon Vokal",
+        "type": "passive",
+        "price": "359",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dali-oberon-vokal-center-speaker-review.50624/",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "sensitivity": 89.5,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 161,
+                        "width": 441,
+                        "depth": 295,
+                    },
+                    "weight": 7.45,
+                },
+            },
+        },
+    },
+    "Dali Rubikore 6": {
+        "brand": "Dali",
+        "model": "Rubikore 6",
+        "type": "passive",
+        "price": "8000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac-v1-0-degree",
+        "measurements": {
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dali_rubikore_6/",
+                    "yt": "https://www.youtube.com/watch?v=IlpFZPevKpM",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 88.5,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 990,
+                        "width": 200,
+                        "depth": 380,
+                    },
+                    "weight": 23.0,
+                },
+                "notes": "This measurement is done at 0 degree with respect to the speaker. Dali recommend to listen at 30 degrees and that's howthe other measurement as been done.",
+            },
+            "eac-v1-30-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dali_rubikore_6/",
+                    "yt": "https://www.youtube.com/watch?v=IlpFZPevKpM",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 88.5,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 990,
+                        "width": 200,
+                        "depth": 380,
+                    },
+                    "weight": 23.0,
+                },
+                "notes": "This measurement is done at 30 degrees with respect to the speaker, that's Dali recommend angle to listen to the speaker. The other measurement is done at 0 degree and is useful to compare speakers together",
+            },
+        },
+    },
+    "Dali Spektor 1": {
+        "brand": "Dali",
+        "model": "Spektor 1",
+        "type": "passive",
+        "price": "250",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dali-spektor-1-review-bookshelf-speaker.25063/",
+                "review_published": "20210719",
+            },
+        },
+    },
+    "Dali Zensor 1": {
+        "brand": "Dali",
+        "model": "Zensor 1",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "100",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dali-zensor-1-spinorama-measurements-passive-version.55016/",
+                },
+                "review_published": "20240618",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 106,
+                    },
+                    "size": {
+                        "height": 274,
+                        "width": 162,
+                        "depth": 220,
+                    },
+                    "weight": 4.2,
+                },
+            },
+        },
+    },
+    "Danley Cube": {
+        "brand": "Danley",
+        "model": "Cube",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x100",
+        "measurements": {
+            "vendor-pattern-100x100": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley J1-94": {
+        "brand": "Danley",
+        "model": "J1-94",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v4-2025",
+        "measurements": {
+            "vendor-v4-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250804",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 100,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "continuous": 148,
+                        "peak": 154,
+                    },
+                    "size": {
+                        "height": 1520,
+                        "width": 1140,
+                        "depth": 760,
+                    },
+                    "weight": 326,
+                },
+            },
+            "vendor-v1-2022": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley J2-96": {
+        "brand": "Danley",
+        "model": "J2-96",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley J3-64": {
+        "brand": "Danley",
+        "model": "J3-64",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley J4-31": {
+        # graphs doesn't work, data is valid in a limited range.
+        "skip": True,
+        "brand": "Danley",
+        "model": "J4-31",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley J6-42": {
+        "brand": "Danley",
+        "model": "J6-42",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "data_acquisition": gll_data_acquisition_std,
+                "format": "gll_hv_txt",
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley J7-95": {
+        # quality is  really low and also computation of LFX doesn't work, same case as DD
+        "skip": True,
+        "brand": "Danley",
+        "model": "J7-95",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-90x50",
+        "measurements": {
+            "vendor-pattern-90x50": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley HRE1": {
+        "brand": "Danley",
+        "model": "HRE1",
+        "type": "active",
+        "price": "46150",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/tom-danley%E2%80%99s-new-%E2%80%98hyperion%E2%80%99.26663/",
+                },
+                "review_published": "20250802",
+                "data_acquisition": {
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 1390,
+                        "width": 717,
+                        "depth": 700,
+                    },
+                },
+            },
+        },
+    },
+    "Danley ILE3": {
+        "brand": "Danley",
+        "model": "ILE3",
+        "type": "active",
+        "price": "37000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "quality": "low",
+                "review_published": "20250803",
+                "data_acquisition": {
+                    "min_valid_freq": 20,
+                    "max_valid_freq": 16000,
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 1594,
+                        "width": 595,
+                        "depth": 566,
+                    },
+                },
+            },
+        },
+    },
+    "Danley SH-50": {
+        "brand": "Danley",
+        "model": "SH-50",
+        "type": "passive",
+        "price": "8000",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v3-2025",
+        "measurements": {
+            "vendor-v3-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250804",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 100,
+                    "impedance": 4,
+                    "SPL": {
+                        "continuous": 127,
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 711,
+                        "width": 711,
+                        "depth": 647,
+                    },
+                    "weight": 60.3,
+                },
+            },
+            "eac-v1-2021": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
+                    "yt": "",
+                },
+                "review_published": "20210815",
+            },
+            "vendor-v1-2022": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley SH-60": {
+        "brand": "Danley",
+        "model": "SH-60",
+        "type": "passive",
+        "price": "8000",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x60",
+        "measurements": {
+            "vendor-pattern-60x60": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley SH-62": {
+        "brand": "Danley",
+        "model": "SH-62",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v2-2025",
+        "measurements": {
+            "vendor-v2-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 105,
+                    "impedance": 4,
+                    "SPL": {
+                        "continuous": 138,
+                        "peak": 144,
+                    },
+                    "size": {
+                        "height": 471,
+                        "width": 914,
+                        "depth": 762,
+                    },
+                    "weight": 106.6,
+                },
+            },
+        },
+    },
+    "Danley SH-96-HO": {
+        "brand": "Danley",
+        "model": "SH-96-HO",
+        "type": "passive",
+        "price": "8000",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley SH-Mini": {
+        "skip": True,
+        "brand": "Danley",
+        "model": "SH-Mini",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x100",
+        "measurements": {
+            "vendor-pattern-100x100": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230112",
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 88,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 111,
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 254,
+                        "width": 254,
+                        "depth": 267,
+                    },
+                    "weight": 12,
+                },
+            },
+        },
+    },
+    "Danley SH-Mini-180": {
+        "brand": "Danley",
+        "model": "SH-Mini-180",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-180x90",
+        "measurements": {
+            "vendor-pattern-180x90": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley SM-60F": {
+        "brand": "Danley",
+        "model": "SM-60F",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1-2025",
+        "measurements": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250803",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 99,
+                    "impedance": 4,
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 125,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 523,
+                        "width": 523,
+                        "depth": 414,
+                    },
+                },
+            },
+            "vendor-v1-2022": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221117",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley SM-60M": {
+        "brand": "Danley",
+        "model": "SM-60M",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221117",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley SM-80": {
+        "brand": "Danley",
+        "model": "SM-80",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221117",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley SM-80F": {
+        "brand": "Danley",
+        "model": "SM-80F",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1-2025",
+        "measurements": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 102,
+                    "impedance": 2,
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 1143,
+                        "width": 660,
+                        "depth": 711,
+                    },
+                    "weight": 97.5,
+                },
+            },
+            "vendor-v1-2022": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "low",
+            },
+        },
+    },
+    "Danley SM-100": {
+        "brand": "Danley",
+        "model": "SM-100",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20221116",
+                "quality": "medium",
+            },
+        },
+    },
+    "Danley SM-100F": {
+        "brand": "Danley",
+        "model": "SM-100F",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1-2025",
+        "measurements": {
+            "vendor-v1-2025": {
+                "origin": "Vendors-Danley",
+                "format": "gll_hv_txt",
+                "review_published": "20250805",
+                "quality": "medium",
+                "data_acquisition": {
+                    "via": "gll",
+                    "signal": "aes 20Hz-20kHz",
+                    "distance": 10.0,  # m
+                    "resolution": 5.0,  # deg
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 18000,
+                },
+                "specifications": {
+                    "sensitivity": 98,
+                    "impedance": 5.3,
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 850,
+                        "width": 520,
+                        "depth": 482,
+                    },
+                    "weight": 55.3,
+                },
+            },
+        },
+    },
+>>>>>>> develop
     "DAS Audio ARTEC 506A": {
         "brand": "DAS Audio",
         "model": "ARTEC 506A",
