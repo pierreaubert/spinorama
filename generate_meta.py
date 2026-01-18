@@ -568,6 +568,10 @@ def compute_near(fspin1, fspin2):
     return near
 
 
+# Formats that provide full spin data for similarity computation
+SPIN_DATA_FORMATS = {"klippel", "gll_hv_txt", "spl_hv_txt", "rew_text_dump"}
+
+
 def get_spin_data(freq, speaker_name, speaker_data):
     default_key = None
     try:
@@ -576,7 +580,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
         return None
 
     default_format = metadata.speakers_info[speaker_name]["measurements"][default_key]["format"]
-    if default_format != "klippel":
+    if default_format not in SPIN_DATA_FORMATS:
         return None
 
     for reviewer, measurements in speaker_data.items():
