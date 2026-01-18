@@ -462,11 +462,30 @@ speakers_info_h: SpeakerDatabase = {
         "brand": "Hsu Research",
         "model": "CCB-8",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "389",
+        "amount": "each",
         "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-ccb-8-speaker-review.68131/",
+                    "ahl": "https://www.audioholics.com/bookshelf-speaker-reviews/ccb-8-bookshelf/measurements",
+                },
+                "review_published": "20251217",
+                "specifications": {
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "size": {
+                        "height": 266,
+                        "width": 304,
+                        "depth": 381,
+                    },
+                    "weight": 10.0,
+                },
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
