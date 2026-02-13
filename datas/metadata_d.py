@@ -741,7 +741,6 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
->>>>>>> develop
     "DAS Audio ARTEC 506A": {
         "brand": "DAS Audio",
         "model": "ARTEC 506A",
