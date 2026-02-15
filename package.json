@@ -6,7 +6,7 @@
     "handlebars": "^4.7.8",
     "npm": "^11.10.0",
     "npm-check-updates": "^19.3.2",
-    "playright": "^0.0.22",
+    "playright": "^1.55.1",
     "plotly.js-dist-min": "^3.3.1",
     "workbox": "^0.0.0",
     "workbox-cli": "^7.4.0",
@@ -18,7 +18,7 @@
     "@vitest/ui": "^4.0.18",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "flow-bin": "^0.300.0",
+    "flow-bin": "^0.301.0",
     "flow-remove-types": "^2.301.0",
     "globals": "^17.3.0",
     "husky": "^9.1.7",
@@ -39,6 +39,6 @@
     "coverage": "npx vitest run --coverage",
     "format": "npx prettier --write \"src/website/*.js\"",
     "upgrade": "npx npm-check-updates -u",
-    "lint": "npx oxlint@1.12.0"
+    "lint": "npx oxlint@1.47.0"
   }
 }

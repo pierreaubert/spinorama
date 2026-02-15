@@ -31,7 +31,7 @@ if test "$OS" = "Linux"; then
   # or maybe
   # sudo apt -y install language-pack-en-base && localectl set-locale LANG=en_US.UTF-8
 elif test "$OS" = "Darwin"; then
-    brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
+    brew install npm hdf5 c-blosc2 lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
     xattr -d com.apple.quarantine $(which chromedriver)
     chmod 755 $(which chromedriver)
     export HDF5_DIR="$(brew --prefix hdf5)"

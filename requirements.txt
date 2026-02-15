@@ -1,7 +1,5 @@
 cython
-flammkuchen
 frozendict
-kaleido>=1.0.0
 mako
 maturin
 more_itertools
@@ -10,5 +8,7 @@ numpy>1.26.4
 pandas>=2.1.0
 plotly>=6.3.0
 scipy>=1.14.1
+flammkuchen
+kaleido>=1.0.0
 
 
