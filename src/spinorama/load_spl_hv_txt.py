@@ -41,27 +41,47 @@ def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[s
     return True, files
 
 
-def parse_graph_spl_hv_txt(dirpath: str, orientation: str, force_symmetry: bool | None = None) -> StatusOr[pd.DataFrame]:
-    """Parse text files with Horizontal and Vertical data"""
+def parse_graph_spl_hv_txt(dirpath: str, orientation: str, symmetry_mode: str | None = None) -> StatusOr[pd.DataFrame]:
+    """Parse text files with Horizontal and Vertical data.
+    
+    symmetry_mode:
+        - None: auto-detect (mirror if no negative angles in files)
+        - "mirror": copy positive angles to negative (10° → -10°)
+        - "shift": wrap angles > 180° to negative (190° → -170°)
+        - "none": no transformation
+    """
     status, files = parse_graph_spl_find_file(dirpath, orientation)
     if not status:
         logger.warning("Did not find files in %s", dirpath)
         return False, pd.DataFrame()
 
-    # Use forced symmetry if provided, otherwise auto-detect
-    if force_symmetry is not None:
-        symmetry = force_symmetry
-    else:
-        symmetry = True
+    # Determine if we need to process angles
+    do_mirror = False
+    do_shift = False
+    
+    if symmetry_mode is None:
+        # Auto-detect: check if any files have negative angles
+        has_negative = False
         for file in files:
             file_format = os.path.basename(file).split()
-            angle = os.path.basename(file).split("_")[0]
+            angle_str = os.path.basename(file).split("_")[0]
             if len(file_format) > 2:
-                angle = file_format[-1][:-4]
-            if int(angle) < 0:
-                symmetry = False
+                angle_str = file_format[-1][:-4]
+            try:
+                if int(angle_str) < 0:
+                    has_negative = True
+                    break
+            except ValueError:
+                pass
+        # If no negative angles found, default to mirroring
+        do_mirror = not has_negative
+    elif symmetry_mode == "mirror":
+        do_mirror = True
+    elif symmetry_mode == "shift":
+        do_shift = True
+    # symmetry_mode == "none": no transformation
 
-    logger.debug("Symmetry is %s", symmetry)
+    logger.debug("Symmetry mode=%s, mirror=%s, shift=%s", symmetry_mode, do_mirror, do_shift)
 
     dfs = []
     already_loaded = set()
@@ -150,15 +170,33 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str, force_symmetry: bool 
             else:
                 logger.warning("angle %s already loaded (dirpath=%s)", angle, dirpath)
         else:
+            # Convert angle string to int for processing
+            try:
+                angle_int = int(angle.replace("°", ""))
+            except ValueError:
+                angle_int = None
+            
+            # Apply shift transformation for angles > 180°
+            if do_shift and angle_int is not None and angle_int > 180:
+                shifted_angle = f"{angle_int - 360}°"
+                if shifted_angle not in already_loaded:
+                    dfs.append(pd.DataFrame({shifted_angle: dbs}))
+                    already_loaded.add(shifted_angle)
+                continue  # Skip adding the original >180 angle
+            
+            # Normal angle processing
             if angle != "-180°":
                 if angle not in already_loaded:
                     dfs.append(pd.DataFrame({angle: dbs}))
                     already_loaded.add(angle)
                 else:
                     logger.warning("angle %s already loaded (dirpath=%s)", angle, dirpath)
-            if symmetry and orientation == "H" and angle != "180°":
+            
+            # Mirror: create negative from positive
+            if do_mirror and orientation == "H" and angle != "180°" and angle_int is not None and angle_int > 0:
                 mangle = f"-{angle}"
-                dfs.append(pd.DataFrame({mangle: dbs}))
+                if mangle not in already_loaded:
+                    dfs.append(pd.DataFrame({mangle: dbs}))
 
     # print("debug {}".format(orientation))
     # print(sort_angles(pd.concat(dfs, axis=1)).keys())
@@ -167,7 +205,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str, force_symmetry: bool 
 
 
 def parse_graphs_speaker_spl_hv_txt(
-    speaker_path: str, speaker_brand: str, speaker_name: str, version: str, symmetry: bool | None = None
+    speaker_path: str, speaker_brand: str, speaker_name: str, version: str, symmetry: str | None = None
 ) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)

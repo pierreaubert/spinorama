@@ -78,7 +78,7 @@ from spinorama.compute_misc import unify_freq
 from spinorama.misc import graph_melt
 
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 # Origins info for graph parameters (using generic defaults)
 DEFAULT_ORIGIN_INFO = {
@@ -149,7 +149,7 @@ def detect_format(data_dir: str, speaker_name: str) -> tuple[str, str] | None:
 
 
 def load_speaker_data(
-    data_dir: str, speaker_name: str, fmt: str, version: str, symmetry: bool | None = None
+    data_dir: str, speaker_name: str, fmt: str, version: str, symmetry: str | None = None
 ) -> tuple[bool, DataSpeaker, dict]:
     """Load speaker data from the specified directory and format.
 
@@ -168,7 +168,7 @@ def load_speaker_data(
     actual_version = version if version != dir_name and subdirs else "."
 
     shape = "default"
-    symmetry = None
+    # Note: symmetry parameter is passed directly to loaders
 
     parameters = {
         "mformat": fmt,
@@ -540,9 +540,9 @@ Examples:
     )
     parser.add_argument(
         "--symmetry",
-        choices=["auto", "true", "false"],
+        choices=["auto", "mirror", "shift", "none"],
         default="auto",
-        help="Speaker symmetry: auto (detect from files), true (symmetric), false (asymmetric). Affects horizontal angle mirroring. (default: auto)",
+        help="Speaker symmetry mode: auto (detect from files), mirror (copy + to -), shift (wrap 180-350 to -180-0), none (as-is). Affects horizontal angle handling. (default: auto)",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
 
@@ -601,10 +601,11 @@ Examples:
             version = subdirs[0]
 
     # Determine symmetry setting
+    symmetry: str | None
     if args.symmetry == "auto":
         symmetry = None  # Auto-detect from files
     else:
-        symmetry = args.symmetry == "true"
+        symmetry = args.symmetry  # "mirror", "shift", or "none"
 
     # Load speaker data
     print(f"\nLoading speaker data (format: {fmt})...")
