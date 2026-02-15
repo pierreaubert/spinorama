@@ -96,52 +96,60 @@ def detect_format(data_dir: str, speaker_name: str) -> tuple[str, str] | None:
     """
     base_path = Path(data_dir)
 
-    # Check for subdirectories (versions) - only immediate children
-    subdirs = [d for d in base_path.iterdir() if d.is_dir() and not d.name.startswith('.')]
-    if not subdirs:
-        subdirs = [base_path]  # Use base directory if no subdirs
-
-    for version_dir in subdirs:
-        version = version_dir.name
-
+    # Helper to check a directory for valid formats
+    def check_dir(path: Path, version: str) -> tuple[str, str] | None:
         # Check for Klippel format (SPL Horizontal.txt / SPL Vertical.txt)
-        if (version_dir / "SPL Horizontal.txt").exists() and (
-            version_dir / "SPL Vertical.txt"
+        if (path / "SPL Horizontal.txt").exists() and (
+            path / "SPL Vertical.txt"
         ).exists():
             return ("klippel", version)
 
         # Check for Princeton format (*_H_IR.mat / *_V_IR.mat)
-        mat_files = list(version_dir.glob("*_H_IR.mat"))
-        if mat_files and list(version_dir.glob("*_V_IR.mat")):
+        mat_files = list(path.glob("*_H_IR.mat"))
+        if mat_files and list(path.glob("*_V_IR.mat")):
             return ("princeton", version)
 
         # Check for GLL format (*.zip with txt files)
-        zip_files = list(version_dir.glob("*.zip"))
+        zip_files = list(path.glob("*.zip"))
         if zip_files:
             return ("gll_hv_txt", version)
 
         # Check for spl_hv_txt format (*_H.txt / * _H.txt patterns)
-        h_files = list(version_dir.glob("*_H.txt")) + list(version_dir.glob("*H*.txt"))
-        v_files = list(version_dir.glob("*_V.txt")) + list(version_dir.glob("*V*.txt"))
+        h_files = list(path.glob("*_H.txt")) + list(path.glob("*H*.txt"))
+        v_files = list(path.glob("*_V.txt")) + list(path.glob("*V*.txt"))
         if h_files and v_files:
             return ("spl_hv_txt", version)
 
         # Check for REW text dump (On Axis.txt, LW.txt, ER.txt, SP.txt)
         rew_files = ["On Axis.txt", "LW.txt", "ER.txt", "SP.txt"]
-        if all((version_dir / f).exists() for f in rew_files):
+        if all((path / f).exists() for f in rew_files):
             return ("rew_text_dump", version)
 
         # Check for WebPlotDigitizer (*.json or *.tar)
-        json_files = list(version_dir.glob("*.json"))
-        tar_files = list(version_dir.glob("*.tar"))
+        json_files = list(path.glob("*.json"))
+        tar_files = list(path.glob("*.tar"))
         if json_files or tar_files:
             return ("webplotdigitizer", version)
+
+        return None
+
+    # First, check the base directory itself (prefer direct files over subdirs)
+    result = check_dir(base_path, base_path.name)
+    if result is not None:
+        return result
+
+    # If no files in base, check subdirectories
+    subdirs = [d for d in base_path.iterdir() if d.is_dir() and not d.name.startswith('.')]
+    for version_dir in subdirs:
+        result = check_dir(version_dir, version_dir.name)
+        if result is not None:
+            return result
 
     return None
 
 
 def load_speaker_data(
-    data_dir: str, speaker_name: str, fmt: str, version: str
+    data_dir: str, speaker_name: str, fmt: str, version: str, symmetry: bool | None = None
 ) -> tuple[bool, DataSpeaker, dict]:
     """Load speaker data from the specified directory and format.
 
@@ -197,7 +205,7 @@ def load_speaker_data(
 
         elif fmt == "spl_hv_txt":
             status, (h_spl, v_spl) = parse_graphs_speaker_spl_hv_txt(
-                parent_dir, "", dir_name, actual_version
+                parent_dir, "", dir_name, actual_version, symmetry
             )
             if not status:
                 return False, {}, parameters
@@ -530,6 +538,12 @@ Examples:
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Enable verbose output"
     )
+    parser.add_argument(
+        "--symmetry",
+        choices=["auto", "true", "false"],
+        default="auto",
+        help="Speaker symmetry: auto (detect from files), true (symmetric), false (asymmetric). Affects horizontal angle mirroring. (default: auto)",
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
 
     args = parser.parse_args()
@@ -586,9 +600,15 @@ Examples:
         if subdirs:
             version = subdirs[0]
 
+    # Determine symmetry setting
+    if args.symmetry == "auto":
+        symmetry = None  # Auto-detect from files
+    else:
+        symmetry = args.symmetry == "true"
+
     # Load speaker data
     print(f"\nLoading speaker data (format: {fmt})...")
-    success, df_graph, parameters = load_speaker_data(data_dir, speaker_name, fmt, version)
+    success, df_graph, parameters = load_speaker_data(data_dir, speaker_name, fmt, version, symmetry)
 
     if not success or not df_graph:
         print("\nError: Failed to load speaker data.")

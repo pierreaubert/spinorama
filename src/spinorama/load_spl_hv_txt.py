@@ -41,21 +41,25 @@ def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[s
     return True, files
 
 
-def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFrame]:
+def parse_graph_spl_hv_txt(dirpath: str, orientation: str, force_symmetry: bool | None = None) -> StatusOr[pd.DataFrame]:
     """Parse text files with Horizontal and Vertical data"""
     status, files = parse_graph_spl_find_file(dirpath, orientation)
     if not status:
         logger.warning("Did not find files in %s", dirpath)
         return False, pd.DataFrame()
 
-    symmetry = True
-    for file in files:
-        file_format = os.path.basename(file).split()
-        angle = os.path.basename(file).split("_")[0]
-        if len(file_format) > 2:
-            angle = file_format[-1][:-4]
-        if int(angle) < 0:
-            symmetry = False
+    # Use forced symmetry if provided, otherwise auto-detect
+    if force_symmetry is not None:
+        symmetry = force_symmetry
+    else:
+        symmetry = True
+        for file in files:
+            file_format = os.path.basename(file).split()
+            angle = os.path.basename(file).split("_")[0]
+            if len(file_format) > 2:
+                angle = file_format[-1][:-4]
+            if int(angle) < 0:
+                symmetry = False
 
     logger.debug("Symmetry is %s", symmetry)
 
@@ -94,7 +98,11 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
                 # freq, db
                 words = l[:-1].split(",")
                 if len(words) == 2:
-                    current_freq = float(words[0])
+                    freq = words[0]
+                    # skip header line (Frequency, Freq, etc.)
+                    if freq[0] == "F":
+                        continue
+                    current_freq = float(freq)
                     if current_freq >= 20 and current_freq <= 20000:
                         freqs.append(current_freq)
                         dbs.append(float(words[1]))
@@ -159,15 +167,15 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
 
 
 def parse_graphs_speaker_spl_hv_txt(
-    speaker_path: str, speaker_brand: str, speaker_name: str, version: str
+    speaker_path: str, speaker_brand: str, speaker_name: str, version: str, symmetry: bool | None = None
 ) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
     logger.debug("scanning path %s for speaker %s %s", dirname, speaker_brand, speaker_name)
 
-    h_status, h_spl = parse_graph_spl_hv_txt(dirname, "H")
-    v_status, v_spl = parse_graph_spl_hv_txt(dirname, "V")
+    h_status, h_spl = parse_graph_spl_hv_txt(dirname, "H", symmetry)
+    v_status, v_spl = parse_graph_spl_hv_txt(dirname, "V", symmetry)
 
     if (
         len(h_spl.keys()) + len(v_spl.keys()) < 72
