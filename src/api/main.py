@@ -13,7 +13,6 @@ from fastapi import FastAPI, Query, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse, FileResponse, Response
 
-from datas.metadata import speakers_info
 from datas.checks import validate_speaker_data
 
 API_VERSION = "v1"
@@ -147,17 +146,21 @@ async def get_speaker_versions(
     f"/{API_VERSION}/speaker/{{speaker_name}}/version/{{speaker_version}}/measurements",
     tags=["speaker"],
 )
-async def get_speaker_measurements(speaker_name: str, speaker_version: str):
+async def get_speaker_measurements(
+    speaker_name: str,
+    speaker_version: str,
+    metadata: dict = Depends(load_metadata),  # noqa: B008
+):
     if not speaker_name:
         return {"error": "Speaker name and measurement name are mandatory"}
 
-    if speaker_name not in speakers_info:
+    if speaker_name not in metadata:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
 
     if "/" in speaker_version or ".." in speaker_version:
         return {"error": f"Invalid speaker_version {speaker_version}!"}
 
-    meta_data = speakers_info[speaker_name]
+    meta_data = metadata[speaker_name]
 
     if speaker_version not in meta_data["measurements"]:
         valid_keys = ", ".join(list(meta_data["measurements"].keys()))
@@ -193,11 +196,12 @@ async def get_speaker_measurements_data(
     speaker_version: str,
     measurement_name: str,
     measurement_format: Annotated[str | None, Query(max_length=5)] = "json",
+    metadata: dict = Depends(load_metadata),  # noqa: B008
 ):
     if not speaker_name or not measurement_name:
         return {"error": "Speaker name and measurement name are mandatory"}
 
-    if speaker_name not in speakers_info:
+    if speaker_name not in metadata:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
 
     if (
@@ -210,7 +214,7 @@ async def get_speaker_measurements_data(
             "error": f"Invalid speaker_version {speaker_version} or speaker_name {speaker_name}!"
         }
 
-    meta_data = speakers_info[speaker_name]
+    meta_data = metadata[speaker_name]
 
     if speaker_version not in meta_data["measurements"]:
         valid_keys = ", ".join(list(meta_data["measurements"].keys()))
