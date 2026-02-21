@@ -6,8 +6,6 @@ PLOTLY=3.1.0
 HANDLEBARS=4.7.8
 BULMA=1.0.4
 FUSE=7.0.0
-WORKBOX=7.3.0
-
 # end section
 
 ASSETS=./dist
@@ -33,8 +31,3 @@ cp node_modules/fuse.js/dist/fuse.min.mjs ${ASSETS_JS}/fuse-${FUSE}.min.mjs
 # PLOTLY
 npm install plotly.js-dist-min
 cp node_modules/plotly.js-dist-min/plotly.min.js ${ASSETS_JS}/plotly-${PLOTLY}.min.mjs
-
-# WORKBOX
-npm install workbox-window
-cp node_modules/workbox-window/build/workbox-window.prod.mjs ${ASSETS_JS}/workbox-window-${WORKBOX}.min.js
-cp node_modules/workbox-window/build/workbox-window.prod.mjs.map ${ASSETS_JS}/workbox-window-${WORKBOX}.min.js.map

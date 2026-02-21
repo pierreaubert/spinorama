@@ -387,7 +387,6 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
-            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -407,7 +406,6 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
-            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -441,8 +439,7 @@ def main():
                 meta=meta_sorted_score,
                 site=site,
                 use_search=use_search,
-                use_sw=flag_sw,
-                min=".min" if flag_optim else "",
+                    min=".min" if flag_optim else "",
                 versions=versions,
             )
             item_filename = cpaths.CPATH_DIST + "/" + item_name
@@ -553,8 +550,8 @@ def main():
             item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
             # if item == "misc":
             #     item_original = "{}/{}.js.tmpl".format(cpaths.CPATH_WEBSITE, item)
-            item_mako_tmpl = "{}-0-flow.js".format(item)
-            item_post_flow = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_mako_tmpl = "{}-0-copy.js".format(item)
+            item_post_copy = "{}/{}-0-copy.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
@@ -562,20 +559,7 @@ def main():
             if flag_dev:
                 item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
 
-            # cleanup flow directives: currently unused
-            flow_bin = "./node_modules/.bin/flow-remove-types"
-            flow_param = ""  # "--pretty --sourcemaps"
-
-            flow_command = "{} {} {}".format(flow_bin, flow_param, item_original)
-            with open(item_post_flow, "w") as item_post_flow_fd:
-                status = subprocess.run(  # noqa: S603
-                    shlex.split(flow_command),
-                    shell=False,
-                    check=True,
-                    stdout=item_post_flow_fd,
-                )
-                if status.returncode != 0:
-                    print("flow failed for %s", item_name)
+            shutil.copy(item_original, item_post_copy)
 
             # build first generation with metadata expension, now only useful for meta.js
             if item == "meta":
@@ -595,7 +579,7 @@ def main():
                 if item_content:
                     write_if_different(str(item_content), item_post_mako, force=True)
             else:
-                shutil.copy(item_post_flow, item_post_mako)
+                shutil.copy(item_post_copy, item_post_mako)
 
             # change import to match prod/dev and browser requirements
             with open(item_post_mako, "r") as fd:
@@ -631,18 +615,6 @@ def main():
         except KeyError as key_error:
             print("Generating {} js file failed with {}".format(item, key_error))
             sys.exit(1)
-
-    # call workbox
-    workbox_command = "workbox generateSW workbox-config.js"
-    if flag_sw:
-        status = subprocess.run(  # noqa: S603
-            shlex.split(workbox_command),
-            shell=False,
-            check=True,
-            capture_output=True,
-        )
-        if status.returncode != 0:
-            print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
     logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DIST)
@@ -682,7 +654,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--optim", action="store_true", help="Generate an optimised build (minification, etc.)."
     )
-    parser.add_argument("--sw", action="store_true", help="Generate a service worker.")
     parser.add_argument(
         "--sitedev",
         type=str,
@@ -704,7 +675,6 @@ if __name__ == "__main__":
 
     flag_dev = parsed_args.dev
     flag_optim = parsed_args.optim
-    flag_sw = parsed_args.sw
     site = SITEPROD  # Default site URL
     skip_speakers = False  # Default for skipping speaker page generation
 
