@@ -25,7 +25,6 @@ import { pagination } from './pagination.js';
 const parametersMapping = [
     // filters
     { selectorName: '#selectReviewer', urlParameter: 'reviewer', eventType: 'change' },
-    { selectorName: '#selectQuality', urlParameter: 'quality', eventType: 'change' },
     { selectorName: '#selectShape', urlParameter: 'shape', eventType: 'change' },
     { selectorName: '#selectPower', urlParameter: 'power', eventType: 'change' },
     { selectorName: '#selectBrand', urlParameter: 'brand', eventType: 'change' },
@@ -139,7 +138,7 @@ function filtersParameters2Sort(url) {
     const filters = {
         brand: '',
         power: '',
-        quality: '',
+        quality: [],
         priceMin: '',
         priceMax: '',
         weightMin: '',
@@ -154,6 +153,9 @@ function filtersParameters2Sort(url) {
         shape: '',
     };
     for (const filterName of Object.keys(filters)) {
+        if (filterName === 'quality') {
+            continue;
+        }
         if (url.searchParams.has(filterName)) {
             filters[filterName] = url.searchParams.get(filterName);
             const selectorName = urlToSelectorName.get(filterName);
@@ -164,6 +166,14 @@ function filtersParameters2Sort(url) {
                 console.error('Filter selector ' + filterName + ' is unknown!');
             }
         }
+    }
+    if (url.searchParams.has('quality')) {
+        const qualityParam = url.searchParams.get('quality');
+        filters.quality = qualityParam.split(',').filter((v) => v !== '');
+        const checkboxes = document.querySelectorAll('.qualityCheckbox');
+        checkboxes.forEach((cb) => {
+            cb.checked = filters.quality.includes(cb.value);
+        });
     }
     return filters;
 }
@@ -546,17 +556,17 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
     }
-    if (shouldShow && filter.quality !== undefined && filter.quality !== '') {
-        let found = true;
+    if (shouldShow && Array.isArray(filter.quality) && filter.quality.length > 0) {
+        let found = false;
+        const qualitySet = new Set(filter.quality.map((q) => q.toLowerCase()));
         for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
-            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
-            if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
-                found = false;
+            if (qualitySet.has(quality)) {
+                found = true;
                 break;
             }
         }
-        if (found) {
+        if (!found) {
             shouldShow = false;
         }
     }
@@ -1013,5 +1023,30 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         } else {
             console.error('Element ' + selectorName + ' not found');
         }
+    });
+
+    const qualityCheckboxes = document.querySelectorAll('.qualityCheckbox');
+    qualityCheckboxes.forEach((cb) => {
+        cb.addEventListener('change', () => {
+            const url = new URL(window.location);
+            const selected = [...document.querySelectorAll('.qualityCheckbox:checked')].map((c) => c.value);
+            if (selected.length > 0) {
+                url.searchParams.set('quality', selected.join(','));
+            } else {
+                url.searchParams.delete('quality');
+            }
+            url.searchParams.set('page', 1);
+            window.history.pushState({}, '', url);
+            const params = urlParameters2Sort(url);
+            const [maxResults, fragment] = process(metadata, params, speaker2html);
+            while (mainDiv.firstChild) {
+                mainDiv.removeChild(mainDiv.firstChild);
+            }
+            if (fragment) {
+                mainDiv.appendChild(fragment);
+                pagination(maxResults);
+            }
+            show(mainDiv);
+        });
     });
 }

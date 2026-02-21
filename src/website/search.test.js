@@ -108,7 +108,10 @@ describe('test full text search and filtering', () => {
                 <select id="sortBy"><option value="date"></option><option value="score"></option></select>
                 <input type="checkbox" id="sortReverse" />
                 <select id="selectReviewer"><option value=""></option><option value="erinsaudiocorner"></option></select>
-                <select id="selectQuality"><option value=""></option><option value="good"></option></select>
+                <label class="checkbox"><input type="checkbox" value="high" class="qualityCheckbox"> High</label>
+                <label class="checkbox"><input type="checkbox" value="medium" class="qualityCheckbox"> Medium</label>
+                <label class="checkbox"><input type="checkbox" value="low" class="qualityCheckbox"> Low</label>
+                <label class="checkbox"><input type="checkbox" value="unknown" class="qualityCheckbox"> Unknown</label>
                 <select id="selectShape"><option value="">All</option><option value="bookshelf">Bookshelf</option></select>
                 <select id="selectPower"><option value="">All</option><option value="passive">Passive</option></select>
                 <select id="selectBrand"><option value="">All</option><option value="KEF">KEF</option></select>
@@ -376,6 +379,52 @@ describe('test full text search and filtering', () => {
         expect(maxResults).toBeDefined();
         expect(results[0]).toBe('KEF-Blade-1-Meta');
         expect(results[1]).toBe('JBL-Synthesis-SCL-1');
+    });
+
+    it('filter by single quality high', () => {
+        const url = new URL(TEST_URL + '?quality=high&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(maxResults).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const speaker = metadata.get(key);
+            const qualities = Object.values(speaker.measurements).map((m) => m.quality.toLowerCase());
+            expect(qualities.some((q) => q === 'high')).toBeTruthy();
+        });
+    });
+
+    it('filter by multiple qualities high,medium', () => {
+        const url = new URL(TEST_URL + '?quality=high,medium&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(maxResults).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const speaker = metadata.get(key);
+            const qualities = Object.values(speaker.measurements).map((m) => m.quality.toLowerCase());
+            expect(qualities.some((q) => q === 'high' || q === 'medium')).toBeTruthy();
+        });
+    });
+
+    it('filter by multiple qualities returns more results than single quality', () => {
+        const urlSingle = new URL(TEST_URL + '?quality=high&count=1000');
+        const paramsSingle = urlParameters2Sort(urlSingle);
+        const [maxSingle] = actualSearch(metadata, paramsSingle);
+
+        const urlMulti = new URL(TEST_URL + '?quality=high,medium&count=1000');
+        const paramsMulti = urlParameters2Sort(urlMulti);
+        const [maxMulti] = actualSearch(metadata, paramsMulti);
+
+        expect(maxMulti).toBeGreaterThanOrEqual(maxSingle);
+    });
+
+    it('empty quality filter returns all speakers', () => {
+        const urlNoFilter = new URL(TEST_URL + '?count=1000');
+        const paramsNoFilter = urlParameters2Sort(urlNoFilter);
+        const [maxNoFilter] = actualSearch(metadata, paramsNoFilter);
+
+        expect(maxNoFilter).toBeGreaterThan(0);
     });
 
     it('search no constraint page 1 & 2', () => {

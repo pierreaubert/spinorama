@@ -1,18 +1,14 @@
 <div class="dropdown-item">
   <div class="field">
-    <div class="control has-icons-left">
-      <div class="select">
-        <select id="selectQuality">
-          <option value="">Measurements Quality</option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-	  <option value="unknown">Unknown</option>
-        </select>
-      </div>
-      <div class="icon is-left">
-	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
-      </div>
+    <label class="label">
+      <svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      Measurements Quality
+    </label>
+    <div class="control">
+      <label class="checkbox"><input type="checkbox" value="high" class="qualityCheckbox"> High</label>
+      <label class="checkbox"><input type="checkbox" value="medium" class="qualityCheckbox"> Medium</label>
+      <label class="checkbox"><input type="checkbox" value="low" class="qualityCheckbox"> Low</label>
+      <label class="checkbox"><input type="checkbox" value="unknown" class="qualityCheckbox"> Unknown</label>
     </div>
   </div>
 </div>
