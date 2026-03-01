@@ -704,6 +704,7 @@ def plot_spinorama_annotation(
         _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
         closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
         curve = spin[measurement].to_numpy()
+        closest_freq = min(closest_freq, len(curve) - 1)
         spl = curve[closest_freq]
         if measurement == "On Axis":
             res_spin = spin.loc[(spin.Freq >= 1000) & (spin.Freq < 5000)]
@@ -717,14 +718,9 @@ def plot_spinorama_annotation(
             idx = lw.argmax()
             spl = lw[idx]
             freq = res_spin.Freq.to_numpy()[idx]
-            spl_on = res_spin["On Axis"].to_numpy()[idx]
-            # if not is_normalized:
-            # print(
-            #    "freq={} spl_on={} spl_lw={} offset={}".format(
-            #        freq, spl_on, spl, (spl_on - spl) * 5
-            #    )
-            # )
-            ay -= int((spl_on - spl) * 5)
+            if "On Axis" in res_spin:
+                spl_on = res_spin["On Axis"].to_numpy()[idx]
+                ay -= int((spl_on - spl) * 5)
         # print("{:20s} {:5.0f}Hz voffset {}".format(measurement, freq, ay))
         fig.add_annotation(
             x=math.log10(freq),

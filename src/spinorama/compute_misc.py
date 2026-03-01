@@ -46,35 +46,31 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     This use linear interpolation for missing points and can generate some NaN in the frame.
     Rows (Freq) with at least 1 NaN are removed.
 
+    Curves that are missing from the input are skipped (partial data is preserved).
+
     dfs: a spinorama stored into a panda DataFrame
     """
-    on = dfs[dfs.Measurements == "On Axis"].set_index("Freq")
-    lw = dfs[dfs.Measurements == "Listening Window"].set_index("Freq")
-    er = dfs[dfs.Measurements == "Early Reflections"].set_index("Freq")
-    sp = dfs[dfs.Measurements == "Sound Power"].set_index("Freq")
+    cea2034_keys = ("On Axis", "Listening Window", "Early Reflections", "Sound Power")
+    curves = {}
+    for key in cea2034_keys:
+        df = dfs[dfs.Measurements == key].set_index("Freq")
+        if len(df) > 0:
+            curves[key] = df
 
-    freq = sorted(set(on.index).union(set(lw.index)).union(set(er.index)).union(sp.index))
+    if not curves:
+        return None
 
+    freq = sorted(set().union(*(df.index for df in curves.values())))
     data = pd.DataFrame({"Freq": freq})
 
-    for key, df in (
-        ("On Axis", on),
-        ("Listening Window", lw),
-        ("Early Reflections", er),
-        ("Sound Power", sp),
-    ):
-        if df is None or len(df.dB) == 0:
-            return
+    for key, df in curves.items():
         if df.index.duplicated().any():
             print("ERROR we have duplicates for key {}: {}".format(key, df.index.duplicated()))
         df_align = df.reindex(freq)
-        # print(df_align)
         df_interpolated = df_align.drop("Measurements", axis=1).interpolate(
             method="slinear",
             fill_value="extrapolate",
         )
-        # print(df_interpolated)
-        # print(df_interpolated.keys())
         data[key] = df_interpolated.to_numpy()
 
     return data.dropna().reset_index(drop=True)

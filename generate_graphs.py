@@ -146,7 +146,7 @@ def process_single_measurement(
         return True, speaker, morigin, mversion, {"df": results, "eq": results_eq}, None
 
     except Exception as e:
-        logger.exception("Error processing %s/%s/%s", speaker, origin, mversion)
+        logger.exception("Error processing speaker [%s] origin [%s] version [%s]", speaker, origin, mversion)
     else:
         return False, speaker, origin, mversion, {}
 
