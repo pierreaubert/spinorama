@@ -505,7 +505,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             }
         }
         if (layout.yaxis) {
-            layout.yaxis.dtick = 1;
+            if (layout.yaxis.nticks) {
+                delete layout.yaxis.dtick;
+                delete layout.yaxis.tickvals;
+                delete layout.yaxis.ticktext;
+            } else {
+                layout.yaxis.dtick = 1;
+            }
             if (layout.yaxis.title) {
                 layout.yaxis.title.font = {
                     size: fontSizeH6 + fontDelta,
@@ -514,7 +520,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             }
         }
         if (layout.yaxis2) {
-            layout.yaxis2.dtick = 1;
+            if (layout.yaxis2.nticks) {
+                delete layout.yaxis2.dtick;
+                delete layout.yaxis2.tickvals;
+                delete layout.yaxis2.ticktext;
+            } else {
+                layout.yaxis2.dtick = 1;
+            }
             if (layout.yaxis2.title) {
                 layout.yaxis2.title.font = {
                     size: fontSizeH6 + fontDelta,

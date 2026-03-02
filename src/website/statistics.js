@@ -52,7 +52,7 @@ getMetadata()
                     title: 'Score',
                     range: [0, 10],
                 },
-                yaxis: { title: 'Count' },
+                yaxis: { title: 'Count', nticks: 5 },
                 barmode: 'overlay',
                 legend: {
                     orientation: 'h',
@@ -91,6 +91,7 @@ getMetadata()
                 },
                 yaxis: {
                     title: 'Count',
+                    nticks: 5,
                 },
                 barmode: 'overlay',
                 legend: {

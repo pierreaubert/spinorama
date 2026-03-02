@@ -202,12 +202,12 @@ def print_radar(meta_data, scale, speaker_data):
     fig = go.Figure()
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
-        fig.update_layout(layout)
-        if not os.path.exists(filename) or os.path.getsize(filename) == 0:
-            content = fig.to_json()
-            if os.path.exists(os.path.dirname(filename)):
-                with open(filename, "w", encoding="utf-8") as f_d:
-                    f_d.write(content)
+    fig.update_layout(layout)
+    if not os.path.exists(filename) or os.path.getsize(filename) == 0:
+        content = fig.to_json()
+        if os.path.exists(os.path.dirname(filename)):
+            with open(filename, "w", encoding="utf-8") as f_d:
+                f_d.write(content)
 
 
 def main(args):

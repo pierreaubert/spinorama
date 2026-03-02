@@ -274,6 +274,7 @@ def generate_xaxis(freq_min=20, freq_max=20000):
         ),
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
+        autorange=False,
         showline=True,
         dtick="D1",
         tickfont=FONT_H3,
@@ -282,16 +283,24 @@ def generate_xaxis(freq_min=20, freq_max=20000):
 
 
 def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
+    spl_range = range_max - range_min
+    if spl_range <= 12:
+        label_interval = 2
+    elif spl_range <= 30:
+        label_interval = 5
+    else:
+        label_interval = 10
     return dict(
         title=dict(
             text="SPL (dB)",
             font=FONT_H3,
         ),
         range=[range_min, range_max],
+        autorange=False,
         dtick=range_step,
         tickvals=list(range(range_min, range_max + range_step, range_step)),
         ticktext=[
-            "{}".format(i) if not i % 5 else " "
+            "{}".format(i) if not i % label_interval else " "
             for i in range(range_min, range_max + range_step, range_step)
         ],
         tickfont=FONT_H3,
@@ -1403,6 +1412,7 @@ def plot_eqs(freq, peqs, names):
             title_text="Frequency (Hz)",
             type="log",
             range=[math.log10(20), math.log10(20000)],
+            autorange=False,
             showline=True,
             dtick="D1",
         ),
@@ -1415,12 +1425,20 @@ def plot_eqs(freq, peqs, names):
     if len(peqs) > 0:
         spl_max = np.max([np.max(peq_spl(freq, peq)) for peq in peqs])
         spl_max = min(15, 5 * round(spl_max / 5) + 5) if spl_max > 5 else 5
+    spl_range = spl_max - spl_min
+    if spl_range <= 6:
+        y_dtick = 1
+    elif spl_range <= 12:
+        y_dtick = 2
+    else:
+        y_dtick = 5
     fig.update_yaxes(
         dict(
             title_text="SPL (dB)",
             range=[spl_min, spl_max],
+            autorange=False,
             showline=True,
-            dtick="D1",
+            dtick=y_dtick,
         ),
     )
     fig.update_layout(

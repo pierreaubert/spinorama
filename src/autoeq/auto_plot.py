@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import math
+
 import numpy as np
 import pandas as pd
 
@@ -61,9 +63,11 @@ def print_freq(freq: float) -> str:
 
 def graph_eq(freq, peq):
     """take a PEQ and return traces (for plotly) with frequency data"""
-    data_frame = pd.DataFrame({"Freq": freq})
+    # Use full 20Hz-20kHz range for EQ filter display since PEQ is a mathematical function
+    full_freq = np.logspace(math.log10(20), math.log10(20000), max(len(freq), 200))
+    data_frame = pd.DataFrame({"Freq": full_freq})
     for i, (pos, biquad) in enumerate(peq):
-        data_frame[f"{biquad.type2str_long()} {i}"] = peq_spl(freq, [(pos, biquad)])
+        data_frame[f"{biquad.type2str_long()} {i}"] = peq_spl(full_freq, [(pos, biquad)])
 
     # print('DEBUG: #{} freq[0]: {}'.format(len(freq), freq[0]))
     traces = []
@@ -86,23 +90,18 @@ def graph_eq(freq, peq):
 
 def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
     """return traces with eq v.s. target"""
-    # manual_peq = [
-    #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
-    #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
-    #    (1.0, Biquad(3, 2000, 48000, 4.32, 1.5)),
-    #    (1.0, Biquad(3, 2500, 48000, 4.32, 3)),
-    #    (1.0, Biquad(3, 3150, 48000, 4.32, 3)),
-    # ]
     curve_names = []
     for name in optim_config["curve_names"]:
         curve_names.append(short_curve_name(name))
 
+    # Use full 20Hz-20kHz range so all curves cover the entire audio band
+    full_freq = np.logspace(math.log10(20), math.log10(20000), max(len(freq), 200))
+
     target_name = f"error {curve_names[0]}"
+    # Build data at measurement frequencies first, then interpolate to full range
     df_compare = pd.DataFrame(
         {
             "Freq": freq,
-            "autoEQ": peq_spl(freq, auto_peq),
-            #        "manualEQ": peq_spl(freq, manual_peq),
             target_name: target,
         }
     )
@@ -119,16 +118,29 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
         df_compare["smoothed {}".format(curve_names[0])] = smoothed
 
     traces = []
+    # autoEQ trace: computed directly at full range (mathematical function)
+    traces.append(
+        go.Scatter(
+            x=full_freq,
+            y=peq_spl(full_freq, auto_peq),
+            name="autoEQ",
+            legendgroup="target",
+            legendgrouptitle={"text": "EQ v.s. Target"},
+            marker_color=colors[1],
+        )
+    )
+    # Other traces: interpolate from measurement freq to full range
     for i, key in enumerate(df_compare.keys()):
         if key != "Freq":
+            y_interp = np.interp(full_freq, freq, df_compare[key].to_numpy())
             traces.append(
                 go.Scatter(
-                    x=df_compare.Freq,
-                    y=df_compare[key],
+                    x=full_freq,
+                    y=y_interp,
                     name=key,
                     legendgroup="target",
                     legendgrouptitle={"text": "EQ v.s. Target"},
-                    marker_color=colors[i + 1],
+                    marker_color=colors[i + 2],
                 )
             )
     return traces
@@ -586,21 +598,21 @@ def graph_results(
         current_hist_fr = go.Figure()
         for t in g_curves[curve]["hist"]:
             fig.add_trace(t, row=4 + 2 * i, col=1)
-            fig.update_yaxes(title="Count", row=4 + 2 * i, col=1)
+            fig.update_yaxes(title="Count", nticks=5, row=4 + 2 * i, col=1)
             t["legendgroup"] = None
             t["legendgrouptitle"] = None
             current_hist_fr.add_trace(t)
-            current_hist_fr.update_yaxes(title="Count")
+            current_hist_fr.update_yaxes(title="Count", nticks=5)
         fig_hist_fullrange[curve] = current_hist_fr
 
         current_hist_mr = go.Figure()
         for t in g_curves[curve]["hist_midrange"]:
             fig.add_trace(t, row=4 + 2 * i, col=2)
-            fig.update_yaxes(title="Count", row=4 + 2 * i, col=2)
+            fig.update_yaxes(title="Count", nticks=5, row=4 + 2 * i, col=2)
             t["legendgroup"] = None
             t["legendgrouptitle"] = None
             current_hist_mr.add_trace(t)
-            current_hist_mr.update_yaxes(title="Count")
+            current_hist_mr.update_yaxes(title="Count", nticks=5)
         fig_hist_midrange[curve] = current_hist_mr
 
     # add tonal balance
