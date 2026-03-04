@@ -1194,9 +1194,13 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     if (graphsConfigs.length > 1) {
         const split0 = split(graphsConfigs[0].layout.title.text);
         const split1 = split(graphsConfigs[1].layout.title.text);
-        title = '(A) ' + split0[0] + ' ' + split0[1] + ' v.s. (B) ' + split1[0] + ' ' + split1[1];
+        title =
+            '(A) ' + split0[0] + ' ' + split0[1] + ' by ' + split0[2] +
+            ' v.s. (B) ' + split1[0] + ' ' + split1[1] + ' by ' + split1[2];
         if (isDisplayCompact() || isDisplayVertical()) {
-            title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+            title =
+                '(A) ' + split0[0] + ' ' + split0[1] + ' by ' + split0[2] +
+                ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1] + ' by ' + split1[2];
         }
     } else if (graphsConfigs.length === 1) {
         title = graphsConfigs[0].layout.title.text;

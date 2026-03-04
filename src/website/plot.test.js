@@ -524,7 +524,7 @@ describe('Plot-Specific Setter Functions', () => {
             expect(result.length).toBe(1);
             const mergedLayout = result[0].layout;
 
-            expect(mergedLayout.title.text).toBe('(A) Contour SpkA measured v.s. (B) Contour SpkB measured');
+            expect(mergedLayout.title.text).toBe('(A) Contour SpkA measured by RevA v.s. (B) Contour SpkB measured by RevB');
             expect(mergedLayout.xaxis.domain).toEqual([0, 0.49]);
             expect(mergedLayout.xaxis2.domain).toEqual([0.51, 1]);
             expect(mergedLayout.yaxis.title.text).toBe('Angle (A)');
@@ -532,6 +532,54 @@ describe('Plot-Specific Setter Functions', () => {
             expect(result[0].data.length).toBe(2);
             expect(result[0].data[1].xaxis).toBe('x2');
             // Re-apply general spy for other tests
+            vi.spyOn(plotJs, 'setGraphOptions').mockImplementation((graphs, w, h, _props, _num) => {
+                const layout =
+                    graphs && graphs[0] && graphs[0].layout
+                        ? JSON.parse(JSON.stringify(graphs[0].layout))
+                        : { title: { text: '' }, margin: {}, font: {}, legend: {}, modebar: {} };
+                const data = graphs && graphs[0] && graphs[0].data ? JSON.parse(JSON.stringify(graphs[0].data)) : [];
+                if (graphs && graphs.length > 1 && graphs[1] && graphs[1].data) {
+                    data.push(...JSON.parse(JSON.stringify(graphs[1].data)));
+                }
+                layout.width = w;
+                layout.height = h;
+                return { layout, data, config: { displayModeBar: true } };
+            });
+        });
+
+        it('should preserve reviewer info in title when comparing same speaker with different versions', () => {
+            window.innerWidth = 1200;
+            window.innerHeight = 800;
+
+            const graph1Layout = {
+                title: { text: 'Contour for SpkA measured by ASR' },
+                xaxis: { range: [2, 4], side: 'bottom', tick: 'outside' },
+                yaxis: { range: [-90, 90], title: { text: 'Angle' } },
+            };
+            const graph2Layout = {
+                title: { text: 'Contour for SpkA measured by Princeton' },
+                xaxis: { range: [2.1, 4.1], side: 'bottom', tick: 'outside' },
+                yaxis: { range: [-80, 80], title: { text: 'Angle' } },
+            };
+            const graph1 = { data: [{ name: 'g1d1' }], layout: graph1Layout };
+            const graph2 = { data: [{ name: 'g2d1' }], layout: graph2Layout };
+
+            plotJs.setGraphOptions.mockRestore();
+
+            const result = plotJs.setContour(
+                'SPL Horizontal Contour',
+                ['SpkA', 'SpkA'],
+                [graph1, graph2],
+                window.innerWidth,
+                window.innerHeight
+            );
+            expect(result.length).toBe(1);
+            const mergedLayout = result[0].layout;
+
+            expect(mergedLayout.title.text).toBe(
+                '(A) Contour SpkA measured by ASR v.s. (B) Contour SpkA measured by Princeton'
+            );
+
             vi.spyOn(plotJs, 'setGraphOptions').mockImplementation((graphs, w, h, _props, _num) => {
                 const layout =
                     graphs && graphs[0] && graphs[0].layout
