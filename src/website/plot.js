@@ -791,6 +791,26 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.legend.font = {
                 size: fontSizeH5 + fontDelta,
             };
+
+            // For vertical legends, reduce font size if many traces would overflow
+            // into multiple columns, which would squeeze the plot area.
+            if (layout.legend.orientation === 'v') {
+                let visibleCount = 0;
+                for (let k = 0; k < datas.length; k++) {
+                    if (datas[k].visible !== false && datas[k].visible !== 'legendonly') {
+                        visibleCount++;
+                    }
+                }
+                const entryLineHeight = 1.6;
+                const availableHeight = layout.height * 0.85;
+                const neededHeight = visibleCount * layout.legend.font.size * entryLineHeight;
+                if (neededHeight > availableHeight && visibleCount > 0) {
+                    const minLegendFontSize = 7;
+                    const idealSize = Math.floor(availableHeight / (visibleCount * entryLineHeight));
+                    layout.legend.font.size = Math.max(minLegendFontSize, idealSize);
+                    layout.legend.tracegroupgap = 2;
+                }
+            }
         }
 
         if (outputGraphProperties.isSurface) {

@@ -818,6 +818,45 @@ describe('setGraphOptions', () => {
             expect(options.data[0].legendgrouptitle).toBeNull();
         });
 
+        it('should reduce legend font size when many traces would overflow vertically', () => {
+            // Non-compact landscape: both dimensions >= 550
+            window.innerWidth = 700;
+            window.innerHeight = 600;
+
+            // Create graph data with many traces (like SPL Horizontal with 37 angles)
+            const numAngles = 37;
+            const manyTraceData = createMockGraphData('SPL Horizontal for SpeakerA measured by ASR', numAngles);
+            for (let i = 0; i < numAngles; i++) {
+                manyTraceData[0].data[i].name = `${(i - 18) * 10}°`;
+                manyTraceData[0].data[i].visible = true;
+            }
+
+            const options = setGraphOptions(manyTraceData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+
+            // Legend should still be vertical for landscape
+            expect(options.layout.legend.orientation).toBe('v');
+            // Font must have been reduced from the default to fit
+            const fontSizeH5 = 10;
+            const fontDelta = Math.round(700 / 300); // = 2
+            const defaultFontSize = fontSizeH5 + fontDelta;
+            expect(options.layout.legend.font.size).toBeLessThan(defaultFontSize);
+            expect(options.layout.legend.font.size).toBeGreaterThanOrEqual(7);
+        });
+
+        it('should not reduce legend font size when few traces fit comfortably', () => {
+            window.innerWidth = 1200;
+            window.innerHeight = 800;
+
+            const fewTraceData = createMockGraphData('SPL Horizontal for SpeakerA measured by ASR', 5);
+            const options = setGraphOptions(fewTraceData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+
+            expect(options.layout.legend.orientation).toBe('v');
+            const fontSizeH5 = 10;
+            const fontDelta = Math.round(1200 / 300); // = 4
+            const defaultFontSize = fontSizeH5 + fontDelta;
+            expect(options.layout.legend.font.size).toBe(defaultFontSize);
+        });
+
         it('should remove legend group titles when comparing two graphs with different speakers', () => {
             const graphData1 = createMockGraphData('Measurement v.s. Something for SpeakerA measured by RevA');
             const graphData2 = createMockGraphData('Another for SpeakerB measured by RevB');
