@@ -1016,6 +1016,82 @@ describe('setGraphOptions', () => {
     });
 });
 
+describe('Resize: layout must change when dimensions change', () => {
+    const createGraphData = () => {
+        const data = [];
+        for (let i = 0; i < 7; i++) {
+            data.push({
+                name: `${i * 10}°`,
+                x: [1, 2, 3],
+                y: [10, 20, 15],
+                visible: true,
+                legendgroup: 'speaker0',
+                legendgrouptitle: { text: 'Speaker' },
+            });
+        }
+        return [
+            {
+                data,
+                layout: {
+                    title: { text: 'SPL Horizontal for Speaker measured by ASR', font: {}, xanchor: 'center', xref: 'paper', x: 0.5 },
+                    xaxis: { title: { text: 'Frequency (Hz)', font: {} }, range: [Math.log10(20), Math.log10(20000)] },
+                    yaxis: { title: { text: 'SPL (dB)', font: {} }, range: [30, 100] },
+                    font: {},
+                    margin: {},
+                    legend: {},
+                    modebar: {},
+                },
+            },
+        ];
+    };
+
+    beforeEach(() => {
+        vi.spyOn(console, 'info').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('should produce different legend orientation for landscape vs portrait', () => {
+        const props = { isGraph: true };
+
+        // Landscape: 1200x700 → non-compact, horizontal → vertical legend on right
+        const landscape = setGraphOptions(createGraphData(), 1200, 700, props, 1);
+        expect(landscape.layout.legend.orientation).toBe('v');
+
+        // Portrait: 700x1200 → non-compact, vertical → horizontal legend below
+        const portrait = setGraphOptions(createGraphData(), 700, 1200, props, 1);
+        expect(portrait.layout.legend.orientation).toBe('h');
+    });
+
+    it('should produce different dimensions for landscape vs portrait', () => {
+        const props = { isGraph: true };
+
+        const landscape = setGraphOptions(createGraphData(), 1200, 700, props, 1);
+        const portrait = setGraphOptions(createGraphData(), 700, 1200, props, 1);
+
+        // Width and height should differ significantly
+        expect(landscape.layout.width).not.toBe(portrait.layout.width);
+        expect(landscape.layout.height).not.toBe(portrait.layout.height);
+    });
+
+    it('should produce compact layout when resized from large to small', () => {
+        const props = { isGraph: true };
+
+        const large = setGraphOptions(createGraphData(), 1200, 800, props, 1);
+        const small = setGraphOptions(createGraphData(), 400, 500, props, 1);
+
+        // Large: non-compact → modebar visible
+        expect(large.config.displayModeBar).toBe(true);
+        // Small: compact → modebar hidden
+        expect(small.config.displayModeBar).toBe(false);
+        // Small should use compact margins
+        expect(small.layout.margin.l).toBe(15);
+        expect(large.layout.margin.l).toBe(30);
+    });
+});
+
 // Helper to compare ArrayBuffers
 function arrayBuffersAreEqual(buf1, buf2) {
     if (buf1.byteLength !== buf2.byteLength) return false;

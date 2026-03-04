@@ -248,6 +248,69 @@ describe('Graph Display', () => {
         expect(options.layout.showlegend).not.toBe(false);
     });
 
+    test('displayGraph registers resize listener for interactive graphs (withConfig=true)', async () => {
+        const addEventSpy = vi.spyOn(window, 'addEventListener');
+
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        const resizeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'resize');
+        expect(resizeCalls.length).toBeGreaterThanOrEqual(1);
+
+        addEventSpy.mockRestore();
+    });
+
+    test('displayGraph does not register resize listener for static previews (withConfig=false)', async () => {
+        const addEventSpy = vi.spyOn(window, 'addEventListener');
+
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+
+        const resizeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'resize');
+        expect(resizeCalls.length).toBe(0);
+
+        addEventSpy.mockRestore();
+    });
+
+    test('displayGraph recomputes layout on resize with new dimensions', async () => {
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        // Initial call: 1024x768
+        expect(setPlotForMeasurement).toHaveBeenCalledWith('On Axis', ['Test Graph'], [graphSpec], 1024, 768, 1);
+
+        // Simulate resize to portrait
+        window.innerWidth = 600;
+        window.innerHeight = 1000;
+
+        // Trigger the resize handler
+        window.dispatchEvent(new window.Event('resize'));
+
+        // Wait for debounce (150ms)
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Should have been called again with new dimensions
+        const calls = setPlotForMeasurement.mock.calls;
+        const lastCall = calls[calls.length - 1];
+        expect(lastCall[3]).toBe(600);
+        expect(lastCall[4]).toBe(1000);
+
+        // Plotly.react should have been called for the re-render
+        expect(Plotly.react).toHaveBeenCalled();
+    });
+
     test('displayGraph handles target element correctly', async () => {
         // Create a sample graph spec with different data
         const graphSpec = {

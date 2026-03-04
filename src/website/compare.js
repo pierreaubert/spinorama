@@ -88,8 +88,8 @@ getMetadata()
         const formContainer = plotContainers.querySelector('#plotForm');
         const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
 
         const [metaSpeakers, speakers] = getAllSpeakers(metadata);
         const initSpeakers = buildInitSpeakers(speakers, nbSpeakers);
@@ -381,21 +381,20 @@ getMetadata()
         }
 
         // add listeners
+        let resizeTimer = null;
         function windowChanges(_event) {
             if (!graphsConfigs) {
                 return;
             }
-            console.log('DEBUG: resize ' + window.innerWidth + 'px ' + window.innerHeight + 'px');
-            if (graphsConfigs.length === 1) {
-                Plotly.Plots.resize('plot0');
-            } else if (graphsConfigs.length === 2) {
-                Plotly.Plots.resize('plot0');
-                Plotly.Plots.resize('plot1');
-            } else if (graphsConfigs.length === 3) {
-                Plotly.Plots.resize('plot0');
-                Plotly.Plots.resize('plot1');
-                Plotly.Plots.resize('plot2');
+            // Debounce: wait for resize to settle before recomputing
+            if (resizeTimer) {
+                clearTimeout(resizeTimer);
             }
+            resizeTimer = setTimeout(() => {
+                windowWidth = window.innerWidth;
+                windowHeight = window.innerHeight;
+                updateSpeakers();
+            }, 150);
         }
 
         window.addEventListener('resize', (event) => {
