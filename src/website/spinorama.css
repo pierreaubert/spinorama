@@ -10,3 +10,19 @@
     min-block-size: min(300px, 60%);
     width: max(300px, 25%);
 }
+
+.card-footer {
+    height: 2.25rem;
+}
+
+.card-footer-item {
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
+}
+
+.card-footer .dropdown-trigger .button {
+    height: auto;
+    min-height: 0;
+    padding: 0.1em 0.5em;
+    font-size: 0.85rem;
+}

@@ -176,8 +176,8 @@ export const defaultConfig = {
         position: 'default', // 'default' means keep original position
         xanchor: 'default', // 'default' means keep original xanchor
         yanchor: 'default', // 'default' means keep original yanchor
-        xoffset: 0, // 0 means no change to original offset
-        yoffset: 0, // 0 means no change to original offset
+        xoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
+        yoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
         label: 'default', // 'default' means keep original label style
     },
     margins: {
@@ -314,6 +314,38 @@ export function applyConfig(options, config) {
                     }
                 }
             });
+        }
+
+        // Apply theme
+        if (config.theme && config.theme !== 'default') {
+            switch (config.theme) {
+                case 'light':
+                    layout.paper_bgcolor = '#ffffff';
+                    layout.plot_bgcolor = '#ffffff';
+                    if (!layout.font) layout.font = {};
+                    layout.font.color = '#333333';
+                    ['xaxis', 'yaxis', 'zaxis'].forEach((axis) => {
+                        if (layout[axis]) {
+                            layout[axis].gridcolor = '#e0e0e0';
+                            layout[axis].linecolor = '#333333';
+                            layout[axis].zerolinecolor = '#666666';
+                        }
+                    });
+                    break;
+                case 'dark':
+                    layout.paper_bgcolor = '#1a1a2e';
+                    layout.plot_bgcolor = '#16213e';
+                    if (!layout.font) layout.font = {};
+                    layout.font.color = '#e0e0e0';
+                    ['xaxis', 'yaxis', 'zaxis'].forEach((axis) => {
+                        if (layout[axis]) {
+                            layout[axis].gridcolor = '#3a3a5c';
+                            layout[axis].linecolor = '#e0e0e0';
+                            layout[axis].zerolinecolor = '#5a5a7c';
+                        }
+                    });
+                    break;
+            }
         }
 
         // Apply margins as deltas to existing margins
@@ -486,6 +518,22 @@ export function applyConfig(options, config) {
                         } else if (config.legend.label === 'long') {
                             trace.name = labelLong[trace._fullName] || trace.name;
                         }
+                    }
+                }
+            }
+
+            // Enforce legend group title font size >= legend item font size
+            if (trace.legendgrouptitle && trace.legendgrouptitle.text) {
+                const legendFontSize = options.layout?.legend?.font?.size;
+                if (legendFontSize) {
+                    if (!trace.legendgrouptitle.font) {
+                        trace.legendgrouptitle.font = {};
+                    }
+                    if (
+                        !trace.legendgrouptitle.font.size ||
+                        trace.legendgrouptitle.font.size < legendFontSize
+                    ) {
+                        trace.legendgrouptitle.font.size = legendFontSize;
                     }
                 }
             }
@@ -1007,10 +1055,10 @@ export function createConfigMenu(divName, config, updateCallback) {
         // Create slider input for incremental adjustments
         const sliderInput = document.createElement('input');
         sliderInput.type = 'range';
-        sliderInput.min = '-20';
-        sliderInput.max = '20';
+        sliderInput.min = '-100';
+        sliderInput.max = '100';
         sliderInput.step = '1';
-        sliderInput.value = Math.round(config.legend[axis + 'offset'] * 100); // Convert from -0.2...0.2 to -20...20
+        sliderInput.value = Math.round(config.legend[axis + 'offset'] * 100); // Convert from -1.0...1.0 to -100...100
         sliderInput.id = `config-legend-offset-${axis}`;
         sliderInput.style.cssText = `
             flex-grow: 1;
@@ -1029,7 +1077,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         // Update handler
         sliderInput.addEventListener('input', (e) => {
             const sliderValue = parseInt(e.target.value);
-            const offsetValue = sliderValue / 100; // Convert slider value to offset (-0.2 to 0.2)
+            const offsetValue = sliderValue / 100; // Convert slider value to offset (-1.0 to 1.0)
             config.legend[axis + 'offset'] = offsetValue;
             valueDisplay.textContent = offsetValue.toFixed(2);
             updateCallback(config);

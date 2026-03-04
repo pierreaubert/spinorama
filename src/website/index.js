@@ -132,7 +132,7 @@ function footerHtml(id, reviews) {
         <div class="card-footer-item">
            <div class="dropdown is-hoverable">
              <div class="dropdown-trigger">
-               <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${id}">
+               <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${id}">
                  <span>Measurements</span>
                    <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
                </button>
