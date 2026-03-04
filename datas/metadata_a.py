@@ -1870,8 +1870,22 @@ speakers_info_a: SpeakerDatabase = {
         "price": "2900",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor-v2-20240917",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-a6b-speaker-review.69864/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/"
+                },
+                "review_published": "20260304",
+                "specifications": {
+                    "size": {"height": 400, "width": 220, "depth": 260},
+                    "weight": 13.0,
+                },
+            },
             "vendor-v2-20240917": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
