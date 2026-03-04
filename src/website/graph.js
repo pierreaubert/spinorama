@@ -81,6 +81,11 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
                 options.config.showTips = false;
                 options.config.responsive = true;
 
+                // hide legend for small static previews (non-interactive, can't toggle)
+                if (ratio > 1 && options.layout) {
+                    options.layout.showlegend = false;
+                }
+
                 // reduce the size of title if ratio > 1
                 if (ratio > 1 && options.layout) {
                     const w = window.innerWidth;

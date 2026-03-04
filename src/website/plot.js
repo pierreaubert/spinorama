@@ -148,16 +148,9 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
     let width = windowWidth;
     let height = windowHeight;
     if (isCompact) {
-        if (isVertical) {
-            // portraint
-            width = windowWidth;
-            height = Math.min(windowHeight, windowWidth / ratio + graphMarginTop + graphMarginBottom);
-        } else {
-            // landscape
-            height = windowHeight - graphMarginTop - graphMarginBottom;
-            const extra = graphLegendWidth + graphMarginLeft + graphMarginRight;
-            width = Math.min(windowWidth - extra, height * ratio + extra);
-        }
+        // legend is horizontal below the graph, so use full width
+        width = windowWidth;
+        height = Math.min(windowHeight, windowWidth / ratio + graphMarginTopSmall + graphMarginBottomSmall);
     } else {
         if (isVertical) {
             width = windowWidth - graphMarginLeft - graphMarginRight;
@@ -432,8 +425,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         return { data: null, layout: null, config: null };
     }
 
-    const isVertical = isDisplayVertical();
-    const isCompact = isDisplayCompact();
+    const isVertical = windowWidth <= windowHeight;
+    const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
 
     let fontDelta = 0;
     if (!isCompact) {
@@ -696,26 +689,16 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         const y_shift = 0.3;
         layout.legend = {};
         if (isCompact) {
-            if (isVertical) {
-                layout.legend = {
-                    orientation: 'h',
-                    y: -y_shift,
-                    x: 0.5,
-                    xref: 'container',
-                    xanchor: 'center',
-                    yanchor: 'bottom',
-                    yref: 'container',
-                    groupclick: 'toggleitem',
-                };
-            } else {
-                layout.legend.orientation = 'v';
-                layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'middel';
-                layout.legend.x = 1.2;
-                layout.legend.y = 0;
-                layout.legend.entrywidth = graphLegendWidth;
-                layout.legend.entrywidthmode = 'pixels';
-            }
+            layout.legend = {
+                orientation: 'h',
+                y: -y_shift,
+                x: 0.5,
+                xref: 'container',
+                xanchor: 'center',
+                yanchor: 'bottom',
+                yref: 'container',
+                groupclick: 'toggleitem',
+            };
         } else {
             layout.legend.xref = 'paper';
             if (isVertical) {
@@ -792,22 +775,32 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 size: fontSizeH5 + fontDelta,
             };
 
-            // For vertical legends, reduce font size if many traces would overflow
-            // into multiple columns, which would squeeze the plot area.
+            // For vertical legends, prevent overflow into multiple columns
+            // which would squeeze the plot area.
             if (layout.legend.orientation === 'v') {
-                let visibleCount = 0;
+                // Count all traces shown in the legend (legendonly still appears)
+                let legendCount = 0;
                 for (let k = 0; k < datas.length; k++) {
-                    if (datas[k].visible !== false && datas[k].visible !== 'legendonly') {
-                        visibleCount++;
+                    if (datas[k].visible !== false && datas[k].showlegend !== false) {
+                        legendCount++;
                     }
                 }
                 const entryLineHeight = 1.6;
+                const fontSize = layout.legend.font.size;
+                const neededHeight = legendCount * fontSize * entryLineHeight;
                 const availableHeight = layout.height * 0.85;
-                const neededHeight = visibleCount * layout.legend.font.size * entryLineHeight;
-                if (neededHeight > availableHeight && visibleCount > 0) {
-                    const minLegendFontSize = 7;
-                    const idealSize = Math.floor(availableHeight / (visibleCount * entryLineHeight));
-                    layout.legend.font.size = Math.max(minLegendFontSize, idealSize);
+                if (neededHeight > availableHeight && legendCount > 0) {
+                    // First: increase graph height (up to 1.5x) to fit legend
+                    const maxHeight = layout.height * 1.5;
+                    const targetHeight = Math.min(maxHeight, neededHeight / 0.85);
+                    layout.height = Math.max(layout.height, targetHeight);
+                    // Second: if still not enough, reduce font size
+                    const newAvailable = layout.height * 0.85;
+                    if (legendCount * fontSize * entryLineHeight > newAvailable) {
+                        const minLegendFontSize = 7;
+                        const idealSize = Math.floor(newAvailable / (legendCount * entryLineHeight));
+                        layout.legend.font.size = Math.max(minLegendFontSize, idealSize);
+                    }
                     layout.legend.tracegroupgap = 2;
                 }
             }
@@ -1080,7 +1073,7 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
 
 export function setGraph(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-    const isCompact = isDisplayCompact();
+    const isCompact = width < graphSmall || height < graphSmall;
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)

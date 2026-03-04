@@ -95,10 +95,10 @@ describe('computeDims', () => {
 
             // Use actual computed values as expected values since the code is correct
             const expectedValues = {
-                'iPhone SE, V, C, 1 graph': [375, 381],
-                'iPhone SE, V, C, 2 graphs': [375, 381],
-                'iPhone SE landscape, H, C, 1 graph': [443, 275],
-                'iPhone SE landscape, H, C, 2 graphs': [443, 275],
+                'iPhone SE, V, C, 1 graph': [375, 351],
+                'iPhone SE, V, C, 2 graphs': [375, 351],
+                'iPhone SE landscape, H, C, 1 graph': [667, 375],
+                'iPhone SE landscape, H, C, 2 graphs': [667, 375],
                 'Tablet portrait, V, NC, 1 graph': [740, 595],
                 'Tablet portrait wide, V, NC, 1 graph': [1140, 868],
                 'Tablet landscape, H, NC, 1 graph': [1157, 700],
@@ -818,24 +818,28 @@ describe('setGraphOptions', () => {
             expect(options.data[0].legendgrouptitle).toBeNull();
         });
 
-        it('should reduce legend font size when many traces would overflow vertically', () => {
+        it('should increase height and reduce font when many traces overflow legend vertically', () => {
             // Non-compact landscape: both dimensions >= 550
             window.innerWidth = 700;
             window.innerHeight = 600;
 
-            // Create graph data with many traces (like SPL Horizontal with 37 angles)
+            // SPL Horizontal with 37 angles: all appear in legend (some as legendonly)
             const numAngles = 37;
             const manyTraceData = createMockGraphData('SPL Horizontal for SpeakerA measured by ASR', numAngles);
             for (let i = 0; i < numAngles; i++) {
                 manyTraceData[0].data[i].name = `${(i - 18) * 10}°`;
-                manyTraceData[0].data[i].visible = true;
+                // Mix of visible and legendonly, like real data
+                manyTraceData[0].data[i].visible = i >= 14 && i <= 24 ? true : 'legendonly';
             }
 
             const options = setGraphOptions(manyTraceData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
 
             // Legend should still be vertical for landscape
             expect(options.layout.legend.orientation).toBe('v');
-            // Font must have been reduced from the default to fit
+            // Height should have increased to accommodate legend
+            // Original computeDims for 700x600 yields ~357px height
+            expect(options.layout.height).toBeGreaterThan(360);
+            // Font should have been reduced since 1.5x height is still not enough for 37 entries
             const fontSizeH5 = 10;
             const fontDelta = Math.round(700 / 300); // = 2
             const defaultFontSize = fontSizeH5 + fontDelta;
@@ -843,7 +847,32 @@ describe('setGraphOptions', () => {
             expect(options.layout.legend.font.size).toBeGreaterThanOrEqual(7);
         });
 
-        it('should not reduce legend font size when few traces fit comfortably', () => {
+        it('should increase height without font reduction when moderate trace count overflows slightly', () => {
+            // Non-compact landscape
+            window.innerWidth = 1200;
+            window.innerHeight = 800;
+
+            // 21 traces like typical SPL Horizontal data
+            const numTraces = 21;
+            const moderateData = createMockGraphData('SPL Horizontal for SpeakerA measured by ASR', numTraces);
+            for (let i = 0; i < numTraces; i++) {
+                moderateData[0].data[i].name = `${(i - 10) * 10}°`;
+                moderateData[0].data[i].visible = i >= 7 && i <= 13 ? true : 'legendonly';
+            }
+
+            const fontSizeH5 = 10;
+            const fontDelta = Math.round(1200 / 300); // = 4
+            const defaultFontSize = fontSizeH5 + fontDelta;
+
+            const options = setGraphOptions(moderateData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
+
+            expect(options.layout.legend.orientation).toBe('v');
+            // 21 entries at font 14: 21 * 14 * 1.6 = 470px
+            // available at 700px height: 700 * 0.85 = 595 → fits, no adjustment needed
+            expect(options.layout.legend.font.size).toBe(defaultFontSize);
+        });
+
+        it('should not adjust legend when few traces fit comfortably', () => {
             window.innerWidth = 1200;
             window.innerHeight = 800;
 
@@ -855,6 +884,36 @@ describe('setGraphOptions', () => {
             const fontDelta = Math.round(1200 / 300); // = 4
             const defaultFontSize = fontSizeH5 + fontDelta;
             expect(options.layout.legend.font.size).toBe(defaultFontSize);
+        });
+
+        it('should detect compact mode from passed-in dimensions, not window (ratio=2 case)', () => {
+            // Simulate displayGraph with ratio=2 on a 1400x900 screen:
+            // w = 1400/2 = 700, h = 900/2 = 450
+            // The real window is large, but setGraphOptions should detect compact from 700x450
+            window.innerWidth = 1400;
+            window.innerHeight = 900;
+            const effectiveWidth = 700;
+            const effectiveHeight = 450; // < 550 → compact
+
+            const numTraces = 21;
+            const data = createMockGraphData('SPL Horizontal for SpeakerA measured by ASR', numTraces);
+            for (let i = 0; i < numTraces; i++) {
+                data[0].data[i].name = `${(i - 10) * 10}°`;
+                data[0].data[i].visible = i >= 7 && i <= 13 ? true : 'legendonly';
+            }
+
+            const options = setGraphOptions(data, effectiveWidth, effectiveHeight, { isGraph: true }, 1);
+
+            // isCompact=true (450<550) → compact mode
+            // Compact mode: horizontal legend below, graph uses full width
+            expect(options.layout.legend.orientation).toBe('h');
+            expect(options.layout.legend.xanchor).toBe('center');
+            // Compact mode: fontDelta=0, font=10 (not 12 as non-compact would give)
+            expect(options.layout.legend.font.size).toBeLessThanOrEqual(10);
+            // Graph uses full width (no legend width reserved on the right)
+            expect(options.layout.width).toBe(700);
+            // Compact mode uses smaller margins
+            expect(options.layout.margin.l).toBe(15); // graphMarginLeftSmall
         });
 
         it('should remove legend group titles when comparing two graphs with different speakers', () => {

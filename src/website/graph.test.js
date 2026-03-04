@@ -213,6 +213,41 @@ describe('Graph Display', () => {
         await expect(displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1)).resolves.not.toThrow();
     });
 
+    test('displayGraph hides legend for static preview graphs (ratio > 1)', async () => {
+        const graphSpec = {
+            layout: {
+                title: { text: 'SPL Horizontal for Speaker measured by ASR' },
+            },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('SPL Horizontal', 'test.json', 'test-graph', graphSpec, false, 2);
+
+        expect(Plotly.newPlot).toHaveBeenCalled();
+        const callArgs = Plotly.newPlot.mock.calls[0];
+        const options = callArgs[1];
+        expect(options.layout.showlegend).toBe(false);
+        expect(options.config.staticPlot).toBe(true);
+    });
+
+    test('displayGraph keeps legend for full-size interactive graphs (ratio = 1)', async () => {
+        const graphSpec = {
+            layout: {
+                title: { text: 'SPL Horizontal for Speaker measured by ASR' },
+                legend: { x: 1, y: 0.5 },
+            },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('SPL Horizontal', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        expect(Plotly.newPlot).toHaveBeenCalled();
+        const callArgs = Plotly.newPlot.mock.calls[0];
+        const options = callArgs[1];
+        // Legend should NOT be hidden for ratio=1 interactive graphs
+        expect(options.layout.showlegend).not.toBe(false);
+    });
+
     test('displayGraph handles target element correctly', async () => {
         // Create a sample graph spec with different data
         const graphSpec = {
