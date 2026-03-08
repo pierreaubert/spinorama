@@ -9,7 +9,7 @@
     "playright": "1.55.1",
     "plotly.js-dist-min": "^3.4.0",
     "rollup": "^4.59.0",
-    "tar": "^7.5.9"
+    "tar": "^7.5.10"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
