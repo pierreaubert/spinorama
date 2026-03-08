@@ -1033,7 +1033,13 @@ describe('Resize: layout must change when dimensions change', () => {
             {
                 data,
                 layout: {
-                    title: { text: 'SPL Horizontal for Speaker measured by ASR', font: {}, xanchor: 'center', xref: 'paper', x: 0.5 },
+                    title: {
+                        text: 'SPL Horizontal for Speaker measured by ASR',
+                        font: {},
+                        xanchor: 'center',
+                        xref: 'paper',
+                        x: 0.5,
+                    },
                     xaxis: { title: { text: 'Frequency (Hz)', font: {} }, range: [Math.log10(20), Math.log10(20000)] },
                     yaxis: { title: { text: 'SPL (dB)', font: {} }, range: [30, 100] },
                     font: {},
@@ -1089,6 +1095,41 @@ describe('Resize: layout must change when dimensions change', () => {
         // Small should use compact margins
         expect(small.layout.margin.l).toBe(15);
         expect(large.layout.margin.l).toBe(30);
+    });
+
+    it('should set legend itemwidth so marker line does not overlap label', () => {
+        const props = { isGraph: true };
+
+        // Landscape: vertical legend on right
+        const landscape = setGraphOptions(createGraphData(), 1200, 700, props, 1);
+        expect(landscape.layout.legend.itemwidth).toBeDefined();
+        expect(landscape.layout.legend.itemwidth).toBeLessThan(30); // default is 30, too wide
+
+        // Portrait: horizontal legend below
+        const portrait = setGraphOptions(createGraphData(), 700, 1200, props, 1);
+        expect(portrait.layout.legend.itemwidth).toBeDefined();
+        expect(portrait.layout.legend.itemwidth).toBeLessThan(30);
+
+        // Compact
+        const compact = setGraphOptions(createGraphData(), 400, 500, props, 1);
+        expect(compact.layout.legend.itemwidth).toBeDefined();
+        expect(compact.layout.legend.itemwidth).toBeLessThan(30);
+    });
+
+    it('should use wider legend entrywidth in compare view to avoid label overlap', () => {
+        const props = { isGraph: true };
+
+        // Portrait (horizontal legend): compare should have wider entries than single
+        const single = setGraphOptions(createGraphData(), 700, 1200, props, 1);
+        const singleEntryWidth = single.layout.legend.entrywidth;
+
+        const graphA = createGraphData();
+        const graphB = createGraphData();
+        graphB[0].layout.title.text = 'SPL Horizontal for Speaker B measured by ASR';
+        const compareGraphs = [graphA[0], graphB[0]];
+        const compare = setGraphOptions(compareGraphs, 700, 1200, props, 1);
+
+        expect(compare.layout.legend.entrywidth).toBeGreaterThan(singleEntryWidth);
     });
 });
 

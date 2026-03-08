@@ -2,7 +2,7 @@
 
 # warning this section is read by a python script (generate_html) to grab the versions
 
-PLOTLY=3.1.0
+PLOTLY=3.4.0
 HANDLEBARS=4.7.8
 BULMA=1.0.4
 FUSE=7.0.0

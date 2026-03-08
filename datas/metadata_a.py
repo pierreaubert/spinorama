@@ -2000,6 +2000,30 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "AsciLab C8C": {
+        "brand": "AsciLab",
+        "model": "C8C",
+        "type": "active",
+        "price": "6200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/"
+                },
+                "review_published": "20260308",
+                "specifications": {
+                    "size": {"height": 560, "width": 254, "depth": 350},
+                    "weight": 27.5,
+                },
+            }
+        },
+    },
     "AsciLab F6B": {
         "brand": "AsciLab",
         "model": "F6B",

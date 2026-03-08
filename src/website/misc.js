@@ -415,7 +415,7 @@ export function getReviews(value) {
             ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
             ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
             ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
-            ["JBL", '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
+            ['JBL', '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
             ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
             ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
             ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],

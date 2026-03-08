@@ -529,10 +529,7 @@ export function applyConfig(options, config) {
                     if (!trace.legendgrouptitle.font) {
                         trace.legendgrouptitle.font = {};
                     }
-                    if (
-                        !trace.legendgrouptitle.font.size ||
-                        trace.legendgrouptitle.font.size < legendFontSize
-                    ) {
+                    if (!trace.legendgrouptitle.font.size || trace.legendgrouptitle.font.size < legendFontSize) {
                         trace.legendgrouptitle.font.size = legendFontSize;
                     }
                 }

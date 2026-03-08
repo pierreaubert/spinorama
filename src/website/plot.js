@@ -708,7 +708,10 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.legend.yanchor = 'bottom';
                 layout.legend.x = 0.5;
                 layout.legend.y = -0.5;
-                layout.legend.entrywidth = 120;
+                // Compare view prefixes labels with "(A) "/"(B) " making them longer;
+                // use wider entries (fewer columns) to avoid overlap.
+                const isCompare = inputGraphsData.length > 1;
+                layout.legend.entrywidth = isCompare ? 180 : 120;
                 layout.legend.entrywidthmode = 'pixels';
             } else {
                 layout.legend.yref = 'paper';
@@ -774,6 +777,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.legend.font = {
                 size: fontSizeH5 + fontDelta,
             };
+            // Reduce legend marker (line) width to prevent overlap with label text.
+            // Plotly default is 30px which is too wide.
+            layout.legend.itemwidth = 20;
 
             // For vertical legends, prevent overflow into multiple columns
             // which would squeeze the plot area.
@@ -1208,12 +1214,32 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         const split0 = split(graphsConfigs[0].layout.title.text);
         const split1 = split(graphsConfigs[1].layout.title.text);
         title =
-            '(A) ' + split0[0] + ' ' + split0[1] + ' by ' + split0[2] +
-            ' v.s. (B) ' + split1[0] + ' ' + split1[1] + ' by ' + split1[2];
+            '(A) ' +
+            split0[0] +
+            ' ' +
+            split0[1] +
+            ' by ' +
+            split0[2] +
+            ' v.s. (B) ' +
+            split1[0] +
+            ' ' +
+            split1[1] +
+            ' by ' +
+            split1[2];
         if (isDisplayCompact() || isDisplayVertical()) {
             title =
-                '(A) ' + split0[0] + ' ' + split0[1] + ' by ' + split0[2] +
-                ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1] + ' by ' + split1[2];
+                '(A) ' +
+                split0[0] +
+                ' ' +
+                split0[1] +
+                ' by ' +
+                split0[2] +
+                ' <br>v.s. (B) ' +
+                split1[0] +
+                ' ' +
+                split1[1] +
+                ' by ' +
+                split1[2];
         }
     } else if (graphsConfigs.length === 1) {
         title = graphsConfigs[0].layout.title.text;
