@@ -24,9 +24,9 @@ import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
 
-const flagGraphConfig = false;
+const flagGraphConfig = true;
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -100,6 +100,24 @@ getMetadata()
         // Load plot configuration from storage
         let config = loadConfigFromStorage('Graph');
 
+        // In compare mode, annotations, trendlines and zones are off by default
+        if (!config.annotations) config.annotations = {};
+        if (!config.trendlines) config.trendlines = {};
+        if (!config.zones) config.zones = {};
+        config.annotations.showA = false;
+        config.annotations.showB = false;
+        config.trendlines.showA = false;
+        config.trendlines.showB = false;
+        config.zones.showA = false;
+        config.zones.showB = false;
+
+        // Create configuration menu attached to the plot zone (compare mode for per-speaker controls)
+        createConfigMenu('plotZone', config, (updatedConfig) => {
+            config = updatedConfig;
+            saveConfigToStorage(updatedConfig);
+            updateSpeakers();
+        }, { compareMode: true });
+
         const speakersSelector = [];
         const originsSelector = [];
         const versionsSelector = [];
@@ -112,7 +130,22 @@ getMetadata()
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
-                    // console.log('plot: resolved ' + graphs.length + ' graphs')
+                    // Tag annotations with speaker index and merge them
+                    const allAnnotations = [];
+                    for (let i = 0; i < graphs.length; i++) {
+                        if (graphs[i] && graphs[i].layout && graphs[i].layout.annotations) {
+                            for (const ann of graphs[i].layout.annotations) {
+                                ann._speakerIndex = i;
+                            }
+                            allAnnotations.push(...graphs[i].layout.annotations);
+                        }
+                    }
+                    // Attach merged annotations to all graphs so they survive the merge
+                    for (let i = 0; i < graphs.length; i++) {
+                        if (graphs[i] && graphs[i].layout) {
+                            graphs[i].layout.annotations = allAnnotations;
+                        }
+                    }
                     if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
                         graphsConfigs = setCEA2034(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (

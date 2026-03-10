@@ -44,7 +44,7 @@
 		 const spec = fetch(graph_json)
 		   .then( (response) => response.json() )
 		   .then( (spec) => {
-		     displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, false, 1);
+		     displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, true, 1);
 		   });
 		</script>
               </a>
@@ -66,7 +66,7 @@
 		 const spec = fetch(graph_json)
 		   .then( (response) => response.json() )
 		   .then( (spec) => {
-		     displayGraph("${contour}", graph_json, "${g_key}-${contour}", spec, false, 1);
+		     displayGraph("${contour}", graph_json, "${g_key}-${contour}", spec, true, 1);
 		   });
 		</script>
                 %endif
@@ -130,7 +130,7 @@
 		 const spec = fetch(graph_json)
 		   .then( (response) => response.json() )
 		   .then( (spec) => {
-		     displayGraph("${freq}", graph_json, "${g_key_eq}-${freq}", spec, false, 1);
+		     displayGraph("${freq}", graph_json, "${g_key_eq}-${freq}", spec, true, 1);
 		   });
 		</script>
               </a>
@@ -151,7 +151,7 @@
 		 const spec = fetch(graph_json)
 		   .then( (response) => response.json() )
 		   .then( (spec) => {
-		     displayGraph("${contour}", graph_json, "${g_key_eq}-${contour}", spec, false, 1);
+		     displayGraph("${contour}", graph_json, "${g_key_eq}-${contour}", spec, true, 1);
 		   });
 		</script>
               </a>

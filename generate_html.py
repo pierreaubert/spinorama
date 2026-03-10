@@ -592,7 +592,9 @@ def main():
             # compress files with terser
             if flag_optim:
                 terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
-                # print(terser_command)
+                # remove stale terser output before running
+                if os.path.exists(item_post_terser):
+                    os.remove(item_post_terser)
                 try:
                     with open(item_post_terser, "w") as item_post_terser_fd:
                         status = subprocess.run(  # noqa: S603
@@ -605,12 +607,21 @@ def main():
                             print("terser failed for item {}".format(item))
                 except subprocess.CalledProcessError as e:
                     print("terser failed for item {} with {}".format(item, e))
+                    # remove failed terser output
+                    if os.path.exists(item_post_terser):
+                        os.remove(item_post_terser)
 
-                # copy last file
-                shutil.copy(item_post_terser, item_dist)
+                # copy terser output if it exists, otherwise fall back to uncompressed
+                if os.path.exists(item_post_terser):
+                    shutil.copy(item_post_terser, item_dist)
+                else:
+                    shutil.copy(item_post_import, item_dist)
             else:
                 # copy last file
                 shutil.copy(item_post_import, item_dist)
+                # remove stale terser output to avoid confusion
+                if os.path.exists(item_post_terser):
+                    os.remove(item_post_terser)
 
         except KeyError as key_error:
             print("Generating {} js file failed with {}".format(item, key_error))

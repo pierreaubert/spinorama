@@ -367,7 +367,11 @@ def optim_save_peq(
         if (
             previous_score is not None and previous_score > auto_score["pref_score"]
         ) or optim_config["generate_images_only"]:
-            auto_peq = parse_eq_iir_rews(eq_name, 48000)
+            if os.path.exists(eq_name):
+                auto_peq = parse_eq_iir_rews(eq_name, 48000)
+            else:
+                fallback_eq = "{}/iir.txt".format(eq_dir)
+                auto_peq = parse_eq_iir_rews(fallback_eq, 48000)
 
         if (
             previous_score is not None

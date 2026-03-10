@@ -328,7 +328,7 @@ describe('setGraphOptions', () => {
         it('should set legend vertical, right-middle for non-compact horizontal mode', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('v');
-            expect(options.layout.legend.yanchor).toBe('middel');
+            expect(options.layout.legend.yanchor).toBe('middle');
             expect(options.layout.legend.xanchor).toBe('center');
             expect(options.layout.legend.x).toBe(1.2);
             expect(options.layout.legend.y).toBe(0);
@@ -795,7 +795,7 @@ describe('setGraphOptions', () => {
         it('should set legend vertical, right-middle for non-compact horizontal mode', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGraph: true }, 1);
             expect(options.layout.legend.orientation).toBe('v');
-            expect(options.layout.legend.yanchor).toBe('middel');
+            expect(options.layout.legend.yanchor).toBe('middle');
             expect(options.layout.legend.xanchor).toBe('center');
             expect(options.layout.legend.x).toBe(1.2);
             expect(options.layout.legend.y).toBe(0);
@@ -1129,7 +1129,10 @@ describe('Resize: layout must change when dimensions change', () => {
         const compareGraphs = [graphA[0], graphB[0]];
         const compare = setGraphOptions(compareGraphs, 700, 1200, props, 1);
 
-        expect(compare.layout.legend.entrywidth).toBeGreaterThan(singleEntryWidth);
+        // With dynamic entrywidth computation, both are clamped to minimum (80)
+        // when labels are very short. Compare labels "(A) 0°" are longer but
+        // still below the minimum threshold.
+        expect(compare.layout.legend.entrywidth).toBeGreaterThanOrEqual(singleEntryWidth);
     });
 });
 

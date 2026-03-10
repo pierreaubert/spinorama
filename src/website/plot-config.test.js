@@ -74,28 +74,164 @@ describe('applyConfig - theme application', () => {
     });
 });
 
-describe('applyConfig - legend offset range', () => {
-    it('allows legend offset up to 1.0', () => {
+describe('applyConfig - legend position presets', () => {
+    const positions = {
+        'right': { x: 1.0, y: 1.0, xanchor: 'left', yanchor: 'auto', orientation: 'v' },
+        'left': { x: 0.0, y: 1.0, xanchor: 'right', yanchor: 'auto', orientation: 'v' },
+        'top': { x: 0.5, y: 1.0, xanchor: 'center', yanchor: 'bottom', orientation: 'h' },
+        'bottom': { x: 0.5, y: -0.1, xanchor: 'center', yanchor: 'top', orientation: 'h' },
+    };
+
+    for (const [position, expected] of Object.entries(positions)) {
+        it(`position "${position}" sets correct x, y, xanchor, yanchor, orientation`, () => {
+            const options = makeOptions();
+            const config = structuredClone(defaultConfig);
+            config.legend.position = position;
+            const result = applyConfig(options, config);
+
+            expect(result.layout.legend.x).toBeCloseTo(expected.x, 2);
+            expect(result.layout.legend.y).toBeCloseTo(expected.y, 2);
+            expect(result.layout.legend.xanchor).toBe(expected.xanchor);
+            expect(result.layout.legend.yanchor).toBe(expected.yanchor);
+            expect(result.layout.legend.orientation).toBe(expected.orientation);
+        });
+
+        it(`position "${position}" works with custom margins`, () => {
+            const options = makeOptions();
+            options.layout.margin = { l: 80, r: 80, t: 80, b: 80 };
+            const config = structuredClone(defaultConfig);
+            config.legend.position = position;
+            const result = applyConfig(options, config);
+
+            expect(result.layout.legend.x).toBeCloseTo(expected.x, 2);
+            expect(result.layout.legend.y).toBeCloseTo(expected.y, 2);
+            expect(result.layout.legend.xanchor).toBe(expected.xanchor);
+            expect(result.layout.legend.yanchor).toBe(expected.yanchor);
+        });
+
+        it(`position "${position}" works with zero margins`, () => {
+            const options = makeOptions();
+            options.layout.margin = { l: 0, r: 0, t: 0, b: 0 };
+            const config = structuredClone(defaultConfig);
+            config.legend.position = position;
+            const result = applyConfig(options, config);
+
+            expect(result.layout.legend.xanchor).toBe(expected.xanchor);
+            expect(result.layout.legend.yanchor).toBe(expected.yanchor);
+        });
+
+        it(`position "${position}" with legend hidden does not show legend`, () => {
+            const options = makeOptions();
+            options.data = [{ name: 'trace1' }];
+            const config = structuredClone(defaultConfig);
+            config.legend.position = position;
+            config.legend.show = false;
+            const result = applyConfig(options, config);
+
+            expect(result.layout.showlegend).toBe(false);
+            expect(result.data[0].showlegend).toBe(false);
+        });
+
+        it(`position "${position}" with legend shown keeps legend visible`, () => {
+            const options = makeOptions();
+            options.data = [{ name: 'trace1' }];
+            const config = structuredClone(defaultConfig);
+            config.legend.position = position;
+            config.legend.show = true;
+            const result = applyConfig(options, config);
+
+            expect(result.layout.showlegend).toBe(true);
+            expect(result.data[0].showlegend).toBe(true);
+        });
+    }
+
+    it('position "right" places legend at x=1.0 with xanchor=left (outside plot)', () => {
         const options = makeOptions();
         const config = structuredClone(defaultConfig);
+        config.legend.position = 'right';
+        const result = applyConfig(options, config);
+
+        expect(result.layout.legend.x).toBe(1.0);
+        expect(result.layout.legend.xanchor).toBe('left');
+        expect(result.layout.legend.orientation).toBe('v');
+    });
+
+    it('position "default" does not modify legend position', () => {
+        const options = makeOptions();
+        options.layout.legend = { x: 0.7, y: 0.3, xanchor: 'auto', yanchor: 'auto' };
+        const config = structuredClone(defaultConfig);
+        config.legend.position = 'default';
+        const result = applyConfig(options, config);
+
+        expect(result.layout.legend.x).toBeCloseTo(0.7, 2);
+        expect(result.layout.legend.y).toBeCloseTo(0.3, 2);
+    });
+
+    it('position with offset adjusts final position', () => {
+        const options = makeOptions();
+        const config = structuredClone(defaultConfig);
+        config.legend.position = 'right';
+        config.legend.xoffset = 0.1;
+        config.legend.yoffset = -0.2;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.legend.x).toBeCloseTo(1.1, 2);
+        expect(result.layout.legend.y).toBeCloseTo(0.8, 2);
+    });
+
+    it('offset of 0 does not modify position', () => {
+        const options = makeOptions();
+        options.layout.legend = { x: 0.5, y: 0.5 };
+        const config = structuredClone(defaultConfig);
+        config.legend.position = 'default';
+        config.legend.xoffset = 0;
+        config.legend.yoffset = 0;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.legend.x).toBeCloseTo(0.5, 2);
+        expect(result.layout.legend.y).toBeCloseTo(0.5, 2);
+    });
+
+    it('offset works when layout has no initial legend position', () => {
+        const options = makeOptions();
+        // no legend set in layout
+        const config = structuredClone(defaultConfig);
+        config.legend.xoffset = 0.3;
+        config.legend.yoffset = -0.1;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.legend.x).toBeCloseTo(0.3, 2);
+        expect(result.layout.legend.y).toBeCloseTo(-0.1, 2);
+    });
+
+    it('legend.show defaults to true in defaultConfig', () => {
+        expect(defaultConfig.legend.show).toBe(true);
+    });
+});
+
+describe('applyConfig - legend offset range', () => {
+    it('allows legend offset up to 1.0 with position set', () => {
+        const options = makeOptions();
+        const config = structuredClone(defaultConfig);
+        config.legend.position = 'top';
         config.legend.xoffset = 1.0;
         config.legend.yoffset = 1.0;
         const result = applyConfig(options, config);
 
-        // Legend position should have the offset applied
-        expect(result.layout.legend.x).toBeGreaterThanOrEqual(1.0);
-        expect(result.layout.legend.y).toBeGreaterThanOrEqual(1.0);
+        expect(result.layout.legend.x).toBeCloseTo(1.5, 2);
+        expect(result.layout.legend.y).toBeCloseTo(2.0, 2);
     });
 
-    it('allows legend offset down to -1.0', () => {
+    it('allows legend offset down to -1.0 with position set', () => {
         const options = makeOptions();
         const config = structuredClone(defaultConfig);
+        config.legend.position = 'top';
         config.legend.xoffset = -1.0;
         config.legend.yoffset = -1.0;
         const result = applyConfig(options, config);
 
-        expect(result.layout.legend.x).toBeLessThanOrEqual(0);
-        expect(result.layout.legend.y).toBeLessThanOrEqual(0);
+        expect(result.layout.legend.x).toBeCloseTo(-0.5, 2);
+        expect(result.layout.legend.y).toBeCloseTo(0.0, 2);
     });
 });
 
@@ -150,5 +286,241 @@ describe('applyConfig - legend group title font', () => {
         const result = applyConfig(options, config);
 
         expect(result.data[0].legendgrouptitle).toBeUndefined();
+    });
+});
+
+describe('applyConfig - annotations visibility', () => {
+    it('hides layout annotations when annotations.show is false', () => {
+        const options = makeOptions({
+            annotations: [
+                { text: 'slope', visible: true },
+                { text: 'smoothness', visible: true },
+            ],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.show = false;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(false);
+        expect(result.layout.annotations[1].visible).toBe(false);
+    });
+
+    it('shows layout annotations when annotations.show is true', () => {
+        const options = makeOptions({
+            annotations: [{ text: 'slope', visible: false }],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.show = true;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(true);
+    });
+});
+
+describe('applyConfig - trendlines visibility', () => {
+    it('hides trend line traces when trendlines.show is false', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'On Axis', type: 'scatter' },
+            { name: 'Band ±3dB', type: 'scatter' },
+            { name: 'Band ±1.5dB', type: 'scatter' },
+            { name: 'Midrange ±3dB', type: 'scatter' },
+            { name: 'Linear interpolation', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.show = false;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBeUndefined();
+        expect(result.data[1].visible).toBe(false);
+        expect(result.data[2].visible).toBe(false);
+        expect(result.data[3].visible).toBe(false);
+        expect(result.data[4].visible).toBe(false);
+    });
+
+    it('shows trend line traces when trendlines.show is true (overrides Python visible=false)', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'Band ±3dB', type: 'scatter', visible: false },
+            { name: 'On Axis', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.show = true;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(true);
+        expect(result.data[1].visible).toBeUndefined();
+    });
+
+    it('handles CEA2034 slope traces', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'Sound Power slope', type: 'scatter', visible: false },
+            { name: 'Listening Window slope', type: 'scatter', visible: false },
+            { name: 'Early Reflections DI slope', type: 'scatter', visible: false },
+            { name: 'On Axis', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.show = true;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(true);
+        expect(result.data[1].visible).toBe(true);
+        expect(result.data[2].visible).toBe(true);
+        expect(result.data[3].visible).toBeUndefined();
+    });
+
+    it('does not affect recommended zone traces', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'recommended SP zone', type: 'scatter', visible: false },
+            { name: 'Band ±3dB', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.show = false;
+        config.zones.show = true;
+        const result = applyConfig(options, config);
+
+        // zones are controlled by zones config, not trendlines
+        expect(result.data[0].visible).toBe(true);
+        expect(result.data[1].visible).toBe(false);
+    });
+});
+
+describe('applyConfig - recommended zones visibility', () => {
+    it('hides recommended zone traces when zones.show is false', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'recommended SP zone', type: 'scatter' },
+            { name: 'recommended LW zone', type: 'scatter' },
+            { name: 'On Axis', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.zones.show = false;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(false);
+        expect(result.data[1].visible).toBe(false);
+        expect(result.data[2].visible).toBeUndefined();
+    });
+
+    it('shows recommended zone traces when zones.show is true', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'recommended SP zone', type: 'scatter', visible: false },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.zones.show = true;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(true);
+    });
+
+    it('per-speaker zone visibility in compare mode', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'recommended SP zone', type: 'scatter', legendgroup: 'speaker0' },
+            { name: 'recommended SP zone', type: 'scatter', legendgroup: 'speaker1' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.zones.showA = true;
+        config.zones.showB = false;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(true);
+        expect(result.data[1].visible).toBe(false);
+    });
+});
+
+describe('applyConfig - per-speaker compare mode', () => {
+    it('hides trendlines for speaker A only', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'Band ±3dB', type: 'scatter', legendgroup: 'speaker0' },
+            { name: 'Band ±3dB', type: 'scatter', legendgroup: 'speaker1' },
+            { name: 'On Axis', type: 'scatter', legendgroup: 'speaker0' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.showA = false;
+        config.trendlines.showB = true;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(false);
+        expect(result.data[1].visible).toBe(true);
+        expect(result.data[2].visible).toBeUndefined();
+    });
+
+    it('hides trendlines for speaker B only', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'Sound Power slope', type: 'scatter', legendgroup: 'speaker0' },
+            { name: 'Sound Power slope', type: 'scatter', legendgroup: 'speaker1' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.showA = true;
+        config.trendlines.showB = false;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(true);
+        expect(result.data[1].visible).toBe(false);
+    });
+
+    it('hides annotations for speaker A only', () => {
+        const options = makeOptions({
+            annotations: [
+                { text: 'slope A', _speakerIndex: 0 },
+                { text: 'slope B', _speakerIndex: 1 },
+            ],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.showA = false;
+        config.annotations.showB = true;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(false);
+        expect(result.layout.annotations[1].visible).toBe(true);
+    });
+
+    it('hides annotations for speaker B only', () => {
+        const options = makeOptions({
+            annotations: [
+                { text: 'slope A', _speakerIndex: 0 },
+                { text: 'slope B', _speakerIndex: 1 },
+            ],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.showA = true;
+        config.annotations.showB = false;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(true);
+        expect(result.layout.annotations[1].visible).toBe(false);
+    });
+
+    it('falls back to global show for traces without legendgroup', () => {
+        const options = makeOptions();
+        options.data = [
+            { name: 'Band ±3dB', type: 'scatter' },
+        ];
+        const config = structuredClone(defaultConfig);
+        config.trendlines.show = false;
+        config.trendlines.showA = true;
+        config.trendlines.showB = true;
+        const result = applyConfig(options, config);
+
+        expect(result.data[0].visible).toBe(false);
+    });
+
+    it('falls back to global show for annotations without _speakerIndex', () => {
+        const options = makeOptions({
+            annotations: [{ text: 'slope' }],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.show = false;
+        config.annotations.showA = true;
+        config.annotations.showB = true;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(false);
     });
 });

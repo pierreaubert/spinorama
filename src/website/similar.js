@@ -21,7 +21,6 @@
 import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
-import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
 import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
 
@@ -56,13 +55,15 @@ getMetadata()
         const [metaSpeakers, speakers] = getNearSpeakers(metadata);
 
         // Load plot configuration from storage
-        let config = loadConfigFromStorage();
+        let config = loadConfigFromStorage('Graph');
         let currentGraphOptions = [];
 
-        // Create configuration menu - add it to the form container (only if not compact with ploty=1)
-        const plotyFlag = getUrlParameter('ploty');
-        const graphSmall = 550; // Same as plot.js
-        const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
+        // Create configuration menu
+        createConfigMenu('cea2034plots', config, (updatedConfig) => {
+            config = updatedConfig;
+            saveConfigToStorage(updatedConfig);
+            updatePlots();
+        });
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -116,7 +117,8 @@ getMetadata()
                         }
 
                         if (graphOptions?.length === 1) {
-                            Plotly.newPlot('plot' + i, graphOptions[0]);
+                            const configured = applyConfig(graphOptions[0], config);
+                            Plotly.newPlot('plot' + i, configured);
                         }
                     }
                     return null;

@@ -173,6 +173,7 @@ export const defaultConfig = {
         color: 'default', // 'default' means keep original color
     },
     legend: {
+        show: true, // Boolean overrides original value
         position: 'default', // 'default' means keep original position
         xanchor: 'default', // 'default' means keep original xanchor
         yanchor: 'default', // 'default' means keep original yanchor
@@ -198,6 +199,18 @@ export const defaultConfig = {
     },
     annotations: {
         show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
+    },
+    trendlines: {
+        show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
+    },
+    zones: {
+        show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
     },
 };
 
@@ -383,62 +396,45 @@ export function applyConfig(options, config) {
             // Apply legend position
             if (config.legend.position && config.legend.position !== 'default') {
                 switch (config.legend.position) {
-                    case 'top-left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.99;
-                        break;
                     case 'top':
                         layout.legend.x = 0.5;
-                        layout.legend.y = 0.99;
-                        break;
-                    case 'top-right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.99;
-                        break;
-                    case 'left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.5;
-                        break;
-                    case 'center':
-                        layout.legend.x = 0.5;
-                        layout.legend.y = 0.5;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'bottom';
+                        layout.legend.orientation = 'h';
                         break;
                     case 'right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.5;
-                        break;
-                    case 'bottom-left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.01;
+                        layout.legend.x = 1.0;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'left';
+                        layout.legend.yanchor = 'auto';
+                        layout.legend.orientation = 'v';
                         break;
                     case 'bottom':
                         layout.legend.x = 0.5;
-                        layout.legend.y = 0.01;
+                        layout.legend.y = -0.1;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'top';
+                        layout.legend.orientation = 'h';
                         break;
-                    case 'bottom-right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.01;
+                    case 'left':
+                        layout.legend.x = 0.0;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'right';
+                        layout.legend.yanchor = 'auto';
+                        layout.legend.orientation = 'v';
                         break;
                 }
             }
 
-            // Apply legend anchor
-            if (config.legend.xanchor && config.legend.xanchor !== 'default') {
-                layout.legend.xanchor = config.legend.xanchor;
-            }
-
-            if (config.legend.yanchor && config.legend.yanchor !== 'default') {
-                layout.legend.yanchor = config.legend.yanchor;
-            }
-
             // Apply legend offset as deltas
-            if (config.legend.xoffset !== undefined) {
-                if (!layout.legend.x) layout.legend.x = 0;
+            if (config.legend.xoffset !== undefined && config.legend.xoffset !== 0) {
+                if (layout.legend.x === undefined) layout.legend.x = 0;
                 layout.legend.x += config.legend.xoffset;
             }
 
-            if (config.legend.yoffset !== undefined) {
-                if (!layout.legend.y) layout.legend.y = 0;
+            if (config.legend.yoffset !== undefined && config.legend.yoffset !== 0) {
+                if (layout.legend.y === undefined) layout.legend.y = 0;
                 layout.legend.y += config.legend.yoffset;
             }
 
@@ -471,6 +467,23 @@ export function applyConfig(options, config) {
                     layout[axis].showticklabels = config.showAxisLabels;
                 }
             });
+        }
+    }
+
+    // Apply annotation visibility
+    if (config.annotations) {
+        if (options.layout && options.layout.annotations) {
+            for (const ann of options.layout.annotations) {
+                // Per-speaker annotation visibility (annotations have no legendgroup,
+                // so we use showA/showB as a combined toggle in compare mode)
+                if (ann._speakerIndex === 1 && config.annotations.showB !== undefined) {
+                    ann.visible = config.annotations.showB;
+                } else if (ann._speakerIndex === 0 && config.annotations.showA !== undefined) {
+                    ann.visible = config.annotations.showA;
+                } else if (config.annotations.show !== undefined) {
+                    ann.visible = config.annotations.show;
+                }
+            }
         }
     }
 
@@ -519,6 +532,37 @@ export function applyConfig(options, config) {
                             trace.name = labelLong[trace._fullName] || trace.name;
                         }
                     }
+                }
+            }
+
+            // Apply trend line visibility
+            if (config.trendlines && trace.name) {
+                const trendNames = [
+                    'Band ±3dB', 'Band ±1.5dB',
+                    'Midrange Band +3dB', 'Midrange Band -3dB', 'Midrange ±3dB',
+                    'Linear interpolation',
+                ];
+                const isTrend = trendNames.includes(trace.name)
+                    || trace.name.endsWith(' slope');
+                if (isTrend) {
+                    if (trace.legendgroup === 'speaker1' && config.trendlines.showB !== undefined) {
+                        trace.visible = config.trendlines.showB;
+                    } else if (trace.legendgroup === 'speaker0' && config.trendlines.showA !== undefined) {
+                        trace.visible = config.trendlines.showA;
+                    } else if (config.trendlines.show !== undefined) {
+                        trace.visible = config.trendlines.show;
+                    }
+                }
+            }
+
+            // Apply recommended zone visibility
+            if (config.zones && trace.name && trace.name.startsWith('recommended ')) {
+                if (trace.legendgroup === 'speaker1' && config.zones.showB !== undefined) {
+                    trace.visible = config.zones.showB;
+                } else if (trace.legendgroup === 'speaker0' && config.zones.showA !== undefined) {
+                    trace.visible = config.zones.showA;
+                } else if (config.zones.show !== undefined) {
+                    trace.visible = config.zones.show;
                 }
             }
 
@@ -583,7 +627,7 @@ export function applyConfig(options, config) {
 }
 
 // Create plot configuration menu
-export function createConfigMenu(divName, config, updateCallback) {
+export function createConfigMenu(divName, config, updateCallback, menuOptions) {
     // Don't create menu if in compact mode with ploty=1 flag
     const plotyFlag = getUrlParameter('ploty');
     const graphSmall = 550; // Same as plot.js
@@ -1015,7 +1059,7 @@ export function createConfigMenu(divName, config, updateCallback) {
             'select',
             config.legend.position,
             'config-legend-position',
-            ['right', 'bottom', 'top', 'left'],
+            ['default', 'top', 'right', 'bottom', 'left'],
             (e) => {
                 config.legend.position = e.target.value;
                 updateCallback(config);
@@ -1025,7 +1069,7 @@ export function createConfigMenu(divName, config, updateCallback) {
 
     // Add legend label format options
     legendSection.appendChild(
-        createFormGroup('Label Format', 'select', config.legend.label, 'config-legend-label', ['short', 'long'], (e) => {
+        createFormGroup('Label Format', 'select', config.legend.label, 'config-legend-label', ['default', 'short', 'long'], (e) => {
             config.legend.label = e.target.value;
             updateCallback(config);
         })
@@ -1385,15 +1429,67 @@ export function createConfigMenu(divName, config, updateCallback) {
     );
 
     // Create annotations section
-    const annotationsSection = createGroupSection('Annotations');
+    const annotationsSection = createGroupSection('Annotations & Trend Lines');
 
-    // Add checkbox to show/hide annotations
-    annotationsSection.appendChild(
-        createFormGroup('Show Annotations', 'checkbox', config.annotations.show, 'config-annotations-show', null, (e) => {
-            config.annotations.show = e.target.checked;
-            updateCallback(config);
-        })
-    );
+    if (menuOptions && menuOptions.compareMode) {
+        // Per-speaker controls for compare mode
+        annotationsSection.appendChild(
+            createFormGroup('Annotations (A)', 'checkbox', config.annotations.showA, 'config-annotations-showA', null, (e) => {
+                config.annotations.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Annotations (B)', 'checkbox', config.annotations.showB, 'config-annotations-showB', null, (e) => {
+                config.annotations.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Trend Lines (A)', 'checkbox', config.trendlines.showA, 'config-trendlines-showA', null, (e) => {
+                config.trendlines.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Trend Lines (B)', 'checkbox', config.trendlines.showB, 'config-trendlines-showB', null, (e) => {
+                config.trendlines.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Recommended Zones (A)', 'checkbox', config.zones.showA, 'config-zones-showA', null, (e) => {
+                config.zones.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Recommended Zones (B)', 'checkbox', config.zones.showB, 'config-zones-showB', null, (e) => {
+                config.zones.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+    } else {
+        // Single speaker mode
+        annotationsSection.appendChild(
+            createFormGroup('Show Annotations', 'checkbox', config.annotations.show, 'config-annotations-show', null, (e) => {
+                config.annotations.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Show Trend Lines', 'checkbox', config.trendlines.show, 'config-trendlines-show', null, (e) => {
+                config.trendlines.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Show Recommended Zones', 'checkbox', config.zones.show, 'config-zones-show', null, (e) => {
+                config.zones.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+    }
 
     // Add all sections to the config panel
     configPanel.appendChild(themeSection);

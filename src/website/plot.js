@@ -132,6 +132,64 @@ const fontSizeH4 = 11;
 const fontSizeH5 = 10;
 const fontSizeH6 = 9;
 
+export function estimateLegendSize(traceNames, fontSize, orientation, entryWidth, availableWidth) {
+    const count = traceNames.length;
+    const lineHeight = fontSize * 1.6;
+    if (orientation === 'v') {
+        return {
+            width: entryWidth,
+            height: count * lineHeight,
+            columns: 1,
+            rows: count,
+        };
+    }
+    const columns = Math.max(1, Math.floor(availableWidth / entryWidth));
+    const rows = Math.ceil(count / columns);
+    return {
+        width: availableWidth,
+        height: rows * lineHeight,
+        columns,
+        rows,
+    };
+}
+
+export function shouldUseShortLabels(traceNames, graphWidth, graphHeight, isCompact, isVertical, targetRatio, userLabelConfig) {
+    if (userLabelConfig === 'long') return false;
+    if (userLabelConfig === 'short') return true;
+    if (isCompact) return true;
+
+    // Estimate legend with long labels and check ratio deviation
+    const fontSize = 10;
+    const charWidth = fontSize * 0.6;
+    const maxLen = Math.max(...traceNames.map((n) => n.length));
+    const entryWidth = maxLen * charWidth + 30;
+
+    // Compare ratio with long labels vs short labels
+    // If long labels make the ratio significantly worse, use short labels
+    const shortCharWidth = fontSize * 0.6;
+    const shortMaxLen = Math.max(...traceNames.map((n) => (labelShort[n] || n).length));
+    const shortEntryWidth = shortMaxLen * shortCharWidth + 30;
+
+    if (isVertical) {
+        // Horizontal legend below graph: takes height from plot area
+        const longLegend = estimateLegendSize(traceNames, fontSize, 'h', entryWidth, graphWidth);
+        const shortLegend = estimateLegendSize(traceNames, fontSize, 'h', shortEntryWidth, graphWidth);
+        const longRatio = graphWidth / Math.max(1, graphHeight - longLegend.height);
+        const shortRatio = graphWidth / Math.max(1, graphHeight - shortLegend.height);
+        const longDev = Math.abs(longRatio - targetRatio) / targetRatio;
+        const shortDev = Math.abs(shortRatio - targetRatio) / targetRatio;
+        return longDev > 0.15 && longDev > shortDev + 0.05;
+    }
+    // Horizontal display with vertical legend on right: takes width from plot area
+    const longLegend = estimateLegendSize(traceNames, fontSize, 'v', entryWidth, graphWidth);
+    const shortLegend = estimateLegendSize(traceNames, fontSize, 'v', shortEntryWidth, graphWidth);
+    const longRatio = Math.max(1, graphWidth - longLegend.width) / graphHeight;
+    const shortRatio = Math.max(1, graphWidth - shortLegend.width) / graphHeight;
+    const longDev = Math.abs(longRatio - targetRatio) / targetRatio;
+    const shortDev = Math.abs(shortRatio - targetRatio) / targetRatio;
+    return longDev > 0.15 && longDev > shortDev + 0.05;
+}
+
 export function isDisplayVertical() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -144,7 +202,7 @@ export function isDisplayCompact() {
     return windowWidth < graphSmall || windowHeight < graphSmall;
 }
 
-export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs, ratio) {
+export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs, ratio, legendWidth) {
     let width = windowWidth;
     let height = windowHeight;
     if (isCompact) {
@@ -158,7 +216,8 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
             height = graphWidth / ratio + graphMarginTop + graphMarginBottom;
         } else {
             height = windowHeight - graphMarginTop - graphMarginBottom;
-            const extra = graphLegendWidth + graphMarginLeft + graphMarginRight;
+            const effectiveLegendWidth = legendWidth !== undefined ? legendWidth : graphLegendWidth;
+            const extra = effectiveLegendWidth + graphMarginLeft + graphMarginRight;
             if (windowWidth - extra < height * ratio) {
                 width = windowWidth;
                 height = (width - extra) / ratio;
@@ -708,16 +767,19 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.legend.yanchor = 'bottom';
                 layout.legend.x = 0.5;
                 layout.legend.y = -0.5;
-                // Compare view prefixes labels with "(A) "/"(B) " making them longer;
-                // use wider entries (fewer columns) to avoid overlap.
-                const isCompare = inputGraphsData.length > 1;
-                layout.legend.entrywidth = isCompare ? 180 : 120;
+                // Compute entrywidth from longest trace label
+                const traceNames = datas.filter((d) => d.name).map((d) => d.name);
+                const fontSize = fontSizeH5 + Math.round(windowWidth / 300);
+                const charWidth = fontSize * 0.6;
+                const maxLen = Math.max(0, ...traceNames.map((n) => n.length));
+                const computed = Math.round(maxLen * charWidth + 30);
+                layout.legend.entrywidth = Math.max(80, Math.min(computed, Math.floor(layout.width / 2)));
                 layout.legend.entrywidthmode = 'pixels';
             } else {
                 layout.legend.yref = 'paper';
                 layout.legend.orientation = 'v';
                 layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'middel';
+                layout.legend.yanchor = 'middle';
                 layout.legend.x = 1.2;
                 layout.legend.y = 0;
                 layout.legend.entrywidth = graphLegendWidth;
@@ -865,17 +927,32 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
-    function computeLabel() {
-        if (isCompact) {
-            // shorten labels
-            for (let k = 0; k < datas.length; k++) {
-                // remove group
+    function computeLabel(userLabelConfig) {
+        const traceNames = datas.filter((d) => d.name).map((d) => d.name);
+        let ratio = graphRatio;
+        if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
+            ratio = squareRatio;
+        }
+        const useShort = shouldUseShortLabels(
+            traceNames,
+            layout.width,
+            layout.height,
+            isCompact,
+            isVertical,
+            ratio,
+            userLabelConfig || 'default'
+        );
+
+        for (let k = 0; k < datas.length; k++) {
+            if (isCompact) {
                 if (isVertical || inputGraphsData.length === 1) {
                     datas[k].legendgroup = null;
                     datas[k].legendgrouptitle = null;
                 }
-                if (datas[k].name && labelShort[datas[k].name]) {
-                    // shorten labels
+            }
+            if (datas[k].name) {
+                datas[k]._fullName = datas[k].name;
+                if (useShort && labelShort[datas[k].name]) {
                     datas[k].name = labelShort[datas[k].name];
                 }
             }
@@ -1057,23 +1134,8 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
         option.layout.height += 22 * 14;
     }
 
-    // hide annotations if we compare 2 graphs
-    if (speakerGraphs.length > 1) {
-        if ('annotations' in option.layout) {
-            for (let i = 0; i < option.layout.annotations.length; i++) {
-                option.layout.annotations[i]['visible'] = false;
-            }
-        }
-    }
-    /* can enable with the menu
-    else if (!isCompact) {
-        if ('annotations' in option.layout) {
-            for (let i = 0; i < option.layout.annotations.length; i++) {
-                option.layout.annotations[i]['visible'] = 'legendonly';
-            }
-        }
-    }
-    */
+    // Annotation and trendline visibility is now controlled by the config menu
+    // via applyConfig() with per-speaker toggles (showA/showB)
     return [option];
 }
 
@@ -1084,27 +1146,8 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
             for (const trace in speakerGraphs[i].data) {
-                const name = speakerGraphs[i].data[trace].name;
-                // hide yellow bands since when you have more than one it is difficult to see the graphs
-                // also remove the midrange lines for the same reason
-                if (
-                    speakerGraphs.length > 1 &&
-                    name != null &&
-                    (name === 'Band ±3dB' ||
-                        name === 'Band ±1.5dB' ||
-                        name === 'Midrange Band +3dB' ||
-                        name === 'Midrange Band -3dB')
-                ) {
-                    speakerGraphs[i].data[trace].visible = 'legendonly';
-                }
-                if (speakerGraphs.length > 1 && !isCompact) {
-                    if (
-                        'name' in speakerGraphs[i].data[trace] &&
-                        speakerGraphs[i].data[trace].name.indexOf('recommended') === 0
-                    ) {
-                        speakerGraphs[i].data[trace]['visible'] = 'legendonly';
-                    }
-                }
+                // Trendline and zone visibility is now controlled by the config menu
+                // via applyConfig() with per-speaker toggles (showA/showB)
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[trace].legendgrouptitle = {
                     text: speakerNames[i],

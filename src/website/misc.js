@@ -418,7 +418,7 @@ export function getReviews(value) {
             ['JBL', '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
             ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
             ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
-            ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],
+            ['Neumann', '<img width="16" height="16" src="/pictures/icon-neumann.png"/>'],
             ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
             ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio.png"/>'],
         ];

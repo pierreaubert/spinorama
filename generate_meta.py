@@ -291,54 +291,9 @@ def add_score(speaker_name, speaker_data):
     """Process a single speaker's data to compute scores"""
     logger.info("Processing %s", speaker_name)
 
-    # Get the default measurement for this speaker if it exists
-    default_measurement = metadata.speakers_info.get(speaker_name, {}).get("default_measurement")
-
-    # Check if the default measurement is in the cache
-    default_found = False
-    if default_measurement:
-        for origin, measurements in speaker_data.items():
-            if default_measurement in measurements:
-                default_found = True
-                break
-
-        if not default_found:
-            logger.warning(
-                "Default measurement '%s' for speaker '%s' not found in cache. "
-                "Available versions: %s. Please run generate_graphs.py to regenerate cache.",
-                default_measurement,
-                speaker_name,
-                [v for origin in speaker_data.values() for v in origin.keys()]
-            )
-
     results = []
     for origin, measurements in speaker_data.items():
         for version, dfs in measurements.items():
-            # If a default is specified, only process that version (and its _eq variant)
-            if default_measurement:
-                # Skip if default not found in cache - don't process anything
-                if not default_found:
-                    logger.debug(
-                        "Skipping measurement '%s' for speaker '%s' because default '%s' not in cache",
-                        version,
-                        speaker_name,
-                        default_measurement
-                    )
-                    continue
-
-                # Skip non-default measurements (keep default and default_eq only)
-                is_eq_version = version.endswith("_eq")
-                base_version = version[:-3] if is_eq_version else version
-
-                if base_version != default_measurement:
-                    logger.debug(
-                        "Skipping non-default measurement '%s' for speaker '%s' (default is '%s')",
-                        version,
-                        speaker_name,
-                        default_measurement
-                    )
-                    continue
-
             try:
                 result = None
                 if isinstance(dfs, dict):

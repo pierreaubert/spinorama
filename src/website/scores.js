@@ -24,21 +24,29 @@ import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
 function getContext(key, index, value) {
-    // console.log(getReviews(value));
-    const scores = getField(value, 'pref_rating', value.default_measurement);
-    scores.pref_score = parseFloat(scores.pref_score).toFixed(1);
-    scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1);
-    const scoresEq = getField(value, 'pref_rating_eq', value.default_measurement);
-    scoresEq.pref_score = parseFloat(scoresEq.pref_score).toFixed(1);
-    scoresEq.pref_score_wsub = parseFloat(scoresEq.pref_score_wsub).toFixed(1);
+    // collect data for all measurements
+    const allMeasurements = [];
+    for (const version in value.measurements) {
+        const scores = { ...getField(value, 'pref_rating', version) };
+        scores.pref_score = parseFloat(scores.pref_score).toFixed(1);
+        scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1);
+        const scoresEq = { ...getField(value, 'pref_rating_eq', version) };
+        scoresEq.pref_score = parseFloat(scoresEq.pref_score).toFixed(1);
+        scoresEq.pref_score_wsub = parseFloat(scoresEq.pref_score_wsub).toFixed(1);
+        allMeasurements.push({
+            version: version,
+            scores: scores,
+            scoresEq: scoresEq,
+            estimates: getField(value, 'estimates', version),
+            estimatesEq: getField(value, 'estimates_eq', version),
+            isDefault: version === value.default_measurement,
+        });
+    }
     return {
         brand: value.brand,
-        estimates: getField(value, 'estimates', value.default_measurement),
-        estimatesEq: getField(value, 'estimates_eq', value.default_measurement),
         model: value.model,
         id: getID(value.brand, value.model),
         img: {
-            // avif: getPicture(value.brand, value.model, "avif"),
             webp: getPicture(value.brand, value.model, 'webp'),
             jpg: getPicture(value.brand, value.model, 'jpg'),
             loading: getLoading(key),
@@ -46,8 +54,7 @@ function getContext(key, index, value) {
         },
         price: getPrice(value.price, value.amount),
         reviews: getReviews(value),
-        scores: scores,
-        scoresEq: scoresEq,
+        allMeasurements: allMeasurements,
         sensitivity: value.sensitivity,
     };
 }
@@ -134,61 +141,57 @@ function contextFragment(context, index) {
     const reviews = context.reviews.reviews;
     const div2 = document.createElement('div');
     div2.setAttribute('class', class2);
-    if (window.innerWidth < 860) {
-        div2.innerHTML = reviews
-            .flatMap((review) => '<a href="' + review.url + '">' + review.originShort + '</a>&nbsp;')
-            .join('<br/>');
-    } else {
-        div2.innerHTML = reviews
-            .flatMap((review) => '<a href="' + review.url + '">' + review.originLong + '</a>&nbsp;')
-            .join('<br/>');
-    }
+    const useShort = window.innerWidth < 860 || reviews.length > 1;
+    div2.innerHTML = reviews
+        .flatMap((review) => '<a href="' + review.url + '">' + (useShort ? review.originShort : review.originLong) + '</a>&nbsp;')
+        .join('<br/>');
     fragment.append(div2);
+
+    const measurements = context.allMeasurements;
+    const multi = measurements.length > 1;
+    const sep = multi ? '<br/>' : '';
+
+    const noData = multi ? '-' : '';
 
     const div3 = document.createElement('div');
     div3.setAttribute('class', class1);
-    div3.innerHTML = context.estimates.ref_3dB + 'Hz';
+    div3.innerHTML = measurements
+        .map((m) => (m.estimates.ref_3dB !== undefined ? m.estimates.ref_3dB + 'Hz' : noData))
+        .join(sep);
     fragment.append(div3);
 
     const div4 = document.createElement('div');
     div4.setAttribute('class', class1);
-    div4.innerHTML = context.estimates.ref_band + 'dB';
+    div4.innerHTML = measurements
+        .map((m) => (m.estimates.ref_band !== undefined ? m.estimates.ref_band + 'dB' : noData))
+        .join(sep);
     fragment.append(div4);
 
-    const pref_score = context.scores.pref_score;
+    const formatScore = (v, isDefault) => {
+        if (v && !isNaN(v)) {
+            return isDefault ? '<b>' + v + '</b>' : v;
+        }
+        return noData;
+    };
+
     const div5 = document.createElement('div');
     div5.setAttribute('class', class1);
-    div5.innerHTML = '';
-    if (pref_score && !isNaN(pref_score)) {
-        div5.innerHTML = '<b>' + pref_score + '</b>';
-    }
+    div5.innerHTML = measurements.map((m) => formatScore(m.scores.pref_score, m.isDefault)).join(sep);
     fragment.append(div5);
 
-    const pref_score_wsub = context.scores.pref_score_wsub;
     const div6 = document.createElement('div');
     div6.setAttribute('class', class1);
-    div6.innerHTML = '';
-    if (pref_score_wsub && !isNaN(pref_score_wsub)) {
-        div6.innerHTML = '<b>' + pref_score_wsub + '</b>';
-    }
+    div6.innerHTML = measurements.map((m) => formatScore(m.scores.pref_score_wsub, m.isDefault)).join(sep);
     fragment.append(div6);
 
-    const eq_pref_score = context.scoresEq.pref_score;
     const div7 = document.createElement('div');
     div7.setAttribute('class', class1);
-    div7.innerHTML = '';
-    if (eq_pref_score && !isNaN(eq_pref_score)) {
-        div7.innerHTML = '<b>' + eq_pref_score + '</b>';
-    }
+    div7.innerHTML = measurements.map((m) => formatScore(m.scoresEq.pref_score, m.isDefault)).join(sep);
     fragment.append(div7);
 
-    const eq_pref_score_wsub = context.scoresEq.pref_score_wsub;
     const div8 = document.createElement('div');
     div8.setAttribute('class', class1);
-    div8.innerHTML = '';
-    if (eq_pref_score_wsub && !isNaN(eq_pref_score_wsub)) {
-        div8.innerHTML = '<b>' + eq_pref_score_wsub + '</b>';
-    }
+    div8.innerHTML = measurements.map((m) => formatScore(m.scoresEq.pref_score_wsub, m.isDefault)).join(sep);
     fragment.append(div8);
 
     return fragment;

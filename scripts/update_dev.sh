@@ -43,4 +43,5 @@ fi
 echo "Sync"
 rsync -arvz --exclude '*.png' --delete ./dist/* "$TARGET"
 rsync -arvz --include '*.png' --delete ./dist/pictures/* "$TARGET/pictures"
+rsync -arvz ./datas/icons/* "$TARGET/pictures"
 
