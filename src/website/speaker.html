@@ -8,7 +8,97 @@
   <body>
     <%include file="nav_simple.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
-    <%include file="tabs_header.html"/>
+
+<%
+  _spk = meta[speaker]
+  _brand = _spk.get('brand', '')
+  _shape = _spk.get('shape', '')
+  _type = _spk.get('type', '')
+  _price = _spk.get('price', '')
+  _amount = _spk.get('amount', '')
+  _meas = _spk.get('measurements', {}).get(g_key, {})
+  _specs = _meas.get('specifications', {}) or {}
+  _size = _specs.get('size', {}) or {}
+  _weight = _specs.get('weight')
+  _width_mm = _size.get('width')
+  _height_mm = _size.get('height')
+  _depth_mm = _size.get('depth')
+
+  _jumps = []
+  if _brand:
+      _jumps.append(('Brand: ' + _brand, '/?brand=' + _brand))
+  if _shape:
+      _jumps.append(('Shape: ' + _shape, '/?shape=' + _shape))
+  if _type:
+      _jumps.append(('Type: ' + _type, '/?power=' + _type))
+
+  def _price_per_piece(price_str, amount_str):
+      try:
+          p = float(price_str)
+      except (ValueError, TypeError):
+          return None
+      if amount_str == 'pair':
+          p = p / 2
+      return p
+
+  _pp = _price_per_piece(_price, _amount)
+  if _pp is not None:
+      _lo = int(_pp * 0.8)
+      _hi = int(_pp * 1.2)
+      _jumps.append(('Price: ~{:.0f} USD'.format(_pp), '/?priceMin={}&priceMax={}'.format(_lo, _hi)))
+
+  def _range_20(val):
+      try:
+          v = float(val)
+      except (ValueError, TypeError):
+          return None
+      return (v * 0.8, v * 1.2)
+
+  if _weight is not None:
+      _r = _range_20(_weight)
+      if _r:
+          _jumps.append(('Weight: ~{:.1f} kg'.format(float(_weight)), '/?weightMin={:.1f}&weightMax={:.1f}'.format(_r[0], _r[1])))
+
+  if _height_mm is not None:
+      _r = _range_20(_height_mm)
+      if _r:
+          _jumps.append(('Height: ~{} mm'.format(_height_mm), '/?heightMin={:.0f}&heightMax={:.0f}'.format(_r[0], _r[1])))
+
+  if _width_mm is not None:
+      _r = _range_20(_width_mm)
+      if _r:
+          _jumps.append(('Width: ~{} mm'.format(_width_mm), '/?widthMin={:.0f}&widthMax={:.0f}'.format(_r[0], _r[1])))
+
+  if _depth_mm is not None:
+      _r = _range_20(_depth_mm)
+      if _r:
+          _jumps.append(('Depth: ~{} mm'.format(_depth_mm), '/?depthMin={:.0f}&depthMax={:.0f}'.format(_r[0], _r[1])))
+%>
+
+    <div style="display: flex; align-items: center;">
+      <%include file="tabs_header.html"/>
+% if _jumps:
+      <div style="margin-left: 10px; align-self: center;">
+        <div class="dropdown is-hoverable is-right">
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-jump-to">
+              <span>Jump to</span>
+              <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-jump-to" role="menu" style="min-width: 250px;">
+            <div class="dropdown-content">
+              % for label, url in _jumps:
+              <a class="dropdown-item" href="${url}">${label}</a>
+              % endfor
+            </div>
+          </div>
+        </div>
+      </div>
+% endif
+    </div>
+
+    <div class="tab-content">
 
     <div class="tab-pane display:none" id="pane-1">
       <div class="container">
@@ -23,7 +113,7 @@
     <!-- Mobile view: sequential-->
     <div class="tab-pane is-active display:block" id="pane-2">
       <div class="section">
-      <table>
+      <table style="margin: auto;">
 <!--
 	<tr>
 	  <td>
@@ -112,7 +202,7 @@
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-3">
       <div class="section">
-      <table>
+      <table style="margin: auto;">
         % if g_eq is not None:
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
@@ -178,7 +268,7 @@
     <!-- Desktop view: Ref vs. EQ views-->
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-4">
-      <table>
+      <table style="margin: auto;">
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
 %>

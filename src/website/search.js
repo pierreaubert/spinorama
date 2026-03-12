@@ -879,6 +879,17 @@ export function rankN(fuse, brands, models, words) {
     return fuse.search(words.join(' '));
 }
 
+function rankLoose(fuse, words) {
+    // Each word must match somewhere in brand or model (as a substring).
+    // This handles cases like "KEF Q Meta" matching "KEF Q150 Meta".
+    const query = {
+        $and: words.map((w) => ({
+            $or: [{ 'speaker.brand': "'" + w }, { 'speaker.model': "'" + w }],
+        })),
+    };
+    return fuse.search(query);
+}
+
 export function rank(fuse, brands, models, keywords) {
     let results = null;
     let minScore = 100;
@@ -891,6 +902,11 @@ export function rank(fuse, brands, models, keywords) {
             results = rank2(fuse, brands, models, words);
         } else {
             results = rankN(fuse, brands, models, words);
+        }
+        // If strict search found nothing, try a looser search where each
+        // word independently matches brand or model.
+        if (results.length === 0 && words.length > 1) {
+            results = rankLoose(fuse, words);
         }
         if (results.length > 0) {
             for (const spk in results) {

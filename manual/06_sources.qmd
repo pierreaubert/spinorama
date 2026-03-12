@@ -34,6 +34,8 @@
   Here is a partial list of vendors providing data:
 
   - Alcons Audio
+  - [AsciLab](https://ascilab.cafe24.com/shop2/company/about.html): direct contribution, thanks!
+  - [Audio First Designs](https://audiofirstdesigns.uk/): direct contribution, thanks!
   - Axiom
   - BiAmp
   - Coda
@@ -60,6 +62,7 @@
   - RCF
   - SE Audiotechnik
   - Seeburg
+  - [Sigberg Audio](https://www.sigbergaudio.com/): direct contribution. Thanks!
   - Soundvision
   - Turbosound
   - Wharfedale Pro

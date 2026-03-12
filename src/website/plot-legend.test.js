@@ -19,13 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import {
-    estimateLegendSize,
-    shouldUseShortLabels,
-    computeDims,
-    setGraphOptions,
-    labelShort,
-} from './plot.js';
+import { estimateLegendSize, shouldUseShortLabels, computeDims, setGraphOptions, labelShort } from './plot.js';
 import { applyConfig, defaultConfig } from './plot-config.js';
 
 beforeEach(() => {
@@ -111,11 +105,21 @@ describe('shouldUseShortLabels', () => {
     it('narrow + many known labels → true', () => {
         // Use labels that exist in labelShort so shortening actually helps
         const many = [
-            'On Axis', 'Listening Window', 'Sound Power', 'Early Reflections DI',
-            'Sound Power DI', 'Total Early Reflection', 'Total Horizontal Reflection',
-            'Total Vertical Reflection', 'Estimated In-Room Response',
-            'On Axis', 'Listening Window', 'Sound Power', 'Early Reflections DI',
-            'Sound Power DI', 'Total Early Reflection',
+            'On Axis',
+            'Listening Window',
+            'Sound Power',
+            'Early Reflections DI',
+            'Sound Power DI',
+            'Total Early Reflection',
+            'Total Horizontal Reflection',
+            'Total Vertical Reflection',
+            'Estimated In-Room Response',
+            'On Axis',
+            'Listening Window',
+            'Sound Power',
+            'Early Reflections DI',
+            'Sound Power DI',
+            'Total Early Reflection',
         ];
         expect(shouldUseShortLabels(many, 600, 500, false, false, targetRatio, 'default')).toBe(true);
     });
@@ -167,7 +171,12 @@ describe('computeLabel integration', () => {
                 yaxis: { title: { text: 'dB' }, range: [-40, 10] },
             },
             data: [
-                { name: 'On Axis', type: 'scatter', legendgroup: 'speaker0', legendgrouptitle: { text: 'CEA2034 for Speaker1' } },
+                {
+                    name: 'On Axis',
+                    type: 'scatter',
+                    legendgroup: 'speaker0',
+                    legendgrouptitle: { text: 'CEA2034 for Speaker1' },
+                },
             ],
         };
         const g2 = {
@@ -177,7 +186,12 @@ describe('computeLabel integration', () => {
                 yaxis: { title: { text: 'dB' }, range: [-40, 10] },
             },
             data: [
-                { name: 'On Axis', type: 'scatter', legendgroup: 'speaker1', legendgrouptitle: { text: 'CEA2034 for Speaker2' } },
+                {
+                    name: 'On Axis',
+                    type: 'scatter',
+                    legendgroup: 'speaker1',
+                    legendgrouptitle: { text: 'CEA2034 for Speaker2' },
+                },
             ],
         };
         const result = setGraphOptions([g1, g2], 1920, 1080, graphProps, 1);

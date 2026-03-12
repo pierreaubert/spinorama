@@ -368,17 +368,27 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
 
 
 def generate_yaxis_phases(phase_min=-180, phase_max=180, phase_step=30):
+    # Extend range to 540 so phase data can wrap beyond 180 without clipping.
+    # Ticks and labels are only shown in the visible range [-180, 180].
+    extended_max = 540
+    tickvals = list(range(phase_min, phase_max + phase_step, phase_step))
+    ticktext = (
+        [""]
+        + ["{}°".format(v) for v in range(phase_min + phase_step, phase_max, phase_step)]
+        + [""]
+    )
+    # Title is removed here and added as an annotation in the On Axis plot
+    # so it can be centered on the visible portion [-180, 180] instead of
+    # the full extended range [-180, 540].
     return dict(
         title=dict(
-            text="Phase (deg)",
+            text="",
             font=FONT_H3,
         ),
-        range=[phase_min, phase_max],
+        range=[phase_min, extended_max],
         dtick=phase_step,
-        tickvals=list(range(phase_min, phase_max + phase_step, phase_step)),
-        ticktext=[""]
-        + ["{}°".format(v) for v in range(phase_min + phase_step, phase_max, phase_step)]
-        + [""],
+        tickvals=tickvals,
+        ticktext=ticktext,
         tickfont=FONT_H3,
         ticks="inside",
         showline=True,
@@ -1126,6 +1136,18 @@ def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid
             )
             fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
             fig_onaxis.update_layout(margin_r=50)
+            # Add "Phase (deg)" as an annotation centered on the visible range [-180, 180].
+            # In paper coordinates, y=0.25 is the midpoint of [-180, 180] within [-180, 540].
+            fig_onaxis.add_annotation(
+                text="Phase (deg)",
+                xref="paper",
+                yref="paper",
+                x=1.05,
+                y=0.25,
+                showarrow=False,
+                textangle=-90,
+                font=FONT_H3,
+            )
 
     fig_onaxis.add_traces(
         plot_valid_freq_ranges(fig_onaxis, valid_freq_range, (params["ymin"], params["ymax"]))

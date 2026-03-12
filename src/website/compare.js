@@ -112,11 +112,16 @@ getMetadata()
         config.zones.showB = false;
 
         // Create configuration menu attached to the plot zone (compare mode for per-speaker controls)
-        createConfigMenu('plotZone', config, (updatedConfig) => {
-            config = updatedConfig;
-            saveConfigToStorage(updatedConfig);
-            updateSpeakers();
-        }, { compareMode: true });
+        createConfigMenu(
+            'plotZone',
+            config,
+            (updatedConfig) => {
+                config = updatedConfig;
+                saveConfigToStorage(updatedConfig);
+                updateSpeakers();
+            },
+            { compareMode: true }
+        );
 
         const speakersSelector = [];
         const originsSelector = [];

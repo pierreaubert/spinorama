@@ -143,7 +143,9 @@ function contextFragment(context, index) {
     div2.setAttribute('class', class2);
     const useShort = window.innerWidth < 860 || reviews.length > 1;
     div2.innerHTML = reviews
-        .flatMap((review) => '<a href="' + review.url + '">' + (useShort ? review.originShort : review.originLong) + '</a>&nbsp;')
+        .flatMap(
+            (review) => '<a href="' + review.url + '">' + (useShort ? review.originShort : review.originLong) + '</a>&nbsp;'
+        )
         .join('<br/>');
     fragment.append(div2);
 

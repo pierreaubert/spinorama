@@ -76,10 +76,10 @@ describe('applyConfig - theme application', () => {
 
 describe('applyConfig - legend position presets', () => {
     const positions = {
-        'right': { x: 1.0, y: 1.0, xanchor: 'left', yanchor: 'auto', orientation: 'v' },
-        'left': { x: 0.0, y: 1.0, xanchor: 'right', yanchor: 'auto', orientation: 'v' },
-        'top': { x: 0.5, y: 1.0, xanchor: 'center', yanchor: 'bottom', orientation: 'h' },
-        'bottom': { x: 0.5, y: -0.1, xanchor: 'center', yanchor: 'top', orientation: 'h' },
+        right: { x: 1.0, y: 1.0, xanchor: 'left', yanchor: 'auto', orientation: 'v' },
+        left: { x: 0.0, y: 1.0, xanchor: 'right', yanchor: 'auto', orientation: 'v' },
+        top: { x: 0.5, y: 1.0, xanchor: 'center', yanchor: 'bottom', orientation: 'h' },
+        bottom: { x: 0.5, y: -0.1, xanchor: 'center', yanchor: 'top', orientation: 'h' },
     };
 
     for (const [position, expected] of Object.entries(positions)) {
@@ -406,9 +406,7 @@ describe('applyConfig - recommended zones visibility', () => {
 
     it('shows recommended zone traces when zones.show is true', () => {
         const options = makeOptions();
-        options.data = [
-            { name: 'recommended SP zone', type: 'scatter', visible: false },
-        ];
+        options.data = [{ name: 'recommended SP zone', type: 'scatter', visible: false }];
         const config = structuredClone(defaultConfig);
         config.zones.show = true;
         const result = applyConfig(options, config);
@@ -499,9 +497,7 @@ describe('applyConfig - per-speaker compare mode', () => {
 
     it('falls back to global show for traces without legendgroup', () => {
         const options = makeOptions();
-        options.data = [
-            { name: 'Band ±3dB', type: 'scatter' },
-        ];
+        options.data = [{ name: 'Band ±3dB', type: 'scatter' }];
         const config = structuredClone(defaultConfig);
         config.trendlines.show = false;
         config.trendlines.showA = true;

@@ -538,12 +538,14 @@ export function applyConfig(options, config) {
             // Apply trend line visibility
             if (config.trendlines && trace.name) {
                 const trendNames = [
-                    'Band ±3dB', 'Band ±1.5dB',
-                    'Midrange Band +3dB', 'Midrange Band -3dB', 'Midrange ±3dB',
+                    'Band ±3dB',
+                    'Band ±1.5dB',
+                    'Midrange Band +3dB',
+                    'Midrange Band -3dB',
+                    'Midrange ±3dB',
                     'Linear interpolation',
                 ];
-                const isTrend = trendNames.includes(trace.name)
-                    || trace.name.endsWith(' slope');
+                const isTrend = trendNames.includes(trace.name) || trace.name.endsWith(' slope');
                 if (isTrend) {
                     if (trace.legendgroup === 'speaker1' && config.trendlines.showB !== undefined) {
                         trace.visible = config.trendlines.showB;
@@ -1069,10 +1071,17 @@ export function createConfigMenu(divName, config, updateCallback, menuOptions) {
 
     // Add legend label format options
     legendSection.appendChild(
-        createFormGroup('Label Format', 'select', config.legend.label, 'config-legend-label', ['default', 'short', 'long'], (e) => {
-            config.legend.label = e.target.value;
-            updateCallback(config);
-        })
+        createFormGroup(
+            'Label Format',
+            'select',
+            config.legend.label,
+            'config-legend-label',
+            ['default', 'short', 'long'],
+            (e) => {
+                config.legend.label = e.target.value;
+                updateCallback(config);
+            }
+        )
     );
 
     // Add legend position adjustment sliders

@@ -8,11 +8,11 @@ author:
 
 copyright:
   holder: Pierre F. Aubert
-  year: 2020-2025
+  year: 2020-2026
 
 funding: "The author received no specific funding for this work."
 
-date: 2025-02-28
+date: 2026-03-12
 
 abstract: >
   Help for the spinorama.org website and a manual for the associated library!

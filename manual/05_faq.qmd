@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-date: 2025-02-04
+date: 2026-03-12
 ---
 
 # Can I trust the data?

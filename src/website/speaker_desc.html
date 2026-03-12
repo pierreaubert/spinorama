@@ -467,7 +467,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 </table>
 </%def>
 
-<%def name="eqs_print_graph(graph, doc, width, height)">
+<%def name="eqs_print_graph(graph, doc, width, height, ratio=2)">
 <%
   origin = default_origin.replace('+', '%20').replace(' ', '%20').replace('&', '%26')
 %>
@@ -488,7 +488,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
        spec.layout.title = {
 	 text: '${doc}'
        }
-       displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, 2);
+       displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, ${ratio});
      });
   </script>
   <h6 class="title is-6">${doc}</h6>
@@ -602,9 +602,9 @@ ${eqs_print_eqs(current_eqs)}
       ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 600, 400)}
       </h5>
       <h5 class="is-5">Histogram of errors</h5>
-      ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200)}
-      ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200)}
-      ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200)}
+      ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200, 4)}
+      ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200, 4)}
+      ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200, 4)}
     </div>
     <div class="content">
       ${eqs_spider(eq)}

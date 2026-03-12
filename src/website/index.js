@@ -21,7 +21,18 @@
 const flagCounters = false;
 
 import { getMetadataHead, getMetadataTail } from './download.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews, getSensitivity, getSPL } from './misc.js';
+import {
+    getPrice,
+    getID,
+    getPicture,
+    getLoading,
+    getDecoding,
+    getScore,
+    getReviews,
+    getSensitivity,
+    getSPL,
+    removeVendors,
+} from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
@@ -56,6 +67,17 @@ function getDollar(price) {
     return '$$$';
 }
 
+function getDefaultUrl(value) {
+    const def = value.default_measurement;
+    if (def && value.measurements[def]) {
+        const origin = value.measurements[def].origin;
+        return encodeURI(
+            'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + def + '.html'
+        );
+    }
+    return null;
+}
+
 function getContext(key, index, value) {
     // console.log(getReviews(value));
     const price = getPrice(value.price, value.amount);
@@ -69,6 +91,7 @@ function getContext(key, index, value) {
         shape: value.shape,
         sensitivity: getSensitivity(value),
         splinfo: getSPL(value),
+        defaultUrl: getDefaultUrl(value),
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -221,15 +244,26 @@ function contextHtml(context) {
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html_score = scoreHtml(context.shape, score);
-    const html = `
-       <div class="card card-min has-background-white-bis">
-           <div class="card-image"
+    const defaultUrl = context.defaultUrl;
+    const imageHtml = defaultUrl
+        ? `<a href="${defaultUrl}">
              <figure class="image is-2by3">
                <picture>
                  <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
                  <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
                </picture>
              </figure>
+           </a>`
+        : `<figure class="image is-2by3">
+               <picture>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
+               </picture>
+             </figure>`;
+    const html = `
+       <div class="card card-min has-background-white-bis">
+           <div class="card-image">
+             ${imageHtml}
            </div>
            <div class="card-content">
              <div class="content">

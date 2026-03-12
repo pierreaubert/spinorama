@@ -503,7 +503,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.xaxis.side = 'bottom';
         }
         if (isCompact) {
-            if (isVertical && layout?.yaxis && layout.yaxis.title) {
+            if (isVertical && layout?.yaxis && layout.yaxis.title && layout?.xaxis?.range) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
@@ -576,7 +576,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 delete layout.yaxis2.dtick;
                 delete layout.yaxis2.tickvals;
                 delete layout.yaxis2.ticktext;
-            } else {
+            } else if (!layout.yaxis2.tickvals) {
                 layout.yaxis2.dtick = 1;
             }
             if (layout.yaxis2.title) {
