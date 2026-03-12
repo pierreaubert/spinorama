@@ -1,0 +1,131 @@
+<%namespace name="util" module="website.utils" import="*"/>
+<%def name="speaker_card(speaker_data, index)"><%
+    brand = speaker_data["brand"]
+    model = speaker_data["model"]
+    stype = speaker_data.get("type", "")
+    shape = speaker_data.get("shape", "")
+    sid = util.get_id(brand, model)
+    price = util.get_price(speaker_data.get("price", ""), speaker_data.get("amount", ""))
+    dollar = util.get_dollar(price)
+    score = util.get_score(speaker_data)
+    reviews = util.get_reviews(speaker_data)
+    short = util.is_short_reviews(reviews)
+    sensitivity = util.sensitivity_html(stype, util.get_sensitivity(speaker_data))
+    spl_info, spl_value = util.get_spl(speaker_data)
+    spl = util.spl_html(spl_info, spl_value)
+    default_url = util.get_default_url(speaker_data)
+    webp = util.get_picture_url(brand, model, "webp")
+    jpg = util.get_picture_url(brand, model, "jpg")
+    loading = util.get_loading(index)
+    decoding = util.get_decoding(index)
+    icon_score = "#icon-volume-danger-" + util.icon_value(score["scoreScaled"])
+    icon_lfx = "#icon-volume-info-" + util.icon_value(score["lfxScaled"])
+    icon_flatness = "#icon-volume-success-" + util.icon_value(score["flatnessScaled"])
+    valid_shapes = frozenset(["floorstanders", "bookshelves", "center", "columns", "liveportable", "cinema"])
+%><div class="cell" id="${sid}">
+  <div class="card card-min has-background-white-bis">
+    <div class="card-image">
+% if default_url:
+      <a href="${default_url}">
+        <figure class="image is-2by3">
+          <picture>
+            <source srcset="${webp}" type="image/webp" width="340" height="510"></source>
+            <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510"/>
+          </picture>
+        </figure>
+      </a>
+% else:
+      <figure class="image is-2by3">
+        <picture>
+          <source srcset="${webp}" type="image/webp" width="340" height="510"></source>
+          <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510"/>
+        </picture>
+      </figure>
+% endif
+    </div>
+    <div class="card-content">
+      <div class="content">
+        <span><b>${brand}</b></span>
+        <br/>
+        <span><b>${model}</b></span>
+      </div>
+      <div class="content">
+        <span class="icon-text">
+          <span class="icon">${dollar}</span>
+          <span>Price: <b>${price}</b></span>
+        </span>
+        <br/>
+% if shape in valid_shapes:
+        <span class="icon-text">
+          <span class="icon">
+            <svg width="20px" height="20px" alt="rating">
+              <use href="${icon_score}"/>
+            </svg>
+          </span>
+          <span>Tonality: <b>${score["score"]}</b></span>
+        </span>
+% else:
+        <span class="icon-text">
+          <span class="icon">
+            <svg width="20px" height="20px" alt="rating">
+              <use href="${icon_score}"/>
+            </svg>
+          </span>
+          <span>Tonality: <b>***</b></span>
+        </span>
+% endif
+        <br/>
+        <span class="icon-text">
+          <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${icon_lfx}"/></svg></span>
+          <span>Bass extension: <b>${score["lfx"]}</b>&nbsp;Hz</span>
+        </span>
+        <br/>
+        <span class="icon-text">
+          <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${icon_flatness}"/></svg></span>
+          <span>Flatness: <b>&plusmn;${score["flatness"]}</b>&nbsp;dB</span>
+        </span>
+        <br/>
+        <span class="icon-text">
+          <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
+          <span>${sensitivity}</span>
+        </span>
+        <br/>
+        <span class="icon-text">
+          <span class="icon has-text-success">
+            <svg width="20px" height="20px" alt="spl">
+              <use href="#icon-circle-dot"/>
+            </svg>
+          </span>
+          <span>${spl}</span>
+        </span>
+      </div>
+    </div>
+    <footer class="card-footer">
+% if short:
+% for review in reviews:
+      <a class="card-footer-item" href="${review['url']}">${review['originLong']}</a>
+% endfor
+% else:
+      <div class="card-footer-item">
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${sid}">
+              <span>Measurements</span>
+              <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu-reviews-${sid}" role="menu" style="min-width: 300px; left: 50%; transform: translateX(-50%);">
+            <div class="dropdown-content" style="min-width: 300px;">
+% for review in reviews:
+              <div class="dropdown-item">
+                <a href="${review['url']}">${review['originLong']}</a>
+              </div>
+% endfor
+            </div>
+          </div>
+        </div>
+      </div>
+% endif
+    </footer>
+  </div>
+</div></%def>

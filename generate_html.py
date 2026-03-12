@@ -462,44 +462,12 @@ def main():
     else:
         logger.info("Skip speaker html generation!")
 
-    # copy favicon(s) and logos
-    for f in [
-        "3d3a.png",
-        "asr.png",
-        "asr-small.png",
-        "BIC America.jpg",
-        "bose.png",
-        "Buchardt Audio.png",
-        "eac.png",
-        "favicon-16x16.png",
-        "favicon.ico",
-        "fulcrum-acoustic.png",
-        "icon-bookshelves.svg",
-        "icon-bookshelves.png",
-        "icon-bookshelves.webp",
-        "icon-bookshelves-48x48.png",
-        "icon-bookshelves-48x48.webp",
-        "icon-bookshelves-144x144.png",
-        "icon-bookshelves-144x144.webp",
-        "icon-bookshelves-zigzag.svg",
-        "infinity.png",
-        "infinity-small.png",
-        "jbl.jpg",
-        "jtr.png",
-        "jtr-small.png",
-        "kef.png",
-        "kling-freitag.png",
-        "magico.png",
-        "meyersound.png",
-        "neumann.png",
-        "paradigm.png",
-        "pmc.png",
-        "revel.png",
-        "spin.svg",
-    ]:
-        file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
-        file_out = cpaths.CPATH_DIST + "/pictures/" + f
-        shutil.copy(file_in, file_out)
+    # copy all icons (png, jpg, webp, svg, ico) to dist/pictures
+    for file_in in glob("{}/*".format(cpaths.CPATH_DATAS_ICONS)):
+        if file_in.endswith((".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico")):
+            f = os.path.basename(file_in)
+            file_out = cpaths.CPATH_DIST + "/pictures/" + f
+            shutil.copy(file_in, file_out)
 
     # copy custom css and manifest
     for file, sub in [

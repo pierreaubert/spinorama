@@ -338,19 +338,25 @@ function display(data, speakerHtml, parentDiv) {
     return maxResults;
 }
 
+function clearContainer(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
+
 getMetadataHead()
     .then((metadataHead) => {
         const url = new URL(window.location);
-        if (url.pathname === '' || url.pathname === 'index.html') {
+        const hasParams = url.search !== '';
+        if (hasParams) {
+            clearContainer(speakerContainer);
             display(metadataHead, printSpeaker, speakerContainer);
         }
         return metadataHead;
     })
     .then((metadataHead) => getMetadataTail(metadataHead))
     .then((metadata) => {
-        // now that we have all the data
         setupEventListener(metadata, printSpeaker, speakerContainer);
-        // moved after the main display of speakers to minimise reflow
         if (flagCounters) {
             const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
             const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
@@ -361,9 +367,8 @@ getMetadataHead()
             brandCount.innerHTML = getBrandCount(metadata);
             reviewCount.innerHTML = getReviewCount();
         }
-        // display if not done above
+        clearContainer(speakerContainer);
         const maxResults = display(metadata, printSpeaker, speakerContainer);
-        // is it needed?
         pagination(maxResults);
     })
     .catch((error) => {

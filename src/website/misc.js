@@ -411,16 +411,16 @@ export function getReviews(value) {
 
         // add an icon if we have one
         const icons = [
-            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd.png"/>'],
-            ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
-            ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
-            ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
-            ['JBL', '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
-            ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
-            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
-            ['Neumann', '<img width="16" height="16" src="/pictures/icon-neumann.png"/>'],
-            ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
-            ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio.png"/>'],
+            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp"/>'],
+            ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp"/>'],
+            ['Danley', '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp"/>'],
+            ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp"/>'],
+            ['JBL', '<img width="16" height="16" src="/pictures/icon-jbl-32x32.webp"/>'],
+            ['KEF', '<img width="16" height="16" src="/pictures/icon-kef-32x32.webp"/>'],
+            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec-32x32.webp"/>'],
+            ['Neumann', '<img width="16" height="16" src="/pictures/icon-neumann-32x32.webp"/>'],
+            ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten-32x32.webp"/>'],
+            ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio-32x32.webp"/>'],
         ];
 
         icons.map((icon) => {

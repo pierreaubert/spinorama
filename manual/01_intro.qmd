@@ -16,7 +16,7 @@ It is a way to understand quickly a speaker properties, how it will sound. It is
 from the US [CTA](https://cta.tech).
 
 Here is an example:
-![Genelec 8341A](/docs/images/Genelec-8341A-CEA2034.png)
+![Genelec 8341A](https://www.spinorama.org/docs/images/Genelec-8341A-CEA2034.png)
 
 The spinorama gives you a few graphs:
 
@@ -37,14 +37,14 @@ The spinorama gives you a few graphs:
 
 The speaker above is *very* good. You can compare with another one:
 
-![Tannoy XT6](https://spinorama.org/docs/images/Tannoy-Revolution-CEA2034.png)
+![Tannoy XT6](https://www.spinorama.org/docs/images/Tannoy-Revolution-XT6-CEA2034.png)
 
 which is not flat at all. Remember that &plusmn;3dB means that the
 volume doubles/halves at the corresponding frequency. If you look at
 the on axis measurement below, you see that it going up, the speaker
 will likely be bright and emphasis high frequency.
 
-![Tannoy XT6](https://spinorama.org/docs/images/Tannoy-Revolution-ON.png)
+![Tannoy XT6](https://www.spinorama.org/docs/images/Tannoy-Revolution-XT6-ON.png)
 
 ## Please tell me more
 
@@ -155,7 +155,7 @@ If you did not answer yes each times, then you do not need the best speakers in 
 
 Each speaker measurement shows up in a box similar to:
 
-![Example for one speaker on the landing page](https://spinorama.org/docs/images/speaker-box.png)
+![Example for one speaker on the landing page](https://www.spinorama.org/docs/images/speaker-box.png)
 
 - **Price**: should be self explanatory; it is in USD per speaker not for a pair. The price was the first hit on Google  when I looked it up. It may be different in your country and/or later in time.
 
