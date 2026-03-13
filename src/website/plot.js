@@ -793,12 +793,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 groups.add(datas[k].legendgroup);
             }
         }
-        if (outputNumberGraphs === 1 && isVertical) {
+        if (groups.size === 1) {
             for (let k = 0; k < datas.length; k++) {
                 datas[k].legendgroup = null;
                 datas[k].legendgrouptitle = null;
             }
-        } else if (!isCompact) {
+        } else if (!isCompact && groups.size > 1) {
+            layout.legend.groupclick = 'toggleitem';
             for (let k = 0; k < datas.length; k++) {
                 const title = datas[k].legendgrouptitle;
                 if (title?.text) {

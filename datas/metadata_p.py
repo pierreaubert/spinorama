@@ -1872,8 +1872,33 @@ speakers_info_p: SpeakerDatabase = {
         "price": "3100",
         "amount": "each",
         "shape": "bookshelves",
-        "default_measurement": "misc-sr",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/psi-a21-m-monitor-review.70026/",
+                    "snr": "https://www.soundandrecording.de/equipment/psi-a21-m-grosser-nahfeldmonitor-im-test/",
+                },
+                "review_published": "20260313",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 30,
+                    },
+                    "SPL": {
+                        "max": 106,
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 250,
+                        "depth": 300,
+                    },
+                    "weight": 12.8,
+                },
+            },
             "misc-sr": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
