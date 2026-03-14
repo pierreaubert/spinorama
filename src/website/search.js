@@ -38,6 +38,20 @@ const parametersMapping = [
     { selectorName: '#inputWidthMax', urlParameter: 'widthMax', eventType: 'change' },
     { selectorName: '#inputDepthMin', urlParameter: 'depthMin', eventType: 'change' },
     { selectorName: '#inputDepthMax', urlParameter: 'depthMax', eventType: 'change' },
+    { selectorName: '#inputF3Min', urlParameter: 'f3Min', eventType: 'change' },
+    { selectorName: '#inputF3Max', urlParameter: 'f3Max', eventType: 'change' },
+    { selectorName: '#inputF6Min', urlParameter: 'f6Min', eventType: 'change' },
+    { selectorName: '#inputF6Max', urlParameter: 'f6Max', eventType: 'change' },
+    { selectorName: '#inputSensitivityMin', urlParameter: 'sensitivityMin', eventType: 'change' },
+    { selectorName: '#inputSensitivityMax', urlParameter: 'sensitivityMax', eventType: 'change' },
+    { selectorName: '#inputImpedanceMin', urlParameter: 'impedanceMin', eventType: 'change' },
+    { selectorName: '#inputImpedanceMax', urlParameter: 'impedanceMax', eventType: 'change' },
+    { selectorName: '#inputLfxMin', urlParameter: 'lfxMin', eventType: 'change' },
+    { selectorName: '#inputLfxMax', urlParameter: 'lfxMax', eventType: 'change' },
+    { selectorName: '#inputSplMin', urlParameter: 'splMin', eventType: 'change' },
+    { selectorName: '#inputSplMax', urlParameter: 'splMax', eventType: 'change' },
+    { selectorName: '#inputBandwidthMin', urlParameter: 'bandwidthMin', eventType: 'change' },
+    { selectorName: '#inputBandwidthMax', urlParameter: 'bandwidthMax', eventType: 'change' },
     // search
     { selectorName: '#searchInput', urlParameter: 'search', eventType: 'keyup' },
     // sort
@@ -151,6 +165,20 @@ function filtersParameters2Sort(url) {
         heightMax: '',
         reviewer: '',
         shape: '',
+        f3Min: '',
+        f3Max: '',
+        f6Min: '',
+        f6Max: '',
+        sensitivityMin: '',
+        sensitivityMax: '',
+        impedanceMin: '',
+        impedanceMax: '',
+        lfxMin: '',
+        lfxMax: '',
+        splMin: '',
+        splMax: '',
+        bandwidthMin: '',
+        bandwidthMax: '',
     };
     for (const filterName of Object.keys(filters)) {
         if (filterName === 'quality') {
@@ -742,6 +770,198 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
         // console.debug('debug: post width ' + shouldShow);
+    }
+
+    if (
+        shouldShow &&
+        ((filter.f3Min !== undefined && filter.f3Min !== '') || (filter.f3Max !== undefined && filter.f3Max !== ''))
+    ) {
+        var f3Min = parseFloat(filter.f3Min);
+        if (isNaN(f3Min)) {
+            f3Min = -1;
+        }
+        var f3Max = parseFloat(filter.f3Max);
+        if (isNaN(f3Max)) {
+            f3Max = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
+            let f3 = parseFloat(msr.estimates.ref_3dB);
+            if (isNaN(f3)) {
+                shouldShow = false;
+            } else {
+                if (f3 > f3Max || f3 < f3Min) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.f6Min !== undefined && filter.f6Min !== '') || (filter.f6Max !== undefined && filter.f6Max !== ''))
+    ) {
+        var f6Min = parseFloat(filter.f6Min);
+        if (isNaN(f6Min)) {
+            f6Min = -1;
+        }
+        var f6Max = parseFloat(filter.f6Max);
+        if (isNaN(f6Max)) {
+            f6Max = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
+            let f6 = parseFloat(msr.estimates.ref_6dB);
+            if (isNaN(f6)) {
+                shouldShow = false;
+            } else {
+                if (f6 > f6Max || f6 < f6Min) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.sensitivityMin !== undefined && filter.sensitivityMin !== '') ||
+            (filter.sensitivityMax !== undefined && filter.sensitivityMax !== ''))
+    ) {
+        var sensitivityMin = parseFloat(filter.sensitivityMin);
+        if (isNaN(sensitivityMin)) {
+            sensitivityMin = -1;
+        }
+        var sensitivityMax = parseFloat(filter.sensitivityMax);
+        if (isNaN(sensitivityMax)) {
+            sensitivityMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('sensitivity' in msr && 'computed' in msr.sensitivity) {
+            let sensitivity = parseFloat(msr.sensitivity.computed);
+            if (isNaN(sensitivity)) {
+                shouldShow = false;
+            } else {
+                if (sensitivity > sensitivityMax || sensitivity < sensitivityMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.impedanceMin !== undefined && filter.impedanceMin !== '') ||
+            (filter.impedanceMax !== undefined && filter.impedanceMax !== ''))
+    ) {
+        var impedanceMin = parseInt(filter.impedanceMin);
+        if (isNaN(impedanceMin)) {
+            impedanceMin = -1;
+        }
+        var impedanceMax = parseInt(filter.impedanceMax);
+        if (isNaN(impedanceMax)) {
+            impedanceMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'impedance' in msr.specifications) {
+            let impedance = parseInt(msr.specifications.impedance);
+            if (isNaN(impedance)) {
+                shouldShow = false;
+            } else {
+                if (impedance > impedanceMax || impedance < impedanceMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.lfxMin !== undefined && filter.lfxMin !== '') || (filter.lfxMax !== undefined && filter.lfxMax !== ''))
+    ) {
+        var lfxMin = parseInt(filter.lfxMin);
+        if (isNaN(lfxMin)) {
+            lfxMin = -1;
+        }
+        var lfxMax = parseInt(filter.lfxMax);
+        if (isNaN(lfxMax)) {
+            lfxMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('pref_rating' in msr && 'lfx_hz' in msr.pref_rating) {
+            let lfx = parseInt(msr.pref_rating.lfx_hz);
+            if (isNaN(lfx)) {
+                shouldShow = false;
+            } else {
+                if (lfx > lfxMax || lfx < lfxMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.splMin !== undefined && filter.splMin !== '') || (filter.splMax !== undefined && filter.splMax !== ''))
+    ) {
+        var splMin = parseInt(filter.splMin);
+        if (isNaN(splMin)) {
+            splMin = -1;
+        }
+        var splMax = parseInt(filter.splMax);
+        if (isNaN(splMax)) {
+            splMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'SPL' in msr.specifications && 'peak' in msr.specifications.SPL) {
+            let spl = parseInt(msr.specifications.SPL.peak);
+            if (isNaN(spl)) {
+                shouldShow = false;
+            } else {
+                if (spl > splMax || spl < splMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.bandwidthMin !== undefined && filter.bandwidthMin !== '') ||
+            (filter.bandwidthMax !== undefined && filter.bandwidthMax !== ''))
+    ) {
+        var bandwidthMin = parseFloat(filter.bandwidthMin);
+        if (isNaN(bandwidthMin)) {
+            bandwidthMin = -1;
+        }
+        var bandwidthMax = parseFloat(filter.bandwidthMax);
+        if (isNaN(bandwidthMax)) {
+            bandwidthMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_band' in msr.estimates) {
+            let bandwidth = parseFloat(msr.estimates.ref_band);
+            if (isNaN(bandwidth)) {
+                shouldShow = false;
+            } else {
+                if (bandwidth > bandwidthMax || bandwidth < bandwidthMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
     }
 
     return shouldShow;

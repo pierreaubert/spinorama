@@ -280,6 +280,255 @@ describe('test full text search and filtering', () => {
         expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
     });
 
+    it('filter by f3 min', () => {
+        const url = new URL(TEST_URL + '?f3Min=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(725);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
+    });
+
+    it('filter by f3 max', () => {
+        const url = new URL(TEST_URL + '?f3Max=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(167);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeFalsy();
+    });
+
+    it('filter by f3 min and max', () => {
+        const url = new URL(TEST_URL + '?f3Min=40&f3Max=80&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(555);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f3 = msr.estimates.ref_3dB;
+            expect(f3).toBeGreaterThanOrEqual(40);
+            expect(f3).toBeLessThanOrEqual(80);
+        });
+    });
+
+    it('filter by f6 min', () => {
+        const url = new URL(TEST_URL + '?f6Min=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(761);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
+    });
+
+    it('filter by f6 max', () => {
+        const url = new URL(TEST_URL + '?f6Max=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(135);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeFalsy();
+    });
+
+    it('filter by f6 min and max', () => {
+        const url = new URL(TEST_URL + '?f6Min=30&f6Max=60&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(481);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f6 = msr.estimates.ref_6dB;
+            expect(f6).toBeGreaterThanOrEqual(30);
+            expect(f6).toBeLessThanOrEqual(60);
+        });
+    });
+
+    it('filter by f3 and f6 combined', () => {
+        const url = new URL(TEST_URL + '?f3Min=40&f3Max=70&f6Min=30&f6Max=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(243);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f3 = msr.estimates.ref_3dB;
+            const f6 = msr.estimates.ref_6dB;
+            expect(f3).toBeGreaterThanOrEqual(40);
+            expect(f3).toBeLessThanOrEqual(70);
+            expect(f6).toBeGreaterThanOrEqual(30);
+            expect(f6).toBeLessThanOrEqual(50);
+        });
+    });
+
+    it('filter by sensitivity min', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=85&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(422);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by sensitivity max', () => {
+        const url = new URL(TEST_URL + '?sensitivityMax=85&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(209);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by sensitivity min and max', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=80&sensitivityMax=90&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(433);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const sensitivity = msr.sensitivity.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(80);
+            expect(sensitivity).toBeLessThanOrEqual(90);
+        });
+    });
+
+    it('filter by impedance min', () => {
+        const url = new URL(TEST_URL + '?impedanceMin=8&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(64);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by impedance max', () => {
+        const url = new URL(TEST_URL + '?impedanceMax=8&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(132);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx min', () => {
+        const url = new URL(TEST_URL + '?lfxMin=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(757);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx max', () => {
+        const url = new URL(TEST_URL + '?lfxMax=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(163);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx min and max', () => {
+        const url = new URL(TEST_URL + '?lfxMin=30&lfxMax=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(313);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const lfx = msr.pref_rating.lfx_hz;
+            expect(lfx).toBeGreaterThanOrEqual(30);
+            expect(lfx).toBeLessThanOrEqual(50);
+        });
+    });
+
+    it('filter by spl min', () => {
+        const url = new URL(TEST_URL + '?splMin=110&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(132);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by spl max', () => {
+        const url = new URL(TEST_URL + '?splMax=110&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(19);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth min', () => {
+        const url = new URL(TEST_URL + '?bandwidthMin=3&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(475);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth max', () => {
+        const url = new URL(TEST_URL + '?bandwidthMax=3&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(468);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth min and max', () => {
+        const url = new URL(TEST_URL + '?bandwidthMin=2&bandwidthMax=4&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(522);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const bandwidth = msr.estimates.ref_band;
+            expect(bandwidth).toBeGreaterThanOrEqual(2);
+            expect(bandwidth).toBeLessThanOrEqual(4);
+        });
+    });
+
     it('search by price alone with Min and Max', () => {
         const priceMin = 100;
         const priceMax = 300;

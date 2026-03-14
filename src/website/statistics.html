@@ -17,31 +17,239 @@
       </p>
     </article>;
 
+    <div class="tabs is-centered is-boxed" id="navtab" style="flex: 1; margin-bottom: 0;">
+      <ul>
+        <li data-target="pane-1" class="is-active" id="1">
+          <a>
+	    <span class="icon is-hidden-mobile" aria-hidden="true">
+	      <svg width="24px" height="24px"><use href="#icon-dollar-sign"/></svg>
+	    </span>
+            <span class="is-hidden-mobile">Value Chart</span>
+          </a>
+        </li>
+        <li data-target="pane-2" id="2">
+          <a>
+	    <span class="icon is-hidden-mobile" aria-hidden="true">
+	      <svg width="24px" height="24px"><use href="#icon-chart-bar"/></svg>
+	    </span>
+            <span class="is-hidden-mobile">Score Distribution</span>
+          </a>
+        </li>
+        <li data-target="pane-3" id="3">
+          <a>
+	    <span class="icon is-hidden-mobile" aria-hidden="true">
+	      <svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+	    </span>
+            <span class="is-hidden-mobile">Score Components</span>
+          </a>
+        </li>
+        <li data-target="pane-4" id="4">
+          <a>
+	    <span class="icon is-hidden-mobile" aria-hidden="true">
+	      <svg width="24px" height="24px"><use href="#icon-cog"/></svg>
+	    </span>
+            <span class="is-hidden-mobile">Custom</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-    <div class="section">
-      <div class="box">
-        <div id="visScoreDistribution"></div>
-      </div>
-      <div class="box">
-        <div id="visScoreDistributionWsub"></div>
+    <div class="tab-pane is-active" id="pane-1" style="display: block;">
+      <div class="section">
+        <div class="box">
+          <div id="visValueChart"></div>
+        </div>
       </div>
     </div>
 
-    <div class="section">
-      <div class="box">
-        <div id="visDistributionLfxHz"></div>
-      </div>
-      <div class="box">
-        <div id="visDistributionNbdOn"></div>
-      </div>
-      <div class="box">
-        <div id="visDistributionNbdPir"></div>
-      </div>
-      <div class="box">
-        <div id="visDistributionSmPir"></div>
+    <div class="tab-pane" id="pane-2" style="display: none;">
+      <div class="section">
+        <div class="columns is-desktop">
+          <div class="column">
+            <div class="box" style="height: 300px;">
+              <div id="visScoreDistribution"></div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box" style="height: 300px;">
+              <div id="visScoreDistributionWsub"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <div class="tab-pane" id="pane-3" style="display: none;">
+      <div class="section">
+        <div class="columns is-multiline">
+          <div class="column is-half">
+            <div class="box">
+              <div id="visDistributionLfxHz"></div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box">
+              <div id="visDistributionNbdOn"></div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box">
+              <div id="visDistributionNbdPir"></div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box">
+              <div id="visDistributionSmPir"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="pane-4" style="display: none;">
+      <div class="section">
+        <div class="box">
+          <div class="columns is-multiline">
+            <div class="column is-2">
+              <label class="label">Chart Type</label>
+              <div class="select">
+                <select id="chartType">
+                  <option value="scatter">Scatter</option>
+                  <option value="histogram">Histogram</option>
+                  <option value="box">Box Plot</option>
+                  <option value="violin">Violin Plot</option>
+                  <option value="bar">Bar Chart</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2">
+              <label class="label">X Axis</label>
+              <div class="select">
+                <select id="xAxis">
+                  <option value="price">Price (USD)</option>
+                  <option value="score" selected>Preference Score</option>
+                  <option value="scoreWsub">Score w/ Sub</option>
+                  <option value="lfx">LFX (Hz)</option>
+                  <option value="sensitivity">Sensitivity (dB)</option>
+                  <option value="impedance">Impedance (ohm)</option>
+                  <option value="f3">F3 -3dB (Hz)</option>
+                  <option value="f6">F6 -6dB (Hz)</option>
+                  <option value="weight">Weight (kg)</option>
+                  <option value="width">Width (mm)</option>
+                  <option value="height">Height (mm)</option>
+                  <option value="depth">Depth (mm)</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-1">
+              <label class="label">X Scale</label>
+              <div class="select">
+                <select id="xScale">
+                  <option value="linear" selected>Linear</option>
+                  <option value="log">Log</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2">
+              <label class="label">Y Axis</label>
+              <div class="select">
+                <select id="yAxis">
+                  <option value="score" selected>Preference Score</option>
+                  <option value="price">Price (USD)</option>
+                  <option value="scoreWsub">Score w/ Sub</option>
+                  <option value="lfx">LFX (Hz)</option>
+                  <option value="sensitivity">Sensitivity (dB)</option>
+                  <option value="impedance">Impedance (ohm)</option>
+                  <option value="f3">F3 -3dB (Hz)</option>
+                  <option value="f6">F6 -6dB (Hz)</option>
+                  <option value="weight">Weight (kg)</option>
+                  <option value="width">Width (mm)</option>
+                  <option value="height">Height (mm)</option>
+                  <option value="depth">Depth (mm)</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-1">
+              <label class="label">Y Scale</label>
+              <div class="select">
+                <select id="yScale">
+                  <option value="linear" selected>Linear</option>
+                  <option value="log">Log</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2">
+              <label class="label">Color By</label>
+              <div class="select">
+                <select id="colorBy">
+                  <option value="none">None</option>
+                  <option value="brand">Brand</option>
+                  <option value="shape">Shape</option>
+                  <option value="quality">Quality</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2">
+              <label class="label">Filter by Brand</label>
+              <div class="select">
+                <select id="filterBrand">
+                  <option value="">All Brands</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2">
+              <label class="label">Filter by Shape</label>
+              <div class="select">
+                <select id="filterShape">
+                  <option value="">All Shapes</option>
+                  <option value="bookshelves">Bookshelves</option>
+                  <option value="floorstanders">Floorstanders</option>
+                  <option value="center">Center</option>
+                  <option value="surround">Surround</option>
+                  <option value="omnidirectional">Omnidirectional</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="columns is-multiline" id="histogramOptions" style="display: none;">
+            <div class="column is-2">
+              <label class="label">Number of Bins</label>
+              <input class="input" type="number" id="numBins" value="20" min="1" max="100">
+            </div>
+            <div class="column is-2">
+              <label class="label">Bin Size</label>
+              <input class="input" type="number" id="binSize" placeholder="auto" min="0">
+            </div>
+            <div class="column is-2">
+              <label class="label">Start</label>
+              <input class="input" type="number" id="binStart" placeholder="min">
+            </div>
+            <div class="column is-2">
+              <label class="label">End</label>
+              <input class="input" type="number" id="binEnd" placeholder="max">
+            </div>
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-primary" id="renderCustomChart">Render Chart</button>
+            </div>
+            <div class="control">
+              <button class="button is-light" id="resetCustomChart">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div id="visCustomChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/tabs-${versions['CACHE']}${min}.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        toggleTab('1', 'pane-1');
+      });
+    </script>
     <script type="module" src="./js/statistics-${versions['CACHE']}${min}.js"></script>
 
     <%include file="footer.html"/>
