@@ -243,7 +243,8 @@ speakers_info_f: SpeakerDatabase = {
         "brand": "Fisher",
         "model": "STE-720",
         "type": "passive",
-        "price": "",
+        "price": "50",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "princeton",
         "measurements": {
@@ -294,7 +295,8 @@ speakers_info_f: SpeakerDatabase = {
         "brand": "Fluance",
         "model": "Reference XL8S",
         "type": "passive",
-        "price": "",
+        "price": "90",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-archimago",
         "measurements": {
@@ -551,8 +553,8 @@ speakers_info_f: SpeakerDatabase = {
         "brand": "Focal",
         "model": "Chora 806",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "450",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
         "measurements": {

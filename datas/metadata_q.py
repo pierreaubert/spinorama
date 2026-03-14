@@ -25,8 +25,8 @@ speakers_info_q: SpeakerDatabase = {
         "brand": "Q Acoustics",
         "model": "3030i",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "275",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
         "measurements": {
@@ -133,7 +133,8 @@ speakers_info_q: SpeakerDatabase = {
         "model": "ESL-57",
         "type": "passive",
         "shape": "panel",
-        "price": "",
+        "price": "300",
+        "amount": "each",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -221,8 +222,8 @@ speakers_info_q: SpeakerDatabase = {
         "brand": "RBH Sound",
         "model": "R-515",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "215",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -238,8 +239,8 @@ speakers_info_q: SpeakerDatabase = {
         "brand": "RBH Sound",
         "model": "SV-61R",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "950",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -255,8 +256,8 @@ speakers_info_q: SpeakerDatabase = {
         "brand": "RBH Sound",
         "model": "PM-8",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "1600",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {

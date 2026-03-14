@@ -73,7 +73,8 @@ speakers_info_i: SpeakerDatabase = {
         "model": "M-808V2",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "",
+        "price": "200",
+        "amount": "each",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -123,8 +124,8 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "Prelude MTS",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "5000",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
@@ -229,7 +230,7 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "RC252",
         "type": "passive",
-        "price": "",
+        "price": "315",
         "amount": "each",
         "shape": "center",
         "default_measurement": "vendor",
@@ -273,9 +274,9 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "Entra One",
         "type": "passive",
-        "price": "",
+        "price": "150",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -288,9 +289,9 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "Interlude IL10",
         "type": "passive",
-        "price": "",
+        "price": "200",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -308,8 +309,8 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "IL60",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "1500",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
@@ -329,8 +330,8 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "Intermezzo 4.1t",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "3500",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {

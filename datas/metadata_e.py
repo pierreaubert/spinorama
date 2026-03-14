@@ -873,9 +873,9 @@ speakers_info_e: SpeakerDatabase = {
         "brand": "Edifier",
         "model": "R1700BT Plus",
         "type": "active",
-        "price": "",
+        "price": "100",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-audiorekr",
         "measurements": {
             "misc-audiorekr": {
@@ -949,7 +949,8 @@ speakers_info_e: SpeakerDatabase = {
         "brand": "Elac",
         "model": "BS 314",
         "type": "passive",
-        "price": "",
+        "price": "2300",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-nuyes-sealed",
         "measurements": {
@@ -999,7 +1000,8 @@ speakers_info_e: SpeakerDatabase = {
         "brand": "Elac",
         "model": "BS U5 Slim",
         "type": "passive",
-        "price": "",
+        "price": "430",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "asr",
         "measurements": {

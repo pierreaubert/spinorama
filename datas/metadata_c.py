@@ -7,7 +7,8 @@ speakers_info_c: SpeakerDatabase = {
         "model": "Model Six",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "",
+        "price": "119",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -519,7 +520,8 @@ speakers_info_c: SpeakerDatabase = {
         "brand": "CommonSense Audio",
         "model": "5.6",
         "type": "passive",
-        "price": "",
+        "price": "114",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "princeton",
         "measurements": {

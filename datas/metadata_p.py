@@ -663,9 +663,9 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Pioneer",
         "model": "S-DF3-K",
         "type": "passive",
-        "price": "",
+        "price": "175",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -909,8 +909,8 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Polk Audio",
         "model": "Legend L200",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "750",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
         "measurements": {
@@ -934,8 +934,8 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Polk Audio",
         "model": "Legend L800",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "3000",
+        "amount": "each",
         "shape": "cinema",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -1095,9 +1095,9 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Polk Audio",
         "model": "RT15i",
         "type": "passive",
-        "price": "",
+        "price": "120",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -1128,9 +1128,9 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Polk Audio",
         "model": "5JR",
         "type": "passive",
-        "price": "",
+        "price": "175",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -1984,8 +1984,8 @@ speakers_info_p: SpeakerDatabase = {
         "brand": "Proson",
         "model": "Twin 716",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "50",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "misc-ageve",
         "measurements": {

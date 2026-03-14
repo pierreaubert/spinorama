@@ -160,7 +160,8 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Gainphile",
         "model": "R16",
         "type": "passive",
-        "price": "",
+        "price": "1000",
+        "amount": "each",
         "shape": "panel",
         "default_measurement": "princeton",
         "measurements": {
@@ -211,7 +212,8 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "GedLee",
         "model": "Nathan",
         "type": "passive",
-        "price": "",
+        "price": "1500",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "princeton",
         "measurements": {
@@ -228,9 +230,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "1031A",
         "type": "active",
-        "price": "",
+        "price": "1350",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-audiorekr",
         "measurements": {
             "misc-audiorekr": {
@@ -256,9 +258,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "1032A",
         "type": "active",
-        "price": "",
+        "price": "1900",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-tomvg",
         "measurements": {
             "misc-tomvg": {
@@ -276,9 +278,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "4010A",
         "type": "active",
-        "price": "",
+        "price": "497",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -303,9 +305,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "4020C",
         "type": "active",
-        "price": "",
+        "price": "700",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -330,9 +332,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "4030C",
         "type": "active",
-        "price": "",
+        "price": "850",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -357,9 +359,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genelec",
         "model": "4040A",
         "type": "active",
-        "price": "",
+        "price": "1400",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -400,7 +402,8 @@ speakers_info_g: SpeakerDatabase = {
         "model": "8030A",
         "type": "active",
         "shape": "bookshelves",
-        "price": "",
+        "price": "650",
+        "amount": "each",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -787,9 +790,9 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Genius",
         "model": "SP-HF3000A",
         "type": "active",
-        "price": "",
+        "price": "35",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-dominikz",
         "measurements": {
             "misc-dominikz": {
@@ -855,7 +858,8 @@ speakers_info_g: SpeakerDatabase = {
         "model": "Helsinki 1.5",
         "shape": "floorstanders",
         "type": "passive",
-        "price": "",
+        "price": "3250",
+        "amount": "each",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -870,8 +874,8 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Grimani Systems",
         "model": "Alpha",
         "type": "active",
-        "price": "",
-        "amount": "pair",
+        "price": "28000",
+        "amount": "each",
         "shape": "inwall",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -905,8 +909,8 @@ speakers_info_g: SpeakerDatabase = {
         "brand": "Grimani Systems",
         "model": "Tau",
         "type": "active",
-        "price": "",
-        "amount": "pair",
+        "price": "14500",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "misc-audioholics",
         "measurements": {

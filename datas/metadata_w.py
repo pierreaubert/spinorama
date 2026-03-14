@@ -79,7 +79,7 @@ speakers_info_w: SpeakerDatabase = {
         "brand": "Wharfedale",
         "model": "Diamond 12 Center",
         "type": "passive",
-        "price": "",
+        "price": "399",
         "shape": "center",
         "amount": "each",
         "default_measurement": "misc-audiorekr",

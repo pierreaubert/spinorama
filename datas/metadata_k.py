@@ -1022,8 +1022,8 @@ speakers_info_k: SpeakerDatabase = {
         "brand": "KEF",
         "model": "R11",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "2500",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -2202,8 +2202,8 @@ speakers_info_k: SpeakerDatabase = {
         "brand": "Kali",
         "model": "LP-8",
         "type": "active",
-        "price": "",
-        "amount": "pair",
+        "price": "249",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2675,8 +2675,8 @@ speakers_info_k: SpeakerDatabase = {
         "brand": "Klipsch",
         "model": "Icon KF-26",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "350",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -2919,9 +2919,9 @@ speakers_info_k: SpeakerDatabase = {
         "brand": "Klipsch",
         "model": "Synergy SB-3 Monitor",
         "type": "passive",
-        "price": "",
+        "price": "225",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {"origin": "Vendors-Klipsch", "format": "rew_text_dump", "review": ""}

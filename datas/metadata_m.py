@@ -229,7 +229,8 @@ speakers_info_m: SpeakerDatabase = {
         "model": "HR824",
         "type": "active",
         "shape": "bookshelves",
-        "price": "",
+        "price": "650",
+        "amount": "each",
         "default_measurement": "harman",
         "measurements": {
             "harman": {
@@ -778,8 +779,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "MartinLogan",
         "model": "Motion 35XTi",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "750",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -879,8 +880,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "MartinLogan",
         "model": "Prodigy",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "5500",
+        "amount": "each",
         "shape": "panel",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -896,8 +897,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "MartinLogan",
         "model": "Vista",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "2100",
+        "amount": "each",
         "shape": "panel",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -2306,8 +2307,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "Monoprice",
         "model": "MP-65RT",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "25",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2323,8 +2324,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "Monoprice",
         "model": "MP-T65RT",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "70",
+        "amount": "each",
         "shape": "floorstanders",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2420,8 +2421,8 @@ speakers_info_m: SpeakerDatabase = {
         "brand": "Monoprice",
         "model": "Monolith K-BAS",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "250",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {

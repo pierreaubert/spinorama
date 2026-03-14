@@ -128,7 +128,8 @@ speakers_info_t: SpeakerDatabase = {
         "brand": "Tannoy",
         "model": "Reveal 501a",
         "type": "passive",
-        "price": "",
+        "price": "229",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-archimago",
         "measurements": {
@@ -160,7 +161,8 @@ speakers_info_t: SpeakerDatabase = {
         "brand": "Tannoy",
         "model": "System 600",
         "type": "passive",
-        "price": "",
+        "price": "350",
+        "amount": "each",
         "shape": "cinema",
         "default_measurement": "asr",
         "measurements": {
@@ -264,7 +266,8 @@ speakers_info_t: SpeakerDatabase = {
         "brand": "Technics",
         "model": "SB-F1",
         "type": "passive",
-        "price": "",
+        "price": "115",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "asr",
         "measurements": {
@@ -473,8 +476,8 @@ speakers_info_t: SpeakerDatabase = {
         "brand": "Totem Acoustic",
         "model": "Kin One",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "300",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {

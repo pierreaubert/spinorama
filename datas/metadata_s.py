@@ -528,8 +528,8 @@ speakers_info_s: SpeakerDatabase = {
         "brand": "Sonus Faber",
         "model": "Sonetto II",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "1250",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
         "measurements": {

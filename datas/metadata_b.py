@@ -161,9 +161,9 @@ speakers_info_b: SpeakerDatabase = {
         "brand": "Behringer",
         "model": "C5A",
         "type": "active",
-        "price": "",
+        "price": "99",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-audiorekr",
         "measurements": {
             "misc-audiorekr": {
@@ -491,8 +491,8 @@ speakers_info_b: SpeakerDatabase = {
         "model": "141",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "",
-        "amount": "pair",
+        "price": "75",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {"vendor": {"origin": "Vendors-Bose", "format": "rew_text_dump"}},
     },
@@ -501,7 +501,8 @@ speakers_info_b: SpeakerDatabase = {
         "model": "301 Series IV",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "",
+        "price": "159",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {"vendor": {"origin": "Vendors-Bose", "format": "rew_text_dump"}},
     },
@@ -510,7 +511,8 @@ speakers_info_b: SpeakerDatabase = {
         "model": "901 Series V",
         "type": "active",
         "shape": "bookshelves",
-        "price": "",
+        "price": "700",
+        "amount": "each",
         "default_measurement": "eac-noeq",
         "measurements": {
             "eac-noeq": {
@@ -1016,8 +1018,8 @@ speakers_info_b: SpeakerDatabase = {
         "brand": "Bowers & Wilkins",
         "model": "686 S2",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "275",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-ageve",
         "measurements": {
@@ -1046,7 +1048,8 @@ speakers_info_b: SpeakerDatabase = {
         "model": "802N",
         "type": "passive",
         "shape": "floorstanders",
-        "price": "",
+        "price": "4000",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {"origin": "Vendors-Bowers & Wilkins", "format": "webplotdigitizer"}
@@ -1100,8 +1103,8 @@ speakers_info_b: SpeakerDatabase = {
         "brand": "Bowers & Wilkins",
         "model": "CWM7.5",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "800",
+        "amount": "each",
         "shape": "inwall",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {

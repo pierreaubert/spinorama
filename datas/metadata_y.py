@@ -238,8 +238,8 @@ speakers_info_y: SpeakerDatabase = {
         "brand": "Yamaha",
         "model": "NS-10M Studio",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "360",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {

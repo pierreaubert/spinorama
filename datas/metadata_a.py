@@ -6,8 +6,8 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "ADS",
         "model": "L520",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "190",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-mab",
         "measurements": {
@@ -108,9 +108,9 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "ATC",
         "model": "SCM20SL MK2",
         "type": "passive",
-        "price": "",
+        "price": "2495",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "misc-audiorekr",
         "measurements": {
             "misc-audiorekr": {
@@ -429,9 +429,9 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "Advent",
         "model": "The New Advent Loudspeaker",
         "type": "passive",
-        "price": "",
+        "price": "125",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
