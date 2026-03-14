@@ -526,3 +526,159 @@ describe('statistics data processing', () => {
         expect(count).toBeGreaterThan(50);
     });
 });
+
+describe('computeLinearRegression', () => {
+    function computeLinearRegression(xValues, yValues, options = {}) {
+        const { logX = false, logY = false } = options;
+        const n = xValues.length;
+        if (n < 2) return null;
+
+        const validPairs = [];
+        for (let i = 0; i < n; i++) {
+            const x = logX ? (xValues[i] > 0 ? Math.log10(xValues[i]) : NaN) : xValues[i];
+            const y = logY ? (yValues[i] > 0 ? Math.log10(yValues[i]) : NaN) : yValues[i];
+            if (!isNaN(x) && !isNaN(y)) {
+                validPairs.push({ x, y, origX: xValues[i] });
+            }
+        }
+
+        if (validPairs.length < 2) return null;
+
+        const validX = validPairs.map((p) => p.x);
+        const validY = validPairs.map((p) => p.y);
+        const origXValues = validPairs.map((p) => p.origX);
+
+        const sumX = validX.reduce((a, b) => a + b, 0);
+        const sumY = validY.reduce((a, b) => a + b, 0);
+        const sumXY = validX.reduce((acc, x, i) => acc + x * validY[i], 0);
+        const sumX2 = validX.reduce((acc, x) => acc + x * x, 0);
+
+        const slope = (validX.length * sumXY - sumX * sumY) / (validX.length * sumX2 - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / validX.length;
+
+        const minX = Math.min(...origXValues);
+        const maxX = Math.max(...origXValues);
+
+        let yMin, yMax;
+        if (logX) {
+            yMin = Math.pow(10, slope * Math.log10(minX) + intercept);
+            yMax = Math.pow(10, slope * Math.log10(maxX) + intercept);
+        } else {
+            yMin = slope * minX + intercept;
+            yMax = slope * maxX + intercept;
+        }
+
+        if (logY) {
+            yMin = Math.pow(10, yMin);
+            yMax = Math.pow(10, yMax);
+        }
+
+        return {
+            slope,
+            intercept,
+            x: [minX, maxX],
+            y: [yMin, yMax],
+        };
+    }
+
+    it('should return null for less than 2 points', () => {
+        expect(computeLinearRegression([1], [2])).toBeNull();
+        expect(computeLinearRegression([], [])).toBeNull();
+    });
+
+    it('should compute correct linear regression for linear data', () => {
+        const xValues = [1, 2, 3, 4, 5];
+        const yValues = [2, 4, 6, 8, 10];
+        const result = computeLinearRegression(xValues, yValues);
+        expect(result.slope).toBeCloseTo(2, 5);
+        expect(result.intercept).toBeCloseTo(0, 5);
+    });
+
+    it('should work for log-scaled x-axis data with logX option', () => {
+        const xValues = [100, 1000, 10000, 100000];
+        const yValues = [1, 2, 3, 4];
+        const result = computeLinearRegression(xValues, yValues, { logX: true });
+        expect(result).not.toBeNull();
+        expect(result.x).toEqual([100, 100000]);
+    });
+
+    it('should compute correct trend for log axis data', () => {
+        const xValues = [10, 100, 1000, 10000];
+        const yValues = [1, 2, 3, 4];
+        const result = computeLinearRegression(xValues, yValues, { logX: true });
+        expect(result.slope).toBeCloseTo(1, 2);
+    });
+
+    it('should compute correct trend for log-scaled y-axis data with logY option', () => {
+        const xValues = [1, 2, 3, 4];
+        const yValues = [10, 100, 1000, 10000];
+        const result = computeLinearRegression(xValues, yValues, { logY: true });
+        expect(result).not.toBeNull();
+    });
+});
+
+describe('computeParetoCurveForData', () => {
+    function computeParetoCurveForData(xValues, yValues, options = {}) {
+        const { direction = 'max' } = options;
+        const points = xValues.map((x, i) => ({ x, y: yValues[i] }));
+        const sorted = points
+            .filter((p) => p.x !== null && p.y !== null && !isNaN(p.x) && !isNaN(p.y))
+            .sort((a, b) => a.x - b.x);
+
+        const pareto = [];
+        if (direction === 'max') {
+            let maxY = -Infinity;
+            for (const p of sorted) {
+                if (p.y > maxY) {
+                    pareto.push(p);
+                    maxY = p.y;
+                }
+            }
+        } else {
+            let minY = Infinity;
+            for (const p of sorted) {
+                if (p.y < minY) {
+                    pareto.push(p);
+                    minY = p.y;
+                }
+            }
+        }
+        return {
+            x: pareto.map((p) => p.x),
+            y: pareto.map((p) => p.y),
+        };
+    }
+
+    it('should return empty for empty input', () => {
+        const result = computeParetoCurveForData([], []);
+        expect(result.x).toEqual([]);
+        expect(result.y).toEqual([]);
+    });
+
+    it('should find pareto frontier for best value (direction=max)', () => {
+        const xValues = [100, 200, 300, 400, 500];
+        const yValues = [5, 8, 6, 9, 7];
+        const result = computeParetoCurveForData(xValues, yValues, { direction: 'max' });
+        expect(result.x).toEqual([100, 200, 400]);
+        expect(result.y).toEqual([5, 8, 9]);
+    });
+
+    it('should find anti-pareto for worst value (direction=min)', () => {
+        const xValues = [100, 200, 300, 400, 500];
+        const yValues = [5, 8, 6, 9, 7];
+        const result = computeParetoCurveForData(xValues, yValues, { direction: 'min' });
+        expect(result.x).toEqual([100]);
+        expect(result.y).toEqual([5]);
+    });
+
+    it('should compute both best and worst pareto curves', () => {
+        const xValues = [100, 200, 300, 400, 500];
+        const yValues = [5, 8, 6, 9, 7];
+        const best = computeParetoCurveForData(xValues, yValues, { direction: 'max' });
+        const worst = computeParetoCurveForData(xValues, yValues, { direction: 'min' });
+        expect(best.x).toEqual([100, 200, 400]);
+        expect(best.y).toEqual([5, 8, 9]);
+        expect(worst.x).toEqual([100]);
+        expect(worst.y).toEqual([5]);
+    });
+});

@@ -117,6 +117,90 @@ getMetadata()
             return pareto;
         }
 
+        function computeLinearRegression(xValues, yValues, options = {}) {
+            const { logX = false, logY = false } = options;
+            const n = xValues.length;
+            if (n < 2) return null;
+
+            const validPairs = [];
+            for (let i = 0; i < n; i++) {
+                const x = logX ? (xValues[i] > 0 ? Math.log10(xValues[i]) : NaN) : xValues[i];
+                const y = logY ? (yValues[i] > 0 ? Math.log10(yValues[i]) : NaN) : yValues[i];
+                if (!isNaN(x) && !isNaN(y)) {
+                    validPairs.push({ x, y, origX: xValues[i] });
+                }
+            }
+
+            if (validPairs.length < 2) return null;
+
+            const validX = validPairs.map((p) => p.x);
+            const validY = validPairs.map((p) => p.y);
+            const origXValues = validPairs.map((p) => p.origX);
+
+            const sumX = validX.reduce((a, b) => a + b, 0);
+            const sumY = validY.reduce((a, b) => a + b, 0);
+            const sumXY = validX.reduce((acc, x, i) => acc + x * validY[i], 0);
+            const sumX2 = validX.reduce((acc, x) => acc + x * x, 0);
+
+            const slope = (validX.length * sumXY - sumX * sumY) / (validX.length * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / validX.length;
+
+            const minX = Math.min(...origXValues);
+            const maxX = Math.max(...origXValues);
+
+            let yMin, yMax;
+            if (logX) {
+                yMin = Math.pow(10, slope * Math.log10(minX) + intercept);
+                yMax = Math.pow(10, slope * Math.log10(maxX) + intercept);
+            } else {
+                yMin = slope * minX + intercept;
+                yMax = slope * maxX + intercept;
+            }
+
+            if (logY) {
+                yMin = Math.pow(10, yMin);
+                yMax = Math.pow(10, yMax);
+            }
+
+            return {
+                slope,
+                intercept,
+                x: [minX, maxX],
+                y: [yMin, yMax],
+            };
+        }
+
+        function computeParetoCurveForData(xValues, yValues, options = {}) {
+            const { direction = 'max' } = options;
+            const points = xValues.map((x, i) => ({ x, y: yValues[i] }));
+            const sorted = points
+                .filter((p) => p.x !== null && p.y !== null && !isNaN(p.x) && !isNaN(p.y))
+                .sort((a, b) => a.x - b.x);
+
+            const pareto = [];
+            if (direction === 'max') {
+                let maxY = -Infinity;
+                for (const p of sorted) {
+                    if (p.y > maxY) {
+                        pareto.push(p);
+                        maxY = p.y;
+                    }
+                }
+            } else {
+                let minY = Infinity;
+                for (const p of sorted) {
+                    if (p.y < minY) {
+                        pareto.push(p);
+                        minY = p.y;
+                    }
+                }
+            }
+            return {
+                x: pareto.map((p) => p.x),
+                y: pareto.map((p) => p.y),
+            };
+        }
+
         function plotValueChart(prices, scores, names, divname) {
             const points = prices.map((p, i) => ({ price: p, score: scores[i], name: names[i] }));
             const pareto = computeParetoFrontier(points);
@@ -451,6 +535,10 @@ getMetadata()
             const colorField = document.getElementById('colorBy').value;
             const filterBrand = document.getElementById('filterBrand').value;
             const filterShape = document.getElementById('filterShape').value;
+            const showTrendLine = document.getElementById('showTrendLine')?.checked ?? false;
+            const showParetoCurve = document.getElementById('showParetoCurve')?.checked ?? false;
+
+            const supportsCurves = chartType === 'scatter' || chartType === 'bar';
 
             const histogramOptions = {
                 nbins: parseInt(document.getElementById('numBins').value) || 20,
@@ -537,6 +625,79 @@ getMetadata()
                 colorIdx++;
             });
 
+            if (supportsCurves) {
+                if (showTrendLine) {
+                    const allX = [];
+                    const allY = [];
+                    groups.forEach((group) => {
+                        allX.push(...group.x);
+                        allY.push(...group.y);
+                    });
+                    const regression = computeLinearRegression(allX, allY, {
+                        logX: xScale === 'log',
+                        logY: yScale === 'log',
+                    });
+                    if (regression) {
+                        data.push({
+                            x: regression.x,
+                            y: regression.y,
+                            mode: 'lines',
+                            type: 'scatter',
+                            name: 'Trend Line',
+                            line: {
+                                color: 'black',
+                                width: 2,
+                                dash: 'dot',
+                            },
+                            hoverinfo: 'skip',
+                        });
+                    }
+                }
+
+                if (showParetoCurve) {
+                    const allX = [];
+                    const allY = [];
+                    groups.forEach((group) => {
+                        allX.push(...group.x);
+                        allY.push(...group.y);
+                    });
+
+                    const paretoBest = computeParetoCurveForData(allX, allY, { direction: 'max' });
+                    if (paretoBest.x.length > 0) {
+                        data.push({
+                            x: paretoBest.x,
+                            y: paretoBest.y,
+                            mode: 'lines',
+                            type: 'scatter',
+                            name: 'Pareto (Best Value)',
+                            line: {
+                                color: 'red',
+                                width: 2,
+                                dash: 'dash',
+                            },
+                            hoverinfo: 'skip',
+                        });
+                    }
+
+                    const paretoWorst = computeParetoCurveForData(allX, allY, { direction: 'min' });
+                    if (paretoWorst.x.length > 0) {
+                        data.push({
+                            x: paretoWorst.x,
+                            y: paretoWorst.y,
+                            mode: 'lines',
+                            type: 'scatter',
+                            name: 'Pareto (Worst Value)',
+                            line: {
+                                color: 'gray',
+                                width: 2,
+                                dash: 'dash',
+                            },
+                            hoverinfo: 'skip',
+                        });
+                    }
+                }
+            }
+
             const xLabel = document.getElementById('xAxis').selectedOptions[0].text;
             const yLabel = document.getElementById('yAxis').selectedOptions[0].text;
 
@@ -560,10 +721,16 @@ getMetadata()
         function updateHistogramOptions() {
             const chartType = document.getElementById('chartType').value;
             const histOptions = document.getElementById('histogramOptions');
+            const curveOptions = document.getElementById('curveOptions');
             if (chartType === 'histogram') {
                 histOptions.style.display = 'flex';
             } else {
                 histOptions.style.display = 'none';
+            }
+            if (chartType === 'scatter' || chartType === 'bar') {
+                curveOptions.style.display = 'flex';
+            } else {
+                curveOptions.style.display = 'none';
             }
         }
 
@@ -582,6 +749,8 @@ getMetadata()
             document.getElementById('binSize').value = '';
             document.getElementById('binStart').value = '';
             document.getElementById('binEnd').value = '';
+            document.getElementById('showTrendLine').checked = false;
+            document.getElementById('showParetoCurve').checked = false;
             updateHistogramOptions();
             document.getElementById('visCustomChart').innerHTML = '';
         }
