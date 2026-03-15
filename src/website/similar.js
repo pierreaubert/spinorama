@@ -29,9 +29,9 @@ function getNearSpeakers(metadata) {
     const speakers = [];
     metadata.forEach(function (value) {
         const speaker = value.brand + ' ' + value.model;
+        metaSpeakers[speaker] = value;
         if (value.nearest && value.nearest.length > 0) {
             speakers.push(speaker);
-            metaSpeakers[speaker] = value;
         }
     });
     return [metaSpeakers, speakers.sort()];
@@ -148,9 +148,14 @@ getMetadata()
             if (metaSpeakers[names[0]].nearest !== null) {
                 const similars = metaSpeakers[names[0]].nearest;
                 for (let i = 0; i < similars.length; i++) {
-                    // console.log('adding '+similars[i][1])
-                    names.push(similars[i][1]);
-                    graphs.push(getSpeakerData(metaSpeakers, graphName, similars[i][1], null, null));
+                    const neighborName = similars[i][1];
+                    if (!metaSpeakers[neighborName]) {
+                        console.log('Skipping unknown neighbor: ' + neighborName);
+                        continue;
+                    }
+                    // console.log('adding '+neighborName)
+                    names.push(neighborName);
+                    graphs.push(getSpeakerData(metaSpeakers, graphName, neighborName, null, null));
                 }
             }
             urlParams.set('measurement', graphName);

@@ -523,8 +523,9 @@ def main():
             item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
-            if flag_dev:
+            if flag_optim:
+                item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
+            else:
                 item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
 
             shutil.copy(item_original, item_post_copy)
@@ -659,7 +660,6 @@ if __name__ == "__main__":
 
     if flag_dev:
         site = SITEDEV  # Default dev site URL
-        flag_optim = False  # Optimizations are typically off for dev unless explicitly re-enabled by other logic
         if parsed_args.sitedev is not None:
             site = parsed_args.sitedev
             if not site.startswith("http"):
