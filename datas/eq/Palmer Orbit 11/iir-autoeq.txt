@@ -1,0 +1,14 @@
+EQ for Palmer Orbit 11 computed from ASR data
+Preference Score 6.27 with EQ 7.46
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-03-16-12:48:19
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc   144 Hz Gain -1.01 dB Q 3.00
+Filter  2: ON PK Fc   369 Hz Gain +1.36 dB Q 2.05
+Filter  3: ON PK Fc  1121 Hz Gain -1.66 dB Q 0.64
+Filter  4: ON PK Fc  1333 Hz Gain +2.95 dB Q 1.42
+Filter  5: ON PK Fc  4818 Hz Gain -2.64 dB Q 1.49
+Filter  6: ON PK Fc  6585 Hz Gain +3.00 dB Q 1.49
+Filter  7: ON PK Fc  9001 Hz Gain -2.66 dB Q 1.46

@@ -2,6 +2,36 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_p: SpeakerDatabase = {
+    "Palmer Orbit 11": {
+        "brand": "Palmer",
+        "model": "Orbit 11",
+        "type": "active",
+        "price": "900",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/palmer-orbit-11-monitor-review.70063/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/palmer-orbit-11-cardioid-coaxial-3-way-studio-monitor-msrp-799%E2%82%AC-899.69461/",
+                },
+                "review_published": "20260315",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 120,
+                    },
+                    "SPL": {"peak": 116},
+                    "size": {"height": 293, "width": 216, "depth": 292},
+                    "weight": 13.9,
+                },
+            },
+        },
+    },
     "Palmer Studimon 5": {
         "brand": "Palmer",
         "model": "Studimon 5",
