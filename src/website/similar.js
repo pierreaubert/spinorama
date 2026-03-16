@@ -121,6 +121,15 @@ getMetadata()
                             Plotly.newPlot('plot' + i, configured);
                         }
                     }
+                    // Clear any leftover plots from a previous render
+                    const numUsed = graphs.length - 1;
+                    for (let j = numUsed; j < 10; j++) {
+                        const el = document.getElementById('plot' + j);
+                        if (el) {
+                            Plotly.purge(el);
+                            el.innerHTML = '';
+                        }
+                    }
                     return null;
                 });
             }
