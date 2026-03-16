@@ -185,7 +185,7 @@ function scoreHtml(shape, score) {
         return `
                <span class="icon-text">
                  <span class="icon">
-                   <svg width="20px" height="20px" alt="rating">
+                   <svg width="20px" height="20px" aria-label="rating">
                      <use href="${iconScore}"/>
                    </svg>
                  </span>
@@ -199,7 +199,7 @@ function scoreHtml(shape, score) {
         return `
                <span class="icon-text">
                  <span class="icon">
-                   <svg width="20px" height="20px" alt="rating">
+                   <svg width="20px" height="20px" aria-label="rating">
                      <use href="${iconScore}"/>
                    </svg>
                  </span>
@@ -249,14 +249,14 @@ function contextHtml(context) {
         ? `<a href="${defaultUrl}">
              <figure class="image is-2by3">
                <picture>
-                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510">
                  <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
                </picture>
              </figure>
            </a>`
         : `<figure class="image is-2by3">
                <picture>
-                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510">
                  <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
                </picture>
              </figure>`;
@@ -280,23 +280,23 @@ function contextHtml(context) {
                ${html_score}
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
+                 <span class="icon has-text-danger"><svg width="20px" height="20px" aria-label="rating"><use href="${iconLFX}"/></svg></span>
                  <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
                </span>
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${iconFlatness}"/></svg></span>
+                 <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="flatness"><use href="${iconFlatness}"/></svg></span>
                  <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
                </span>
                <br/>
                <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
+                 <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="sensitivity"><use href="#icon-circle"/></svg></span>
                  <span>${sensitivity}</span>
                </span>
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-success">
-                   <svg width="20px" height="20px" alt="spl">
+                   <svg width="20px" height="20px" aria-label="spl">
                     <use href="#icon-circle-dot"/>
                    </svg>
                  </span>

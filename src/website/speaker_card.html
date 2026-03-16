@@ -29,16 +29,16 @@
       <a href="${default_url}">
         <figure class="image is-2by3">
           <picture>
-            <source srcset="${webp}" type="image/webp" width="340" height="510"></source>
-            <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510"/>
+            <source srcset="${webp}" type="image/webp" width="340" height="510">
+            <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510">
           </picture>
         </figure>
       </a>
 % else:
       <figure class="image is-2by3">
         <picture>
-          <source srcset="${webp}" type="image/webp" width="340" height="510"></source>
-          <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510"/>
+          <source srcset="${webp}" type="image/webp" width="340" height="510">
+          <img src="${jpg}" loading="${loading}" decoding="${decoding}" alt="${brand} ${model}" width="340" height="510">
         </picture>
       </figure>
 % endif
@@ -46,7 +46,7 @@
     <div class="card-content">
       <div class="content">
         <span><b>${brand}</b></span>
-        <br/>
+        <br>
         <span><b>${model}</b></span>
       </div>
       <div class="content">
@@ -54,11 +54,11 @@
           <span class="icon">${dollar}</span>
           <span>Price: <b>${price}</b></span>
         </span>
-        <br/>
+        <br>
 % if shape in valid_shapes:
         <span class="icon-text">
           <span class="icon">
-            <svg width="20px" height="20px" alt="rating">
+            <svg width="20px" height="20px" aria-label="rating">
               <use href="${icon_score}"/>
             </svg>
           </span>
@@ -67,32 +67,32 @@
 % else:
         <span class="icon-text">
           <span class="icon">
-            <svg width="20px" height="20px" alt="rating">
+            <svg width="20px" height="20px" aria-label="rating">
               <use href="${icon_score}"/>
             </svg>
           </span>
           <span>Tonality: <b>***</b></span>
         </span>
 % endif
-        <br/>
+        <br>
         <span class="icon-text">
-          <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${icon_lfx}"/></svg></span>
+          <span class="icon has-text-danger"><svg width="20px" height="20px" aria-label="rating"><use href="${icon_lfx}"/></svg></span>
           <span>Bass extension: <b>${score["lfx"]}</b>&nbsp;Hz</span>
         </span>
-        <br/>
+        <br>
         <span class="icon-text">
-          <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${icon_flatness}"/></svg></span>
+          <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="flatness"><use href="${icon_flatness}"/></svg></span>
           <span>Flatness: <b>&plusmn;${score["flatness"]}</b>&nbsp;dB</span>
         </span>
-        <br/>
+        <br>
         <span class="icon-text">
-          <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
+          <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="sensitivity"><use href="#icon-circle"/></svg></span>
           <span>${sensitivity}</span>
         </span>
-        <br/>
+        <br>
         <span class="icon-text">
           <span class="icon has-text-success">
-            <svg width="20px" height="20px" alt="spl">
+            <svg width="20px" height="20px" aria-label="spl">
               <use href="#icon-circle-dot"/>
             </svg>
           </span>

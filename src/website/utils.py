@@ -226,16 +226,16 @@ def get_default_url(context, value):
 
 
 _REVIEWER_ICONS = [
-    ("Audio First Design", '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp"/>'),
-    ("Audio Science Review", '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp"/>'),
-    ("Danley", '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp"/>'),
-    ("Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp"/>'),
-    ("JBL", '<img width="16" height="16" src="/pictures/icon-jbl-32x32.webp"/>'),
-    ("KEF", '<img width="16" height="16" src="/pictures/icon-kef-32x32.webp"/>'),
-    ("Genelec", '<img width="16" height="16" src="/pictures/icon-genelec-32x32.webp"/>'),
-    ("Neumann", '<img width="16" height="16" src="/pictures/icon-neumann-32x32.webp"/>'),
-    ("Perlisten", '<img width="16" height="16" src="/pictures/icon-perlisten-32x32.webp"/>'),
-    ("Sigberg", '<img width="16" height="16" src="/pictures/icon-sigbergaudio-32x32.webp"/>'),
+    ("Audio First Design", '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp" alt="">'),
+    ("Audio Science Review", '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp" alt="">'),
+    ("Danley", '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp" alt="">'),
+    ("Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp" alt="">'),
+    ("JBL", '<img width="16" height="16" src="/pictures/icon-jbl-32x32.webp" alt="">'),
+    ("KEF", '<img width="16" height="16" src="/pictures/icon-kef-32x32.webp" alt="">'),
+    ("Genelec", '<img width="16" height="16" src="/pictures/icon-genelec-32x32.webp" alt="">'),
+    ("Neumann", '<img width="16" height="16" src="/pictures/icon-neumann-32x32.webp" alt="">'),
+    ("Perlisten", '<img width="16" height="16" src="/pictures/icon-perlisten-32x32.webp" alt="">'),
+    ("Sigberg", '<img width="16" height="16" src="/pictures/icon-sigbergaudio-32x32.webp" alt="">'),
 ]
 
 
@@ -450,7 +450,7 @@ def get_reviews(context, value):
 
         for reviewer, img in _REVIEWER_ICONS:
             if reviewer in origin:
-                origin_long = '<span class="icon-text"><span class="icon">{}</span><span>{}</span><span>'.format(
+                origin_long = '<span class="icon-text"><span class="icon">{}</span><span>{}</span></span>'.format(
                     img, origin_long
                 )
                 break
