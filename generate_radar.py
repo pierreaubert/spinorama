@@ -19,6 +19,8 @@
 
 import argparse
 import json
+import logging
+import multiprocessing
 import os
 import pathlib
 from pprint import pprint
@@ -38,6 +40,8 @@ from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
+
+logger = logging.getLogger("spinorama")
 
 
 def compute_scale(speakers):
@@ -245,12 +249,16 @@ def main(args):
 
     scale = compute_scale(jsmeta)
 
+    tasks = []
     for speaker in jsmeta.items():
         speaker_name = "{} {}".format(speaker[1]["brand"], speaker[1]["model"])
         if speaker_name not in df_speaker:
             continue
-        speaker_data = df_speaker[speaker_name]
-        print_radar(speaker[1], scale, speaker_data)
+        tasks.append((speaker[1], scale, df_speaker[speaker_name]))
+
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
+    with multiprocessing.Pool(processes=num_processes) as pool:
+        pool.starmap(print_radar, tasks)
 
     sys.exit(0)
 

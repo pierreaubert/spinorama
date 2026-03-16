@@ -412,65 +412,78 @@ def add_quality(parse_max: Optional[int], filters: dict):
             update_metadata(speaker_name, version, "quality", quality)
 
 
+def _eq_worker(speaker_path, speaker_name):
+    """Worker: load EQ files for a speaker. Returns (name, default_eq_or_None, {eq_key: EQ_data})."""
+    default_eq = None
+    eqs = {}
+    for suffix, display in (
+        ("autoeq", "AutomaticEQ (IIR)"),
+        ("autoeq-lw", "AutomaticEQ LW (IIR)"),
+        ("autoeq-score", "AutomaticEQ Score (IIR)"),
+        ("amirm", "amirm@ASR (IIR)"),
+        ("maiky76", "maiky76@ASR (IIR)"),
+        ("maiky76-lw", "maiky76@ASR LW (IIR)"),
+        ("maiky76-score", "maiky76@ASR (IIR)"),
+        ("flipflop", "flipflop@ASR (IIR)"),
+        ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
+        ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
+    ):
+        eq_filename = "{}/eq/{}/iir-{}.txt".format(speaker_path, speaker_name, suffix)
+        iir = load_parse_eq_iir_rews(eq_filename, 48000)
+        if iir is not None and len(iir) > 0:
+            if suffix == "autoeq":
+                default_eq = "autoeq"
+            eq_key = f"{suffix}".replace("-", "_")
+
+            peq_list: list[Peq] = []
+            for iir_weight, iir_filter in iir:
+                if iir_weight != 0.0:
+                    peq_list.append(
+                        Peq(
+                            type=iir_filter.biquad_type,
+                            freq=iir_filter.freq,
+                            srate=iir_filter.srate,
+                            Q=iir_filter.q,
+                            dbGain=iir_filter.db_gain,
+                        )
+                    )
+
+            current_eq_data: EQ = EQ(
+                display_name=display,
+                filename=eq_filename,
+                preamp_gain=round(filter_peq_preamp_gain(iir), 1),
+                type="peq",
+                peq=peq_list,
+            )
+            eqs[eq_key] = current_eq_data
+
+    return (speaker_name, default_eq, eqs)
+
+
 def add_eq(speaker_path, dataframe, parse_max, filters):
     """Compute some values per speaker and add them to metadata"""
+    tasks = []
     parsed = 0
     for speaker_name in dataframe:
         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
-        logger.info("Processing %s", speaker_name)
-
         if speaker_name not in metadata.speakers_info:
             logger.info("Error: %s is not in metadata", speaker_name)
             continue
+        tasks.append((speaker_path, speaker_name))
 
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
+    with multiprocessing.Pool(processes=num_processes) as pool:
+        all_results = pool.starmap(_eq_worker, tasks)
+
+    for speaker_name, default_eq, eqs in all_results:
         speaker_info = metadata.speakers_info[speaker_name]
         if "eqs" not in speaker_info or not isinstance(speaker_info["eqs"], dict):
             speaker_info["eqs"] = {}
-
-        for suffix, display in (
-            ("autoeq", "AutomaticEQ (IIR)"),
-            ("autoeq-lw", "AutomaticEQ LW (IIR)"),
-            ("autoeq-score", "AutomaticEQ Score (IIR)"),
-            ("amirm", "amirm@ASR (IIR)"),
-            ("maiky76", "maiky76@ASR (IIR)"),
-            ("maiky76-lw", "maiky76@ASR LW (IIR)"),
-            ("maiky76-score", "maiky76@ASR (IIR)"),
-            ("flipflop", "flipflop@ASR (IIR)"),
-            ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
-            ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
-        ):
-            eq_filename = "{}/eq/{}/iir-{}.txt".format(speaker_path, speaker_name, suffix)
-            iir = load_parse_eq_iir_rews(eq_filename, 48000)
-            if iir is not None and len(iir) > 0:
-                if suffix == "autoeq":
-                    metadata.speakers_info[speaker_name]["default_eq"] = "autoeq"
-                eq_key = f"{suffix}".replace("-", "_")
-
-                peq_list: list[Peq] = []
-                for iir_weight, iir_filter in iir:
-                    if iir_weight != 0.0:
-                        peq_list.append(
-                            Peq(  # Explicitly create Peq TypedDict
-                                type=iir_filter.biquad_type,
-                                freq=iir_filter.freq,
-                                srate=iir_filter.srate,
-                                Q=iir_filter.q,
-                                dbGain=iir_filter.db_gain,
-                            )
-                        )
-
-                current_eq_data: EQ = EQ(
-                    display_name=display,
-                    filename=eq_filename,
-                    preamp_gain=round(filter_peq_preamp_gain(iir), 1),
-                    type="peq",
-                    peq=peq_list,
-                )
-
-                speaker_info["eqs"][eq_key] = current_eq_data
-                logger.debug("adding eq: %s", speaker_info["eqs"][eq_key])
+        if default_eq is not None:
+            speaker_info["default_eq"] = default_eq
+        speaker_info["eqs"].update(eqs)
 
 
 def interpolate(speaker_name, freq, freq1, data1):

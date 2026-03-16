@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
+import multiprocessing
 import os
 import sys
 import glob
@@ -56,6 +57,16 @@ def build_eq_figure_and_filename(data):
     return fig, filename, eqs
 
 
+def _eq_compare_worker(speaker_data, force):
+    """Worker: build EQ comparison figure and write to file if needed."""
+    fig, filename, deps = build_eq_figure_and_filename(speaker_data)
+    if not os.path.exists(filename) or os.path.getsize(filename) == 0 or force:
+        content = fig.to_json()
+        if os.path.exists(os.path.dirname(filename)):
+            with open(filename, "w", encoding="utf-8") as f_d:
+                f_d.write(content)
+
+
 def main(force, batch_size):
     # load all metadata from generated json file
     json_filename, _ = find_metadata_file()
@@ -69,17 +80,11 @@ def main(force, batch_size):
 
     logger.info("Data %s loaded (%d speakers!", json_filename, len(jsmeta))
 
-    # Collect figures that need to be (re)generated
-    batch: list[tuple[object, str]] = []
+    tasks = [(speaker_data, force) for speaker_data in jsmeta.values()]
 
-    for speaker_data in jsmeta.values():
-        fig, filename, deps = build_eq_figure_and_filename(speaker_data)
-
-        if not os.path.exists(filename) or os.path.getsize(filename) == 0 or force:
-            content = fig.to_json()
-            if os.path.exists(os.path.dirname(filename)):
-                with open(filename, "w", encoding="utf-8") as f_d:
-                    f_d.write(content)
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
+    with multiprocessing.Pool(processes=num_processes) as pool:
+        pool.starmap(_eq_compare_worker, tasks)
 
     return 0
 

@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import multiprocessing
 import sys
 import argparse
 import pandas as pd
@@ -76,12 +77,20 @@ def print_scores(aggregated_scores):
     df_scores.to_csv("build/results_scores.csv", index=False)
 
 
+def _peq_worker(current_speaker_name, default_origin, df_speaker, optim_config):
+    """Worker: compute EQ for a single speaker."""
+    return (
+        current_speaker_name,
+        optim_save_peq(current_speaker_name, default_origin, df_speaker, optim_config),
+    )
+
+
 def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
     """Queue all speakers for EQ computation"""
     if filters is None:
         filters = {}
 
-    results = {}
+    tasks = []
     for current_speaker_name in df_all_speakers:
         # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
@@ -155,14 +164,13 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
         else:
             logger.debug("processing %s", current_speaker_name)
 
-        # Process EQ computation directly
-        results[current_speaker_name] = optim_save_peq(
-            current_speaker_name,
-            default_origin,
-            df_speaker,
-            optim_config,
-        )
+        tasks.append((current_speaker_name, default_origin, df_speaker, optim_config))
 
+    num_processes = max(1, multiprocessing.cpu_count() - 1)
+    with multiprocessing.Pool(processes=num_processes) as pool:
+        worker_results = pool.starmap(_peq_worker, tasks)
+
+    results = {name: result for name, result in worker_results}
     logger.info("Processed %d speakers for EQ computations", len(results))
     return results
 
