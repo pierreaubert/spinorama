@@ -28,12 +28,14 @@ Output directory: dist-dotli/
 
 import argparse
 import base64
-import gzip
+import brotli
 import json
+import multiprocessing
 import os
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor
 from glob import glob
 
 from generate_common import (
@@ -47,7 +49,11 @@ import spinorama.constant_paths as cpaths
 
 DIST_DOTLI = "./dist-dotli"
 DIST_DOTLI_CHUNKS = f"{DIST_DOTLI}/chunks"
+DIST_DOTLI_MANIFEST = f"{DIST_DOTLI}/manifest.json"
 SITEPROD = "https://www.spinorama.org"
+
+DATA_CHUNK_MAX_UNCOMPRESSED_BYTES = 2_000_000
+PICTURES_PER_CHUNK = 50
 
 # Graph types to include in chunks (core subset — no SPL H/V full, no 3D)
 GRAPH_TYPES = [
@@ -68,6 +74,194 @@ GRAPH_TYPES = [
 ]
 
 TARGET_NUM_CHUNKS = 500
+
+
+def load_manifest(logger):
+    """Load an existing manifest from dist-dotli/manifest.json, or return None."""
+    if not os.path.exists(DIST_DOTLI_MANIFEST):
+        logger.info("No existing manifest found at %s", DIST_DOTLI_MANIFEST)
+        return None
+    with open(DIST_DOTLI_MANIFEST, "r") as f:
+        manifest = json.load(f)
+    if manifest.get("version") != 2:
+        logger.warning("Manifest version mismatch, ignoring existing manifest")
+        return None
+    logger.info(
+        "Loaded manifest: %d data chunks, %d pic chunks",
+        len(manifest.get("data_chunks", {})),
+        len(manifest.get("pic_chunks", {})),
+    )
+    return manifest
+
+
+def save_manifest(manifest, logger):
+    """Write manifest to disk."""
+    with open(DIST_DOTLI_MANIFEST, "w") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+    logger.info("Saved manifest to %s", DIST_DOTLI_MANIFEST)
+
+
+def compute_initial_manifest(speaker_data_list, target_chunks, logger):
+    """First build: use bin_pack_speakers for initial assignment, convert to manifest."""
+    chunks = bin_pack_speakers(speaker_data_list, target_chunks)
+    logger.info("Initial bin-packing produced %d chunks", len(chunks))
+
+    manifest = {
+        "version": 2,
+        "data_chunk_max_uncompressed_bytes": DATA_CHUNK_MAX_UNCOMPRESSED_BYTES,
+        "pic_chunk_max_count": PICTURES_PER_CHUNK,
+        "data_chunks": {},
+        "pic_chunks": {},
+    }
+
+    for chunk_idx, chunk in enumerate(chunks):
+        speakers = [name for name, _ in chunk]
+        sealed = chunk_idx < len(chunks) - 1
+        manifest["data_chunks"][str(chunk_idx)] = {
+            "sealed": sealed,
+            "speakers": speakers,
+        }
+
+    return manifest
+
+
+def compute_initial_pic_manifest(meta, manifest, logger):
+    """First build: assign pictures to chunks in manifest."""
+    pic_by_name = {}
+    for pic_path in sorted(glob(f"{cpaths.CPATH_DIST_PICTURES}/*.webp")):
+        speaker_name = os.path.basename(pic_path).replace(".webp", "")
+        if speaker_name in meta:
+            pic_by_name[speaker_name] = pic_path
+
+    # Use insertion order from data chunks to determine picture assignment
+    all_speakers_ordered = []
+    data_chunks = manifest["data_chunks"]
+    for idx in sorted(data_chunks.keys(), key=int):
+        for name in data_chunks[idx]["speakers"]:
+            if name in pic_by_name:
+                all_speakers_ordered.append(name)
+
+    # Also add any speakers with pictures not yet in data chunks
+    data_speakers = {n for c in data_chunks.values() for n in c["speakers"]}
+    for name in pic_by_name:
+        if name not in data_speakers:
+            all_speakers_ordered.append(name)
+
+    pic_chunks = {}
+    for i in range(0, len(all_speakers_ordered), PICTURES_PER_CHUNK):
+        chunk_idx = i // PICTURES_PER_CHUNK
+        batch = all_speakers_ordered[i : i + PICTURES_PER_CHUNK]
+        sealed = (i + PICTURES_PER_CHUNK) < len(all_speakers_ordered)
+        pic_chunks[str(chunk_idx)] = {
+            "sealed": sealed,
+            "speakers": batch,
+        }
+
+    manifest["pic_chunks"] = pic_chunks
+    logger.info("Initial pic manifest: %d chunks for %d pictures", len(pic_chunks), len(all_speakers_ordered))
+
+
+def assign_new_speakers(manifest, new_speakers, speaker_data_map, logger):
+    """Append new speakers to the active (unsealed) data chunk.
+
+    Returns set of dirty chunk indices that need rewriting.
+    """
+    if not new_speakers:
+        return set()
+
+    data_chunks = manifest["data_chunks"]
+    dirty = set()
+
+    # Find the active (unsealed) chunk — highest index
+    if data_chunks:
+        active_idx = max(int(k) for k in data_chunks.keys())
+        active_chunk = data_chunks[str(active_idx)]
+        if active_chunk["sealed"]:
+            # All sealed — create a new one
+            active_idx += 1
+            data_chunks[str(active_idx)] = {"sealed": False, "speakers": []}
+            active_chunk = data_chunks[str(active_idx)]
+    else:
+        active_idx = 0
+        data_chunks["0"] = {"sealed": False, "speakers": []}
+        active_chunk = data_chunks["0"]
+
+    max_bytes = manifest["data_chunk_max_uncompressed_bytes"]
+
+    for speaker_name in new_speakers:
+        # Estimate current chunk uncompressed size
+        chunk_size = _estimate_chunk_size(active_chunk["speakers"], speaker_data_map)
+        speaker_size = _estimate_speaker_size(speaker_name, speaker_data_map)
+
+        if chunk_size + speaker_size > max_bytes and len(active_chunk["speakers"]) > 0:
+            # Seal current, create next
+            active_chunk["sealed"] = True
+            active_idx += 1
+            data_chunks[str(active_idx)] = {"sealed": False, "speakers": []}
+            active_chunk = data_chunks[str(active_idx)]
+            logger.info("Data chunk %d sealed, created chunk %d", active_idx - 1, active_idx)
+
+        active_chunk["speakers"].append(speaker_name)
+        dirty.add(active_idx)
+
+    logger.info("Assigned %d new speakers, %d dirty data chunks", len(new_speakers), len(dirty))
+    return dirty
+
+
+def assign_new_pic_speakers(manifest, new_pic_speakers, logger):
+    """Append new speakers to the active (unsealed) picture chunk.
+
+    Returns set of dirty pic chunk indices.
+    """
+    if not new_pic_speakers:
+        return set()
+
+    pic_chunks = manifest["pic_chunks"]
+    dirty = set()
+
+    if pic_chunks:
+        active_idx = max(int(k) for k in pic_chunks.keys())
+        active_chunk = pic_chunks[str(active_idx)]
+        if active_chunk["sealed"]:
+            active_idx += 1
+            pic_chunks[str(active_idx)] = {"sealed": False, "speakers": []}
+            active_chunk = pic_chunks[str(active_idx)]
+    else:
+        active_idx = 0
+        pic_chunks["0"] = {"sealed": False, "speakers": []}
+        active_chunk = pic_chunks["0"]
+
+    max_count = manifest["pic_chunk_max_count"]
+
+    for speaker_name in new_pic_speakers:
+        if len(active_chunk["speakers"]) >= max_count:
+            active_chunk["sealed"] = True
+            active_idx += 1
+            pic_chunks[str(active_idx)] = {"sealed": False, "speakers": []}
+            active_chunk = pic_chunks[str(active_idx)]
+            logger.info("Pic chunk %d sealed, created chunk %d", active_idx - 1, active_idx)
+
+        active_chunk["speakers"].append(speaker_name)
+        dirty.add(active_idx)
+
+    logger.info("Assigned %d new pic speakers, %d dirty pic chunks", len(new_pic_speakers), len(dirty))
+    return dirty
+
+
+def _estimate_chunk_size(speaker_names, speaker_data_map):
+    """Estimate uncompressed JSON size of a chunk's speakers."""
+    total = 0
+    for name in speaker_names:
+        total += _estimate_speaker_size(name, speaker_data_map)
+    return total
+
+
+def _estimate_speaker_size(speaker_name, speaker_data_map):
+    """Estimate uncompressed JSON size for a single speaker."""
+    data = speaker_data_map.get(speaker_name)
+    if data is None:
+        return 0
+    return len(json.dumps(data, separators=(",", ":")).encode("utf-8"))
 
 
 def load_metadata(logger):
@@ -345,33 +539,47 @@ def extract_layout_presets(logger):
 
 
 def bin_pack_speakers(speaker_data_list, target_chunks):
-    """Greedy bin-packing: sort by size desc, assign each to smallest bin."""
+    """Greedy bin-packing with rebalancing for uniform compressed chunk sizes."""
     if not speaker_data_list:
         return []
 
-    # Compute compressed size for each speaker
+    # Use raw JSON byte length for initial assignment (fast, well-correlated)
     sized = []
     for name, data in speaker_data_list:
-        raw = json.dumps(data).encode("utf-8")
-        compressed = gzip.compress(raw)
-        sized.append((name, data, len(compressed)))
+        raw_len = len(json.dumps(data).encode("utf-8"))
+        sized.append((name, data, raw_len))
 
-    # Sort by compressed size descending
+    # Sort by size descending — largest-first greedy produces balanced bins
     sized.sort(key=lambda x: x[2], reverse=True)
 
     num_chunks = min(target_chunks, len(sized))
-    chunks = [[] for _ in range(num_chunks)]
+    chunks: list[list[tuple[str, dict, int]]] = [[] for _ in range(num_chunks)]
     chunk_sizes = [0] * num_chunks
 
     for name, data, size in sized:
-        # Find the chunk with the smallest current total
         min_idx = chunk_sizes.index(min(chunk_sizes))
-        chunks[min_idx].append((name, data))
+        chunks[min_idx].append((name, data, size))
         chunk_sizes[min_idx] += size
 
-    # Remove empty chunks
-    chunks = [c for c in chunks if c]
-    return chunks
+    # Rebalance: move smallest speaker from largest chunk to smallest chunk
+    # until the ratio max/min is acceptable
+    for _ in range(len(sized)):
+        max_idx = chunk_sizes.index(max(chunk_sizes))
+        min_idx = chunk_sizes.index(min(chunk_sizes))
+        if chunk_sizes[min_idx] == 0 or max_idx == min_idx:
+            break
+        ratio = chunk_sizes[max_idx] / chunk_sizes[min_idx]
+        if ratio < 1.15:
+            break
+        # Move the smallest speaker from the largest chunk
+        smallest_in_max = min(range(len(chunks[max_idx])), key=lambda i: chunks[max_idx][i][2])
+        speaker = chunks[max_idx].pop(smallest_in_max)
+        chunk_sizes[max_idx] -= speaker[2]
+        chunks[min_idx].append(speaker)
+        chunk_sizes[min_idx] += speaker[2]
+
+    # Strip size field, remove empty chunks
+    return [[(name, data) for name, data, _ in c] for c in chunks if c]
 
 
 def generate_index_json(meta, speaker_chunk_map, pic_chunk_map, logger):
@@ -407,52 +615,93 @@ def generate_index_json(meta, speaker_chunk_map, pic_chunk_map, logger):
     return index_path
 
 
-def generate_chunks(meta, logger, target_chunks=TARGET_NUM_CHUNKS):
-    """Collect graph data for all speakers and pack into gzipped chunks."""
+def _compress_and_write_chunk(args):
+    """Worker: compress one data chunk with brotli and write to disk."""
+    chunk_idx, chunk_data, output_path = args
+    chunk_json = json.dumps(chunk_data, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    compressed = brotli.compress(chunk_json, quality=11)
+    with open(output_path, "wb") as f:
+        f.write(compressed)
+    return chunk_idx, len(compressed)
+
+
+def generate_chunks(meta, manifest, force_rebuild, logger, target_chunks=TARGET_NUM_CHUNKS):
+    """Manifest-driven chunk generation. Only writes dirty chunks."""
     logger.info("Collecting speaker graph data...")
-    speaker_data_list = []
+    speaker_data_map = {}
     skipped = 0
 
     for speaker_name, speaker_data in meta.items():
         data = collect_speaker_graph_data(speaker_name, speaker_data)
         if data:
-            speaker_data_list.append((speaker_name, data))
+            speaker_data_map[speaker_name] = data
         else:
             skipped += 1
 
-    logger.info("Collected %d speakers, skipped %d", len(speaker_data_list), skipped)
+    logger.info("Collected %d speakers, skipped %d", len(speaker_data_map), skipped)
 
-    logger.info("Bin-packing into ~%d chunks...", target_chunks)
-    chunks = bin_pack_speakers(speaker_data_list, target_chunks)
-    logger.info("Created %d chunks", len(chunks))
+    is_initial = manifest is None or not manifest.get("data_chunks") or force_rebuild
+    if is_initial:
+        logger.info("Initial build: bin-packing into ~%d chunks...", target_chunks)
+        speaker_data_list = [(name, data) for name, data in speaker_data_map.items()]
+        manifest = compute_initial_manifest(speaker_data_list, target_chunks, logger)
+        compute_initial_pic_manifest(meta, manifest, logger)
+        dirty_chunks = set(int(k) for k in manifest["data_chunks"].keys())
+    else:
+        # Identify new speakers: in metadata with graph data but not in manifest
+        manifest_speakers = set()
+        for chunk_info in manifest["data_chunks"].values():
+            manifest_speakers.update(chunk_info["speakers"])
 
-    # Build chunk map: speaker_name -> (chunk_idx, position_within_chunk)
+        new_speakers = [name for name in speaker_data_map if name not in manifest_speakers]
+        if new_speakers:
+            logger.info("Found %d new speakers to assign", len(new_speakers))
+        dirty_chunks = assign_new_speakers(manifest, new_speakers, speaker_data_map, logger)
+
+    # Build speaker_chunk_map from manifest and prepare work items for dirty chunks
     speaker_chunk_map = {}
-    total_compressed = 0
+    work_items = []
 
-    for chunk_idx, chunk in enumerate(chunks):
-        chunk_data = []
-        for pos, (name, data) in enumerate(chunk):
-            speaker_chunk_map[name] = (chunk_idx, pos)
-            chunk_data.append(data)
+    for chunk_idx_str, chunk_info in manifest["data_chunks"].items():
+        chunk_idx = int(chunk_idx_str)
+        for pos, name in enumerate(chunk_info["speakers"]):
+            # Only include speakers that have graph data and are in current metadata
+            if name in speaker_data_map:
+                speaker_chunk_map[name] = (chunk_idx, pos)
 
-        chunk_json = json.dumps(chunk_data, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-        compressed = gzip.compress(chunk_json, compresslevel=9)
-        total_compressed += len(compressed)
+        if chunk_idx in dirty_chunks:
+            chunk_data = []
+            for name in chunk_info["speakers"]:
+                data = speaker_data_map.get(name)
+                if data:
+                    chunk_data.append(data)
+            output_path = f"{DIST_DOTLI_CHUNKS}/chunk-{chunk_idx:03d}.json.br"
+            work_items.append((chunk_idx, chunk_data, output_path))
 
-        chunk_filename = f"{DIST_DOTLI_CHUNKS}/chunk-{chunk_idx:03d}.json.gz"
-        with open(chunk_filename, "wb") as f:
-            f.write(compressed)
+    if work_items:
+        num_workers = multiprocessing.cpu_count()
+        logger.info("Compressing %d dirty chunks using %d workers...", len(work_items), num_workers)
+        chunk_compressed_sizes = {}
 
-    avg_size = total_compressed / len(chunks) if chunks else 0
-    logger.info(
-        "Chunks: total=%.1f MB, avg=%.1f KB, count=%d",
-        total_compressed / (1024 * 1024),
-        avg_size / 1024,
-        len(chunks),
-    )
+        with ProcessPoolExecutor(max_workers=num_workers) as pool:
+            for chunk_idx, compressed_len in pool.map(_compress_and_write_chunk, work_items):
+                chunk_compressed_sizes[chunk_idx] = compressed_len
 
-    return speaker_chunk_map
+        total_compressed = sum(chunk_compressed_sizes.values())
+        if chunk_compressed_sizes:
+            sizes = list(chunk_compressed_sizes.values())
+            logger.info(
+                "Wrote %d chunks: total=%.1f MB, avg=%.1f KB, min=%.1f KB, max=%.1f KB",
+                len(sizes),
+                total_compressed / (1024 * 1024),
+                total_compressed / len(sizes) / 1024,
+                min(sizes) / 1024,
+                max(sizes) / 1024,
+            )
+    else:
+        logger.info("No dirty data chunks — all chunks up to date")
+
+    return speaker_chunk_map, manifest
 
 
 def generate_html(logger):
@@ -469,11 +718,24 @@ def generate_html(logger):
     logger.info("index.html: %.1f KB", os.path.getsize(html_path) / 1024)
 
 
-PICTURES_PER_CHUNK = 50
+def _compress_and_write_pic_chunk(args):
+    """Worker: build one picture chunk from file paths, compress, and write."""
+    chunk_idx, name_path_pairs, output_path = args
+    chunk_data = {}
+    for name, pic_path in name_path_pairs:
+        with open(pic_path, "rb") as f:
+            raw = f.read()
+        chunk_data[name] = f"data:image/webp;base64,{base64.b64encode(raw).decode('ascii')}"
+
+    chunk_json = json.dumps(chunk_data, separators=(",", ":")).encode("utf-8")
+    compressed = brotli.compress(chunk_json, quality=11)
+    with open(output_path, "wb") as f:
+        f.write(compressed)
+    return chunk_idx, len(compressed)
 
 
-def generate_picture_chunks(meta, logger):
-    """Pack webp pictures into gzipped JSON chunks with base64 data URIs.
+def generate_picture_chunks(meta, manifest, force_rebuild, logger):
+    """Manifest-driven picture chunk generation. Only writes dirty chunks.
 
     Returns a dict mapping speaker_name -> picture_chunk_index.
     """
@@ -487,38 +749,60 @@ def generate_picture_chunks(meta, logger):
         if speaker_name in meta:
             pic_by_name[speaker_name] = pic_path
 
-    # Group alphabetically into chunks
-    sorted_names = sorted(pic_by_name.keys())
+    is_initial = not manifest.get("pic_chunks") or force_rebuild
+    if is_initial:
+        # pic manifest was already computed during generate_chunks initial build
+        # or needs to be computed now if force_rebuild only affects pics
+        if not manifest.get("pic_chunks"):
+            compute_initial_pic_manifest(meta, manifest, logger)
+        dirty_pic_chunks = set(int(k) for k in manifest["pic_chunks"].keys())
+    else:
+        # Identify new speakers with pictures not in pic manifest
+        manifest_pic_speakers = set()
+        for chunk_info in manifest["pic_chunks"].values():
+            manifest_pic_speakers.update(chunk_info["speakers"])
+
+        new_pic_speakers = [name for name in pic_by_name if name not in manifest_pic_speakers]
+        if new_pic_speakers:
+            logger.info("Found %d new speakers with pictures", len(new_pic_speakers))
+        dirty_pic_chunks = assign_new_pic_speakers(manifest, new_pic_speakers, logger)
+
+    # Build pic_chunk_map from manifest and prepare work items for dirty chunks
     pic_chunk_map = {}
-    total_compressed = 0
-    chunk_idx = 0
+    work_items = []
 
-    for i in range(0, len(sorted_names), PICTURES_PER_CHUNK):
-        batch = sorted_names[i : i + PICTURES_PER_CHUNK]
-        chunk_data = {}
-        for name in batch:
-            pic_path = pic_by_name[name]
-            with open(pic_path, "rb") as f:
-                raw = f.read()
-            chunk_data[name] = f"data:image/webp;base64,{base64.b64encode(raw).decode('ascii')}"
-            pic_chunk_map[name] = chunk_idx
+    for chunk_idx_str, chunk_info in manifest["pic_chunks"].items():
+        chunk_idx = int(chunk_idx_str)
+        for name in chunk_info["speakers"]:
+            if name in pic_by_name:
+                pic_chunk_map[name] = chunk_idx
 
-        chunk_json = json.dumps(chunk_data, separators=(",", ":")).encode("utf-8")
-        compressed = gzip.compress(chunk_json, compresslevel=9)
-        total_compressed += len(compressed)
+        if chunk_idx in dirty_pic_chunks:
+            name_path_pairs = []
+            for name in chunk_info["speakers"]:
+                if name in pic_by_name:
+                    name_path_pairs.append((name, pic_by_name[name]))
+            if name_path_pairs:
+                output_path = f"{pictures_dir}/pic-{chunk_idx:03d}.json.br"
+                work_items.append((chunk_idx, name_path_pairs, output_path))
 
-        chunk_file = f"{pictures_dir}/pic-{chunk_idx:03d}.json.gz"
-        with open(chunk_file, "wb") as f:
-            f.write(compressed)
+    if work_items:
+        num_workers = multiprocessing.cpu_count()
+        logger.info("Compressing %d dirty picture chunks using %d workers...", len(work_items), num_workers)
+        total_compressed = 0
 
-        chunk_idx += 1
+        with ProcessPoolExecutor(max_workers=num_workers) as pool:
+            for _, compressed_len in pool.map(_compress_and_write_pic_chunk, work_items):
+                total_compressed += compressed_len
 
-    logger.info(
-        "Picture chunks: %d pictures in %d chunks, total=%.1f MB",
-        len(pic_by_name),
-        chunk_idx,
-        total_compressed / (1024 * 1024),
-    )
+        logger.info(
+            "Wrote %d picture chunks, total=%.1f MB",
+            len(work_items),
+            total_compressed / (1024 * 1024),
+        )
+    else:
+        logger.info("No dirty picture chunks — all up to date")
+
     return pic_chunk_map
 
 
@@ -562,10 +846,20 @@ def generate_js_bundle(logger, layout_presets, plotly_template):
         logger.error("esbuild failed: %s", result.stderr)
         sys.exit(1)
 
-    if os.path.exists(output):
-        logger.info("app.js: %.1f KB", os.path.getsize(output) / 1024)
-    else:
+    if not os.path.exists(output):
         logger.error("esbuild did not produce output")
+        sys.exit(1)
+
+    logger.info("app.js: %.1f KB", os.path.getsize(output) / 1024)
+
+    # Copy brotli-dec-wasm WASM file next to app.js so the browser can load it
+    wasm_src = "./src/dotli/app/node_modules/brotli-dec-wasm/pkg/brotli_dec_wasm_bg.wasm"
+    wasm_dst = f"{DIST_DOTLI}/brotli_dec_wasm_bg.wasm"
+    if os.path.exists(wasm_src):
+        shutil.copy(wasm_src, wasm_dst)
+        logger.info("Copied WASM: %.1f KB", os.path.getsize(wasm_dst) / 1024)
+    else:
+        logger.error("WASM file not found at %s", wasm_src)
         sys.exit(1)
 
 
@@ -591,11 +885,23 @@ def main():
         action="store_true",
         help="Skip JS bundling (useful for debugging).",
     )
+    parser.add_argument(
+        "--max-speakers",
+        type=int,
+        default=0,
+        help="Limit to N speakers (0 = all). Useful for fast test builds.",
+    )
+    parser.add_argument(
+        "--force-rebuild",
+        action="store_true",
+        help="Ignore existing manifest, regenerate all chunks from scratch.",
+    )
 
     args = parser.parse_args()
     logger = get_custom_logger(level=args2level(args), duplicate=True)
 
     target_num_chunks = args.target_chunks
+    force_rebuild = args.force_rebuild
 
     # Create output directories
     for d in (DIST_DOTLI, DIST_DOTLI_CHUNKS):
@@ -604,34 +910,48 @@ def main():
     # Step 1: Load metadata
     logger.info("Step 1: Loading metadata...")
     meta = load_metadata(logger)
+    if args.max_speakers > 0:
+        meta_sorted = sort_metadata_per_date(meta)
+        meta = dict(list(meta_sorted.items())[: args.max_speakers])
+        target_num_chunks = min(target_num_chunks, max(1, len(meta) // 2))
     logger.info("Loaded %d speakers", len(meta))
 
     # Step 2: Extract layout presets from existing graphs
     logger.info("Step 2: Extracting layout presets...")
     layout_presets, plotly_template = extract_layout_presets(logger)
 
-    # Step 3: Generate data chunks
-    logger.info("Step 3: Generating data chunks...")
-    speaker_chunk_map = generate_chunks(meta, logger, target_chunks=target_num_chunks)
+    # Step 3: Load or create manifest
+    logger.info("Step 3: Loading manifest...")
+    manifest = None if force_rebuild else load_manifest(logger)
 
-    # Step 4: Generate picture chunks
-    logger.info("Step 4: Generating picture chunks...")
-    pic_chunk_map = generate_picture_chunks(meta, logger)
+    # Step 4: Generate data chunks (manifest-driven)
+    logger.info("Step 4: Generating data chunks...")
+    speaker_chunk_map, manifest = generate_chunks(
+        meta, manifest, force_rebuild, logger, target_chunks=target_num_chunks
+    )
 
-    # Step 5: Generate index.json (needs both chunk maps)
-    logger.info("Step 5: Generating index.json...")
+    # Step 5: Generate picture chunks (manifest-driven)
+    logger.info("Step 5: Generating picture chunks...")
+    pic_chunk_map = generate_picture_chunks(meta, manifest, force_rebuild, logger)
+
+    # Step 6: Save manifest
+    logger.info("Step 6: Saving manifest...")
+    save_manifest(manifest, logger)
+
+    # Step 7: Generate index.json (needs both chunk maps)
+    logger.info("Step 7: Generating index.json...")
     generate_index_json(meta, speaker_chunk_map, pic_chunk_map, logger)
 
-    # Step 6: Generate HTML shell
-    logger.info("Step 6: Generating HTML shell...")
+    # Step 8: Generate HTML shell
+    logger.info("Step 8: Generating HTML shell...")
     generate_html(logger)
 
-    # Step 7: Bundle JS
+    # Step 9: Bundle JS
     if not args.skip_bundle:
-        logger.info("Step 7: Bundling JS...")
+        logger.info("Step 9: Bundling JS...")
         generate_js_bundle(logger, layout_presets, plotly_template)
     else:
-        logger.info("Step 7: Skipping JS bundle (--skip-bundle)")
+        logger.info("Step 9: Skipping JS bundle (--skip-bundle)")
 
     # Summary
     total_size = 0

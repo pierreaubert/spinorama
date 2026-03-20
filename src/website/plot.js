@@ -478,6 +478,20 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
+    // Set zorder: grid (default 0) -> bands (-2) -> band lines (-1) -> SPL curves (1)
+    if (datas != null) {
+        for (let k = 0; k < datas.length; k++) {
+            const trace = datas[k];
+            if (trace.fill) {
+                trace.zorder = -2;
+            } else if (trace.name && (trace.name.indexOf('Midrange') !== -1 || trace.name.indexOf('Linear') !== -1 || trace.name.indexOf('Reg') !== -1)) {
+                trace.zorder = -1;
+            } else {
+                trace.zorder = 1;
+            }
+        }
+    }
+
     // If after the above logic, layout or datas are still null (e.g. inputGraphsData had unexpected structure)
     if (layout === null || datas === null) {
         console.log('Error: No valid graph data to process in setGraphOptions');

@@ -15,6 +15,7 @@ TAGS
 .coverage
 .idea
 dist
+dist-dotli
 tmp
 extracted
 logs
