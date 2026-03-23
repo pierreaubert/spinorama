@@ -206,9 +206,12 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
     let width = windowWidth;
     let height = windowHeight;
     if (isCompact) {
-        // legend is horizontal below the graph, so use full width
-        width = windowWidth;
+        // legend is horizontal below the graph
         height = Math.min(windowHeight, windowWidth / ratio + graphMarginTopSmall + graphMarginBottomSmall);
+        // Cap width to maintain a reasonable aspect ratio in compact landscape
+        // (e.g. wide monitor with low viewport height due to browser chrome)
+        const maxWidth = height * ratio + graphMarginLeftSmall + graphMarginRightSmall;
+        width = Math.min(windowWidth, maxWidth);
     } else {
         if (isVertical) {
             width = windowWidth - graphMarginLeft - graphMarginRight;
@@ -749,6 +752,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     layout.margin.r += 160;
                 }
             }
+            if (outputGraphProperties.isSurface && !isVertical) {
+                layout.margin.r += 60;
+            }
         }
         if (outputGraphProperties.isGlobe) {
             layout.margin.t += 50;
@@ -1016,7 +1022,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     }
                 } else {
                     datas[k].colorbar.orientation = 'v';
-                    datas[k].colorbar.xanchor = 'top';
+                    datas[k].colorbar.xanchor = 'left';
                     datas[k].colorbar.yanchor = 'center';
                     datas[k].colorbar.x = 1.0;
                     datas[k].colorbar.yref = 'paper';

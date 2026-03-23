@@ -266,42 +266,50 @@ function contextHtml(context) {
              ${imageHtml}
            </div>
            <div class="card-content">
-             <div class="content">
-               <span><b>${brand}</b></span>
-               <br/>
-               <span><b>${model}</b></span>
+             <div class="content card-identity">
+               <span class="card-brand">${brand}</span>
+               <span class="card-model">${model}</span>
              </div>
-             <div class="content">
-               <span class="icon-text">
-                 <span class="icon">${dollar}</span>
-                 <span>Price: <b>${price}</b></span>
-               </span>
-               <br/>
-               ${html_score}
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-danger"><svg width="20px" height="20px" aria-label="rating"><use href="${iconLFX}"/></svg></span>
-                 <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="flatness"><use href="${iconFlatness}"/></svg></span>
-                 <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="sensitivity"><use href="#icon-circle"/></svg></span>
-                 <span>${sensitivity}</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success">
-                   <svg width="20px" height="20px" aria-label="spl">
-                    <use href="#icon-circle-dot"/>
-                   </svg>
+             <div class="content card-metrics">
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon">${dollar}</span>
+                   <span>Price: <b>${price}</b></span>
                  </span>
-                 <span>${spl}</span>
-               </span>
+               </div>
+               <div class="card-metric-row card-metric-score">
+                 ${html_score}
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-danger"><svg width="20px" height="20px" aria-label="rating"><use href="${iconLFX}"/></svg></span>
+                   <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
+                 </span>
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="flatness"><use href="${iconFlatness}"/></svg></span>
+                   <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
+                 </span>
+               </div>
+             </div>
+             <div class="content card-secondary">
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="sensitivity"><use href="#icon-circle"/></svg></span>
+                   <span>${sensitivity}</span>
+                 </span>
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success">
+                     <svg width="20px" height="20px" aria-label="spl">
+                      <use href="#icon-circle-dot"/>
+                     </svg>
+                   </span>
+                   <span>${spl}</span>
+                 </span>
+               </div>
              </div>
            </div>
            <footer class="card-footer">

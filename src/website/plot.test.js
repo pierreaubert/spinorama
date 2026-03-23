@@ -86,6 +86,35 @@ describe('computeDims', () => {
         { ww: 1920, wh: 1080, v: false, c: false, n: 3, desc: 'Desktop 2k, H, NC, 3 graphs' },
     ];
 
+    it('should not produce an excessively wide graph on a wide monitor with low viewport height', () => {
+        // Wide monitor with browser chrome reducing effective height below 550 (compact threshold)
+        // e.g. 1536x500 — this triggers compact mode where width was uncapped
+        const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+
+        const [w, h] = computeDims(1536, 500, false, true, 1, baseGraphRatio);
+        const effectiveRatio = w / h;
+
+        // The graph ratio should stay reasonable (close to 4:3, not 3:1)
+        expect(effectiveRatio).toBeLessThan(2.0);
+        // Width should not be the full window width
+        expect(w).toBeLessThan(1536);
+
+        consoleInfoSpy.mockRestore();
+    });
+
+    it('should maintain reasonable ratio in compact landscape for various wide screens', () => {
+        const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+
+        // Test several wide-screen compact scenarios
+        for (const [ww, wh] of [[1920, 450], [2560, 500], [1536, 520], [1440, 400]]) {
+            const [w, h] = computeDims(ww, wh, false, true, 1, baseGraphRatio);
+            const ratio = w / h;
+            expect(ratio).toBeLessThan(2.0);
+        }
+
+        consoleInfoSpy.mockRestore();
+    });
+
     testCases.forEach(({ ww, wh, v, c, n, desc }) => {
         it(`should compute dimensions correctly for ${desc}`, () => {
             // Suppress console.info during this test if it's noisy
@@ -97,8 +126,8 @@ describe('computeDims', () => {
             const expectedValues = {
                 'iPhone SE, V, C, 1 graph': [375, 351],
                 'iPhone SE, V, C, 2 graphs': [375, 351],
-                'iPhone SE landscape, H, C, 1 graph': [667, 375],
-                'iPhone SE landscape, H, C, 2 graphs': [667, 375],
+                'iPhone SE landscape, H, C, 1 graph': [520, 375],
+                'iPhone SE landscape, H, C, 2 graphs': [520, 375],
                 'Tablet portrait, V, NC, 1 graph': [740, 595],
                 'Tablet portrait wide, V, NC, 1 graph': [1140, 868],
                 'Tablet landscape, H, NC, 1 graph': [1157, 700],
@@ -407,8 +436,52 @@ describe('setGraphOptions', () => {
             const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('v');
-            expect(cb.xanchor).toBe('top');
+            expect(cb.xanchor).toBe('left');
             expect(cb.yanchor).toBe('center');
+        });
+
+        it('should use valid Plotly xanchor values for colorbar in landscape mode', () => {
+            // xanchor must be 'left', 'center', or 'right' — not 'top'
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(['left', 'center', 'right']).toContain(cb.xanchor);
+        });
+
+        it('should place colorbar outside the plot area in landscape mode', () => {
+            // colorbar at x=1.0 with xanchor='left' places the bar just outside the right edge
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(cb.x).toBeGreaterThanOrEqual(1.0);
+            expect(cb.xanchor).toBe('left');
+        });
+
+        it('should place colorbar below the plot area in portrait mode', () => {
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 800, 1200, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(cb.orientation).toBe('h');
+            expect(cb.y).toBeLessThan(0);
+            expect(cb.yanchor).toBe('bottom');
+        });
+
+        it('should add right margin for surface/contour plots in landscape mode to fit colorbar', () => {
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            expect(options.layout.margin.r).toBeGreaterThan(30);
         });
     });
 
@@ -910,8 +983,9 @@ describe('setGraphOptions', () => {
             expect(options.layout.legend.xanchor).toBe('center');
             // Compact mode: fontDelta=0, font=10 (not 12 as non-compact would give)
             expect(options.layout.legend.font.size).toBeLessThanOrEqual(10);
-            // Graph uses full width (no legend width reserved on the right)
-            expect(options.layout.width).toBe(700);
+            // Width is capped to maintain ratio (not full input width in compact landscape)
+            expect(options.layout.width).toBeLessThanOrEqual(700);
+            expect(options.layout.width / options.layout.height).toBeLessThan(2.0);
             // Compact mode uses smaller margins
             expect(options.layout.margin.l).toBe(15); // graphMarginLeftSmall
         });
@@ -968,8 +1042,52 @@ describe('setGraphOptions', () => {
             const options = setGraphOptions(dataWithColorbar, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('v');
-            expect(cb.xanchor).toBe('top');
+            expect(cb.xanchor).toBe('left');
             expect(cb.yanchor).toBe('center');
+        });
+
+        it('should use valid Plotly xanchor values for colorbar in landscape mode', () => {
+            // xanchor must be 'left', 'center', or 'right' — not 'top'
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(['left', 'center', 'right']).toContain(cb.xanchor);
+        });
+
+        it('should place colorbar outside the plot area in landscape mode', () => {
+            // colorbar at x=1.0 with xanchor='left' places the bar just outside the right edge
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(cb.x).toBeGreaterThanOrEqual(1.0);
+            expect(cb.xanchor).toBe('left');
+        });
+
+        it('should place colorbar below the plot area in portrait mode', () => {
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 800, 1200, { isSurface: true }, 1);
+            const cb = options.data[0].colorbar;
+            expect(cb.orientation).toBe('h');
+            expect(cb.y).toBeLessThan(0);
+            expect(cb.yanchor).toBe('bottom');
+        });
+
+        it('should add right margin for surface/contour plots in landscape mode to fit colorbar', () => {
+            const dataWithColorbar = createMockGraphData('Contour Test', 1);
+            dataWithColorbar[0].data[0].type = 'contour';
+            dataWithColorbar[0].data[0].colorbar = {};
+
+            const options = setGraphOptions(dataWithColorbar, 1200, 800, { isSurface: true }, 1);
+            expect(options.layout.margin.r).toBeGreaterThan(30);
         });
     });
 

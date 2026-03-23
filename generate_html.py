@@ -498,6 +498,7 @@ def main():
         "similar",
         "statistics",
         "tabs",
+        "theme",
     ):
         try:
             # remove the ./dist parts

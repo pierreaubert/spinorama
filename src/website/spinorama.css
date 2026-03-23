@@ -1,28 +1,304 @@
-.hidden {
-  display: none;
+/* ==========================================================================
+   Spinorama Design System
+   Layers on top of Bulma 1.0.4 (compiled with dark theme via bulma4spin.scss)
+   ========================================================================== */
+
+/* --- Spinorama custom properties --- */
+:root {
+  --spin-accent: #3273dc;
+  --spin-accent-hover: #2366d1;
+  --spin-score-bad: #f14668;
+
+  --spin-border-light: #ededed;
+  --spin-shadow-card: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  --spin-shadow-card-hover: 0 8px 16px rgba(10, 10, 10, 0.1), 0 2px 4px rgba(10, 10, 10, 0.1);
+
+  --spin-transition-fast: 150ms ease;
+  --spin-transition-normal: 250ms ease;
+
+  --spin-card-radius: 8px;
 }
 
-.graph {
-  width: max(400px, 100%);
+[data-theme="dark"] {
+  --spin-accent: #5e9bff;
+  --spin-accent-hover: #7db1ff;
+
+  --spin-border-light: #333360;
+  --spin-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --spin-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
+
+.hidden { display: none; }
+
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+#searchInput {
+  min-width: 200px;
+  transition: box-shadow var(--spin-transition-fast),
+              border-color var(--spin-transition-fast);
+}
+
+@media (min-width: 769px) {
+  #searchInput {
+    min-width: 300px;
+  }
+}
+
+#searchInput:focus {
+  box-shadow: 0 0 0 3px rgba(50, 115, 220, 0.25);
+  border-color: var(--spin-accent);
+}
+
+/* Theme toggle */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--bulma-border);
+  border-radius: 20px;
+  padding: 2px;
+  background: var(--bulma-scheme-main-bis);
+}
+
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--bulma-text-weak);
+  cursor: pointer;
+  transition: background var(--spin-transition-fast),
+              color var(--spin-transition-fast);
+  padding: 0;
+  line-height: 1;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--bulma-text);
+}
+
+.theme-toggle-btn.is-active {
+  background: var(--spin-accent);
+  color: #fff;
+}
+
+/* Active filter badge: inline next to the icon */
+.filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  background: var(--spin-score-bad);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9px;
+  line-height: 1;
+  padding: 0 4px;
+  margin-left: 4px;
+}
+
+
+/* ==========================================================================
+   Speaker Cards
+   ========================================================================== */
+
+.graph { width: max(400px, 100%); }
 
 .card-min {
-    min-block-size: min(300px, 60%);
-    width: max(300px, 25%);
+  min-block-size: min(300px, 60%);
+  width: max(300px, 25%);
+  border-radius: var(--spin-card-radius);
+  box-shadow: var(--spin-shadow-card);
+  border: 1px solid var(--spin-border-light);
+  transition: transform var(--spin-transition-normal),
+              box-shadow var(--spin-transition-normal),
+              border-color var(--spin-transition-normal);
 }
 
+.card-min:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--spin-shadow-card-hover);
+  border-color: var(--spin-accent);
+}
+
+.card-min .card-image {
+  overflow: hidden;
+}
+
+.card-min .card-image img {
+  transition: transform 400ms ease;
+}
+
+.card-min:hover .card-image img {
+  transform: scale(1.03);
+}
+
+.card-min .card-content {
+  padding: 0.75rem;
+}
+
+/* Card identity: brand small, model prominent */
+.card-identity {
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--spin-border-light);
+}
+
+.card-brand {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bulma-text-weak);
+}
+
+.card-model {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--bulma-text-strong);
+  line-height: 1.3;
+}
+
+/* Measurement lines */
+.card-min .card-content .icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+/* Tonality score highlight */
+.card-metric-score b {
+  font-size: 1.1em;
+  color: var(--spin-accent);
+}
+
+/* Key metrics section */
+.card-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-metric-row {
+  display: flex;
+  align-items: center;
+}
+
+/* Secondary metrics: deemphasized */
+.card-secondary {
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--spin-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-secondary .icon-text {
+  font-size: 0.82rem;
+  color: var(--bulma-text-weak);
+}
+
+/* Card footer */
 .card-footer {
-    height: 2.25rem;
+  height: 2.25rem;
+  border-top: 1px solid var(--spin-border-light);
 }
 
 .card-footer-item {
-    padding: 0 0.5rem;
-    font-size: 0.85rem;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
 }
 
 .card-footer .dropdown-trigger .button {
-    height: auto;
-    min-height: 0;
-    padding: 0.1em 0.5em;
-    font-size: 0.85rem;
+  height: auto;
+  min-height: 0;
+  padding: 0.1em 0.5em;
+  font-size: 0.85rem;
+}
+
+
+/* ==========================================================================
+   Filter Dropdown
+   ========================================================================== */
+
+#filters-dropdown-menu .dropdown-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+#filters-dropdown-menu .label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.15rem;
+}
+
+#filters-dropdown-menu .input:focus {
+  box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
+  border-color: var(--spin-accent);
+}
+
+
+/* ==========================================================================
+   Compare Page
+   ========================================================================== */
+
+#plotForm .select select {
+  min-width: 200px;
+}
+
+
+/* ==========================================================================
+   Tabs (speaker detail, statistics)
+   ========================================================================== */
+
+.tabs.is-boxed a {
+  transition: color var(--spin-transition-fast),
+              border-color var(--spin-transition-fast);
+}
+
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+
+.pagination-link,
+.pagination-previous,
+.pagination-next {
+  transition: background-color var(--spin-transition-fast),
+              border-color var(--spin-transition-fast),
+              color var(--spin-transition-fast);
+}
+
+
+/* ==========================================================================
+   Dark mode: only overrides Bulma doesn't handle natively
+   ========================================================================== */
+
+/* Bulma's has-background-* utilities use hardcoded colors, not CSS vars */
+[data-theme="dark"] .has-background-white-bis,
+[data-theme="dark"] .has-background-light {
+  background-color: var(--bulma-scheme-main-bis) !important;
+}
+
+[data-theme="dark"] .has-background-white {
+  background-color: var(--bulma-scheme-main) !important;
+}
+
+[data-theme="dark"] .container.has-background-white-bis {
+  background-color: var(--bulma-scheme-main) !important;
 }

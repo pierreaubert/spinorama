@@ -2007,9 +2007,23 @@ speakers_info_a: SpeakerDatabase = {
         "price": "6200",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20260223",
         "measurements": {
-            "asr": {
+            "asr-v2-20260323": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-v1-1-measurement-update.70219/",
+                    "asr1": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/"
+                },
+                "review_published": "20260308",
+                "specifications": {
+                    "size": {"height": 560, "width": 254, "depth": 350},
+                    "weight": 27.5,
+                },
+            }
+            "asr-v1-20260308": {
                 "origin": "ASR",
                 "format": "klippel",
                 "quality": "high",
@@ -2017,10 +2031,6 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/"
                 },
                 "review_published": "20260308",
-                "specifications": {
-                    "size": {"height": 560, "width": 254, "depth": 350},
-                    "weight": 27.5,
-                },
             }
         },
     },

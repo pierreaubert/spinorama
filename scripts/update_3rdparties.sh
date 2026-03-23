@@ -20,9 +20,9 @@ if ! test -f "${ASSETS_JS}/handlebars-${HANDLEBARS}.min.js"; then
     wget -O${ASSETS_JS}/handlebars-${HANDLEBARS}.min.js https://cdn.jsdelivr.net/npm/handlebars@${HANDLEBARS}/dist/handlebars.min.js
 fi
 
-# BULMA
+# BULMA: compile from SCSS to include both light and dark themes
 npm install bulma
-cp node_modules/bulma/css/bulma.min.css dist/css/bulma-${BULMA}.min.css
+npx sass --load-path=node_modules src/website/bulma4spin.scss dist/css/bulma-${BULMA}.min.css --style=compressed --no-source-map
 
 # FUSE.JS
 npm install fuse.js
