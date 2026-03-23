@@ -60,3 +60,7 @@ recompute_eqs.sh
 .scannerwork
 *.egg-info
 target
+.claude
+CLAUDE.md
+AGENTS.md
+GEMINI.md
