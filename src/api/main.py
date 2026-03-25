@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from glob import glob
-import io
 import json
 import logging
 import os
 import sys
 from contextlib import asynccontextmanager
 from typing import Annotated
-import yaml
 
 from fastapi import FastAPI, Query, Depends, Request
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import JSONResponse, FileResponse, Response
+from starlette.responses import JSONResponse, FileResponse
 
 from datas.checks import validate_speaker_data
 
@@ -22,6 +20,7 @@ SOFTWARE_VERSION = f"{API_VERSION}.{CURRENT_VERSION}"
 APIFILES = "/var/www/html/spinorama-api"
 SPINFILES = "/var/www/html/spinorama-prod/speakers"
 METADATA = f"{APIFILES}/assets/metadata.json"
+HEADPHONE_METADATA = f"{APIFILES}/assets/headphone.json"
 
 KNOWN_MEASUREMENTS = set(
     [
@@ -63,6 +62,7 @@ ALIAS_MEASUREMENTS = {
 
 # Global variable to store metadata
 _metadata_cache = None
+_headphone_metadata_cache = None
 
 
 def load_metadata():
@@ -79,11 +79,25 @@ def load_metadata():
     yield _metadata_cache
 
 
+def load_headphone_metadata():
+    """Load headphone metadata for dependency injection."""
+    global _headphone_metadata_cache
+    if _headphone_metadata_cache is None:
+        if not os.path.exists(HEADPHONE_METADATA):
+            logging.warning("Cannot find %s, headphone endpoints disabled", HEADPHONE_METADATA)
+            _headphone_metadata_cache = {}
+        else:
+            with open(HEADPHONE_METADATA, "r", encoding="utf8") as f:
+                _headphone_metadata_cache = json.load(f)
+
+    yield _headphone_metadata_cache
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for FastAPI startup/shutdown."""
     # Startup: Load metadata into cache
-    global _metadata_cache
+    global _metadata_cache, _headphone_metadata_cache
     if not os.path.exists(METADATA):
         logging.error("Cannot find %s", METADATA)
         sys.exit(1)
@@ -91,10 +105,17 @@ async def lifespan(app: FastAPI):
     with open(METADATA, "r", encoding="utf8") as f:
         _metadata_cache = json.load(f)
 
+    if os.path.exists(HEADPHONE_METADATA):
+        with open(HEADPHONE_METADATA, "r", encoding="utf8") as f:
+            _headphone_metadata_cache = json.load(f)
+    else:
+        _headphone_metadata_cache = {}
+
     yield
 
     # Shutdown: Clean up if needed
     _metadata_cache = None
+    _headphone_metadata_cache = None
 
 
 app = FastAPI(
@@ -301,3 +322,96 @@ async def validate_speaker_metadata(request: Request):
             "messages": [f"ERROR: Validation failed - {str(e)}"],
             "speaker_name": "Unknown",
         }
+
+
+# --- Headphone endpoints ---
+
+
+HEADPHONE_FILES = "/var/www/html/spinorama-api/assets/headphones"
+
+
+@app.get(f"/{API_VERSION}/headphones", tags=["headphone"])
+async def get_headphone_list(
+    brand: Annotated[str | None, Query(description="Filter by brand")] = None,
+    shape: Annotated[str | None, Query(description="Filter by shape (over-ear, on-ear, in-ear)")] = None,
+    recommendation: Annotated[str | None, Query(description="Filter by recommendation (Yes/No)")] = None,
+    metadata: dict = Depends(load_headphone_metadata),  # noqa: B008
+):
+    results = metadata
+    if brand:
+        brand_lower = brand.lower()
+        results = {k: v for k, v in results.items() if v.get("brand", "").lower() == brand_lower}
+    if shape:
+        shape_lower = shape.lower()
+        results = {k: v for k, v in results.items() if v.get("shape", "").lower() == shape_lower}
+    if recommendation:
+        rec_lower = recommendation.lower()
+        results = {
+            k: v
+            for k, v in results.items()
+            if any(m.get("recommendation", "").lower() == rec_lower for m in v.get("measurements", {}).values())
+        }
+    return sorted(results.keys())
+
+
+@app.get(f"/{API_VERSION}/headphone/brands", tags=["headphone"])
+async def get_headphone_brand_list(metadata: dict = Depends(load_headphone_metadata)):  # noqa: B008
+    return sorted({v.get("brand") for _, v in metadata.items()})
+
+
+@app.get(f"/{API_VERSION}/headphone/shapes", tags=["headphone"])
+async def get_headphone_shape_list(metadata: dict = Depends(load_headphone_metadata)):  # noqa: B008
+    return sorted({v.get("shape") for _, v in metadata.items()})
+
+
+@app.get(f"/{API_VERSION}/headphone/{{headphone_name}}/metadata", tags=["headphone"])
+async def get_headphone_metadata(
+    headphone_name: str,
+    metadata: dict = Depends(load_headphone_metadata),  # noqa: B008
+):
+    content = metadata.get(headphone_name, {"error": "Headphone not found"})
+    encoded = jsonable_encoder(content)
+    return JSONResponse(content=encoded)
+
+
+@app.get(f"/{API_VERSION}/headphone/{{headphone_name}}/versions", tags=["headphone"])
+async def get_headphone_versions(
+    headphone_name: str,
+    metadata: dict = Depends(load_headphone_metadata),  # noqa: B008
+):
+    if headphone_name not in metadata:
+        return {"error": f"Headphone {headphone_name} is not in our database!"}
+
+    return list(metadata[headphone_name].get("measurements", {}).keys())
+
+
+@app.get(
+    f"/{API_VERSION}/headphone/{{headphone_name}}/frequency_response",
+    tags=["headphone"],
+)
+async def get_headphone_frequency_response(
+    headphone_name: str,
+    version: Annotated[str | None, Query(description="Measurement version (defaults to default_measurement)")] = None,
+    metadata: dict = Depends(load_headphone_metadata),  # noqa: B008
+):
+    if headphone_name not in metadata:
+        return {"error": f"Headphone {headphone_name} is not in our database!"}
+
+    if "/" in headphone_name or ".." in headphone_name:
+        return {"error": f"Invalid headphone_name {headphone_name}!"}
+
+    hp = metadata[headphone_name]
+    meas_key = version or hp.get("default_measurement", "")
+
+    if not meas_key or meas_key not in hp.get("measurements", {}):
+        valid = list(hp.get("measurements", {}).keys())
+        return {"error": f"Unknown version {meas_key!r} for {headphone_name}. Valid: {valid}"}
+
+    if "/" in meas_key or ".." in meas_key:
+        return {"error": f"Invalid version {meas_key}!"}
+
+    csv_path = f"{HEADPHONE_FILES}/{headphone_name}/{meas_key}/frequency_response.csv"
+    if not os.path.exists(csv_path):
+        return {"error": f"No frequency response data for {headphone_name} ({meas_key})"}
+
+    return FileResponse(csv_path, media_type="text/csv")

@@ -63,7 +63,13 @@ class Extras(TypedDict, total=False):
 
 
 MeasurementFormat = Literal[
-    "klippel", "webplotdigitizer", "spl_hv_txt", "gll_hv_txt", "princeton", "rew_text_dump"
+    "klippel",
+    "webplotdigitizer",
+    "spl_hv_txt",
+    "gll_hv_txt",
+    "princeton",
+    "rew_text_dump",
+    "csv_freq_spl",
 ]
 
 
@@ -187,6 +193,41 @@ class Speaker(SpeakerRequired, total=False):
 
 
 SpeakerDatabase = dict[str, Speaker]
+
+
+# Headphone types
+HeadphoneShape = Literal["over-ear", "on-ear", "in-ear", "earbud"]
+
+
+class HeadphoneMeasurementRequired(TypedDict):
+    origin: str
+    format: MeasurementFormat
+
+
+class HeadphoneMeasurement(HeadphoneMeasurementRequired, total=False):
+    review: str
+    review_published: str
+    quality: MeasurementQuality
+    notes: str
+    sensitivity_mV_94dB: float
+    recommendation: str
+
+
+class HeadphoneRequired(TypedDict):
+    brand: str
+    model: str
+    shape: HeadphoneShape
+    default_measurement: str
+    measurements: dict[str, HeadphoneMeasurement]
+
+
+class Headphone(HeadphoneRequired, total=False):
+    price: str
+    skip: bool
+
+
+HeadphoneDatabase = dict[str, Headphone]
+
 
 # common GLL extraction
 gll_data_acquisition_std: DataAcquisition = {
