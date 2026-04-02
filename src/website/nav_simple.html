@@ -1,42 +1,19 @@
 <%include file="symbols.html"/>
 
-<div class="block my-1 mx-1">
-  <nav class="level is-light is-mobile">
-    <!-- LEFT -->
-    <div class="level-left">
-      <div class="level-item dropdown is-hoverable" id="menu-main">
-        <div class="dropdown-trigger" id="menu-main-trigger">
-          <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
-	    <svg class="icon"><use href="#icon-bars"/></svg>
-          </button>
-        </div>
-        <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
-          <div class="dropdown-content">
-            <%include file="nav_menu.html"/>
-          </div>
-        </div>
-	<a href="/" class="is-size-4 mx-4">
-          <b>SPIN</b>orama
-	</a>
+<nav class="navbar-bar mx-1 my-1">
+  <div class="dropdown is-hoverable" id="menu-main">
+    <div class="dropdown-trigger" id="menu-main-trigger">
+      <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" aria-label="menu-main">
+        <svg class="icon"><use href="#icon-bars"/></svg>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
+      <div class="dropdown-content">
+        <%include file="nav_menu.html"/>
       </div>
     </div>
-    <!-- RIGHT -->
-    <div class="level-right">
-      <div class="level-item">
-	<a href="/docs/index.html" class="is-size-4">
-	  Help
-	</a>
-      </div>
-      <div class="level-item px-1">
-        <div class="theme-toggle" role="radiogroup" aria-label="Theme">
-          <button type="button" class="theme-toggle-btn" data-theme="light" aria-label="Light theme">
-            <svg width="16" height="16"><use href="#icon-theme-light"/></svg>
-          </button>
-          <button type="button" class="theme-toggle-btn" data-theme="dark" aria-label="Dark theme">
-            <svg width="16" height="16"><use href="#icon-theme-dark"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-</div>
+  </div>
+  <a href="/" class="navbar-brand-link is-size-4">
+    <b>SPIN</b>orama
+  </a>
+</nav>

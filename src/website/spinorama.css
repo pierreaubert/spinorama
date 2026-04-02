@@ -1,44 +1,218 @@
 /* ==========================================================================
-   Spinorama Design System
+   Spinorama Design System — Material Design 3 approximation
    Layers on top of Bulma 1.0.4 (compiled with dark theme via bulma4spin.scss)
    ========================================================================== */
 
-/* --- Spinorama custom properties --- */
+
+/* ==========================================================================
+   MD3 Color Tokens — Light
+   Seed hue: 232 (blue-violet)
+   ========================================================================== */
 :root {
-  --spin-accent: #3273dc;
-  --spin-accent-hover: #2366d1;
-  --spin-score-bad: #f14668;
+  /* Primary */
+  --md3-primary: #4758a9;
+  --md3-on-primary: #ffffff;
+  --md3-primary-container: #dde1ff;
+  --md3-on-primary-container: #001257;
 
-  --spin-border-light: #ededed;
-  --spin-shadow-card: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-  --spin-shadow-card-hover: 0 8px 16px rgba(10, 10, 10, 0.1), 0 2px 4px rgba(10, 10, 10, 0.1);
+  /* Secondary */
+  --md3-secondary: #595d72;
+  --md3-on-secondary: #ffffff;
+  --md3-secondary-container: #dde1f9;
+  --md3-on-secondary-container: #161b2c;
 
+  /* Tertiary */
+  --md3-tertiary: #745470;
+  --md3-on-tertiary: #ffffff;
+  --md3-tertiary-container: #ffd7f5;
+  --md3-on-tertiary-container: #2b122a;
+
+  /* Error */
+  --md3-error: #ba1a1a;
+  --md3-on-error: #ffffff;
+  --md3-error-container: #ffdad6;
+  --md3-on-error-container: #410002;
+
+  /* Surface system */
+  --md3-surface: #faf8ff;
+  --md3-surface-dim: #dbd9e0;
+  --md3-surface-container-lowest: #ffffff;
+  --md3-surface-container-low: #f4f3fa;
+  --md3-surface-container: #efedf4;
+  --md3-surface-container-high: #e9e7ef;
+  --md3-surface-container-highest: #e3e1e9;
+  --md3-on-surface: #1b1b21;
+  --md3-on-surface-variant: #45464f;
+
+  /* Outline */
+  --md3-outline: #767680;
+  --md3-outline-variant: #c6c5d0;
+
+  /* Inverse */
+  --md3-inverse-surface: #303036;
+  --md3-inverse-on-surface: #f2f0f7;
+  --md3-inverse-primary: #b9c3ff;
+
+  /* Shape */
+  --md3-shape-extra-small: 4px;
+  --md3-shape-small: 8px;
+  --md3-shape-medium: 12px;
+  --md3-shape-large: 16px;
+  --md3-shape-extra-large: 28px;
+  --md3-shape-full: 9999px;
+}
+
+
+/* ==========================================================================
+   MD3 Color Tokens — Dark
+   ========================================================================== */
+[data-theme="dark"] {
+  /* Primary */
+  --md3-primary: #b9c3ff;
+  --md3-on-primary: #17276e;
+  --md3-primary-container: #2f4090;
+  --md3-on-primary-container: #dde1ff;
+
+  /* Secondary */
+  --md3-secondary: #c1c5dd;
+  --md3-on-secondary: #2b3042;
+  --md3-secondary-container: #414659;
+  --md3-on-secondary-container: #dde1f9;
+
+  /* Tertiary */
+  --md3-tertiary: #e2bad9;
+  --md3-on-tertiary: #422740;
+  --md3-tertiary-container: #5b3d58;
+  --md3-on-tertiary-container: #ffd7f5;
+
+  /* Error */
+  --md3-error: #ffb4ab;
+  --md3-on-error: #690005;
+  --md3-error-container: #93000a;
+  --md3-on-error-container: #ffdad6;
+
+  /* Surface system */
+  --md3-surface: #131318;
+  --md3-surface-dim: #131318;
+  --md3-surface-container-lowest: #0e0e13;
+  --md3-surface-container-low: #1b1b21;
+  --md3-surface-container: #1f1f25;
+  --md3-surface-container-high: #2a2a30;
+  --md3-surface-container-highest: #34343b;
+  --md3-on-surface: #e3e1e9;
+  --md3-on-surface-variant: #c6c5d0;
+
+  /* Outline */
+  --md3-outline: #90909a;
+  --md3-outline-variant: #45464f;
+
+  /* Inverse */
+  --md3-inverse-surface: #e3e1e9;
+  --md3-inverse-on-surface: #303036;
+  --md3-inverse-primary: #4758a9;
+}
+
+
+/* ==========================================================================
+   Bridge --spin-* tokens to MD3
+   ========================================================================== */
+:root {
+  --spin-accent: var(--md3-primary);
+  --spin-accent-hover: var(--md3-primary);
+  --spin-score-bad: var(--md3-error);
+  --spin-border-light: var(--md3-outline-variant);
+  --spin-shadow-card: 0 1px 2px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+  --spin-shadow-card-hover: 0 1px 3px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08);
   --spin-transition-fast: 150ms ease;
   --spin-transition-normal: 250ms ease;
-
-  --spin-card-radius: 8px;
+  --spin-card-radius: var(--md3-shape-medium);
 }
 
 [data-theme="dark"] {
-  --spin-accent: #5e9bff;
-  --spin-accent-hover: #7db1ff;
-
-  --spin-border-light: #333360;
-  --spin-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --spin-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --spin-shadow-card: none;
+  --spin-shadow-card-hover: none;
 }
 
 .hidden { display: none; }
 
 
 /* ==========================================================================
-   Navigation
+   Override Bulma scheme lightness for MD3 surface alignment
+   ========================================================================== */
+:root {
+  --bulma-scheme-main-l: 99%;
+  --bulma-scheme-main-bis-l: 96%;
+  --bulma-scheme-main-ter-l: 94%;
+  --bulma-background-l: 94%;
+  --bulma-border-weak-l: 79%;
+  --bulma-border-l: 76%;
+  --bulma-text-weak-l: 45%;
+  --bulma-text-l: 11%;
+  --bulma-text-strong-l: 7%;
+}
+
+[data-theme="dark"] {
+  --bulma-scheme-main-l: 8%;
+  --bulma-scheme-main-bis-l: 12%;
+  --bulma-scheme-main-ter-l: 15%;
+  --bulma-background-l: 12%;
+  --bulma-border-weak-l: 21%;
+  --bulma-border-l: 28%;
+  --bulma-text-weak-l: 60%;
+  --bulma-text-l: 87%;
+  --bulma-text-strong-l: 93%;
+}
+
+
+/* ==========================================================================
+   Remap Bulma semantic color classes to MD3 roles
+   ========================================================================== */
+:root {
+  /* is-info, is-primary, is-link → MD3 primary */
+  --bulma-info-h: 232;
+  --bulma-info-s: 41%;
+  --bulma-info-l: 47%;
+  --bulma-primary-h: 232;
+  --bulma-primary-s: 41%;
+  --bulma-primary-l: 47%;
+  --bulma-link-h: 232;
+  --bulma-link-s: 41%;
+  --bulma-link-l: 47%;
+
+  /* is-danger → MD3 error */
+  --bulma-danger-h: 0;
+  --bulma-danger-s: 72%;
+  --bulma-danger-l: 41%;
+
+  /* is-warning — warm amber */
+  --bulma-warning-h: 40;
+  --bulma-warning-s: 80%;
+  --bulma-warning-l: 50%;
+
+  /* is-success — green */
+  --bulma-success-h: 141;
+  --bulma-success-s: 53%;
+  --bulma-success-l: 41%;
+}
+
+
+/* ==========================================================================
+   Navigation — single row: menu | brand | search
    ========================================================================== */
 
-#searchInput {
-  min-width: 200px;
-  transition: box-shadow var(--spin-transition-fast),
-              border-color var(--spin-transition-fast);
+.navbar-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-brand-link {
+  white-space: nowrap;
+}
+
+.navbar-search-field {
+  flex: 1;
+  min-width: 0;
 }
 
 @media (min-width: 769px) {
@@ -47,9 +221,100 @@
   }
 }
 
+
+/* ==========================================================================
+   Menu dropdown — label + control rows
+   ========================================================================== */
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.config-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--md3-on-surface-variant);
+}
+
+
+/* ==========================================================================
+   Customization page
+   ========================================================================== */
+
+.customization-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.custom-card {
+  padding: 1rem;
+  border: 1px solid var(--md3-outline-variant);
+  border-radius: var(--md3-shape-medium);
+  background: var(--md3-surface-container-low);
+}
+
+[data-theme="dark"] .custom-card {
+  background: var(--md3-surface-container);
+}
+
+
+/* ==========================================================================
+   Graph grid — responsive columns via data-graph-cols attribute
+   ========================================================================== */
+
+.graph-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+[data-graph-cols="2"] .graph-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+[data-graph-cols="4"] .graph-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* On narrow screens, cap to 2 columns max */
+@media (max-width: 1024px) {
+  [data-graph-cols="4"] .graph-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  [data-graph-cols="2"] .graph-grid,
+  [data-graph-cols="4"] .graph-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.graph-grid > .graph-cell {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.graph-grid > .graph-cell .js-plotly-plot {
+  width: 100% !important;
+}
+
+#searchInput {
+  transition: box-shadow var(--spin-transition-fast),
+              border-color var(--spin-transition-fast);
+  min-width: 0;
+  width: 100%;
+}
+
 #searchInput:focus {
-  box-shadow: 0 0 0 3px rgba(50, 115, 220, 0.25);
-  border-color: var(--spin-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md3-primary) 25%, transparent);
+  border-color: var(--md3-primary);
 }
 
 /* Theme toggle */
@@ -57,10 +322,10 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  border: 1px solid var(--bulma-border);
-  border-radius: 20px;
+  border: 1px solid var(--md3-outline-variant);
+  border-radius: var(--md3-shape-full);
   padding: 2px;
-  background: var(--bulma-scheme-main-bis);
+  background: var(--md3-surface-container);
 }
 
 .theme-toggle-btn {
@@ -70,9 +335,9 @@
   width: 32px;
   height: 28px;
   border: none;
-  border-radius: 18px;
+  border-radius: var(--md3-shape-full);
   background: transparent;
-  color: var(--bulma-text-weak);
+  color: var(--md3-on-surface-variant);
   cursor: pointer;
   transition: background var(--spin-transition-fast),
               color var(--spin-transition-fast);
@@ -81,26 +346,66 @@
 }
 
 .theme-toggle-btn:hover {
-  color: var(--bulma-text);
+  color: var(--md3-on-surface);
 }
 
 .theme-toggle-btn.is-active {
-  background: var(--spin-accent);
-  color: #fff;
+  background: var(--md3-inverse-surface);
+  color: var(--md3-inverse-on-surface);
 }
 
-/* Active filter badge: inline next to the icon */
+/* Plot settings section inside config panel */
+#global-config-panel {
+  width: 100%;
+}
+
+.plot-config-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plot-config-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.25rem 1rem;
+}
+
+.plot-config-section .config-label {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.plot-config-section .section-content {
+  width: 100%;
+}
+
+.config-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.config-flex-container .form-group {
+  flex: 1 1 auto;
+  min-width: 140px;
+  max-width: 250px;
+}
+
+/* Active filter badge */
 .filter-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 18px;
   height: 18px;
-  background: var(--spin-score-bad);
-  color: #fff;
+  background: var(--md3-error);
+  color: var(--md3-on-error);
   font-size: 11px;
   font-weight: 700;
-  border-radius: 9px;
+  border-radius: var(--md3-shape-full);
   line-height: 1;
   padding: 0 4px;
   margin-left: 4px;
@@ -121,13 +426,14 @@
   border: 1px solid var(--spin-border-light);
   transition: transform var(--spin-transition-normal),
               box-shadow var(--spin-transition-normal),
-              border-color var(--spin-transition-normal);
+              border-color var(--spin-transition-normal),
+              background-color var(--spin-transition-normal);
 }
 
 .card-min:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: var(--spin-shadow-card-hover);
-  border-color: var(--spin-accent);
+  border-color: var(--md3-outline);
 }
 
 .card-min .card-image {
@@ -159,14 +465,14 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--bulma-text-weak);
+  color: var(--md3-on-surface-variant);
 }
 
 .card-model {
   display: block;
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--bulma-text-strong);
+  color: var(--md3-on-surface);
   line-height: 1.3;
 }
 
@@ -182,7 +488,7 @@
 /* Tonality score highlight */
 .card-metric-score b {
   font-size: 1.1em;
-  color: var(--spin-accent);
+  color: var(--md3-primary);
 }
 
 /* Key metrics section */
@@ -209,7 +515,7 @@
 
 .card-secondary .icon-text {
   font-size: 0.82rem;
-  color: var(--bulma-text-weak);
+  color: var(--md3-on-surface-variant);
 }
 
 /* Card footer */
@@ -230,6 +536,42 @@
   font-size: 0.85rem;
 }
 
+/* Measurements dropdown must appear above adjacent cards */
+.card-footer .dropdown-menu {
+  z-index: 30;
+}
+
+.cell:has(.dropdown.is-hoverable:hover) {
+  z-index: 30;
+  position: relative;
+}
+
+
+/* ==========================================================================
+   MD3 Shape — buttons, dropdowns, cards
+   ========================================================================== */
+
+.button {
+  border-radius: var(--md3-shape-full);
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.button.is-info,
+.button.is-primary,
+.button.is-link {
+  border-radius: var(--md3-shape-full);
+}
+
+.dropdown-content {
+  border-radius: var(--md3-shape-small);
+}
+
+.tabs.is-boxed a {
+  border-radius: var(--md3-shape-small) var(--md3-shape-small) 0 0;
+  transition: color var(--spin-transition-fast),
+              border-color var(--spin-transition-fast);
+}
+
 
 /* ==========================================================================
    Filter Dropdown
@@ -248,8 +590,8 @@
 }
 
 #filters-dropdown-menu .input:focus {
-  box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
-  border-color: var(--spin-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md3-primary) 20%, transparent);
+  border-color: var(--md3-primary);
 }
 
 
@@ -259,16 +601,6 @@
 
 #plotForm .select select {
   min-width: 200px;
-}
-
-
-/* ==========================================================================
-   Tabs (speaker detail, statistics)
-   ========================================================================== */
-
-.tabs.is-boxed a {
-  transition: color var(--spin-transition-fast),
-              border-color var(--spin-transition-fast);
 }
 
 
@@ -286,19 +618,314 @@
 
 
 /* ==========================================================================
-   Dark mode: only overrides Bulma doesn't handle natively
+   SVG icons: inherit text color everywhere
    ========================================================================== */
 
-/* Bulma's has-background-* utilities use hardcoded colors, not CSS vars */
+svg { color: inherit; }
+
+.icon svg,
+.icon-text svg,
+.theme-toggle-btn svg,
+.navbar svg,
+.level svg {
+  fill: currentColor;
+}
+
+
+/* ==========================================================================
+   Dark mode overrides — MD3 surfaces & elevation
+   ========================================================================== */
+
+/* Bulma's has-background-* utilities use hardcoded colors */
 [data-theme="dark"] .has-background-white-bis,
 [data-theme="dark"] .has-background-light {
-  background-color: var(--bulma-scheme-main-bis) !important;
+  background-color: var(--md3-surface-container-low) !important;
 }
 
 [data-theme="dark"] .has-background-white {
-  background-color: var(--bulma-scheme-main) !important;
+  background-color: var(--md3-surface) !important;
 }
 
 [data-theme="dark"] .container.has-background-white-bis {
-  background-color: var(--bulma-scheme-main) !important;
+  background-color: var(--md3-surface) !important;
+}
+
+/* Search input */
+[data-theme="dark"] #searchInput,
+[data-theme="dark"] .input.is-info {
+  background-color: var(--md3-surface-container-high);
+  border-color: var(--md3-outline-variant);
+  color: var(--md3-on-surface);
+}
+
+[data-theme="dark"] #searchInput::placeholder {
+  color: var(--md3-on-surface-variant);
+}
+
+[data-theme="dark"] #searchInput:focus,
+[data-theme="dark"] .input.is-info:focus {
+  border-color: var(--md3-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md3-primary) 20%, transparent);
+}
+
+[data-theme="dark"] #filters-dropdown-menu .input:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md3-primary) 15%, transparent);
+  border-color: var(--md3-primary);
+}
+
+/* Buttons — default: tonal surface style */
+[data-theme="dark"] .button {
+  background-color: var(--md3-surface-container-high);
+  border-color: var(--md3-outline-variant);
+  color: var(--md3-on-surface);
+}
+
+[data-theme="dark"] .button:hover {
+  background-color: var(--md3-surface-container-highest);
+  border-color: var(--md3-outline);
+  color: var(--md3-on-surface);
+}
+
+/* Filled buttons */
+[data-theme="dark"] .button.is-info,
+[data-theme="dark"] .button.is-link,
+[data-theme="dark"] .button.is-primary {
+  background-color: var(--md3-primary);
+  color: var(--md3-on-primary);
+  border-color: transparent;
+}
+
+[data-theme="dark"] .button.is-info:hover,
+[data-theme="dark"] .button.is-link:hover,
+[data-theme="dark"] .button.is-primary:hover {
+  background-color: color-mix(in srgb, var(--md3-primary) 88%, white);
+  color: var(--md3-on-primary);
+}
+
+/* Tonal buttons (is-light variants) */
+[data-theme="dark"] .button.is-info.is-light,
+[data-theme="dark"] .button.is-link.is-light {
+  background-color: var(--md3-secondary-container);
+  color: var(--md3-on-secondary-container);
+  border-color: transparent;
+}
+
+[data-theme="dark"] .button.is-info.is-light:hover,
+[data-theme="dark"] .button.is-link.is-light:hover {
+  background-color: color-mix(in srgb, var(--md3-secondary-container) 85%, white);
+  color: var(--md3-on-secondary-container);
+}
+
+/* Tabs */
+[data-theme="dark"] .tabs a {
+  color: var(--md3-on-surface-variant);
+  border-bottom-color: var(--md3-outline-variant);
+}
+
+[data-theme="dark"] .tabs a:hover {
+  color: var(--md3-on-surface);
+  border-bottom-color: var(--md3-outline);
+}
+
+[data-theme="dark"] .tabs li.is-active a {
+  color: var(--md3-primary);
+  border-bottom-color: var(--md3-primary);
+}
+
+[data-theme="dark"] .tabs.is-boxed li.is-active a {
+  background-color: var(--md3-surface);
+  border-color: var(--md3-outline-variant);
+  border-bottom-color: transparent;
+}
+
+/* Message boxes */
+[data-theme="dark"] .message.is-info,
+[data-theme="dark"] .message.is-primary {
+  background-color: var(--md3-surface-container-low);
+}
+
+[data-theme="dark"] .message.is-info .message-header,
+[data-theme="dark"] .message.is-primary .message-header {
+  background-color: var(--md3-surface-container-high);
+  color: var(--md3-on-surface);
+}
+
+[data-theme="dark"] .message.is-info .message-body,
+[data-theme="dark"] .message.is-primary .message-body {
+  border-color: var(--md3-outline-variant);
+  color: var(--md3-on-surface-variant);
+}
+
+/* Links */
+[data-theme="dark"] a {
+  color: var(--md3-primary);
+}
+
+[data-theme="dark"] a:hover {
+  color: color-mix(in srgb, var(--md3-primary) 85%, white);
+}
+
+/* Select dropdowns */
+[data-theme="dark"] .select select {
+  background-color: var(--md3-surface-container-high);
+  border-color: var(--md3-outline-variant);
+  color: var(--md3-on-surface);
+}
+
+[data-theme="dark"] .select select:hover {
+  border-color: var(--md3-outline);
+}
+
+/* Dropdown menus */
+[data-theme="dark"] .dropdown-content {
+  background-color: var(--md3-surface-container);
+  border: 1px solid var(--md3-outline-variant);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background-color: var(--md3-surface-container-high);
+}
+
+/* Cards — elevation via surface tint */
+[data-theme="dark"] .card-min {
+  background-color: var(--md3-surface-container-low);
+}
+
+[data-theme="dark"] .card-min:hover {
+  background-color: var(--md3-surface-container);
+}
+
+/* Tags */
+[data-theme="dark"] .tag:not(.is-white):not(.is-light) {
+  color: #fff;
+}
+
+/* Speaker card images: reduce harsh white glare */
+[data-theme="dark"] .card-min .card-image img {
+  filter: brightness(0.92) contrast(1.05);
+}
+
+/* Plotly graph containers */
+[data-theme="dark"] .js-plotly-plot,
+[data-theme="dark"] .plot-container {
+  background-color: var(--md3-surface-container-lowest);
+  border-radius: var(--md3-shape-small);
+}
+
+/* Tables */
+[data-theme="dark"] .table {
+  background-color: var(--md3-surface-container-low);
+  color: var(--md3-on-surface);
+}
+
+[data-theme="dark"] .table th {
+  color: var(--md3-on-surface);
+}
+
+
+/* ==========================================================================
+   Speaker detail: Data & EQ pane — 2-column block grid
+   ========================================================================== */
+
+.desc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .desc-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+.desc-block {
+  padding: 1rem;
+  border: 1px solid var(--md3-outline-variant);
+  border-radius: var(--md3-shape-medium);
+  background: var(--md3-surface-container-low);
+}
+
+.desc-block-full {
+  grid-column: 1 / -1;
+}
+
+/* Two-column layout inside a desc-block: text left, image right */
+.desc-block-cols {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.desc-block-text {
+  flex: 3;
+  min-width: 0;
+}
+
+.desc-block-img {
+  flex: 2;
+  min-width: 160px;
+  max-width: 320px;
+}
+
+.desc-block-img img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--md3-shape-small);
+  object-fit: contain;
+}
+
+.desc-block-img svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Directivity plots below speaker picture */
+.directivity-plot {
+  margin-top: 0.5rem;
+  border: 1px solid var(--md3-outline-variant);
+  border-radius: var(--md3-shape-small);
+  overflow: hidden;
+}
+
+.directivity-plot .js-plotly-plot {
+  width: 100% !important;
+}
+
+@media (max-width: 600px) {
+  .desc-block-cols {
+    flex-direction: column;
+  }
+  .desc-block-img {
+    flex: none;
+    max-width: 160px;
+    align-self: center;
+  }
+}
+
+/* EQ card inside a block */
+.eq-card {
+  padding: 0;
+}
+
+.eq-card .table {
+  margin-bottom: 0.75rem;
+}
+
+/* Graph boxes inside blocks */
+.desc-block .box {
+  padding: 0.5rem;
+  box-shadow: none;
+  border: 1px solid var(--md3-outline-variant);
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.desc-block .js-plotly-plot {
+  width: 100% !important;
+}
+
+[data-theme="dark"] .desc-block {
+  background-color: var(--md3-surface-container);
+  border-color: var(--md3-outline-variant);
 }

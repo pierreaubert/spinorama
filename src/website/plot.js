@@ -110,7 +110,8 @@ export const labelLong = Object.entries(labelShort).reduce((obj, [k, v]) => {
 const graphSmall = 550;
 const graphLarge = 1024;
 
-const graphRatio = 4.0 / 3.0;
+const graphRatio = 1.8;
+const contourRatio = 4.0 / 3.0;
 const squareRatio = 1.0;
 
 const graphMarginLeft = 30;
@@ -578,8 +579,14 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 delete layout.yaxis.dtick;
                 delete layout.yaxis.tickvals;
                 delete layout.yaxis.ticktext;
+            } else if (layout.yaxis.tickvals) {
+                // Axis with explicit tickvals (e.g. contour angle axis) — preserve them
+                // Ensure range is constrained to prevent gaps
+                layout.yaxis.constrain = 'domain';
             } else {
-                layout.yaxis.dtick = 1;
+                // SPL axis: grid lines every 5 dB, minor ticks every 1 dB
+                layout.yaxis.dtick = 5;
+                layout.yaxis.minor = { dtick: 1, showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' };
             }
             if (layout.yaxis.title) {
                 layout.yaxis.title.font = {
@@ -593,8 +600,11 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 delete layout.yaxis2.dtick;
                 delete layout.yaxis2.tickvals;
                 delete layout.yaxis2.ticktext;
-            } else if (!layout.yaxis2.tickvals) {
-                layout.yaxis2.dtick = 1;
+            } else if (layout.yaxis2.tickvals) {
+                layout.yaxis2.constrain = 'domain';
+            } else {
+                layout.yaxis2.dtick = 5;
+                layout.yaxis2.minor = { dtick: 1, showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' };
             }
             if (layout.yaxis2.title) {
                 layout.yaxis2.title.font = {
@@ -781,12 +791,12 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else {
             layout.legend.xref = 'paper';
             if (isVertical) {
-                layout.legend.yref = 'container';
+                layout.legend.yref = 'paper';
                 layout.legend.orientation = 'h';
                 layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'bottom';
+                layout.legend.yanchor = 'top';
                 layout.legend.x = 0.5;
-                layout.legend.y = -0.5;
+                layout.legend.y = -0.08;
                 // Compute entrywidth from longest trace label
                 const traceNames = datas.filter((d) => d.name).map((d) => d.name);
                 const fontSize = fontSizeH5 + Math.round(windowWidth / 300);
@@ -897,8 +907,11 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
         if (outputGraphProperties.isSurface) {
             layout.showlegend = false;
-            for (let k = 1; k < datas.length; k++) {
-                datas[k].showscale = false;
+            for (let k = 0; k < datas.length; k++) {
+                datas[k].showlegend = false;
+                if (k > 0) {
+                    datas[k].showscale = false;
+                }
             }
         }
     }
@@ -951,7 +964,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
     function computeLabel(userLabelConfig) {
         const traceNames = datas.filter((d) => d.name).map((d) => d.name);
         let ratio = graphRatio;
-        if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
+        if (outputGraphProperties.isSurface) {
+            ratio = contourRatio;
+        } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
         }
         const useShort = shouldUseShortLabels(
@@ -1050,7 +1065,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
     if (layout != null && datas != null) {
         let ratio = graphRatio;
-        if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
+        if (outputGraphProperties.isSurface) {
+            ratio = contourRatio;
+        } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
         }
         [layout.width, layout.height] = computeDims(
@@ -1064,6 +1081,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         computeFont();
         computeXaxis();
         computeYaxis();
+        // Borders are applied in applyConfig using _graphType metadata
         computeTitle(); // before legend
         computeLegend();
         computeLabel();
@@ -1071,6 +1089,50 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         computeColorbar();
         computePolar();
         computeMargin(); // must be last
+
+        // Enforce plot area aspect ratio: the plot area (data region) must keep a
+        // constant width:height ratio regardless of legend size, title, or margins.
+        // We estimate the legend height and include it in the bottom margin so the
+        // plot area itself is always plotW / ratio.
+        if (!outputGraphProperties.isRadar && !outputGraphProperties.isGlobe) {
+            // Estimate horizontal legend height (below plot)
+            let legendH = 0;
+            if (layout.showlegend !== false && layout.legend && layout.legend.orientation === 'h') {
+                let visibleCount = 0;
+                for (let k = 0; k < datas.length; k++) {
+                    if (datas[k].visible !== false && datas[k].showlegend !== false) {
+                        visibleCount++;
+                    }
+                }
+                if (visibleCount > 0) {
+                    const legendFontSize = layout.legend.font ? layout.legend.font.size : 12;
+                    const avgCharWidth = legendFontSize * 0.55;
+                    const itemWidth = layout.legend.itemwidth || 20;
+                    const plotW = layout.width - (layout.margin?.l || 0) - (layout.margin?.r || 0);
+                    // Estimate avg label width and how many fit per row
+                    let totalLabelWidth = 0;
+                    for (let k = 0; k < datas.length; k++) {
+                        if (datas[k].visible !== false && datas[k].showlegend !== false) {
+                            const name = datas[k].name || '';
+                            totalLabelWidth += name.length * avgCharWidth + itemWidth + 16;
+                        }
+                    }
+                    const legendRows = Math.max(1, Math.ceil(totalLabelWidth / plotW));
+                    const lineHeight = legendFontSize * 1.8;
+                    legendH = legendRows * lineHeight + 10;
+                }
+            }
+
+            const ml = layout.margin ? (layout.margin.l || 0) : 0;
+            const mr = layout.margin ? (layout.margin.r || 0) : 0;
+            const mt = layout.margin ? (layout.margin.t || 0) : 0;
+            const baseMarginB = layout.margin ? (layout.margin.b || 0) : 0;
+            const mb = baseMarginB + legendH;
+            if (layout.margin) layout.margin.b = mb;
+            const plotW = layout.width - ml - mr;
+            const plotH = plotW / ratio;
+            layout.height = plotH + mt + mb;
+        }
     } else {
         // should be a pop up
         console.log('Error: No graph is available');
@@ -1089,7 +1151,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             '}'
     );
 */
-    return { data: datas, layout: layout, config: config };
+    return { data: datas, layout: layout, config: config, _graphType: outputGraphProperties };
 }
 
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {

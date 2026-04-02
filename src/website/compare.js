@@ -24,9 +24,16 @@ import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, saveConfigToStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = true;
+
+function detectTheme() {
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark') return 'dark';
+    if (attr === 'light') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -99,6 +106,7 @@ getMetadata()
 
         // Load plot configuration from storage
         let config = loadConfigFromStorage('Graph');
+        config.theme = detectTheme();
 
         // In compare mode, annotations, trendlines and zones are off by default
         if (!config.annotations) config.annotations = {};
@@ -111,17 +119,15 @@ getMetadata()
         config.zones.showA = false;
         config.zones.showB = false;
 
-        // Create configuration menu attached to the plot zone (compare mode for per-speaker controls)
-        createConfigMenu(
-            'plotZone',
-            config,
-            (updatedConfig) => {
-                config = updatedConfig;
-                saveConfigToStorage(updatedConfig);
-                updateSpeakers();
-            },
-            { compareMode: true }
-        );
+        // Initialize the global config panel
+        initGlobalConfigPanel(config);
+
+        // Re-render when global config changes
+        window.addEventListener('spinorama-config-change', () => {
+            config = loadConfigFromStorage('Graph');
+            config.theme = detectTheme();
+            updateSpeakers();
+        });
 
         const speakersSelector = [];
         const originsSelector = [];

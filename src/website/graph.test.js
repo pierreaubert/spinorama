@@ -59,6 +59,7 @@ vi.mock('./plot-config.js', () => ({
     }),
     saveConfigToStorage: vi.fn(),
     createConfigMenu: vi.fn(),
+    initGlobalConfigPanel: vi.fn(),
     applyConfig: vi.fn().mockImplementation((options, _config) => options),
 }));
 
@@ -264,7 +265,7 @@ describe('Graph Display', () => {
         addEventSpy.mockRestore();
     });
 
-    test('displayGraph does not register resize listener for static previews (withConfig=false)', async () => {
+    test('displayGraph registers resize and config-change listeners even for static previews', async () => {
         const addEventSpy = vi.spyOn(window, 'addEventListener');
 
         const graphSpec = {
@@ -275,7 +276,10 @@ describe('Graph Display', () => {
         await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
 
         const resizeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'resize');
-        expect(resizeCalls.length).toBe(0);
+        expect(resizeCalls.length).toBeGreaterThanOrEqual(1);
+
+        const configChangeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'spinorama-config-change');
+        expect(configChangeCalls.length).toBeGreaterThanOrEqual(1);
 
         addEventSpy.mockRestore();
     });
@@ -328,5 +332,51 @@ describe('Graph Display', () => {
 
         // Check if Plotly.newPlot was called
         expect(Plotly.newPlot).toHaveBeenCalled();
+    });
+
+    test('applyConfig is called for all graphs including withConfig=false', async () => {
+        const { applyConfig } = await import('./plot-config.js');
+        applyConfig.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Static Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        expect(applyConfig).toHaveBeenCalled();
+    });
+
+    test('spinorama-config-change event triggers Plotly.react for withConfig=false graphs', async () => {
+        Plotly.react.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Static Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        Plotly.react.mockClear();
+
+        window.dispatchEvent(new window.CustomEvent('spinorama-config-change'));
+        // Allow microtask to process
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        expect(Plotly.react).toHaveBeenCalled();
+    });
+
+    test('initGlobalConfigPanel is called only for withConfig=true', async () => {
+        const { initGlobalConfigPanel } = await import('./plot-config.js');
+        initGlobalConfigPanel.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Test' } },
+            data: [{ x: [1], y: [1], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        expect(initGlobalConfigPanel).not.toHaveBeenCalled();
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+        expect(initGlobalConfigPanel).toHaveBeenCalled();
     });
 });

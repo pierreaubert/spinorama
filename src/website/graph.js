@@ -20,10 +20,19 @@
 
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
-import { getUrlParameter } from './misc.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
-const flagsEnableConfig = true;
+function detectTheme() {
+    try {
+        const attr = document.documentElement.getAttribute('data-theme');
+        if (attr === 'dark') return 'dark';
+        if (attr === 'light') return 'light';
+        if (window.matchMedia) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+    } catch (_) { /* test environment */ }
+    return 'light';
+}
 
 export function displayGraph(measurementName, jsonName, divName, graphSpec, withConfig, ratio) {
     if (typeof divName !== 'string' && !(divName instanceof HTMLElement)) {
@@ -31,11 +40,24 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         return Promise.reject(new Error('Invalid divName parameter'));
     }
 
-    const config = loadConfigFromStorage(measurementName);
+    function getConfig() {
+        const config = loadConfigFromStorage(measurementName);
+        config.theme = detectTheme();
+        return config;
+    }
 
-    function computeOptions() {
-        const w = window.innerWidth / ratio;
-        const h = window.innerHeight / ratio;
+    function getColumnRatio() {
+        try {
+            var cols = parseInt(document.documentElement.getAttribute('data-graph-cols') || '1');
+            if (cols > 1) return cols;
+        } catch (_) {}
+        return 1;
+    }
+
+    function computeOptions(config) {
+        const effectiveRatio = ratio * getColumnRatio();
+        const w = window.innerWidth / effectiveRatio;
+        const h = window.innerHeight / effectiveRatio;
 
         let title = measurementName;
         if (graphSpec.layout && graphSpec.layout.title && graphSpec.layout.title.text) {
@@ -55,9 +77,8 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
             }
         }
 
-        if (flagsEnableConfig && withConfig) {
-            options = applyConfig(options, config);
-        }
+        // Always apply config (theme colors, palette, etc.)
+        options = applyConfig(options, config);
 
         // Configure Plotly for compact non-interactive mode if needed
         if (!withConfig) {
@@ -103,22 +124,15 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
     }
 
     async function run() {
-        const options = computeOptions();
+        const config = getConfig();
+        const options = computeOptions(config);
         if (!options) {
             return;
         }
 
-        if (flagsEnableConfig && withConfig) {
-            createConfigMenu(divName, config, (updatedConfig) => {
-                saveConfigToStorage(updatedConfig);
-                const updatedOptions = applyConfig(JSON.parse(JSON.stringify(options)), updatedConfig);
-                const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
-                if (!targetElement) {
-                    console.error(`Error: Target element not found for updating plot`);
-                    return;
-                }
-                Plotly.react(divName, updatedOptions.data, updatedOptions.layout, updatedOptions.config);
-            });
+        // Initialize the global config panel (once, on first interactive graph)
+        if (withConfig) {
+            initGlobalConfigPanel(config);
         }
 
         const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
@@ -128,21 +142,29 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         }
         await Plotly.newPlot(targetElement, options);
 
-        // Set up resize handler for interactive graphs to recompute layout
-        if (withConfig) {
-            let resizeTimer = null;
-            window.addEventListener('resize', () => {
-                if (resizeTimer) {
-                    clearTimeout(resizeTimer);
+        // Re-render ALL graphs when config or theme changes
+        window.addEventListener('spinorama-config-change', () => {
+            const newConfig = getConfig();
+            const newOptions = computeOptions(newConfig);
+            if (newOptions) {
+                Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
+            }
+        });
+
+        // Set up resize handler
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            if (resizeTimer) {
+                clearTimeout(resizeTimer);
+            }
+            resizeTimer = setTimeout(() => {
+                const newConfig = getConfig();
+                const newOptions = computeOptions(newConfig);
+                if (newOptions) {
+                    Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
                 }
-                resizeTimer = setTimeout(() => {
-                    const newOptions = computeOptions();
-                    if (newOptions) {
-                        Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
-                    }
-                }, 150);
-            });
-        }
+            }, 150);
+        });
     }
 
     return run();

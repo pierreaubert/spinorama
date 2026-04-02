@@ -118,11 +118,27 @@ async def lifespan(app: FastAPI):
     _headphone_metadata_cache = None
 
 
+openapi_tags = [
+    {
+        "name": "speaker",
+        "description": "Speaker measurements and metadata",
+    },
+    {
+        "name": "headphone",
+        "description": "Headphone measurements and metadata",
+    },
+    {
+        "name": "validation",
+        "description": "Data validation endpoints",
+    },
+]
+
 app = FastAPI(
     debug=False,
     title="Spinorama API",
     version=SOFTWARE_VERSION,
     lifespan=lifespan,
+    openapi_tags=openapi_tags,
 )
 
 

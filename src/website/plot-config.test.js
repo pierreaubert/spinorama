@@ -43,11 +43,11 @@ describe('applyConfig - theme application', () => {
         const config = { ...structuredClone(defaultConfig), theme: 'light' };
         const result = applyConfig(options, config);
 
-        expect(result.layout.paper_bgcolor).toBe('#ffffff');
-        expect(result.layout.plot_bgcolor).toBe('#ffffff');
-        expect(result.layout.font.color).toBe('#333333');
-        expect(result.layout.xaxis.gridcolor).toBe('#e0e0e0');
-        expect(result.layout.yaxis.gridcolor).toBe('#e0e0e0');
+        expect(result.layout.paper_bgcolor).toBe('#faf8ff');
+        expect(result.layout.plot_bgcolor).toBe('#faf8ff');
+        expect(result.layout.font.color).toBe('#1b1b21');
+        expect(result.layout.xaxis.gridcolor).toBe('#c6c5d0');
+        expect(result.layout.yaxis.gridcolor).toBe('#c6c5d0');
     });
 
     it('dark theme sets correct bgcolor and font colors', () => {
@@ -55,12 +55,12 @@ describe('applyConfig - theme application', () => {
         const config = { ...structuredClone(defaultConfig), theme: 'dark' };
         const result = applyConfig(options, config);
 
-        expect(result.layout.paper_bgcolor).toBe('#1a1a2e');
-        expect(result.layout.plot_bgcolor).toBe('#16213e');
-        expect(result.layout.font.color).toBe('#e0e0e0');
-        expect(result.layout.xaxis.gridcolor).toBe('#3a3a5c');
-        expect(result.layout.xaxis.linecolor).toBe('#e0e0e0');
-        expect(result.layout.xaxis.zerolinecolor).toBe('#5a5a7c');
+        expect(result.layout.paper_bgcolor).toBe('#131318');
+        expect(result.layout.plot_bgcolor).toBe('#1f1f25');
+        expect(result.layout.font.color).toBe('#e3e1e9');
+        expect(result.layout.xaxis.gridcolor).toBe('#34343b');
+        expect(result.layout.xaxis.linecolor).toBe('#c6c5d0');
+        expect(result.layout.xaxis.zerolinecolor).toBe('#45464f');
     });
 
     it('default theme leaves layout unchanged', () => {
@@ -518,5 +518,156 @@ describe('applyConfig - per-speaker compare mode', () => {
         const result = applyConfig(options, config);
 
         expect(result.layout.annotations[0].visible).toBe(false);
+    });
+});
+
+describe('applyConfig - dark palette auto-selection', () => {
+    it('auto-selects dark palette when theme is dark and palette is default', () => {
+        const options = {
+            layout: {
+                paper_bgcolor: '#f0f0f0',
+                plot_bgcolor: '#f0f0f0',
+                font: { color: '#000' },
+                xaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                margin: { l: 10, r: 10, t: 10, b: 10 },
+            },
+            data: [
+                { type: 'scatter', line: { color: 'blue' }, marker: {} },
+            ],
+        };
+        const config = { ...structuredClone(defaultConfig), theme: 'dark', colors: { palette: 'default' } };
+        const result = applyConfig(options, config);
+        // dark palette should have been applied — first color is rgb(185, 195, 255)
+        expect(result.data[0].line.color).toBe('rgb(185, 195, 255)');
+    });
+
+    it('does not auto-select dark palette when user chose a specific palette', () => {
+        const options = {
+            layout: {
+                paper_bgcolor: '#f0f0f0',
+                plot_bgcolor: '#f0f0f0',
+                font: { color: '#000' },
+                xaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                margin: { l: 10, r: 10, t: 10, b: 10 },
+            },
+            data: [
+                { type: 'scatter', line: { color: 'blue' }, marker: {} },
+            ],
+        };
+        const config = { ...structuredClone(defaultConfig), theme: 'dark', colors: { palette: 'vibrant' } };
+        const result = applyConfig(options, config);
+        // vibrant palette first color: rgb(255, 107, 107)
+        expect(result.data[0].line.color).toBe('rgb(255, 107, 107)');
+    });
+
+    it('does not auto-select dark palette in light theme', () => {
+        const options = {
+            layout: {
+                paper_bgcolor: '#f0f0f0',
+                plot_bgcolor: '#f0f0f0',
+                font: { color: '#000' },
+                xaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                margin: { l: 10, r: 10, t: 10, b: 10 },
+            },
+            data: [
+                { type: 'scatter', line: { color: 'blue' }, marker: {} },
+            ],
+        };
+        const config = { ...structuredClone(defaultConfig), theme: 'light', colors: { palette: 'default' } };
+        const result = applyConfig(options, config);
+        // default palette not applied when palette is 'default' in light mode
+        expect(result.data[0].line.color).toBe('blue');
+    });
+});
+
+describe('createConfigMenu is a no-op', () => {
+    it('returns immediately without error', async () => {
+        const { createConfigMenu } = await import('./plot-config.js');
+        createConfigMenu('nonexistent', {}, () => {}, {});
+    });
+});
+
+describe('applyConfig — _graphType border enforcement', () => {
+    function makeBaseOptions(graphType) {
+        return {
+            layout: {
+                xaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
+                font: { color: '#000' },
+                margin: { l: 10, r: 10, t: 10, b: 10 },
+            },
+            data: [{ type: 'scatter', line: { color: 'blue' }, marker: {} }],
+            _graphType: graphType,
+        };
+    }
+
+    it('F1: sets showline/mirror on SPL graph (_graphType.isGraph=true)', () => {
+        const options = makeBaseOptions({ isGraph: true, isSpin: false, isRadar: false, isSurface: false, isGlobe: false });
+        const config = { ...structuredClone(defaultConfig), theme: 'light' };
+        const result = applyConfig(options, config);
+        expect(result.layout.xaxis.showline).toBe(true);
+        expect(result.layout.xaxis.mirror).toBe('ticks');
+        expect(result.layout.yaxis.showline).toBe(true);
+        expect(result.layout.yaxis.mirror).toBe('ticks');
+    });
+
+    it('F2: does NOT set showline on contour (_graphType.isSurface=true)', () => {
+        const options = makeBaseOptions({ isGraph: false, isSpin: false, isRadar: false, isSurface: true, isGlobe: false });
+        const config = { ...structuredClone(defaultConfig), theme: 'light' };
+        const result = applyConfig(options, config);
+        expect(result.layout.xaxis.showline).not.toBe(true);
+    });
+
+    it('F3: defaults to SPL behavior when _graphType is missing', () => {
+        const options = makeBaseOptions(undefined);
+        delete options._graphType;
+        const config = { ...structuredClone(defaultConfig), theme: 'light' };
+        const result = applyConfig(options, config);
+        expect(result.layout.xaxis.showline).toBe(true);
+        expect(result.layout.xaxis.mirror).toBe('ticks');
+    });
+});
+
+describe('applyConfig — showlegend guards', () => {
+    function makeBaseOptions(showlegend) {
+        const opts = {
+            layout: {
+                xaxis: {}, yaxis: {},
+                font: { color: '#000' },
+                margin: { l: 10, r: 10, t: 10, b: 10 },
+            },
+            data: [
+                { type: 'scatter', name: 'trace1', line: { color: 'blue' }, marker: {} },
+            ],
+        };
+        if (showlegend !== undefined) {
+            opts.layout.showlegend = showlegend;
+        }
+        return opts;
+    }
+
+    it('F4: preserves layout.showlegend=false even when config.legend.show=true', () => {
+        const options = makeBaseOptions(false);
+        const config = { ...structuredClone(defaultConfig), legend: { ...defaultConfig.legend, show: true } };
+        const result = applyConfig(options, config);
+        expect(result.layout.showlegend).toBe(false);
+    });
+
+    it('F5: sets layout.showlegend=true when absent and config.legend.show=true', () => {
+        const options = makeBaseOptions(undefined);
+        const config = { ...structuredClone(defaultConfig), legend: { ...defaultConfig.legend, show: true } };
+        const result = applyConfig(options, config);
+        expect(result.layout.showlegend).toBe(true);
+    });
+
+    it('F6: preserves per-trace showlegend=false even when config.legend.show=true', () => {
+        const options = makeBaseOptions(undefined);
+        options.data[0].showlegend = false;
+        const config = { ...structuredClone(defaultConfig), legend: { ...defaultConfig.legend, show: true } };
+        const result = applyConfig(options, config);
+        expect(result.data[0].showlegend).toBe(false);
     });
 });

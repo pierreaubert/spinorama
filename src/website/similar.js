@@ -22,7 +22,14 @@ import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, saveConfigToStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
+
+function detectTheme() {
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark') return 'dark';
+    if (attr === 'light') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -56,12 +63,16 @@ getMetadata()
 
         // Load plot configuration from storage
         let config = loadConfigFromStorage('Graph');
+        config.theme = detectTheme();
         let currentGraphOptions = [];
 
-        // Create configuration menu
-        createConfigMenu('cea2034plots', config, (updatedConfig) => {
-            config = updatedConfig;
-            saveConfigToStorage(updatedConfig);
+        // Initialize the global config panel
+        initGlobalConfigPanel(config);
+
+        // Re-render when global config changes
+        window.addEventListener('spinorama-config-change', () => {
+            config = loadConfigFromStorage('Graph');
+            config.theme = detectTheme();
             updatePlots();
         });
 

@@ -29,6 +29,7 @@ CPATH_DATAS_ICONS = f"{CPATH_DATAS}/icons"
 CPATH_DATAS_PICTURES = f"{CPATH_DATAS}/pictures"
 CPATH_DATAS_SPEAKERS = f"{CPATH_DATAS}/measurements"
 CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
+CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphones"
 
 # where the temporay files go
 CPATH_BUILD = f"{CPATH}/build"
@@ -46,6 +47,7 @@ CPATH_DIST_METADATA_JSON = f"{CPATH_DIST_JSON}/metadata.json"
 CPATH_DIST_EQDATA_JSON = f"{CPATH_DIST_JSON}/eqdata.json"
 CPATH_DIST_SPEAKERS = f"{CPATH_DIST}/speakers"
 CPATH_DIST_PICTURES = f"{CPATH_DIST}/pictures"
+CPATH_DIST_HEADPHONE_JSON = f"{CPATH_DIST_JSON}/headphone.json"
 
 # mean is computed over a range
 MEAN_MIN = 300

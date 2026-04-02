@@ -102,99 +102,82 @@
 
     <div class="tab-pane display:none" id="pane-1">
       <div class="container">
-	<table>
-          <tr>
-            <td><%include file="speaker_desc.html"/></td>
-          </tr>
-	</table>
+        <div class="desc-grid">
+          <%include file="speaker_desc.html"/>
+        </div>
       </div>
     </div>
 
     <!-- Mobile view: sequential-->
     <div class="tab-pane is-active display:block" id="pane-2">
       <div class="section">
-      <table style="margin: auto;">
-<!--
-	<tr>
-	  <td>
-	    <%include file="speaker_tip.html"/>
-	  </td>
-	</tr>
--->
+      <div class="graph-grid">
         % for freq in g_freq:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key}/${freq | space2url}.html">
-		<div id="${g_key}-${freq}"></div>
-		<script type="module">
-		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-		 let graph = "${g_key}/${freq | space2url}";
-		 let graph_json = "./" + graph + ".json";
-		 const spec = fetch(graph_json)
-		   .then( (response) => response.json() )
-		   .then( (spec) => {
-		     displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, true, 1);
-		   });
-		</script>
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key}/${freq | space2url}.html">
+              <div id="${g_key}-${freq}"></div>
+              <script type="module">
+               import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+               let graph = "${g_key}/${freq | space2url}";
+               let graph_json = "./" + graph + ".json";
+               const spec = fetch(graph_json)
+                 .then( (response) => response.json() )
+                 .then( (spec) => {
+                   displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, true, 1);
+                 });
+              </script>
+            </a>
+          </div>
+        </div>
         % endfor
         % for contour in g_contour:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key}/${contour | unmeltC, space2url}.html">
-                %if '3D' not in contour:
-		<div id="${g_key}-${contour}"></div>
-		<script type="module">
-		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-		 let graph = "${g_key}/${contour | space2url}";
-		 let graph_json = "./" + graph + ".json";
-		 const spec = fetch(graph_json)
-		   .then( (response) => response.json() )
-		   .then( (spec) => {
-		     displayGraph("${contour}", graph_json, "${g_key}-${contour}", spec, true, 1);
-		   });
-		</script>
-                %endif
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key}/${contour | unmeltC, space2url}.html">
+              %if '3D' not in contour:
+              <div id="${g_key}-${contour}"></div>
+              <script type="module">
+               import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+               let graph = "${g_key}/${contour | space2url}";
+               let graph_json = "./" + graph + ".json";
+               const spec = fetch(graph_json)
+                 .then( (response) => response.json() )
+                 .then( (spec) => {
+                   displayGraph("${contour}", graph_json, "${g_key}-${contour}", spec, true, 1);
+                 });
+              </script>
+              %endif
+            </a>
+          </div>
+        </div>
         % endfor
-        <tr>
-          <td class="is-centered">
-            % for contour in g_contour:
-            %   if '3D' in contour:
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key}/${contour | unmeltC, space2url}.html">
-		<div id="${g_key}-${contour}">
-		  <div class="buttons">
-		    <button class="button is-info">
-		      Click for a 3D view of ${contour}!
-		    </button>
-		  </div>
-		</div>
-              </a>
-            </div>
-          %   endif
-          % endfor
-          </td>
-        </tr>
+        % for contour in g_contour:
+        %   if '3D' in contour:
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key}/${contour | unmeltC, space2url}.html">
+              <div id="${g_key}-${contour}">
+                <div class="buttons">
+                  <button class="button is-info">
+                    Click for a 3D view of ${contour}!
+                  </button>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        %   endif
+        % endfor
         % for radar in g_radar:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key}/${radar | unmeltR, space2url}.html">
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key}/${radar | unmeltR, space2url}.html">
+            </a>
+          </div>
+        </div>
         % endfor
-      </table>
+      </div>
     </div>
     </div>
 
@@ -202,65 +185,59 @@
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-3">
       <div class="section">
-      <table style="margin: auto;">
+      <div class="graph-grid">
         % if g_eq is not None:
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
 %>
         % for freq in g_freq:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key_eq}/${freq | space2url}.html">
-		<div id="${g_key_eq}-${freq}"></div>
-		<script type="module">
-		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-		 let graph = "${g_key_eq}/${freq | space2url}";
-		 let graph_json = "./" + graph + ".json";
-		 const spec = fetch(graph_json)
-		   .then( (response) => response.json() )
-		   .then( (spec) => {
-		     displayGraph("${freq}", graph_json, "${g_key_eq}-${freq}", spec, true, 1);
-		   });
-		</script>
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key_eq}/${freq | space2url}.html">
+              <div id="${g_key_eq}-${freq}"></div>
+              <script type="module">
+               import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+               let graph = "${g_key_eq}/${freq | space2url}";
+               let graph_json = "./" + graph + ".json";
+               const spec = fetch(graph_json)
+                 .then( (response) => response.json() )
+                 .then( (spec) => {
+                   displayGraph("${freq}", graph_json, "${g_key_eq}-${freq}", spec, true, 1);
+                 });
+              </script>
+            </a>
+          </div>
+        </div>
         % endfor
         % for contour in g_contour:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
-		<div id="${g_key_eq}-${contour}"></div>
-		<script type="module">
-		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-		 let graph = "${g_key_eq}/${contour | space2url}";
-		 let graph_json = "./" + graph + ".json";
-		 const spec = fetch(graph_json)
-		   .then( (response) => response.json() )
-		   .then( (spec) => {
-		     displayGraph("${contour}", graph_json, "${g_key_eq}-${contour}", spec, true, 1);
-		   });
-		</script>
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
+              <div id="${g_key_eq}-${contour}"></div>
+              <script type="module">
+               import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+               let graph = "${g_key_eq}/${contour | space2url}";
+               let graph_json = "./" + graph + ".json";
+               const spec = fetch(graph_json)
+                 .then( (response) => response.json() )
+                 .then( (spec) => {
+                   displayGraph("${contour}", graph_json, "${g_key_eq}-${contour}", spec, true, 1);
+                 });
+              </script>
+            </a>
+          </div>
+        </div>
         % endfor
         % for radar in g_radar:
-        <tr>
-          <td>
-            <div class="box has-background-white-bis m-1 p-1">
-              <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
-              </a>
-            </div>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div class="box has-background-white-bis m-1 p-1">
+            <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
+            </a>
+          </div>
+        </div>
         % endfor
         % endif
-      </table>
+      </div>
       </div>
     </div>
     % endif
@@ -268,41 +245,39 @@
     <!-- Desktop view: Ref vs. EQ views-->
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-4">
-      <table style="margin: auto;">
+      <div class="graph-grid" style="grid-template-columns: repeat(2, 1fr);">
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
 %>
         % for freq in g_freq:
-        <tr>
-          <td>
-	    <div id="comp-${g_key}-${freq}"></div>
-	    <script type="module">
-	     import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-	     let graph = "${g_key}/${freq | space2url}";
-	     let graph_json = "./" + graph + ".json";
-	     const spec = fetch(graph_json)
-	       .then( (response) => response.json() )
-	       .then( (spec) => {
-		 displayGraph("${freq}", graph_json, "comp-${g_key}-${freq}", spec, false, 2);
-	       });
-	    </script>
-          </td>
-          <td>
-	    <div id="comp-${g_key_eq}-${freq}"></div>
-	    <script type="module">
-	     import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
-	     let graph = "${g_key_eq}/${freq | space2url}";
-	     let graph_json = "./" + graph + ".json";
-	     const spec = fetch(graph_json)
-	       .then( (response) => response.json() )
-	       .then( (spec) => {
-		 displayGraph("${freq}", graph_json, "comp-${g_key_eq}-${freq}", spec, false, 2);
-	       });
-	    </script>
-          </td>
-        </tr>
+        <div class="graph-cell">
+          <div id="comp-${g_key}-${freq}"></div>
+          <script type="module">
+           import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+           let graph = "${g_key}/${freq | space2url}";
+           let graph_json = "./" + graph + ".json";
+           const spec = fetch(graph_json)
+             .then( (response) => response.json() )
+             .then( (spec) => {
+               displayGraph("${freq}", graph_json, "comp-${g_key}-${freq}", spec, false, 2);
+             });
+          </script>
+        </div>
+        <div class="graph-cell">
+          <div id="comp-${g_key_eq}-${freq}"></div>
+          <script type="module">
+           import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+           let graph = "${g_key_eq}/${freq | space2url}";
+           let graph_json = "./" + graph + ".json";
+           const spec = fetch(graph_json)
+             .then( (response) => response.json() )
+             .then( (spec) => {
+               displayGraph("${freq}", graph_json, "comp-${g_key_eq}-${freq}", spec, false, 2);
+             });
+          </script>
+        </div>
         % endfor
-      </table>
+      </div>
     </div>
     % endif
 

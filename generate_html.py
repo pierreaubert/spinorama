@@ -424,6 +424,7 @@ def main():
     try:
         for item in (
             "compare",
+            "customization",
             "scores",
             "similar",
             "statistics",

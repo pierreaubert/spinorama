@@ -60,16 +60,16 @@ export const colorPalettes = {
         'rgb(245, 222, 179)',
     ],
     dark: [
-        'rgb(44, 62, 80)',
-        'rgb(231, 76, 60)',
-        'rgb(52, 152, 219)',
-        'rgb(46, 204, 113)',
-        'rgb(243, 156, 18)',
-        'rgb(155, 89, 182)',
-        'rgb(26, 188, 156)',
-        'rgb(52, 73, 94)',
-        'rgb(230, 126, 34)',
-        'rgb(149, 165, 166)',
+        'rgb(185, 195, 255)',
+        'rgb(255, 180, 171)',
+        'rgb(80, 220, 160)',
+        'rgb(255, 193, 70)',
+        'rgb(226, 186, 217)',
+        'rgb(193, 197, 221)',
+        'rgb(255, 157, 120)',
+        'rgb(133, 193, 233)',
+        'rgb(255, 214, 102)',
+        'rgb(174, 214, 181)',
     ],
     monochrome: [
         'rgb(44, 62, 80)',
@@ -161,7 +161,6 @@ export const defaultConfig = {
         size: 0, // 0 means no change to original size
         color: 'default', // 'default' means keep original color
     },
-    theme: 'default', // 'default' means keep original theme
     colors: {
         palette: 'default', // 'default' means keep original palette
     },
@@ -329,36 +328,57 @@ export function applyConfig(options, config) {
             });
         }
 
-        // Apply theme
+        // Apply theme (light/dark) to graph backgrounds and colors
         if (config.theme && config.theme !== 'default') {
             switch (config.theme) {
                 case 'light':
-                    layout.paper_bgcolor = '#ffffff';
-                    layout.plot_bgcolor = '#ffffff';
+                    layout.paper_bgcolor = '#faf8ff';
+                    layout.plot_bgcolor = '#faf8ff';
                     if (!layout.font) layout.font = {};
-                    layout.font.color = '#333333';
-                    ['xaxis', 'yaxis', 'zaxis'].forEach((axis) => {
+                    layout.font.color = '#1b1b21';
+                    ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
-                            layout[axis].gridcolor = '#e0e0e0';
-                            layout[axis].linecolor = '#333333';
-                            layout[axis].zerolinecolor = '#666666';
+                            layout[axis].gridcolor = '#c6c5d0';
+                            layout[axis].linecolor = '#45464f';
+                            layout[axis].zerolinecolor = '#767680';
+                            if (layout[axis].minor) {
+                                layout[axis].minor.gridcolor = 'rgba(0,0,0,0.05)';
+                            }
                         }
                     });
                     break;
                 case 'dark':
-                    layout.paper_bgcolor = '#1a1a2e';
-                    layout.plot_bgcolor = '#16213e';
+                    layout.paper_bgcolor = '#131318';
+                    layout.plot_bgcolor = '#1f1f25';
                     if (!layout.font) layout.font = {};
-                    layout.font.color = '#e0e0e0';
-                    ['xaxis', 'yaxis', 'zaxis'].forEach((axis) => {
+                    layout.font.color = '#e3e1e9';
+                    ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
-                            layout[axis].gridcolor = '#3a3a5c';
-                            layout[axis].linecolor = '#e0e0e0';
-                            layout[axis].zerolinecolor = '#5a5a7c';
+                            layout[axis].gridcolor = '#34343b';
+                            layout[axis].linecolor = '#c6c5d0';
+                            layout[axis].zerolinecolor = '#45464f';
+                            if (layout[axis].minor) {
+                                layout[axis].minor.gridcolor = 'rgba(255,255,255,0.05)';
+                            }
                         }
                     });
                     break;
             }
+        }
+
+        // Enforce plot borders on SPL vs frequency graphs (not contour/radar/globe)
+        var gt = options._graphType;
+        var isSplGraph = !gt || (gt.isGraph && !gt.isSurface && !gt.isRadar && !gt.isGlobe);
+        if (isSplGraph) {
+            var borderColor = (config.theme === 'dark') ? '#c6c5d0' : '#45464f';
+            ['xaxis', 'yaxis', 'yaxis2'].forEach(function(ax) {
+                if (layout[ax]) {
+                    layout[ax].showline = true;
+                    layout[ax].linewidth = 1;
+                    layout[ax].linecolor = borderColor;
+                    layout[ax].mirror = 'ticks';
+                }
+            });
         }
 
         // Apply margins as deltas to existing margins
@@ -389,7 +409,8 @@ export function applyConfig(options, config) {
                 layout.legend = {};
             }
 
-            if (config.legend.show !== undefined) {
+            // Only force legend on if the graph didn't explicitly disable it (e.g. contour plots)
+            if (config.legend.show !== undefined && layout.showlegend !== false) {
                 layout.showlegend = config.legend.show;
             }
 
@@ -517,8 +538,8 @@ export function applyConfig(options, config) {
 
             // Apply legend settings
             if (config.legend) {
-                // Show/hide legend
-                if (config.legend.show !== undefined) {
+                // Show/hide legend — respect per-trace override (e.g. contour grid lines)
+                if (config.legend.show !== undefined && trace.showlegend !== false) {
                     trace.showlegend = config.legend.show;
                 }
 
@@ -582,6 +603,11 @@ export function applyConfig(options, config) {
             }
         });
 
+        // Auto-select dark palette when in dark theme and user hasn't chosen one
+        if (config.theme === 'dark' && config.colors && (!config.colors.palette || config.colors.palette === 'default')) {
+            config.colors.palette = 'dark';
+        }
+
         // Only apply color palette if not set to 'default'
         if (config.colors && config.colors.palette && config.colors.palette !== 'default') {
             const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
@@ -628,333 +654,65 @@ export function applyConfig(options, config) {
     return options;
 }
 
-// Create plot configuration menu
+// Legacy per-graph config menu — now a no-op (config lives in the global navbar panel)
 export function createConfigMenu(divName, config, updateCallback, menuOptions) {
-    // Don't create menu if in compact mode with ploty=1 flag
-    const plotyFlag = getUrlParameter('ploty');
-    const graphSmall = 550; // Same as plot.js
-    const isCompact = window.innerWidth < graphSmall || window.innerHeight < graphSmall;
+    return;
+}
 
-    if (plotyFlag === '1' && isCompact) {
+// Notify all listeners that global config changed
+function dispatchConfigChange(config) {
+    saveConfigToStorage(config);
+    window.dispatchEvent(new CustomEvent('spinorama-config-change', { detail: config }));
+}
+
+// Initialize the global config panel inside #global-config-panel in the navbar
+export function initGlobalConfigPanel(config) {
+    const panel = document.getElementById('global-config-panel');
+    if (!panel || panel.dataset.initialized) {
         return;
     }
+    panel.dataset.initialized = 'true';
 
-    // Get the container element
-    const container = typeof divName === 'string' ? document.getElementById(divName) : divName;
-    if (!container) {
-        console.error('Cannot find container for configuration menu');
-        return;
-    }
+    const updateCallback = (updatedConfig) => dispatchConfigChange(updatedConfig);
+    const menuOptions = {};
 
-    // Check if config menu already exists
-    let configContainer = container.querySelector('.plot-config-container');
-    if (configContainer) {
-        return; // Menu already exists
-    }
-
-    // Create main config container with grid layout
-    configContainer = document.createElement('div');
-    configContainer.className = 'plot-config-container';
-    configContainer.style.cssText = `
-        width: 100%;
-        margin-bottom: 20px;
-        order: -1; /* Ensure it appears before other elements in flex contexts */
-        display: flex;
-        justify-content: center;
-    `;
-
-    // Create grid container
-    const gridContainer = document.createElement('div');
-    gridContainer.className = 'grid';
-    gridContainer.style.cssText = `
-        justify-content: center;
-        text-align: center;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    `;
-    configContainer.appendChild(gridContainer);
-
-    // Create cell for the main config dropdown
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-
-    // Create dropdown structure
-    const dropdown = document.createElement('div');
-    dropdown.className = 'dropdown is-hoverable';
-
-    // Create dropdown trigger
-    const dropdownTrigger = document.createElement('div');
-    dropdownTrigger.className = 'dropdown-trigger';
-
-    // Create main button
-    const mainButton = document.createElement('button');
-    mainButton.className = 'button';
-    mainButton.setAttribute('aria-haspopup', 'true');
-    mainButton.setAttribute('aria-controls', 'dropdown-plotconfig-main');
-
-    const buttonText = document.createElement('span');
-    buttonText.textContent = 'Plot Configuration';
-
-    const buttonIcon = document.createElement('span');
-    buttonIcon.className = 'icon is-small';
-    buttonIcon.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>';
-
-    mainButton.appendChild(buttonText);
-    mainButton.appendChild(buttonIcon);
-    dropdownTrigger.appendChild(mainButton);
-
-    // Create dropdown menu
-    const dropdownMenu = document.createElement('div');
-    dropdownMenu.className = 'dropdown-menu';
-    dropdownMenu.id = 'dropdown-plotconfig-main';
-    dropdownMenu.setAttribute('role', 'menu');
-    dropdownMenu.style.cssText = `
-        left: 50%;
-        transform: translateX(-50%);
-        position: absolute;
-    `;
-
-    // Create dropdown content
-    const dropdownContent = document.createElement('div');
-    dropdownContent.className = 'dropdown-content';
-    dropdownContent.style.cssText = `
-        min-width: 400px;
-        max-width: 600px;
-    `;
-
-    dropdownMenu.appendChild(dropdownContent);
-
-    // Assemble dropdown structure
-    dropdown.appendChild(dropdownTrigger);
-    dropdown.appendChild(dropdownMenu);
-    cell.appendChild(dropdown);
-    gridContainer.appendChild(cell);
-
-    // Create config panel container (inside dropdown content)
+    // Build config UI directly inside the global panel
     const configPanel = document.createElement('div');
-    configPanel.className = 'config-panel';
-    configPanel.style.cssText = `
-        padding: 15px;
-    `;
-    dropdownContent.appendChild(configPanel);
+    configPanel.className = 'plot-config-inner';
+    panel.appendChild(configPanel);
 
-    // Array to keep track of all sections for accordion behavior
-    const allSections = [];
-
-    // Create group sections to organize controls
+    // Create group sections — flat layout, no accordion
     function createGroupSection(title) {
         const section = document.createElement('div');
-        section.className = 'config-section';
-        section.style.cssText = `
-            margin-bottom: 20px;
-            padding: 0px;
-        `;
+        section.className = 'plot-config-section';
 
-        // Create collapsible section header
-        const sectionHeader = document.createElement('div');
-        sectionHeader.className = 'section-header is-clickable';
-        sectionHeader.style.cssText = `
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: rgb(245, 245, 245);
-            border-radius: 4px;
-            cursor: pointer;
-            border: 1px solid rgb(224, 224, 224);
-        `;
-
-        // Section title
-        const heading = document.createElement('h4');
+        const heading = document.createElement('div');
+        heading.className = 'config-label';
         heading.textContent = title;
-        heading.style.cssText = `
-            margin: 0px;
-            font-size: 1rem;
-            font-weight: bold;
-            flex-grow: 1;
-        `;
+        section.appendChild(heading);
 
-        // Toggle icon - start with closed state
-        const toggleIcon = document.createElement('span');
-        toggleIcon.innerHTML = '►';
-        toggleIcon.style.cssText = `
-            margin-left: 10px;
-            font-size: 0.8rem;
-            transition: transform 0.2s;
-        `;
-
-        sectionHeader.appendChild(heading);
-        sectionHeader.appendChild(toggleIcon);
-        section.appendChild(sectionHeader);
-
-        // Create content area for form elements - start closed
         const contentArea = document.createElement('div');
         contentArea.className = 'section-content';
-        contentArea.style.cssText = `
-            display: none;
-            padding: 10px;
-            border-right: 1px solid rgb(224, 224, 224);
-            border-bottom: 1px solid rgb(224, 224, 224);
-            border-left: 1px solid rgb(224, 224, 224);
-            border-image: initial;
-            border-top: none;
-            background: rgb(255, 255, 255);
-            border-radius: 0px 0px 4px 4px;
-        `;
 
-        // Create a flex container for form elements
         const flexContainer = document.createElement('div');
         flexContainer.className = 'config-flex-container';
-        flexContainer.style.cssText = `
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: flex-start;
-        `;
-
         contentArea.appendChild(flexContainer);
         section.appendChild(contentArea);
 
-        // Store section data for accordion behavior
-        const sectionData = {
-            sectionHeader,
-            contentArea,
-            toggleIcon,
-            isContentVisible: false, // Start closed
-        };
-
-        // Add this section to the allSections array
-        allSections.push(sectionData);
-
-        // Store a reference to close all other sections function
-        section._closeOthers = () => {
-            allSections.forEach((otherSection) => {
-                if (otherSection !== sectionData) {
-                    otherSection.isContentVisible = false;
-                    otherSection.contentArea.style.display = 'none';
-                    otherSection.toggleIcon.innerHTML = '►';
-                    otherSection.toggleIcon.style.transform = 'rotate(-90deg)';
-                }
-            });
-        };
-
-        // Add click handler for accordion behavior
-        sectionHeader.addEventListener('click', () => {
-            const wasVisible = sectionData.isContentVisible;
-
-            // Close all other sections first
-            section._closeOthers();
-
-            // Toggle this section
-            sectionData.isContentVisible = !wasVisible;
-            contentArea.style.display = sectionData.isContentVisible ? 'block' : 'none';
-            toggleIcon.innerHTML = sectionData.isContentVisible ? '▼' : '►';
-            toggleIcon.style.transform = sectionData.isContentVisible ? 'rotate(0)' : 'rotate(-90deg)';
-        });
-
-        // Override the appendChild method to add items to the flex container
-        const originalAppendChild = section.appendChild;
+        // Override appendChild to route into flexContainer
+        const originalAppendChild = section.appendChild.bind(section);
         section.appendChild = function (element) {
-            if (element !== sectionHeader && element !== contentArea && element !== flexContainer) {
-                // Ensure each form control has proper styling for the flex layout
-                if (element.classList.contains('form-group')) {
-                    element.style.cssText += `
-                        width: 100%;
-                        flex: 1 1 auto;
-                        min-width: 180px;
-                        max-width: 300px;
-                    `;
-                }
+            if (element !== heading && element !== contentArea && element !== flexContainer) {
                 return flexContainer.appendChild(element);
             }
-            return originalAppendChild.call(this, element);
+            return originalAppendChild(element);
         };
 
         return section;
     }
 
-    // Theme section
-    const themeSection = createGroupSection('Theme & Appearance');
-
-    // Custom theme selector with SVG icons
-    const themeGroup = document.createElement('div');
-    themeGroup.className = 'form-group field';
-    // themeGroup.style.cssText = `
-    //     width: 100%;
-    // `;
-
-    const themeLabel = document.createElement('label');
-    themeLabel.className = 'label is-small';
-    themeLabel.textContent = 'Theme';
-    themeGroup.appendChild(themeLabel);
-
-    const themeContainer = document.createElement('div');
-    themeContainer.style.cssText = `
-        display: flex;
-        gap: 10px;
-        padding: 5px 0;
-    `;
-
-    // Light theme option
-    const lightTheme = document.createElement('div');
-    lightTheme.className = `theme-option ${config.theme === 'light' ? 'active' : ''}`;
-    lightTheme.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z" fill="currentColor"/>
-        <path d="M12 2L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M12 20L12 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M22 12L20 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M4 12L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M19.0711 4.92893L17.6569 6.34315" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M6.34315 17.6569L4.92893 19.0711" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M19.0711 19.0711L17.6569 17.6569" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M6.34315 6.34315L4.92893 4.92893" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>`;
-    lightTheme.style.cssText = `
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 1px solid ${config.theme === 'light' ? '#4285f4' : '#ddd'};
-        background-color: ${config.theme === 'light' ? '#e8f0fe' : 'transparent'};
-    `;
-    lightTheme.dataset.value = 'light';
-
-    // Dark theme option
-    const darkTheme = document.createElement('div');
-    darkTheme.className = `theme-option ${config.theme === 'dark' ? 'active' : ''}`;
-    darkTheme.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20V4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="currentColor"/>
-    </svg>`;
-    darkTheme.style.cssText = `
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 1px solid ${config.theme === 'dark' ? '#4285f4' : '#ddd'};
-        background-color: ${config.theme === 'dark' ? '#e8f0fe' : 'transparent'};
-    `;
-    darkTheme.dataset.value = 'dark';
-
-    // Theme option click handlers
-    [lightTheme, darkTheme].forEach((option) => {
-        option.addEventListener('click', () => {
-            const themeValue = option.dataset.value;
-            config.theme = themeValue;
-
-            // Update UI
-            document.querySelectorAll('.theme-option').forEach((opt) => {
-                opt.style.border = opt === option ? '1px solid #4285f4' : '1px solid #ddd';
-                opt.style.backgroundColor = opt === option ? '#e8f0fe' : 'transparent';
-            });
-
-            updateCallback(config);
-        });
-    });
-
-    themeContainer.appendChild(lightTheme);
-    themeContainer.appendChild(darkTheme);
-    themeGroup.appendChild(themeContainer);
-
-    themeSection.appendChild(themeGroup);
+    // Fonts section
+    const themeSection = createGroupSection('Fonts');
 
     themeSection.appendChild(
         createFormGroup(
@@ -1519,21 +1277,6 @@ export function createConfigMenu(divName, config, updateCallback, menuOptions) {
 
     resetContainer.appendChild(resetButton);
     configPanel.appendChild(resetContainer);
-
-    // Make container a flex container to control the order properly
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-
-    // Insert config container at start of target container
-    container.insertBefore(configContainer, container.firstChild);
-
-    // Find any plotly graph containers and ensure they display properly
-    Array.from(container.querySelectorAll('.js-plotly-plot')).forEach((plotContainer) => {
-        if (plotContainer !== configContainer) {
-            // Ensure the plot container takes full width
-            plotContainer.style.width = '100%';
-        }
-    });
 }
 
 // Helper function to create form groups
@@ -1542,12 +1285,6 @@ export function createFormGroup(label, type, value, name, options, onChange) {
 
     group = document.createElement('div');
     group.className = 'form-group field';
-    group.style.cssText = `
-        width: 100%;
-        flex: 1 1 auto;
-        min-width: 180px;
-        max-width: 300px;
-    `;
 
     // Label with Bulma styling
     if (label) {

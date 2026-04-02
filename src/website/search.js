@@ -1171,19 +1171,15 @@ export function search(data, params) {
     const [minScore, resultsFullText] = rank(fuse_exact, brands, models, keywords);
 
     const resultsFiltered = [];
-    let currentDisplay = 0;
     let maxDisplay = 0;
-    const targetDisplay = pagination.count;
     sortMetadata2(data, sorter, resultsFullText).forEach((key) => {
         const speaker = data.get(key);
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
-        const withinPage = isWithinPage(maxDisplay, pagination);
-        // console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
-        if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
-            resultsFiltered.push(key);
-            maxDisplay += 1;
-        } else if (testFiltered && testKeywords) {
+        if (testFiltered && testKeywords) {
+            if (isWithinPage(maxDisplay, pagination)) {
+                resultsFiltered.push(key);
+            }
             maxDisplay += 1;
         }
     });
