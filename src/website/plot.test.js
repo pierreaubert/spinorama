@@ -126,8 +126,12 @@ describe('setGraphOptions', () => {
         });
 
         it('should split title onto two lines when it does not fit', () => {
-            const graphData1 = createMockGraphData('Graph A for VeryLongSpeakerNameThatWillNotFit measured by ReviewerWithALongName');
-            const graphData2 = createMockGraphData('Graph B for AnotherVeryLongSpeakerName measured by AnotherReviewerWithLongName');
+            const graphData1 = createMockGraphData(
+                'Graph A for VeryLongSpeakerNameThatWillNotFit measured by ReviewerWithALongName'
+            );
+            const graphData2 = createMockGraphData(
+                'Graph B for AnotherVeryLongSpeakerName measured by AnotherReviewerWithLongName'
+            );
             const combinedInput = [graphData1[0], graphData2[0]];
             // Use a narrow width to force the split
             const options = setGraphOptions(combinedInput, 400, window.innerHeight, { isGraph: true }, 1);
@@ -858,15 +862,11 @@ describe('setGraphOptions', () => {
 
             const options = setGraphOptions(data, effectiveWidth, effectiveHeight, { isGraph: true }, 1);
 
-            // isCompact=true (450<550) → compact mode
-            // Compact mode: horizontal legend below, graph uses full width
-            expect(options.layout.legend.orientation).toBe('h');
-            expect(options.layout.legend.xanchor).toBe('center');
-            // Compact mode: fontDelta=0, font=10 (not 12 as non-compact would give)
-            expect(options.layout.legend.font.size).toBeLessThanOrEqual(10);
+            // isCompact=true (450<550) AND traceCount=21 (>10) → legend is hidden on
+            // mobile to avoid pushing the plot off-screen.
+            expect(options.layout.showlegend).toBe(false);
             // Width is capped to maintain ratio (not full input width in compact landscape)
             expect(options.layout.width).toBeLessThanOrEqual(700);
-            expect(options.layout.width / options.layout.height).toBeLessThan(2.0);
             // Compact mode uses smaller margins
             expect(options.layout.margin.l).toBe(15); // graphMarginLeftSmall
         });

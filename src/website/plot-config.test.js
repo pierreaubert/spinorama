@@ -63,6 +63,44 @@ describe('applyConfig - theme application', () => {
         expect(result.layout.xaxis.zerolinecolor).toBe('#45464f');
     });
 
+    it('dark theme overrides title font color (regression: black title on dark bg)', () => {
+        // Simulate the production scenario: plot.js sets layout.title with no
+        // explicit color, applyConfig must give it a light color in dark mode.
+        const options = {
+            layout: {
+                title: { text: 'CEA2034 for Test', font: { size: 16 } },
+                xaxis: { title: { text: 'SPL (dB) v.s. Frequency (Hz)', font: { size: 11 } } },
+                yaxis: { title: { text: 'SPL (dB)', font: { size: 11 } } },
+                margin: { l: 30, r: 30, t: 70, b: 30 },
+            },
+            data: [],
+        };
+        const config = { ...structuredClone(defaultConfig), theme: 'dark' };
+        const result = applyConfig(options, config);
+
+        expect(result.layout.title.font.color).toBe('#e3e1e9');
+        expect(result.layout.xaxis.title.font.color).toBe('#e3e1e9');
+        expect(result.layout.yaxis.title.font.color).toBe('#e3e1e9');
+    });
+
+    it('light theme also sets title font color explicitly', () => {
+        const options = {
+            layout: {
+                title: { text: 'CEA2034 for Test', font: { size: 16 } },
+                xaxis: { title: { text: 'SPL (dB) v.s. Frequency (Hz)', font: { size: 11 } } },
+                yaxis: { title: { text: 'SPL (dB)', font: { size: 11 } } },
+                margin: { l: 30, r: 30, t: 70, b: 30 },
+            },
+            data: [],
+        };
+        const config = { ...structuredClone(defaultConfig), theme: 'light' };
+        const result = applyConfig(options, config);
+
+        expect(result.layout.title.font.color).toBe('#1b1b21');
+        expect(result.layout.xaxis.title.font.color).toBe('#1b1b21');
+        expect(result.layout.yaxis.title.font.color).toBe('#1b1b21');
+    });
+
     it('default theme leaves layout unchanged', () => {
         const options = makeOptions();
         const config = { ...structuredClone(defaultConfig), theme: 'default' };
@@ -532,9 +570,7 @@ describe('applyConfig - dark palette auto-selection', () => {
                 yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
                 margin: { l: 10, r: 10, t: 10, b: 10 },
             },
-            data: [
-                { type: 'scatter', line: { color: 'blue' }, marker: {} },
-            ],
+            data: [{ type: 'scatter', line: { color: 'blue' }, marker: {} }],
         };
         const config = { ...structuredClone(defaultConfig), theme: 'dark', colors: { palette: 'default' } };
         const result = applyConfig(options, config);
@@ -552,9 +588,7 @@ describe('applyConfig - dark palette auto-selection', () => {
                 yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
                 margin: { l: 10, r: 10, t: 10, b: 10 },
             },
-            data: [
-                { type: 'scatter', line: { color: 'blue' }, marker: {} },
-            ],
+            data: [{ type: 'scatter', line: { color: 'blue' }, marker: {} }],
         };
         const config = { ...structuredClone(defaultConfig), theme: 'dark', colors: { palette: 'vibrant' } };
         const result = applyConfig(options, config);
@@ -572,9 +606,7 @@ describe('applyConfig - dark palette auto-selection', () => {
                 yaxis: { gridcolor: '#ccc', linecolor: '#000', zerolinecolor: '#000' },
                 margin: { l: 10, r: 10, t: 10, b: 10 },
             },
-            data: [
-                { type: 'scatter', line: { color: 'blue' }, marker: {} },
-            ],
+            data: [{ type: 'scatter', line: { color: 'blue' }, marker: {} }],
         };
         const config = { ...structuredClone(defaultConfig), theme: 'light', colors: { palette: 'default' } };
         const result = applyConfig(options, config);
@@ -635,13 +667,12 @@ describe('applyConfig — showlegend guards', () => {
     function makeBaseOptions(showlegend) {
         const opts = {
             layout: {
-                xaxis: {}, yaxis: {},
+                xaxis: {},
+                yaxis: {},
                 font: { color: '#000' },
                 margin: { l: 10, r: 10, t: 10, b: 10 },
             },
-            data: [
-                { type: 'scatter', name: 'trace1', line: { color: 'blue' }, marker: {} },
-            ],
+            data: [{ type: 'scatter', name: 'trace1', line: { color: 'blue' }, marker: {} }],
         };
         if (showlegend !== undefined) {
             opts.layout.showlegend = showlegend;

@@ -134,7 +134,7 @@ describe('Navbar structure', () => {
     test('menu contains customization link', () => {
         const menu = document.querySelector('#menu-main .dropdown-content');
         const links = Array.from(menu.querySelectorAll('a.dropdown-item'));
-        const customLink = links.find(a => a.href.includes('customization'));
+        const customLink = links.find((a) => a.href.includes('customization'));
         expect(customLink).not.toBeUndefined();
     });
 

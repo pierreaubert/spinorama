@@ -230,7 +230,17 @@ export function isDisplayCompact() {
 //      space it needs. Scale font down to 8px if needed to reduce legend height.
 //   3. Add legend space to the appropriate margin, compute plotW from the reduced width,
 //      enforce plotH = plotW / ratio, return total width/height and legend config.
-export function computeLayout(containerWidth, isVertical, isCompact, graphProps, traceCount, maxLabelLen, hasYaxis2, ratio, fontDelta) {
+export function computeLayout(
+    containerWidth,
+    isVertical,
+    isCompact,
+    graphProps,
+    traceCount,
+    maxLabelLen,
+    hasYaxis2,
+    ratio,
+    fontDelta
+) {
     const minFont = 8;
     const baseFont = isCompact ? fontSizeH5 : fontSizeH5 + fontDelta;
     const isPolar = graphProps.isRadar || graphProps.isGlobe;
@@ -262,9 +272,18 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0, hidden: true };
     } else if (traceCount === 0) {
         legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0 };
+    } else if (isCompact && traceCount > 10) {
+        // Compact mode with many traces (e.g. SPL Horizontal with 36 angles):
+        // a horizontal legend would push the plot off-screen even with row-cap,
+        // and Plotly's auto-grown bottom margin (from xaxis automargin) makes
+        // any cap unreliable. Hide the legend entirely on mobile in this case
+        // — the user can hover to identify traces, or rotate / expand to see
+        // them via the wider landscape layout.
+        legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0, hidden: true };
     } else if (isCompact || isVertical) {
-        // Compact or portrait: horizontal legend below the plot.
-        // Scale font down to 8px if legend would be too tall (>60% of plot height).
+        // Compact or portrait with a manageable trace count: horizontal legend below the plot.
+        // Cap visible legend at 5 rows so the plot doesn't get squeezed.
+        const MAX_LEGEND_ROWS = 5;
         const plotAreaW_avail = containerWidth - margin.l - margin.r;
         let font = baseFont;
         let legendH = 0;
@@ -273,7 +292,8 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
             entryW = Math.max(60, maxLabelLen * font * 0.6 + 50);
             const cols = Math.max(1, Math.floor(plotAreaW_avail / entryW));
             const rows = Math.ceil(traceCount / cols);
-            legendH = rows * font * 1.8 + 10;
+            const visibleRows = Math.min(rows, MAX_LEGEND_ROWS);
+            legendH = visibleRows * font * 1.8 + 10;
             const plotAreaH = plotAreaW_avail / ratio;
             if (legendH <= plotAreaH * 0.6 || font <= minFont) break;
             font -= 1;
@@ -329,7 +349,7 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         // that may wrap to 2 lines at narrow widths. In other modes it's a short 1-line title.
         const xTitleFont = fontSizeH6 + fontDelta;
         const xTitleLineH = xTitleFont * 1.4;
-        const xTitleH = (isCompact && isVertical) ? (xTitleLineH * 2 + 6) : (xTitleLineH + 6);
+        const xTitleH = isCompact && isVertical ? xTitleLineH * 2 + 6 : xTitleLineH + 6;
         margin.b += xTitleH;
     }
 
@@ -346,12 +366,21 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
     let totalH;
 
     if (graphProps.isSurface) {
-        // Contour plots: enforce the TOTAL layout ratio (not plot area ratio).
-        // The user perceives the visible cell, not just the data region inside
-        // the axes/colorbar. Solving totalH = containerWidth / ratio gives:
-        //   plotAreaH = totalH - margin.t - margin.b
-        totalH = containerWidth / ratio;
-        plotAreaH = Math.max(1, totalH - margin.t - margin.b);
+        // Contour plots:
+        //   - Non-compact: enforce TOTAL layout ratio so the visible bordered
+        //     cell has the target shape (1.6:1). Margins are a small fraction
+        //     of the cell at desktop sizes.
+        //   - Compact (mobile): enforce PLOT AREA ratio instead. At narrow
+        //     widths the fixed margins (xtitle, colorbar, etc.) take up so
+        //     much of a 1.6:1 cell that the data region collapses to ~1:3.
+        //     Letting layout grow taller keeps the data region readable.
+        if (isCompact) {
+            plotAreaH = plotAreaW / ratio;
+            totalH = plotAreaH + margin.t + margin.b;
+        } else {
+            totalH = containerWidth / ratio;
+            plotAreaH = Math.max(1, totalH - margin.t - margin.b);
+        }
     } else {
         // Line/CEA2034 graphs: enforce plot area ratio so the data region itself
         // has consistent proportions across graphs (legend/title vary in size).
@@ -595,7 +624,12 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             const trace = datas[k];
             if (trace.fill) {
                 trace.zorder = -2;
-            } else if (trace.name && (trace.name.indexOf('Midrange') !== -1 || trace.name.indexOf('Linear') !== -1 || trace.name.indexOf('Reg') !== -1)) {
+            } else if (
+                trace.name &&
+                (trace.name.indexOf('Midrange') !== -1 ||
+                    trace.name.indexOf('Linear') !== -1 ||
+                    trace.name.indexOf('Reg') !== -1)
+            ) {
                 trace.zorder = -1;
             } else {
                 trace.zorder = 1;
@@ -624,9 +658,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
     function computeXaxis() {
         if (layout.xaxis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
+            // No hardcoded color — applyConfig sets a theme-aware color via layout.font
             layout.xaxis.title.font = {
                 size: fontSizeH6 + fontDelta,
-                color: '#000',
             };
             layout.xaxis.automargin = 'height';
             layout.xaxis.side = 'bottom';
@@ -783,7 +817,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             if (layout.yaxis.title) {
                 layout.yaxis.title.font = {
                     size: fontSizeH6 + fontDelta,
-                    color: '#000',
                 };
             }
         }
@@ -810,7 +843,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             if (layout.yaxis2.title) {
                 layout.yaxis2.title.font = {
                     size: fontSizeH6 + fontDelta,
-                    color: '#000',
                 };
             }
         }
@@ -931,7 +963,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         if (isCompact) {
             layout.title = {
                 text: title,
-                font: { size: chosenFontSize, color: '#000' },
+                // No hardcoded color — applyConfig sets a theme-aware color via layout.font
+                font: { size: chosenFontSize },
                 xref: 'paper',
                 xanchor: 'left',
                 x: 0.0,
@@ -939,7 +972,8 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else {
             layout.title = {
                 text: title,
-                font: { size: chosenFontSize, color: '#000' },
+                // No hardcoded color — applyConfig sets a theme-aware color via layout.font
+                font: { size: chosenFontSize },
                 xref: 'container',
                 xanchor: 'center',
                 x: 0.5,

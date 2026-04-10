@@ -139,10 +139,14 @@ function headFragment() {
                 col.label +
                 '</b>' +
                 '<span class="sort-arrows" style="display:inline-flex;flex-direction:column;line-height:0;gap:1px;margin-left:2px">' +
-                '<span class="sort-arrow-up" style="' + upStyle + '">' +
+                '<span class="sort-arrow-up" style="' +
+                upStyle +
+                '">' +
                 svgArrowUp +
                 '</span>' +
-                '<span class="sort-arrow-down" style="' + downStyle + '">' +
+                '<span class="sort-arrow-down" style="' +
+                downStyle +
+                '">' +
                 svgArrowDown +
                 '</span>' +
                 '</span>' +

@@ -341,11 +341,17 @@ export function applyConfig(options, config) {
         // Apply theme (light/dark) to graph backgrounds and colors
         if (config.theme && config.theme !== 'default') {
             switch (config.theme) {
-                case 'light':
+                case 'light': {
+                    const fg = '#1b1b21';
                     layout.paper_bgcolor = '#faf8ff';
                     layout.plot_bgcolor = '#faf8ff';
                     if (!layout.font) layout.font = {};
-                    layout.font.color = '#1b1b21';
+                    layout.font.color = fg;
+                    // Force title color (Plotly default may not inherit from layout.font)
+                    if (layout.title) {
+                        if (!layout.title.font) layout.title.font = {};
+                        layout.title.font.color = fg;
+                    }
                     ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
                             // Major grid: darker so 5 dB lines stand out
@@ -356,14 +362,27 @@ export function applyConfig(options, config) {
                                 // Minor grid: lighter so 1 dB lines are visible but subordinate
                                 layout[axis].minor.gridcolor = 'rgba(0,0,0,0.07)';
                             }
+                            // Tick and axis title text colors
+                            if (layout[axis].tickfont) layout[axis].tickfont.color = fg;
+                            else layout[axis].tickfont = { color: fg };
+                            if (layout[axis].title) {
+                                if (!layout[axis].title.font) layout[axis].title.font = {};
+                                layout[axis].title.font.color = fg;
+                            }
                         }
                     });
                     break;
-                case 'dark':
+                }
+                case 'dark': {
+                    const fg = '#e3e1e9';
                     layout.paper_bgcolor = '#131318';
                     layout.plot_bgcolor = '#1f1f25';
                     if (!layout.font) layout.font = {};
-                    layout.font.color = '#e3e1e9';
+                    layout.font.color = fg;
+                    if (layout.title) {
+                        if (!layout.title.font) layout.title.font = {};
+                        layout.title.font.color = fg;
+                    }
                     ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
                             // Major grid: brighter so 5 dB lines stand out
@@ -374,9 +393,16 @@ export function applyConfig(options, config) {
                                 // Minor grid: dimmer so 1 dB lines are subordinate
                                 layout[axis].minor.gridcolor = 'rgba(255,255,255,0.07)';
                             }
+                            if (layout[axis].tickfont) layout[axis].tickfont.color = fg;
+                            else layout[axis].tickfont = { color: fg };
+                            if (layout[axis].title) {
+                                if (!layout[axis].title.font) layout[axis].title.font = {};
+                                layout[axis].title.font.color = fg;
+                            }
                         }
                     });
                     break;
+                }
             }
         }
 
@@ -384,8 +410,8 @@ export function applyConfig(options, config) {
         var gt = options._graphType;
         var isSplGraph = !gt || (gt.isGraph && !gt.isSurface && !gt.isRadar && !gt.isGlobe);
         if (isSplGraph) {
-            var borderColor = (config.theme === 'dark') ? '#c6c5d0' : '#45464f';
-            ['xaxis', 'yaxis', 'yaxis2'].forEach(function(ax) {
+            var borderColor = config.theme === 'dark' ? '#c6c5d0' : '#45464f';
+            ['xaxis', 'yaxis', 'yaxis2'].forEach(function (ax) {
                 if (layout[ax]) {
                     layout[ax].showline = true;
                     layout[ax].linewidth = 1;
@@ -541,7 +567,8 @@ export function applyConfig(options, config) {
     if (options.data && Array.isArray(options.data)) {
         // Pre-compute flags to skip unnecessary work inside the trace loop
         const hasFontConfig = Object.keys(fontConfig).length > 0;
-        const hasColorbar = config.colorbar && (config.colorbar.thickness || config.colorbar.len || config.colorbar.show !== undefined);
+        const hasColorbar =
+            config.colorbar && (config.colorbar.thickness || config.colorbar.len || config.colorbar.show !== undefined);
         const hasLegendConfig = !!config.legend;
         const legendLabel = config.legend?.label;
         const hasLegendLabel = legendLabel && legendLabel !== 'default';
@@ -554,9 +581,11 @@ export function applyConfig(options, config) {
             config.colors.palette = 'dark';
         }
         const applyPalette = config.colors?.palette && config.colors.palette !== 'default';
-        const selectedPalette = applyPalette ? (colorPalettes[config.colors.palette] || colorPalettes.default) : null;
+        const selectedPalette = applyPalette ? colorPalettes[config.colors.palette] || colorPalettes.default : null;
         const applyColorscale = config.contour?.colorscale && config.contour.colorscale !== 'default';
-        const selectedColorscale = applyColorscale ? (contourColorscales[config.contour.colorscale] || contourColorscales.default) : null;
+        const selectedColorscale = applyColorscale
+            ? contourColorscales[config.contour.colorscale] || contourColorscales.default
+            : null;
 
         // Single pass over all traces
         for (let index = 0; index < options.data.length; index++) {
@@ -564,7 +593,8 @@ export function applyConfig(options, config) {
 
             // Colorbar
             if (hasColorbar && trace.colorbar) {
-                if (config.colorbar.thickness) trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
+                if (config.colorbar.thickness)
+                    trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
                 if (config.colorbar.len) trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
                 if (config.colorbar.show !== undefined) trace.colorbar.visible = config.colorbar.show;
             }
@@ -634,7 +664,10 @@ export function applyConfig(options, config) {
             }
 
             // Colorscale (only if non-default)
-            if (selectedColorscale && (trace.type === 'contour' || trace.type === 'heatmap' || trace.type === 'surface' || trace.type === 'contourgl')) {
+            if (
+                selectedColorscale &&
+                (trace.type === 'contour' || trace.type === 'heatmap' || trace.type === 'surface' || trace.type === 'contourgl')
+            ) {
                 trace.colorscale = selectedColorscale;
             }
         }

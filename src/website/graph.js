@@ -30,7 +30,9 @@ function detectTheme() {
         if (window.matchMedia) {
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
-    } catch (_) { /* test environment */ }
+    } catch (_) {
+        /* test environment */
+    }
     return 'light';
 }
 
@@ -115,13 +117,13 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
             layout.title.font = Object.assign({}, layout.title.font);
         }
         // Shallow-clone annotations array (applyConfig sets .visible on each)
-        const annotations = layout.annotations ? layout.annotations.map(a => Object.assign({}, a)) : undefined;
+        const annotations = layout.annotations ? layout.annotations.map((a) => Object.assign({}, a)) : undefined;
         if (annotations) layout.annotations = annotations;
         // Clone shapes array (applyConfig pushes border shape)
         if (layout.shapes) layout.shapes = layout.shapes.slice();
 
         // Shallow-clone each trace: share x/y/z data arrays, clone mutable props
-        const data = base.data.map(t => {
+        const data = base.data.map((t) => {
             const clone = Object.assign({}, t);
             if (clone.marker) clone.marker = Object.assign({}, clone.marker);
             if (clone.line) clone.line = Object.assign({}, clone.line);

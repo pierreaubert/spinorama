@@ -61,9 +61,9 @@
     var UNITS_KEY = 'spinorama-units';
 
     var conversions = {
-        mm:  { factor: 0.03937008, label: 'in',  decimals: 1 },
-        kg:  { factor: 2.20462,    label: 'lbs', decimals: 1 },
-        m:   { factor: 3.28084,    label: 'ft',  decimals: 1 }
+        mm: { factor: 0.03937008, label: 'in', decimals: 1 },
+        kg: { factor: 2.20462, label: 'lbs', decimals: 1 },
+        m: { factor: 3.28084, label: 'ft', decimals: 1 },
     };
 
     function applyUnits(system) {
@@ -76,7 +76,7 @@
                 el.textContent = (raw * c.factor).toFixed(c.decimals);
             } else {
                 // metric: restore original
-                var d = (unit === 'mm') ? 0 : 1;
+                var d = unit === 'mm' ? 0 : 1;
                 el.textContent = parseFloat(raw.toFixed(d)) + '';
             }
         });

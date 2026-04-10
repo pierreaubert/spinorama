@@ -14,93 +14,257 @@ const CONTOUR_TYPE = { isGraph: false, isSpin: false, isRadar: false, isSurface:
 
 // Minimal SPL graph input matching Plotly JSON structure from Python backend
 function makeSPLInput(title) {
-    return [{
-        data: [
-            { name: 'On Axis', x: [20, 100, 1000, 20000], y: [80, 85, 82, 75], type: 'scatter', line: { color: 'blue' }, marker: {} },
-            { name: 'Listening Window', x: [20, 100, 1000, 20000], y: [78, 83, 80, 72], type: 'scatter', line: { color: 'red' }, marker: {} },
-        ],
-        layout: {
-            title: { text: title, font: { size: 14, color: '#000' } },
-            xaxis: { title: { text: 'Frequency (Hz)', font: { size: 12 } }, type: 'log', range: [Math.log10(20), Math.log10(20000)], tickfont: { size: 10 } },
-            yaxis: { title: { text: 'SPL (dB)', font: { size: 12 } }, range: [50, 100], tickfont: { size: 10 } },
-            font: { size: 12, color: '#000' },
-            margin: { l: 60, r: 20, t: 40, b: 50 },
-            legend: { x: 0.5, y: -0.2 },
+    return [
+        {
+            data: [
+                {
+                    name: 'On Axis',
+                    x: [20, 100, 1000, 20000],
+                    y: [80, 85, 82, 75],
+                    type: 'scatter',
+                    line: { color: 'blue' },
+                    marker: {},
+                },
+                {
+                    name: 'Listening Window',
+                    x: [20, 100, 1000, 20000],
+                    y: [78, 83, 80, 72],
+                    type: 'scatter',
+                    line: { color: 'red' },
+                    marker: {},
+                },
+            ],
+            layout: {
+                title: { text: title, font: { size: 14, color: '#000' } },
+                xaxis: {
+                    title: { text: 'Frequency (Hz)', font: { size: 12 } },
+                    type: 'log',
+                    range: [Math.log10(20), Math.log10(20000)],
+                    tickfont: { size: 10 },
+                },
+                yaxis: { title: { text: 'SPL (dB)', font: { size: 12 } }, range: [50, 100], tickfont: { size: 10 } },
+                font: { size: 12, color: '#000' },
+                margin: { l: 60, r: 20, t: 40, b: 50 },
+                legend: { x: 0.5, y: -0.2 },
+            },
         },
-    }];
+    ];
 }
 
 // Minimal contour graph input
 function makeContourInput(title) {
-    return [{
-        data: [
-            {
-                name: 'contour', type: 'contour',
-                x: [100, 1000, 10000], y: [-90, -60, -30, 0, 30, 60, 90],
-                z: [[1,2,3],[2,3,4],[3,4,5],[4,5,6],[3,4,5],[2,3,4],[1,2,3]],
-                colorbar: { thickness: 15, len: 0.8, lenmode: 'fraction', thicknessmode: 'pixels' },
-                showscale: true,
+    return [
+        {
+            data: [
+                {
+                    name: 'contour',
+                    type: 'contour',
+                    x: [100, 1000, 10000],
+                    y: [-90, -60, -30, 0, 30, 60, 90],
+                    z: [
+                        [1, 2, 3],
+                        [2, 3, 4],
+                        [3, 4, 5],
+                        [4, 5, 6],
+                        [3, 4, 5],
+                        [2, 3, 4],
+                        [1, 2, 3],
+                    ],
+                    colorbar: { thickness: 15, len: 0.8, lenmode: 'fraction', thicknessmode: 'pixels' },
+                    showscale: true,
+                },
+                // Grid line traces (scatter) added by Python backend
+                { name: '', type: 'scatter', x: [100, 10000], y: [0, 0], mode: 'lines', line: { color: 'white', width: 0.5 } },
+                {
+                    name: '',
+                    type: 'scatter',
+                    x: [100, 10000],
+                    y: [30, 30],
+                    mode: 'lines',
+                    line: { color: 'white', width: 0.5 },
+                },
+            ],
+            layout: {
+                title: { text: title, font: { size: 14, color: '#000' } },
+                xaxis: {
+                    title: { text: 'Frequency (Hz)', font: { size: 12 } },
+                    type: 'log',
+                    range: [Math.log10(100), Math.log10(20000)],
+                    tickfont: { size: 10 },
+                },
+                yaxis: {
+                    title: { text: 'Angle (deg)', font: { size: 12 } },
+                    range: [-180, 180],
+                    tickvals: [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180],
+                    ticktext: [
+                        '-180°',
+                        '-150°',
+                        '-120°',
+                        '-90°',
+                        '-60°',
+                        '-30°',
+                        '0°',
+                        '30°',
+                        '60°',
+                        '90°',
+                        '120°',
+                        '150°',
+                        '180°',
+                    ],
+                    tickfont: { size: 10 },
+                },
+                font: { size: 12, color: '#000' },
+                margin: { l: 60, r: 80, t: 40, b: 50 },
+                legend: {},
             },
-            // Grid line traces (scatter) added by Python backend
-            { name: '', type: 'scatter', x: [100, 10000], y: [0, 0], mode: 'lines', line: { color: 'white', width: 0.5 } },
-            { name: '', type: 'scatter', x: [100, 10000], y: [30, 30], mode: 'lines', line: { color: 'white', width: 0.5 } },
-        ],
-        layout: {
-            title: { text: title, font: { size: 14, color: '#000' } },
-            xaxis: { title: { text: 'Frequency (Hz)', font: { size: 12 } }, type: 'log', range: [Math.log10(100), Math.log10(20000)], tickfont: { size: 10 } },
-            yaxis: { title: { text: 'Angle (deg)', font: { size: 12 } }, range: [-180, 180],
-                     tickvals: [-180,-150,-120,-90,-60,-30,0,30,60,90,120,150,180],
-                     ticktext: ['-180°','-150°','-120°','-90°','-60°','-30°','0°','30°','60°','90°','120°','150°','180°'],
-                     tickfont: { size: 10 } },
-            font: { size: 12, color: '#000' },
-            margin: { l: 60, r: 80, t: 40, b: 50 },
-            legend: {},
         },
-    }];
+    ];
 }
 
 // CEA2034 graph input — dual y-axis (SPL + DI), tickvals every 5dB from Python backend
 function makeCEA2034Input(title) {
-    const ymin = -40, ymax = 10, step = 5;
+    const ymin = -40,
+        ymax = 10,
+        step = 5;
     const tickvals = [];
     const ticktext = [];
     for (let i = ymin; i <= ymax; i += step) {
         tickvals.push(i);
-        ticktext.push((i % 10 === 0) ? String(i) : ' ');
+        ticktext.push(i % 10 === 0 ? String(i) : ' ');
     }
-    return [{
-        data: [
-            { name: 'On Axis', x: [20, 100, 1000, 20000], y: [0, 0, 0, -5], type: 'scatter', line: { color: 'blue' }, marker: {} },
-            { name: 'Listening Window', x: [20, 100, 1000, 20000], y: [-1, -1, -1, -6], type: 'scatter', line: { color: 'orange' }, marker: {} },
-            { name: 'Early Reflections', x: [20, 100, 1000, 20000], y: [-2, -2, -2, -7], type: 'scatter', line: { color: 'red' }, marker: {} },
-            { name: 'Sound Power', x: [20, 100, 1000, 20000], y: [-3, -3, -3, -8], type: 'scatter', line: { color: 'teal' }, marker: {} },
-            { name: 'Early Reflections DI', x: [20, 100, 1000, 20000], y: [-35, -35, -30, -35], type: 'scatter', yaxis: 'y2', line: { color: 'green' }, marker: {} },
-            { name: 'Sound Power DI', x: [20, 100, 1000, 20000], y: [-35, -35, -30, -35], type: 'scatter', yaxis: 'y2', line: { color: 'gray' }, marker: {} },
-        ],
-        layout: {
-            title: { text: title, font: { size: 14, color: '#000' } },
-            xaxis: { title: { text: 'Frequency (Hz)', font: { size: 12 } }, type: 'log', range: [Math.log10(20), Math.log10(20000)], tickfont: { size: 10 }, showline: true, dtick: 'D1' },
-            yaxis: { title: { text: 'SPL (dB)', font: { size: 12 } }, range: [ymin, ymax], autorange: false,
-                     dtick: step, tickvals: tickvals, ticktext: ticktext, tickfont: { size: 10 }, ticks: 'inside', showline: true },
-            yaxis2: { title: { text: 'DI (dB)', font: { size: 12 } }, range: [-5, 45], overlaying: 'y', side: 'right',
-                      dtick: 5, tickvals: [-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
-                      ticktext: ['-5', '0', '5', '10', '15', '20', '25', '30', '35', '40', '45'],
-                      tickfont: { size: 10 }, ticks: 'inside', showline: true },
-            font: { size: 12, color: '#000' },
-            margin: { l: 60, r: 60, t: 40, b: 50 },
-            legend: { x: 0.5, y: -0.2 },
+    return [
+        {
+            data: [
+                {
+                    name: 'On Axis',
+                    x: [20, 100, 1000, 20000],
+                    y: [0, 0, 0, -5],
+                    type: 'scatter',
+                    line: { color: 'blue' },
+                    marker: {},
+                },
+                {
+                    name: 'Listening Window',
+                    x: [20, 100, 1000, 20000],
+                    y: [-1, -1, -1, -6],
+                    type: 'scatter',
+                    line: { color: 'orange' },
+                    marker: {},
+                },
+                {
+                    name: 'Early Reflections',
+                    x: [20, 100, 1000, 20000],
+                    y: [-2, -2, -2, -7],
+                    type: 'scatter',
+                    line: { color: 'red' },
+                    marker: {},
+                },
+                {
+                    name: 'Sound Power',
+                    x: [20, 100, 1000, 20000],
+                    y: [-3, -3, -3, -8],
+                    type: 'scatter',
+                    line: { color: 'teal' },
+                    marker: {},
+                },
+                {
+                    name: 'Early Reflections DI',
+                    x: [20, 100, 1000, 20000],
+                    y: [-35, -35, -30, -35],
+                    type: 'scatter',
+                    yaxis: 'y2',
+                    line: { color: 'green' },
+                    marker: {},
+                },
+                {
+                    name: 'Sound Power DI',
+                    x: [20, 100, 1000, 20000],
+                    y: [-35, -35, -30, -35],
+                    type: 'scatter',
+                    yaxis: 'y2',
+                    line: { color: 'gray' },
+                    marker: {},
+                },
+            ],
+            layout: {
+                title: { text: title, font: { size: 14, color: '#000' } },
+                xaxis: {
+                    title: { text: 'Frequency (Hz)', font: { size: 12 } },
+                    type: 'log',
+                    range: [Math.log10(20), Math.log10(20000)],
+                    tickfont: { size: 10 },
+                    showline: true,
+                    dtick: 'D1',
+                },
+                yaxis: {
+                    title: { text: 'SPL (dB)', font: { size: 12 } },
+                    range: [ymin, ymax],
+                    autorange: false,
+                    dtick: step,
+                    tickvals: tickvals,
+                    ticktext: ticktext,
+                    tickfont: { size: 10 },
+                    ticks: 'inside',
+                    showline: true,
+                },
+                yaxis2: {
+                    title: { text: 'DI (dB)', font: { size: 12 } },
+                    range: [-5, 45],
+                    overlaying: 'y',
+                    side: 'right',
+                    dtick: 5,
+                    tickvals: [-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
+                    ticktext: ['-5', '0', '5', '10', '15', '20', '25', '30', '35', '40', '45'],
+                    tickfont: { size: 10 },
+                    ticks: 'inside',
+                    showline: true,
+                },
+                font: { size: 12, color: '#000' },
+                margin: { l: 60, r: 60, t: 40, b: 50 },
+                legend: { x: 0.5, y: -0.2 },
+            },
         },
-    }];
+    ];
 }
 
 // SPL graph with N traces (variable legend size)
 function makeSPLInputWithTraces(title, traceCount) {
-    const colors = ['blue', 'red', 'green', 'orange', 'purple', 'cyan', 'gray', 'pink', 'brown', 'olive',
-                    'navy', 'teal', 'maroon', 'lime', 'aqua', 'fuchsia'];
-    const names = ['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power',
-                   'Early Reflections DI', 'Sound Power DI', 'Floor Bounce', 'Ceiling Bounce',
-                   'Front Wall Bounce', 'Side Wall Bounce', 'Rear Wall Bounce', 'Total Early Reflection',
-                   'Band +3dB', 'Band -3dB', 'Midrange +3dB', 'Midrange -3dB'];
+    const colors = [
+        'blue',
+        'red',
+        'green',
+        'orange',
+        'purple',
+        'cyan',
+        'gray',
+        'pink',
+        'brown',
+        'olive',
+        'navy',
+        'teal',
+        'maroon',
+        'lime',
+        'aqua',
+        'fuchsia',
+    ];
+    const names = [
+        'On Axis',
+        'Listening Window',
+        'Early Reflections',
+        'Sound Power',
+        'Early Reflections DI',
+        'Sound Power DI',
+        'Floor Bounce',
+        'Ceiling Bounce',
+        'Front Wall Bounce',
+        'Side Wall Bounce',
+        'Rear Wall Bounce',
+        'Total Early Reflection',
+        'Band +3dB',
+        'Band -3dB',
+        'Midrange +3dB',
+        'Midrange -3dB',
+    ];
     const data = [];
     for (let i = 0; i < traceCount; i++) {
         data.push({
@@ -112,17 +276,24 @@ function makeSPLInputWithTraces(title, traceCount) {
             marker: {},
         });
     }
-    return [{
-        data: data,
-        layout: {
-            title: { text: title, font: { size: 14, color: '#000' } },
-            xaxis: { title: { text: 'Frequency (Hz)', font: { size: 12 } }, type: 'log', range: [Math.log10(20), Math.log10(20000)], tickfont: { size: 10 } },
-            yaxis: { title: { text: 'SPL (dB)', font: { size: 12 } }, range: [50, 100], tickfont: { size: 10 } },
-            font: { size: 12, color: '#000' },
-            margin: { l: 60, r: 20, t: 40, b: 50 },
-            legend: { x: 0.5, y: -0.2 },
+    return [
+        {
+            data: data,
+            layout: {
+                title: { text: title, font: { size: 14, color: '#000' } },
+                xaxis: {
+                    title: { text: 'Frequency (Hz)', font: { size: 12 } },
+                    type: 'log',
+                    range: [Math.log10(20), Math.log10(20000)],
+                    tickfont: { size: 10 },
+                },
+                yaxis: { title: { text: 'SPL (dB)', font: { size: 12 } }, range: [50, 100], tickfont: { size: 10 } },
+                font: { size: 12, color: '#000' },
+                margin: { l: 60, r: 20, t: 40, b: 50 },
+                legend: { x: 0.5, y: -0.2 },
+            },
         },
-    }];
+    ];
 }
 
 function makeConfig(overrides) {
@@ -307,10 +478,10 @@ describe('CEA2034 border handling via pipeline', () => {
 describe('Plot area ratio consistency across different legend sizes', () => {
     // Helper: compute the plot area dimensions from layout (width/height minus margins)
     function plotArea(layout) {
-        const ml = layout.margin ? (layout.margin.l || 0) : 0;
-        const mr = layout.margin ? (layout.margin.r || 0) : 0;
-        const mt = layout.margin ? (layout.margin.t || 0) : 0;
-        const mb = layout.margin ? (layout.margin.b || 0) : 0;
+        const ml = layout.margin ? layout.margin.l || 0 : 0;
+        const mr = layout.margin ? layout.margin.r || 0 : 0;
+        const mt = layout.margin ? layout.margin.t || 0 : 0;
+        const mb = layout.margin ? layout.margin.b || 0 : 0;
         return {
             w: layout.width - ml - mr,
             h: layout.height - mt - mb,
@@ -416,6 +587,30 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         expect(r.layout.title.text).not.toContain('<br>');
     });
 
+    it('E9: mobile portrait — long legend (36 traces) is capped at 5 rows', () => {
+        // iPhone SE dimensions, SPL Horizontal-style with 36 traces.
+        // Without the cap, margin.b grew to ~648px, making the cell very tall
+        // and the plot look "flat". With the cap, margin.b should be small enough
+        // that the plot area ratio stays at the target.
+        const input = makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 36);
+        const r = setGraphOptions(input, 375, 667, SPL_TYPE, 1);
+
+        // Plot area ratio should still be ~1.8
+        const ml = r.layout.margin.l || 0;
+        const mr = r.layout.margin.r || 0;
+        const mt = r.layout.margin.t || 0;
+        const mb = r.layout.margin.b || 0;
+        const plotW = r.layout.width - ml - mr;
+        const plotH = r.layout.height - mt - mb;
+        expect(plotW / plotH).toBeCloseTo(1.8, 1);
+
+        // The legend reservation must NOT be more than ~5 rows worth.
+        // 5 rows × 10px font × 1.8 line-height ≈ 90px + ~10px padding ≈ 100px
+        // Plus the x-axis title height (compact-vertical: ~32px) and the base
+        // bottom margin (40px in compact). Total ceiling around 175px.
+        expect(mb).toBeLessThan(200);
+    });
+
     it('E8: title that legitimately wraps gets extra top margin', () => {
         // Compare a reasonable single-line title against an artificially long one
         // at the same dimensions. The wrapped one should have a larger margin.t
@@ -424,7 +619,8 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         const longInput = makeCEA2034Input(
             'CEA2034 for VeryLongSpeakerNameThatDefinitelyWillNotFit measured by AnEvenLongerReviewerNameLikeAudioScienceReviewExtended'
         );
-        const w = 800, h = 1080;
+        const w = 800,
+            h = 1080;
         const rShort = setGraphOptions(shortInput, w, h, CEA2034_TYPE, 1);
         const rLong = setGraphOptions(longInput, w, h, CEA2034_TYPE, 1);
 
@@ -447,13 +643,13 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
     // Representative viewport sizes from smartphone to 4K (all landscape)
     const VIEWPORTS = [
         // mobile
-        [375, 667],     // iPhone SE (portrait-ish, but width < height)
-        [414, 896],     // iPhone 11 Pro Max portrait
-        [568, 320],     // small landscape / split view
+        [375, 667], // iPhone SE (portrait-ish, but width < height)
+        [414, 896], // iPhone 11 Pro Max portrait
+        [568, 320], // small landscape / split view
         // tablet
-        [768, 1024],    // iPad portrait
-        [820, 1180],    // iPad Air portrait
-        [1024, 768],    // iPad landscape
+        [768, 1024], // iPad portrait
+        [820, 1180], // iPad Air portrait
+        [1024, 768], // iPad landscape
         // small laptop / odd intermediate sizes (bug zone from screenshots)
         [1100, 700],
         [1200, 800],
@@ -463,10 +659,10 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         // desktop
         [1600, 900],
         [1680, 1050],
-        [1920, 1080],   // FHD
+        [1920, 1080], // FHD
         [2048, 1152],
-        [2560, 1440],   // QHD
-        [3440, 1440],   // ultrawide
+        [2560, 1440], // QHD
+        [3440, 1440], // ultrawide
         // 4K
         [3840, 2160],
     ];
@@ -550,10 +746,13 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
     // Target ratios (must match plot.js constants)
     const SPL_RATIO = 1.8;
     const CONTOUR_RATIO = 1.6;
-    const RATIO_TOLERANCE = 0.10; // 10%
+    const RATIO_TOLERANCE = 0.1; // 10%
 
     // Run the sweep and collect failures so one assertion reports all bad viewports at once.
-    // ratioMode: 'plot' to check the inner data region, 'layout' to check the visible cell.
+    // ratioMode:
+    //   'plot'         - check the inner data region (used for SPL/CEA2034)
+    //   'layout'       - check the visible cell (used for non-compact contour)
+    //   'auto-contour' - 'plot' when compact, 'layout' otherwise (mixed contour mode)
     function sweep(inputFactory, graphType, label, targetRatio, checkLegend, ratioMode = 'plot') {
         const failures = [];
         for (const [w, h] of VIEWPORTS) {
@@ -566,7 +765,13 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
             const layout = result.layout;
             const data = result.data || [];
 
-            if (checkLegend) {
+            // Compact viewports with many traces hide the legend by design
+            // (no room for it without squeezing the plot off-screen).
+            const isCompactViewport = w < 550 || h < 550;
+            const traceCount = data.filter((t) => t.visible !== false && t.showlegend !== false && t.name).length;
+            const legendIntentionallyHidden = isCompactViewport && traceCount > 10;
+
+            if (checkLegend && !legendIntentionallyHidden) {
                 // Invariant 1: legend is visible
                 if (layout.showlegend === false) {
                     failures.push(`${label} ${w}x${h}: legend is HIDDEN (showlegend=false)`);
@@ -580,18 +785,20 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
                     const avail = orient === 'v' ? layout.margin?.r : layout.margin?.b;
                     failures.push(
                         `${label} ${w}x${h}: legend OVERLAPS plot ` +
-                        `(orient=${orient}, needed=${Math.round(orient === 'v' ? fp.width : fp.height)}px, ` +
-                        `margin=${Math.round(avail || 0)}px)`
+                            `(orient=${orient}, needed=${Math.round(orient === 'v' ? fp.width : fp.height)}px, ` +
+                            `margin=${Math.round(avail || 0)}px)`
                     );
                 }
             }
 
             // Invariant 3: ratio within 10% of target
-            const ratio = ratioMode === 'layout' ? layoutRatio(layout) : plotRatio(layout);
+            const isCompact = w < 550 || h < 550;
+            const effectiveMode = ratioMode === 'auto-contour' ? (isCompact ? 'plot' : 'layout') : ratioMode;
+            const ratio = effectiveMode === 'layout' ? layoutRatio(layout) : plotRatio(layout);
             const dev = Math.abs(ratio - targetRatio) / targetRatio;
             if (dev > RATIO_TOLERANCE) {
                 failures.push(
-                    `${label} ${w}x${h}: ${ratioMode} ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${targetRatio.toFixed(2)}`
+                    `${label} ${w}x${h}: ${effectiveMode} ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${targetRatio.toFixed(2)}`
                 );
             }
         }
@@ -599,37 +806,56 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
     }
 
     it('F1: CEA2034 at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
-        const failures = sweep(() => makeCEA2034Input('CEA2034 for Test Speaker measured by ASR'), CEA2034_TYPE, 'CEA2034', SPL_RATIO, true);
+        const failures = sweep(
+            () => makeCEA2034Input('CEA2034 for Test Speaker measured by ASR'),
+            CEA2034_TYPE,
+            'CEA2034',
+            SPL_RATIO,
+            true
+        );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
     });
 
     it('F2: SPL graph with 6 traces at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
-        const failures = sweep(() => makeSPLInputWithTraces('On Axis for Test Speaker measured by ASR', 6), SPL_TYPE, 'SPL6', SPL_RATIO, true);
+        const failures = sweep(
+            () => makeSPLInputWithTraces('On Axis for Test Speaker measured by ASR', 6),
+            SPL_TYPE,
+            'SPL6',
+            SPL_RATIO,
+            true
+        );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
     });
 
     it('F3: SPL graph with 16 traces (SPL Horizontal-like) at all viewport sizes', () => {
-        const failures = sweep(() => makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 16), SPL_TYPE, 'SPL16', SPL_RATIO, true);
+        const failures = sweep(
+            () => makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 16),
+            SPL_TYPE,
+            'SPL16',
+            SPL_RATIO,
+            true
+        );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
     });
 
-    it('F4: contour at all viewport sizes — visible cell ratio within 10% of 1.6 (frequency × angle)', () => {
+    it('F4: contour at all viewport sizes — ratio within 10% of 1.6', () => {
         // Contour plots hide the legend; only check ratio invariant.
-        // We check the LAYOUT (cell) ratio, not the inner plot area ratio, because
-        // the user perceives the bordered cell, not the data region.
+        // 'auto-contour' picks plot-area ratio for compact viewports (where the
+        // visible cell ratio is dominated by margins) and layout ratio for
+        // non-compact viewports (where we want the bordered cell to be 1.6:1).
         const failures = sweep(
             () => makeContourInput('SPL Horizontal Contour for Test Speaker measured by ASR'),
             CONTOUR_TYPE,
             'Contour',
             CONTOUR_RATIO,
             false,
-            'layout'
+            'auto-contour'
         );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));

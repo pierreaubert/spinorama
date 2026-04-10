@@ -168,14 +168,7 @@ describe('test full text search and filtering', () => {
     // Must match misc.js validShape — speakers with other shapes (inwall,
     // outdoor, surround, cbt, toursound, …) display *** instead of a score
     // and are sorted as score-less.
-    const VALID_SHAPES = new Set([
-        'floorstanders',
-        'bookshelves',
-        'center',
-        'columns',
-        'liveportable',
-        'cinema',
-    ]);
+    const VALID_SHAPES = new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']);
 
     // Helper: extract pref_score for a speaker key (returns -10 if no displayed score)
     function getScore(key) {
