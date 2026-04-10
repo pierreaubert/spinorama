@@ -1,0 +1,65 @@
+<div class="graph-shortcuts">
+  <span class="is-size-7 has-text-weight-semibold">Quick config:</span>
+  <label class="checkbox is-size-7">
+    <input type="checkbox" class="graph-shortcut" data-config="trendlines"> Trend Lines
+  </label>
+  <label class="checkbox is-size-7">
+    <input type="checkbox" class="graph-shortcut" data-config="zones"> Recommended Zones
+  </label>
+  <label class="checkbox is-size-7">
+    <input type="checkbox" class="graph-shortcut" data-config="annotations"> Annotations
+  </label>
+  <a href="/customization.html" title="Customization">
+    <svg width="16" height="16"><use href="#icon-gear"/></svg>
+  </a>
+</div>
+<script>
+(function() {
+  var KEY = 'spinorama-plot-config';
+
+  function getConfig() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(_) { return {}; }
+  }
+
+  // Find the shortcuts container that THIS script tag belongs to
+  var scripts = document.getElementsByTagName('script');
+  var thisScript = scripts[scripts.length - 1];
+  var container = thisScript.previousElementSibling;
+  if (!container || !container.classList.contains('graph-shortcuts')) return;
+
+  var checkboxes = container.querySelectorAll('.graph-shortcut');
+  var cfg = getConfig();
+
+  // Initialize checkboxes from stored config (defaults: all true)
+  checkboxes.forEach(function(cb) {
+    var key = cb.dataset.config;
+    var sub = cfg[key];
+    var val = !sub || sub.show === undefined ? true : sub.show;
+    cb.checked = val;
+  });
+
+  // On change: update only the relevant config key, preserve everything else
+  checkboxes.forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var key = cb.dataset.config;
+      var cfg = getConfig();
+      if (!cfg[key]) cfg[key] = {};
+      cfg[key].show = cb.checked;
+      cfg[key].showA = cb.checked;
+      cfg[key].showB = cb.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch(_) {}
+      window.dispatchEvent(new CustomEvent('spinorama-config-change'));
+    });
+  });
+
+  // Sync checkboxes when config changes from other sources (e.g. customization page)
+  window.addEventListener('spinorama-config-change', function() {
+    var cfg = getConfig();
+    checkboxes.forEach(function(cb) {
+      var key = cb.dataset.config;
+      var sub = cfg[key];
+      if (sub && sub.show !== undefined) cb.checked = sub.show;
+    });
+  });
+})();
+</script>

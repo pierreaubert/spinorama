@@ -2,12 +2,12 @@
   "dependencies": {
     "@babel/core": "7.29.0",
     "bulma": "^1.0.4",
-    "fuse.js": "^7.1.0",
+    "fuse.js": "^7.3.0",
     "handlebars": "4.7.9",
     "npm": "11.12.1",
     "npm-check-updates": "20.0.0",
     "playright": "1.55.1",
-    "plotly.js-dist-min": "^3.4.0",
+    "plotly.js-dist-min": "^3.5.0",
     "rollup": "^4.60.1",
     "tar": "^7.5.13"
   },

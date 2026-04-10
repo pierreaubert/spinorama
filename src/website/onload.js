@@ -56,17 +56,7 @@ window.onload = () => {
         });
     }
 
-    const filters = document.querySelector('#filters-dropdown');
-    if (filters) {
-        const trigger = filters.querySelector('#filters-dropdown-trigger');
-        const menu = filters.querySelector('#filters-dropdown-menu');
-        if (!trigger || !menu) {
-            console.log('error dropdown trigger+menu not found!');
-        }
-        trigger.addEventListener('click', () => {
-            filters.classList.toggle('is-active');
-        });
-    }
+    // Filter dropdown toggle is handled by theme.js
 
     // Intercept pushState so we can detect URL changes made by search.js
     const origPushState = history.pushState.bind(history);

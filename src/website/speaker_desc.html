@@ -409,8 +409,6 @@ Links to other reviews: <a href="${review}">${key} review</a>
         <source srcset="/${_webp}" type="image/webp">
         <img src="/${_jpg}" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async">
       </picture>
-      <div id="directivity-h" class="directivity-plot"></div>
-      <div id="directivity-v" class="directivity-plot"></div>
       <script type="module">
         // Decode Plotly bdata (base64 typed arrays) or plain arrays
         function decodePlotlyArray(obj) {
@@ -503,23 +501,41 @@ Links to other reviews: <a href="${review}">${key} review</a>
               mode: 'lines', name: '-', line: { color: c2, width: 2, dash: 'dot' }, showlegend: false }
           ];
           var container = document.getElementById(divId);
-          var cw = container ? container.offsetWidth : 280;
-          var layout = {
-            title: { text: title, font: { size: 10, color: fg } },
-            paper_bgcolor: bg, plot_bgcolor: bg,
-            autosize: false,
-            width: cw,
-            height: Math.max(160, cw * 0.6),
-            xaxis: { type: 'log',
-                     tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
-                     range: [Math.log10(100), Math.log10(20000)] },
-            yaxis: { title: { text: 'deg', font: { size: 9, color: fg } },
-                     tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
-                     range: [-180, 180], dtick: 90, zeroline: true, zerolinecolor: grid },
-            margin: { l: 32, r: 8, t: 22, b: 22 }
-          };
-          if (window.Plotly) {
-            window.Plotly.newPlot(divId, traces, layout, { displayModeBar: false, staticPlot: true, responsive: true });
+          var plotConfig = { displayModeBar: false, staticPlot: true, responsive: true };
+
+          function doPlot() {
+            var cw = container ? container.offsetWidth : 400;
+            if (cw < 100) cw = 400;
+            var layout = {
+              title: { text: title, font: { size: 10, color: fg } },
+              paper_bgcolor: bg, plot_bgcolor: bg,
+              autosize: false,
+              width: cw,
+              height: Math.max(180, cw * 0.5),
+              xaxis: { type: 'log',
+                       tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
+                       range: [Math.log10(100), Math.log10(20000)] },
+              yaxis: { title: { text: 'deg', font: { size: 9, color: fg } },
+                       tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
+                       range: [-180, 180], dtick: 90, zeroline: true, zerolinecolor: grid },
+              margin: { l: 32, r: 8, t: 22, b: 22 }
+            };
+            if (window.Plotly) {
+              window.Plotly.newPlot(divId, traces, layout, plotConfig);
+            }
+          }
+
+          // Container may be hidden (inactive tab) — defer until visible
+          if (container && container.offsetWidth > 0) {
+            doPlot();
+          } else {
+            var obs = new ResizeObserver(function(entries) {
+              if (entries[0].contentRect.width > 0) {
+                obs.disconnect();
+                doPlot();
+              }
+            });
+            if (container) obs.observe(container);
           }
         }
 
@@ -529,13 +545,13 @@ Links to other reviews: <a href="${review}">${key} review</a>
           if (!r.ok) return null;
           return r.json();
         }).then(function(spec) {
-          if (spec) plotDirectivity('directivity-h', spec, 'H Directivity (-6dB)');
+          if (spec) plotDirectivity('directivity-h', spec, 'Horizontal Directivity (-6dB)');
         }).catch(function(e) { console.warn('H directivity load failed:', e); });
         fetch(vUrl).then(function(r) {
           if (!r.ok) return null;
           return r.json();
         }).then(function(spec) {
-          if (spec) plotDirectivity('directivity-v', spec, 'V Directivity (-6dB)');
+          if (spec) plotDirectivity('directivity-v', spec, 'Vertical Directivity (-6dB)');
         }).catch(function(e) { console.warn('V directivity load failed:', e); });
       </script>
     </div>
@@ -585,7 +601,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
 
         // Person reference: 1700mm tall (geometry always in mm)
         var personH = 1700;
-        var svgW = 200, svgH = 280;
+        var svgH = 280;
         var maxDim = Math.max(Hmm, personH);
         var scale = (svgH - 60) / maxDim;
 
@@ -593,13 +609,17 @@ Links to other reviews: <a href="${review}">${key} review</a>
         var dx = Dmm * scale * iso;
         var dy = Dmm * scale * iso * 0.5;
 
-        var bx = 20;
+        var labelPad = Math.max(20, hLabel.toString().length * 6 + 14);
+        var bx = labelPad;
         var bw = Wmm * scale;
         var bh = Hmm * scale;
         var by = svgH - 30 - bh;
 
         var ph = personH * scale;
         var px = bx + bw + dx + 30;
+        var pcx = px + 12;
+        var armW = ph * 0.12;
+        var svgW = Math.max(200, pcx + armW + 30);
 
         var cs = getComputedStyle(document.documentElement);
         var fg = cs.getPropertyValue('--md3-on-surface').trim() || '#1b1b21';
@@ -631,11 +651,11 @@ Links to other reviews: <a href="${review}">${key} review</a>
         s += '<text x="' + (bx+bw/2) + '" y="' + (svgH-4) + '" text-anchor="middle" font-size="' + (fs-1) + '" fill="' + fg2 + '">' + unitLabel + '</text>';
 
         // Person
-        var pcx = px + 12, pbot = svgH - 30;
+        var pbot = svgH - 30;
         var headR = Math.max(ph * 0.04, 3);
         s += '<circle cx="' + pcx + '" cy="' + (pbot-ph+headR+1) + '" r="' + headR + '" fill="' + fg2 + '"/>';
         var neck = pbot-ph+headR*2+2, shoulder = neck+ph*0.05, hip = neck+ph*0.42;
-        var armW = ph*0.12, legW = ph*0.06;
+        var legW = ph*0.06;
         s += '<line x1="' + pcx + '" y1="' + neck + '" x2="' + pcx + '" y2="' + hip + '" stroke="' + fg2 + '" stroke-width="2" stroke-linecap="round"/>';
         s += '<line x1="' + (pcx-armW) + '" y1="' + (shoulder+ph*0.15) + '" x2="' + pcx + '" y2="' + shoulder + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
         s += '<line x1="' + (pcx+armW) + '" y1="' + (shoulder+ph*0.15) + '" x2="' + pcx + '" y2="' + shoulder + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
@@ -656,6 +676,11 @@ Links to other reviews: <a href="${review}">${key} review</a>
     </script>
 % endif
   </div>
+</div>
+<div class="desc-block">
+  <h4 class="title is-6 mb-3">Directivity (-6dB)</h4>
+  <div id="directivity-h" class="directivity-plot"></div>
+  <div id="directivity-v" class="directivity-plot"></div>
 </div>
 % endif
 
@@ -726,7 +751,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
   origin = default_origin.replace('+', '%20').replace(' ', '%20').replace('&', '%26')
   is_hist = 'hist' in graph
 %>
-<div class="box">
+<div class="eq-graph">
   <div id="${origin}-${graph}"></div>
   <script type="module">
    import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
@@ -737,6 +762,28 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
      .then( (spec) => {
        spec.layout.title = {
 	 text: '${doc}'
+       }
+       // Shorten EQ trace names: "Peak 1" → "PK1: 369Hz"
+       var typeMap = { 'Peak': 'PK', 'Lowshelf': 'LS', 'Highshelf': 'HS', 'Lowpass': 'LP', 'Highpass': 'HP', 'Notch': 'NO', 'Bandpath': 'BP' };
+       if (spec.data) {
+         for (var t of spec.data) {
+           if (t.name) {
+             var parts = t.name.match(/^(\w+)\s+(\d+)$/);
+             if (parts && typeMap[parts[1]]) {
+               var shortType = typeMap[parts[1]] + parts[2];
+               // Find peak frequency from trace data
+               var peakFreq = '';
+               if (t.y && t.x) {
+                 var maxIdx = 0, maxVal = 0;
+                 for (var k = 0; k < t.y.length; k++) {
+                   if (Math.abs(t.y[k]) > maxVal) { maxVal = Math.abs(t.y[k]); maxIdx = k; }
+                 }
+                 if (t.x[maxIdx] !== undefined) peakFreq = ': ' + Math.round(t.x[maxIdx]) + 'Hz';
+               }
+               t.name = shortType + peakFreq;
+             }
+           }
+         }
        }
 % if is_hist:
        if (!spec.layout.yaxis) spec.layout.yaxis = {};
@@ -847,20 +894,10 @@ ${eqs_print_eqs(current_eqs)}
 
 <div class="desc-block desc-block-full">
   ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 600, 400)}
-</div>
-<div class="desc-block desc-block-full">
   ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 600, 400)}
-</div>
-<div class="desc-block desc-block-full">
   ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200, 3)}
-</div>
-<div class="desc-block desc-block-full">
   ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200, 3)}
-</div>
-<div class="desc-block desc-block-full">
   ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200, 3)}
-</div>
-<div class="desc-block desc-block-full">
   ${eqs_spider(eq)}
 </div>
 % endif

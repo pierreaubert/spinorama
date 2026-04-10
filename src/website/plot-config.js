@@ -154,6 +154,16 @@ export const contourColorscales = {
     ],
 };
 
+// Trendline trace names (module-level constant, not recreated per call)
+const trendNames = new Set([
+    'Band ±3dB',
+    'Band ±1.5dB',
+    'Midrange Band +3dB',
+    'Midrange Band -3dB',
+    'Midrange ±3dB',
+    'Linear interpolation',
+]);
+
 // Default delta configuration options for plots
 export const defaultConfig = {
     font: {
@@ -338,11 +348,13 @@ export function applyConfig(options, config) {
                     layout.font.color = '#1b1b21';
                     ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
-                            layout[axis].gridcolor = '#c6c5d0';
+                            // Major grid: darker so 5 dB lines stand out
+                            layout[axis].gridcolor = 'rgba(0,0,0,0.22)';
                             layout[axis].linecolor = '#45464f';
                             layout[axis].zerolinecolor = '#767680';
                             if (layout[axis].minor) {
-                                layout[axis].minor.gridcolor = 'rgba(0,0,0,0.05)';
+                                // Minor grid: lighter so 1 dB lines are visible but subordinate
+                                layout[axis].minor.gridcolor = 'rgba(0,0,0,0.07)';
                             }
                         }
                     });
@@ -354,11 +366,13 @@ export function applyConfig(options, config) {
                     layout.font.color = '#e3e1e9';
                     ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
                         if (layout[axis]) {
-                            layout[axis].gridcolor = '#34343b';
+                            // Major grid: brighter so 5 dB lines stand out
+                            layout[axis].gridcolor = 'rgba(255,255,255,0.22)';
                             layout[axis].linecolor = '#c6c5d0';
                             layout[axis].zerolinecolor = '#45464f';
                             if (layout[axis].minor) {
-                                layout[axis].minor.gridcolor = 'rgba(255,255,255,0.05)';
+                                // Minor grid: dimmer so 1 dB lines are subordinate
+                                layout[axis].minor.gridcolor = 'rgba(255,255,255,0.07)';
                             }
                         }
                     });
@@ -376,9 +390,24 @@ export function applyConfig(options, config) {
                     layout[ax].showline = true;
                     layout[ax].linewidth = 1;
                     layout[ax].linecolor = borderColor;
-                    layout[ax].mirror = 'ticks';
+                    layout[ax].mirror = true;
                 }
             });
+            // Add explicit border rectangle to guarantee all 4 edges are visible.
+            // Use 'x domain' / 'y domain' references so the rect follows the actual
+            // plot area (including when yaxis2 side='right' reserves extra margin).
+            var borderShape = {
+                type: 'rect',
+                xref: 'x domain',
+                yref: 'y domain',
+                x0: 0,
+                y0: 0,
+                x1: 1,
+                y1: 1,
+                line: { color: borderColor, width: 1 },
+            };
+            if (!layout.shapes) layout.shapes = [];
+            layout.shapes.push(borderShape);
         }
 
         // Apply margins as deltas to existing margins
@@ -510,64 +539,60 @@ export function applyConfig(options, config) {
 
     // Apply to data traces if they exist
     if (options.data && Array.isArray(options.data)) {
-        options.data.forEach((trace) => {
-            if (trace.colorbar) {
-                // Apply colorbar configuration if it exists
-                if (config.colorbar) {
-                    if (config.colorbar.thickness !== undefined) {
-                        // Apply thickness as delta
-                        trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
-                    }
-                    if (config.colorbar.len !== undefined) {
-                        // Apply length as delta
-                        trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
-                    }
-                    if (config.colorbar.show !== undefined) {
-                        trace.colorbar.visible = config.colorbar.show;
-                    }
-                }
+        // Pre-compute flags to skip unnecessary work inside the trace loop
+        const hasFontConfig = Object.keys(fontConfig).length > 0;
+        const hasColorbar = config.colorbar && (config.colorbar.thickness || config.colorbar.len || config.colorbar.show !== undefined);
+        const hasLegendConfig = !!config.legend;
+        const legendLabel = config.legend?.label;
+        const hasLegendLabel = legendLabel && legendLabel !== 'default';
+        const hasTrendlines = !!config.trendlines;
+        const hasZones = !!config.zones;
+        const legendFontSize = options.layout?.legend?.font?.size;
+
+        // Auto-select dark palette when in dark theme and user hasn't chosen one
+        if (config.theme === 'dark' && config.colors && (!config.colors.palette || config.colors.palette === 'default')) {
+            config.colors.palette = 'dark';
+        }
+        const applyPalette = config.colors?.palette && config.colors.palette !== 'default';
+        const selectedPalette = applyPalette ? (colorPalettes[config.colors.palette] || colorPalettes.default) : null;
+        const applyColorscale = config.contour?.colorscale && config.contour.colorscale !== 'default';
+        const selectedColorscale = applyColorscale ? (contourColorscales[config.contour.colorscale] || contourColorscales.default) : null;
+
+        // Single pass over all traces
+        for (let index = 0; index < options.data.length; index++) {
+            const trace = options.data[index];
+
+            // Colorbar
+            if (hasColorbar && trace.colorbar) {
+                if (config.colorbar.thickness) trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
+                if (config.colorbar.len) trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
+                if (config.colorbar.show !== undefined) trace.colorbar.visible = config.colorbar.show;
             }
 
-            if (trace.marker && trace.marker.textfont && Object.keys(fontConfig).length > 0) {
-                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
+            // Font overrides (rare)
+            if (hasFontConfig) {
+                if (trace.marker?.textfont) trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
+                if (trace.hoverlabel?.font) trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
             }
 
-            if (trace.hoverlabel && trace.hoverlabel.font && Object.keys(fontConfig).length > 0) {
-                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
-            }
-
-            // Apply legend settings
-            if (config.legend) {
-                // Show/hide legend — respect per-trace override (e.g. contour grid lines)
+            // Legend show/hide and label format
+            if (hasLegendConfig) {
                 if (config.legend.show !== undefined && trace.showlegend !== false) {
                     trace.showlegend = config.legend.show;
                 }
-
-                // Apply label format (short or long)
-                if (trace.name) {
+                if (hasLegendLabel && trace.name) {
                     trace._fullName = trace.name;
-                    if (config.legend.label && config.legend.label !== 'default') {
-                        if (config.legend.label === 'short') {
-                            trace.name = labelShort[trace._fullName] || trace.name;
-                        } else if (config.legend.label === 'long') {
-                            trace.name = labelLong[trace._fullName] || trace.name;
-                        }
+                    if (legendLabel === 'short') {
+                        trace.name = labelShort[trace._fullName] || trace.name;
+                    } else if (legendLabel === 'long') {
+                        trace.name = labelLong[trace._fullName] || trace.name;
                     }
                 }
             }
 
-            // Apply trend line visibility
-            if (config.trendlines && trace.name) {
-                const trendNames = [
-                    'Band ±3dB',
-                    'Band ±1.5dB',
-                    'Midrange Band +3dB',
-                    'Midrange Band -3dB',
-                    'Midrange ±3dB',
-                    'Linear interpolation',
-                ];
-                const isTrend = trendNames.includes(trace.name) || trace.name.endsWith(' slope');
-                if (isTrend) {
+            // Trendline visibility (Set.has is O(1) vs Array.includes O(N))
+            if (hasTrendlines && trace.name) {
+                if (trendNames.has(trace.name) || trace.name.endsWith(' slope')) {
                     if (trace.legendgroup === 'speaker1' && config.trendlines.showB !== undefined) {
                         trace.visible = config.trendlines.showB;
                     } else if (trace.legendgroup === 'speaker0' && config.trendlines.showA !== undefined) {
@@ -578,8 +603,8 @@ export function applyConfig(options, config) {
                 }
             }
 
-            // Apply recommended zone visibility
-            if (config.zones && trace.name && trace.name.startsWith('recommended ')) {
+            // Recommended zone visibility
+            if (hasZones && trace.name && trace.name.startsWith('recommended ')) {
                 if (trace.legendgroup === 'speaker1' && config.zones.showB !== undefined) {
                     trace.visible = config.zones.showB;
                 } else if (trace.legendgroup === 'speaker0' && config.zones.showA !== undefined) {
@@ -589,60 +614,29 @@ export function applyConfig(options, config) {
                 }
             }
 
-            // Enforce legend group title font size >= legend item font size
-            if (trace.legendgrouptitle && trace.legendgrouptitle.text) {
-                const legendFontSize = options.layout?.legend?.font?.size;
-                if (legendFontSize) {
-                    if (!trace.legendgrouptitle.font) {
-                        trace.legendgrouptitle.font = {};
-                    }
-                    if (!trace.legendgrouptitle.font.size || trace.legendgrouptitle.font.size < legendFontSize) {
-                        trace.legendgrouptitle.font.size = legendFontSize;
-                    }
+            // Legend group title font
+            if (legendFontSize && trace.legendgrouptitle?.text) {
+                if (!trace.legendgrouptitle.font) trace.legendgrouptitle.font = {};
+                if (!trace.legendgrouptitle.font.size || trace.legendgrouptitle.font.size < legendFontSize) {
+                    trace.legendgrouptitle.font.size = legendFontSize;
                 }
             }
-        });
 
-        // Auto-select dark palette when in dark theme and user hasn't chosen one
-        if (config.theme === 'dark' && config.colors && (!config.colors.palette || config.colors.palette === 'default')) {
-            config.colors.palette = 'dark';
-        }
-
-        // Only apply color palette if not set to 'default'
-        if (config.colors && config.colors.palette && config.colors.palette !== 'default') {
-            const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
-            options.data.forEach((trace, index) => {
-                if (trace.type === 'scatter') {
-                    const colorIndex = index % selectedPalette.length;
-                    const color = selectedPalette[colorIndex];
-
-                    if (trace.marker) {
-                        trace.marker.color = color;
-                    }
-                    if (trace.line) {
-                        trace.line.color = color;
-                    }
-                    if (!trace.marker && !trace.line) {
-                        trace.marker = { color: color };
-                        trace.line = { color: color };
-                    }
+            // Color palette (only if non-default)
+            if (selectedPalette && trace.type === 'scatter') {
+                const color = selectedPalette[index % selectedPalette.length];
+                if (trace.marker) trace.marker.color = color;
+                if (trace.line) trace.line.color = color;
+                if (!trace.marker && !trace.line) {
+                    trace.marker = { color };
+                    trace.line = { color };
                 }
-            });
-        }
+            }
 
-        // Only apply colorscale if not set to 'default'
-        if (config.contour && config.contour.colorscale && config.contour.colorscale !== 'default') {
-            const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
-            options.data.forEach((trace) => {
-                if (
-                    trace.type === 'contour' ||
-                    trace.type === 'heatmap' ||
-                    trace.type === 'surface' ||
-                    trace.type === 'contourgl'
-                ) {
-                    trace.colorscale = selectedColorscale;
-                }
-            });
+            // Colorscale (only if non-default)
+            if (selectedColorscale && (trace.type === 'contour' || trace.type === 'heatmap' || trace.type === 'surface' || trace.type === 'contourgl')) {
+                trace.colorscale = selectedColorscale;
+            }
         }
     }
 

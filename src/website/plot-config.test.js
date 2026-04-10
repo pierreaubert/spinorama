@@ -46,8 +46,8 @@ describe('applyConfig - theme application', () => {
         expect(result.layout.paper_bgcolor).toBe('#faf8ff');
         expect(result.layout.plot_bgcolor).toBe('#faf8ff');
         expect(result.layout.font.color).toBe('#1b1b21');
-        expect(result.layout.xaxis.gridcolor).toBe('#c6c5d0');
-        expect(result.layout.yaxis.gridcolor).toBe('#c6c5d0');
+        expect(result.layout.xaxis.gridcolor).toBe('rgba(0,0,0,0.22)');
+        expect(result.layout.yaxis.gridcolor).toBe('rgba(0,0,0,0.22)');
     });
 
     it('dark theme sets correct bgcolor and font colors', () => {
@@ -58,7 +58,7 @@ describe('applyConfig - theme application', () => {
         expect(result.layout.paper_bgcolor).toBe('#131318');
         expect(result.layout.plot_bgcolor).toBe('#1f1f25');
         expect(result.layout.font.color).toBe('#e3e1e9');
-        expect(result.layout.xaxis.gridcolor).toBe('#34343b');
+        expect(result.layout.xaxis.gridcolor).toBe('rgba(255,255,255,0.22)');
         expect(result.layout.xaxis.linecolor).toBe('#c6c5d0');
         expect(result.layout.xaxis.zerolinecolor).toBe('#45464f');
     });
@@ -609,9 +609,9 @@ describe('applyConfig — _graphType border enforcement', () => {
         const config = { ...structuredClone(defaultConfig), theme: 'light' };
         const result = applyConfig(options, config);
         expect(result.layout.xaxis.showline).toBe(true);
-        expect(result.layout.xaxis.mirror).toBe('ticks');
+        expect(result.layout.xaxis.mirror).toBe(true);
         expect(result.layout.yaxis.showline).toBe(true);
-        expect(result.layout.yaxis.mirror).toBe('ticks');
+        expect(result.layout.yaxis.mirror).toBe(true);
     });
 
     it('F2: does NOT set showline on contour (_graphType.isSurface=true)', () => {
@@ -627,7 +627,7 @@ describe('applyConfig — _graphType border enforcement', () => {
         const config = { ...structuredClone(defaultConfig), theme: 'light' };
         const result = applyConfig(options, config);
         expect(result.layout.xaxis.showline).toBe(true);
-        expect(result.layout.xaxis.mirror).toBe('ticks');
+        expect(result.layout.xaxis.mirror).toBe(true);
     });
 });
 

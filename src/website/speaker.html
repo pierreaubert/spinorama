@@ -111,6 +111,7 @@
     <!-- Mobile view: sequential-->
     <div class="tab-pane is-active display:block" id="pane-2">
       <div class="section">
+      <%include file="graph_shortcuts.html"/>
       <div class="graph-grid">
         % for freq in g_freq:
         <div class="graph-cell">
@@ -185,6 +186,7 @@
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-3">
       <div class="section">
+      <%include file="graph_shortcuts.html"/>
       <div class="graph-grid">
         % if g_eq is not None:
 <%
@@ -245,6 +247,7 @@
     <!-- Desktop view: Ref vs. EQ views-->
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-4">
+      <%include file="graph_shortcuts.html"/>
       <div class="graph-grid" style="grid-template-columns: repeat(2, 1fr);">
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"

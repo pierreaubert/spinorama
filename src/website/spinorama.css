@@ -263,6 +263,34 @@
 
 
 /* ==========================================================================
+   Graph shortcuts — toggle bar for trendlines, zones, annotations
+   ========================================================================== */
+
+.graph-shortcuts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--md3-surface-container-low);
+  border-radius: var(--md3-shape-small);
+}
+
+.graph-shortcuts .checkbox {
+  user-select: none;
+}
+
+.graph-shortcuts a {
+  display: flex;
+  color: var(--md3-on-surface-variant);
+}
+
+.graph-shortcuts a:hover {
+  color: var(--md3-primary);
+}
+
+/* ==========================================================================
    Graph grid — responsive columns via data-graph-cols attribute
    ========================================================================== */
 
@@ -274,24 +302,24 @@
   margin: 0 auto;
 }
 
-[data-graph-cols="2"] .graph-grid {
+[data-graph-cols="2"] .graph-grid:not(.graph-grid--single) {
   grid-template-columns: repeat(2, 1fr);
 }
 
-[data-graph-cols="4"] .graph-grid {
+[data-graph-cols="4"] .graph-grid:not(.graph-grid--single) {
   grid-template-columns: repeat(4, 1fr);
 }
 
 /* On narrow screens, cap to 2 columns max */
 @media (max-width: 1024px) {
-  [data-graph-cols="4"] .graph-grid {
+  [data-graph-cols="4"] .graph-grid:not(.graph-grid--single) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
-  [data-graph-cols="2"] .graph-grid,
-  [data-graph-cols="4"] .graph-grid {
+  [data-graph-cols="2"] .graph-grid:not(.graph-grid--single),
+  [data-graph-cols="4"] .graph-grid:not(.graph-grid--single) {
     grid-template-columns: 1fr;
   }
 }
@@ -303,6 +331,11 @@
 
 .graph-grid > .graph-cell .js-plotly-plot {
   width: 100% !important;
+}
+
+/* Hide the entire Columns row on pages where it doesn't apply (e.g. compare) */
+.no-columns .dropdown-item:has(.col-btn) {
+  display: none;
 }
 
 #searchInput {
@@ -880,7 +913,10 @@ svg { color: inherit; }
   height: auto;
 }
 
-/* Directivity plots below speaker picture */
+.eq-graph {
+  margin-bottom: 0.75rem;
+}
+
 .directivity-plot {
   margin-top: 0.5rem;
   border: 1px solid var(--md3-outline-variant);

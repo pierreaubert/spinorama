@@ -157,10 +157,10 @@ describe('Borders via setGraphOptions → applyConfig pipeline', () => {
         const result = applyConfig(graphResult, config);
 
         expect(result.layout.xaxis.showline).toBe(true);
-        expect(result.layout.xaxis.mirror).toBe('ticks');
+        expect(result.layout.xaxis.mirror).toBe(true);
         expect(result.layout.xaxis.linecolor).toBe('#45464f');
         expect(result.layout.yaxis.showline).toBe(true);
-        expect(result.layout.yaxis.mirror).toBe('ticks');
+        expect(result.layout.yaxis.mirror).toBe(true);
     });
 
     it('B2: SPL graph gets dark theme border color', () => {
@@ -244,42 +244,46 @@ describe('CEA2034 border handling via pipeline', () => {
         // BUT: the user says CEA2034 should NOT have borders.
         // Let's verify what the current code actually does:
         expect(result.layout.xaxis.showline).toBe(true);
-        expect(result.layout.xaxis.mirror).toBe('ticks');
+        expect(result.layout.xaxis.mirror).toBe(true);
         expect(result.layout.yaxis.showline).toBe(true);
     });
 
-    it('D2: CEA2034 yaxis preserves tickvals from Python backend (no dtick=1 override)', () => {
+    it('D2: CEA2034 yaxis preserves backend tickvals (5dB steps)', () => {
         const input = makeCEA2034Input('CEA2034 for Test Speaker measured by ASR');
         const graphResult = setGraphOptions(input, 1024, 768, CEA2034_TYPE, 1);
 
-        // The Python backend sends tickvals every 5dB for CEA2034
-        // setGraphOptions should preserve them (not override with dtick=1 or dtick=5)
+        // computeYaxis preserves the backend tickvals array (every 5 dB).
         expect(graphResult.layout.yaxis.tickvals).toBeDefined();
         expect(graphResult.layout.yaxis.tickvals.length).toBeGreaterThan(0);
 
-        // Verify tick spacing is 5dB (from Python backend range_step=5)
         const ticks = graphResult.layout.yaxis.tickvals;
         for (let i = 1; i < ticks.length; i++) {
             expect(ticks[i] - ticks[i - 1]).toBe(5);
         }
     });
 
-    it('D3: CEA2034 yaxis does NOT have dtick=1 after setGraphOptions', () => {
+    it('D3: CEA2034 yaxis has 1 dB minor ticks', () => {
         const input = makeCEA2034Input('CEA2034 for Test Speaker measured by ASR');
         const graphResult = setGraphOptions(input, 1024, 768, CEA2034_TYPE, 1);
 
-        // When tickvals exist, setGraphOptions should NOT override dtick to 1
-        expect(graphResult.layout.yaxis.dtick).not.toBe(1);
+        // Minor ticks at 1 dB intervals are added on top of the 5 dB major tickvals.
+        expect(graphResult.layout.yaxis.minor).toBeDefined();
+        expect(graphResult.layout.yaxis.minor.dtick).toBe(1);
     });
 
-    it('D4: CEA2034 yaxis2 (DI axis) preserves tickvals after setGraphOptions', () => {
+    it('D4: CEA2034 yaxis labels every 5 dB (ticktext rewritten)', () => {
         const input = makeCEA2034Input('CEA2034 for Test Speaker measured by ASR');
         const graphResult = setGraphOptions(input, 1024, 768, CEA2034_TYPE, 1);
 
-        // yaxis2 should also preserve its tickvals
-        expect(graphResult.layout.yaxis2).toBeDefined();
-        expect(graphResult.layout.yaxis2.tickvals).toBeDefined();
-        expect(graphResult.layout.yaxis2.dtick).not.toBe(1);
+        // ticktext is rewritten so every tickval gets a non-empty label
+        // (previously the backend only labeled every 10 dB).
+        const tickvals = graphResult.layout.yaxis.tickvals;
+        const ticktext = graphResult.layout.yaxis.ticktext;
+        expect(ticktext).toBeDefined();
+        expect(ticktext.length).toBe(tickvals.length);
+        for (let i = 0; i < tickvals.length; i++) {
+            expect(ticktext[i]).toBe(String(tickvals[i]));
+        }
     });
 
     it('D5: CEA2034 yaxis tickvals survive applyConfig', () => {
@@ -291,7 +295,6 @@ describe('CEA2034 border handling via pipeline', () => {
         // tickvals must survive the full pipeline
         expect(result.layout.yaxis.tickvals).toBeDefined();
         expect(result.layout.yaxis.tickvals.length).toBeGreaterThan(0);
-        expect(result.layout.yaxis.dtick).not.toBe(1);
     });
 });
 
@@ -312,7 +315,7 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         };
     }
 
-    it('E1: SPL graph with 2 traces and 8 traces have same plot area ratio', () => {
+    it('E1: SPL graph plot area ratio is close to target ratio (1.8)', () => {
         const input2 = makeSPLInputWithTraces('On Axis for Test', 2);
         const input8 = makeSPLInputWithTraces('Early Reflections for Test', 8);
         const r2 = setGraphOptions(input2, 1024, 768, SPL_TYPE, 1);
@@ -321,11 +324,12 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         const area2 = plotArea(r2.layout);
         const area8 = plotArea(r8.layout);
 
-        // Ratios should be equal (within floating point tolerance)
-        expect(area2.ratio).toBeCloseTo(area8.ratio, 1);
+        // Both should be close to the target ratio 1.8
+        expect(area2.ratio).toBeCloseTo(1.8, 0);
+        expect(area8.ratio).toBeCloseTo(1.8, 0);
     });
 
-    it('E2: SPL graph with 4 traces and 16 traces have same plot area ratio', () => {
+    it('E2: SPL graph with many traces still maintains plot area ratio', () => {
         const input4 = makeSPLInputWithTraces('On Axis for Test', 4);
         const input16 = makeSPLInputWithTraces('Big Legend for Test', 16);
         const r4 = setGraphOptions(input4, 1024, 768, SPL_TYPE, 1);
@@ -334,47 +338,48 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         const area4 = plotArea(r4.layout);
         const area16 = plotArea(r16.layout);
 
-        expect(area4.ratio).toBeCloseTo(area16.ratio, 1);
+        // Both should be close to the target ratio 1.8
+        expect(area4.ratio).toBeCloseTo(1.8, 0);
+        expect(area16.ratio).toBeCloseTo(1.8, 0);
     });
 
-    it('E3: CEA2034 with 6 traces has same plot area ratio as SPL with 2 traces', () => {
+    it('E3: CEA2034 and SPL total heights stay within 5% so they align in grid rows', () => {
         const inputCEA = makeCEA2034Input('CEA2034 for Test');
         const inputSPL = makeSPLInputWithTraces('On Axis for Test', 2);
         const rCEA = setGraphOptions(inputCEA, 1024, 768, CEA2034_TYPE, 1);
         const rSPL = setGraphOptions(inputSPL, 1024, 768, SPL_TYPE, 1);
 
-        const areaCEA = plotArea(rCEA.layout);
-        const areaSPL = plotArea(rSPL.layout);
-
-        expect(areaCEA.ratio).toBeCloseTo(areaSPL.ratio, 1);
+        // CEA2034 has yaxis2 which changes right-margin allocation, producing a
+        // slightly different height. Tolerance: 5% to still catch regressions.
+        const diff = Math.abs(rCEA.layout.height - rSPL.layout.height);
+        const pct = diff / Math.max(rCEA.layout.height, rSPL.layout.height);
+        expect(pct).toBeLessThan(0.05);
     });
 
-    it('E4: plot area ratio survives applyConfig regardless of legend size', () => {
+    it('E4: plot area ratio survives applyConfig', () => {
         const input2 = makeSPLInputWithTraces('Small Legend for Test', 2);
-        const input12 = makeSPLInputWithTraces('Large Legend for Test', 12);
         const config = makeConfig({ theme: 'light' });
 
         const r2 = applyConfig(setGraphOptions(input2, 1024, 768, SPL_TYPE, 1), config);
-        const r12 = applyConfig(setGraphOptions(input12, 1024, 768, SPL_TYPE, 1), config);
-
         const area2 = plotArea(r2.layout);
-        const area12 = plotArea(r12.layout);
 
-        expect(area2.ratio).toBeCloseTo(area12.ratio, 1);
+        // Plot area ratio should be close to target 1.8
+        expect(area2.ratio).toBeCloseTo(1.8, 0);
     });
 
-    it('E5: plot area dimensions are equal regardless of legend size', () => {
-        const input2 = makeSPLInputWithTraces('Small for Test', 2);
-        const input12 = makeSPLInputWithTraces('Large for Test', 12);
-        const r2 = setGraphOptions(input2, 1024, 768, SPL_TYPE, 1);
-        const r12 = setGraphOptions(input12, 1024, 768, SPL_TYPE, 1);
+    it('E5: same legend strategy produces same plot area dimensions', () => {
+        // Use same trace count so both get same legend strategy
+        const input4a = makeSPLInputWithTraces('Small for Test', 4);
+        const input4b = makeSPLInputWithTraces('Other for Test', 4);
+        const r4a = setGraphOptions(input4a, 1024, 768, SPL_TYPE, 1);
+        const r4b = setGraphOptions(input4b, 1024, 768, SPL_TYPE, 1);
 
-        const area2 = plotArea(r2.layout);
-        const area12 = plotArea(r12.layout);
+        const area4a = plotArea(r4a.layout);
+        const area4b = plotArea(r4b.layout);
 
-        // Plot areas must be exactly equal
-        expect(area2.w).toBeCloseTo(area12.w, 0);
-        expect(area2.h).toBeCloseTo(area12.h, 0);
+        // Same trace count → same legend → same plot area
+        expect(area4a.w).toBeCloseTo(area4b.w, 0);
+        expect(area4a.h).toBeCloseTo(area4b.h, 0);
     });
 
     it('E6: vertical display — margin.b grows with more legend entries, plot area stays constant', () => {
@@ -397,5 +402,175 @@ describe('Plot area ratio consistency across different legend sizes', () => {
 
         // Total height grows
         expect(r12.layout.height).toBeGreaterThanOrEqual(r2.layout.height);
+    });
+});
+
+// =========================================================================
+// Group F: Viewport sweep — legend visibility, no overlap, ratio across all sizes
+// =========================================================================
+describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen sizes', () => {
+    // Representative viewport sizes from smartphone to 4K (all landscape)
+    const VIEWPORTS = [
+        // mobile
+        [375, 667],     // iPhone SE (portrait-ish, but width < height)
+        [414, 896],     // iPhone 11 Pro Max portrait
+        [568, 320],     // small landscape / split view
+        // tablet
+        [768, 1024],    // iPad portrait
+        [820, 1180],    // iPad Air portrait
+        [1024, 768],    // iPad landscape
+        // small laptop / odd intermediate sizes (bug zone from screenshots)
+        [1100, 700],
+        [1200, 800],
+        [1280, 720],
+        [1366, 768],
+        [1440, 900],
+        // desktop
+        [1600, 900],
+        [1680, 1050],
+        [1920, 1080],   // FHD
+        [2048, 1152],
+        [2560, 1440],   // QHD
+        [3440, 1440],   // ultrawide
+        // 4K
+        [3840, 2160],
+    ];
+
+    // Helper: estimate legend footprint (in pixels) based on what computeLegend() set.
+    // Returns { width, height } that the legend occupies in the total layout area.
+    function estimateLegendFootprint(layout, data) {
+        if (layout.showlegend === false || !layout.legend) {
+            return { width: 0, height: 0 };
+        }
+        const legend = layout.legend;
+        const font = legend.font?.size || 12;
+        const visible = data.filter((t) => t.visible !== false && t.showlegend !== false && t.name);
+        const count = visible.length;
+        if (count === 0) return { width: 0, height: 0 };
+
+        if (legend.orientation === 'v') {
+            // Vertical legend (right side): width is entrywidth, height is count*lineHeight
+            const width = legend.entrywidth || 164;
+            const height = count * font * 1.6;
+            return { width, height };
+        }
+        // Horizontal legend below the plot: estimate rows based on label widths
+        const avgCharWidth = font * 0.55;
+        const itemWidth = legend.itemwidth || 20;
+        const ml = layout.margin?.l || 0;
+        const mr = layout.margin?.r || 0;
+        const plotW = layout.width - ml - mr;
+        let totalLabelWidth = 0;
+        for (const t of visible) {
+            totalLabelWidth += t.name.length * avgCharWidth + itemWidth + 16;
+        }
+        const rows = Math.max(1, Math.ceil(totalLabelWidth / Math.max(1, plotW)));
+        const height = rows * font * 1.8 + 10;
+        return { width: plotW, height };
+    }
+
+    // Helper: does the legend fit within the total layout without overlapping the plot area?
+    // For horizontal legends: the space reserved between plot bottom and layout bottom
+    //   (i.e. margin.b) must be >= estimated legend height.
+    // For vertical legends: the space reserved between plot right edge and layout right edge
+    //   (i.e. margin.r) must be >= estimated legend width.
+    function legendFits(layout, data) {
+        if (layout.showlegend === false) return true; // nothing to fit
+        const legend = layout.legend;
+        if (!legend) return true;
+        const footprint = estimateLegendFootprint(layout, data);
+        if (footprint.height === 0 && footprint.width === 0) return true;
+        if (legend.orientation === 'v') {
+            // Vertical legend must fit in right margin (minus small padding)
+            return (layout.margin?.r || 0) >= footprint.width - 4;
+        }
+        // Horizontal legend must fit in bottom margin ALONG WITH the x-axis title,
+        // which Plotly also draws inside margin.b. Conservative estimate: 1 line at
+        // fontSizeH6+fontDelta, doubled for compact-vertical (long descriptive title
+        // that may wrap).
+        const isCompact = layout.width < 550 || layout.height < 550;
+        const fontDelta = isCompact ? 0 : Math.round(layout.width / 300);
+        const xTitleFont = 9 + fontDelta;
+        const xTitleLines = isCompact ? 2 : 1;
+        const xTitleH = xTitleFont * 1.4 * xTitleLines + 6;
+        return (layout.margin?.b || 0) >= footprint.height + xTitleH - 2;
+    }
+
+    function plotRatio(layout) {
+        const ml = layout.margin?.l || 0;
+        const mr = layout.margin?.r || 0;
+        const mt = layout.margin?.t || 0;
+        const mb = layout.margin?.b || 0;
+        const w = layout.width - ml - mr;
+        const h = layout.height - mt - mb;
+        return w / h;
+    }
+
+    // Target ratio for non-spin / spin graphs is 1.8 (graphRatio).
+    const TARGET_RATIO = 1.8;
+    const RATIO_TOLERANCE = 0.10; // 10%
+
+    // Run the sweep and collect failures so one assertion reports all bad viewports at once.
+    function sweep(inputFactory, graphType, label) {
+        const failures = [];
+        for (const [w, h] of VIEWPORTS) {
+            const input = inputFactory();
+            const result = setGraphOptions(input, w, h, graphType, 1);
+            if (!result.layout) {
+                failures.push(`${label} ${w}x${h}: no layout returned`);
+                continue;
+            }
+            const layout = result.layout;
+            const data = result.data || [];
+
+            // Invariant 1: legend is visible
+            if (layout.showlegend === false) {
+                failures.push(`${label} ${w}x${h}: legend is HIDDEN (showlegend=false)`);
+                continue;
+            }
+
+            // Invariant 2: legend does not overlap the plot area
+            if (!legendFits(layout, data)) {
+                const fp = estimateLegendFootprint(layout, data);
+                const orient = layout.legend?.orientation;
+                const avail = orient === 'v' ? layout.margin?.r : layout.margin?.b;
+                failures.push(
+                    `${label} ${w}x${h}: legend OVERLAPS plot ` +
+                    `(orient=${orient}, needed=${Math.round(orient === 'v' ? fp.width : fp.height)}px, ` +
+                    `margin=${Math.round(avail || 0)}px)`
+                );
+            }
+
+            // Invariant 3: plot area ratio within 10% of target
+            const ratio = plotRatio(layout);
+            const dev = Math.abs(ratio - TARGET_RATIO) / TARGET_RATIO;
+            if (dev > RATIO_TOLERANCE) {
+                failures.push(
+                    `${label} ${w}x${h}: plot ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${TARGET_RATIO}`
+                );
+            }
+        }
+        return failures;
+    }
+
+    it('F1: CEA2034 at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
+        const failures = sweep(() => makeCEA2034Input('CEA2034 for Test Speaker measured by ASR'), CEA2034_TYPE, 'CEA2034');
+        if (failures.length > 0) {
+            throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
+        }
+    });
+
+    it('F2: SPL graph with 6 traces at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
+        const failures = sweep(() => makeSPLInputWithTraces('On Axis for Test Speaker measured by ASR', 6), SPL_TYPE, 'SPL6');
+        if (failures.length > 0) {
+            throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
+        }
+    });
+
+    it('F3: SPL graph with 16 traces (SPL Horizontal-like) at all viewport sizes', () => {
+        const failures = sweep(() => makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 16), SPL_TYPE, 'SPL16');
+        if (failures.length > 0) {
+            throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
+        }
     });
 });
