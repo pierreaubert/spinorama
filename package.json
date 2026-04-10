@@ -26,7 +26,7 @@
     "prettier": "3.8.1",
     "sass": "1.98.0",
     "terser": "5.46.1",
-    "vite": "8.0.3",
+    "vite": "8.0.8",
     "vitest": "^4.1.2",
     "w3c-html-validator": "2.2.0"
   },
