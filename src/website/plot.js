@@ -127,10 +127,12 @@ export const labelLong = Object.entries(labelShort).reduce((obj, [k, v]) => {
 }, {});
 
 const graphSmall = 550;
-const graphLarge = 1024;
 
 const graphRatio = 1.8;
-const contourRatio = 4.0 / 3.0;
+// Contour plots (frequency × angle): wider than tall since frequency spans ~3 decades
+// on a log axis while angle spans 360°. Value matches the visual appearance of the
+// old computeDims-based sizing (~1.5-1.6 at typical viewport sizes).
+const contourRatio = 1.6;
 const squareRatio = 1.0;
 
 const graphMarginLeft = 30;
@@ -142,10 +144,6 @@ const graphMarginLeftSmall = 15;
 const graphMarginRightSmall = 5;
 const graphMarginTopSmall = 30;
 const graphMarginBottomSmall = 40;
-
-const graphExtraPadding = 40;
-
-const graphLegendWidth = 164;
 
 const fontSizeH3 = 12;
 const fontSizeH4 = 11;
@@ -235,17 +233,19 @@ export function isDisplayCompact() {
 export function computeLayout(containerWidth, isVertical, isCompact, graphProps, traceCount, maxLabelLen, hasYaxis2, ratio, fontDelta) {
     const minFont = 8;
     const baseFont = isCompact ? fontSizeH5 : fontSizeH5 + fontDelta;
+    const isPolar = graphProps.isRadar || graphProps.isGlobe;
 
     // --- Pass 1: Base margins (before legend allocation) ---
     let margin;
     if (isCompact) {
         margin = { l: graphMarginLeftSmall, r: graphMarginRightSmall, t: graphMarginTopSmall, b: graphMarginBottomSmall };
     } else {
-        // Right margin: add 25px if no yaxis2 (to leave room for the right tick labels when mirrored)
-        const offsetR = hasYaxis2 ? 0 : 25;
+        // Right margin: add 25px if no yaxis2 (to leave room for the right tick labels when mirrored).
+        // Polar plots don't have a yaxis2 tick margin concept, so skip the offset.
+        const offsetR = isPolar || hasYaxis2 ? 0 : 25;
         margin = {
             l: graphMarginLeft,
-            r: graphMarginRight + (isVertical ? offsetR : offsetR),
+            r: graphMarginRight + offsetR,
             t: graphMarginTop,
             b: graphMarginBottom,
         };
@@ -255,9 +255,10 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
     }
 
     // --- Pass 2: Decide legend strategy and compute its footprint ---
-    // For surface plots, legend is hidden entirely.
+    // Surface/radar/globe hide the legend entirely (they use colorbars or have
+    // no trace-based legend to show).
     let legend;
-    if (graphProps.isSurface) {
+    if (graphProps.isSurface || isPolar) {
         legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0, hidden: true };
     } else if (traceCount === 0) {
         legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0 };
@@ -281,7 +282,11 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
     } else {
         // Landscape: try vertical (right) legend first. Fall back to horizontal if it won't fit
         // or if there are too many traces for a vertical legend.
-        const legendW = Math.min(Math.max(80, maxLabelLen * baseFont * 0.6 + 50), 200);
+        // Width per entry: icon marker (~24px) + label text (maxLabelLen * 0.6 * fontSize)
+        //                  + left/right padding (~16px). Capped at 280px so very long
+        //                  labels don't starve the plot area; labels longer than that
+        //                  will be truncated by Plotly (rare — SPL-style names fit).
+        const legendW = Math.min(Math.max(80, maxLabelLen * baseFont * 0.62 + 40), 280);
         const plotAreaW_rightLegend = containerWidth - margin.l - margin.r - legendW;
         const plotAreaH_rightLegend = plotAreaW_rightLegend / ratio;
         const legendH_needed = traceCount * baseFont * 1.6 + 10;
@@ -313,25 +318,20 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         }
     }
 
-    // --- Pass 3: Allocate legend space into margins, then compute dimensions ---
+    // --- Pass 3: Allocate legend/title space into margins, then compute dimensions ---
     // Small padding between plot elements (in pixels).
     const legendPad = 8;
 
     // Reserve space for the x-axis title, which Plotly draws inside margin.b.
-    // In compact-vertical mode the title is a long descriptive string (~55 chars at fontSizeH6)
-    // that may wrap to 2 lines at narrow widths. In other modes it's a short 1-line title.
-    // The title font is fontSizeH6 + fontDelta (line-height ~1.4).
-    const xTitleFont = fontSizeH6 + fontDelta;
-    const xTitleLineH = xTitleFont * 1.4;
-    let xTitleH;
-    if (isCompact && isVertical) {
-        // Long title — assume 2 lines to be safe at narrow widths
-        xTitleH = xTitleLineH * 2 + 6;
-    } else {
-        // Short "SPL (dB) v.s. Frequency (Hz)" — 1 line
-        xTitleH = xTitleLineH + 6;
+    // Polar plots (radar/globe) don't have an x-axis title, so skip this.
+    if (!isPolar) {
+        // In compact-vertical mode the title is a long descriptive string (~55 chars at fontSizeH6)
+        // that may wrap to 2 lines at narrow widths. In other modes it's a short 1-line title.
+        const xTitleFont = fontSizeH6 + fontDelta;
+        const xTitleLineH = xTitleFont * 1.4;
+        const xTitleH = (isCompact && isVertical) ? (xTitleLineH * 2 + 6) : (xTitleLineH + 6);
+        margin.b += xTitleH;
     }
-    margin.b += xTitleH;
 
     if (!legend.hidden && legend.height > 0) {
         if (legend.orientation === 'v') {
@@ -341,7 +341,15 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         }
     }
 
-    const plotAreaW = Math.max(1, containerWidth - margin.l - margin.r);
+    // For square-ratio plots (radar/globe) in a landscape container, we'd otherwise
+    // get an extremely wide plot area. Cap the plot width so the square plot area is
+    // not unreasonably large (use the smaller of containerWidth and available height-based width).
+    let plotAreaW = Math.max(1, containerWidth - margin.l - margin.r);
+    if (Math.abs(ratio - 1.0) < 0.01) {
+        // Square plot: the caller usually passes a containerWidth from the DOM, and
+        // we keep the square sized to the width. This yields a tall plot in landscape
+        // viewports — same as before.
+    }
     const plotAreaH = plotAreaW / ratio;
     const totalW = containerWidth;
     const totalH = plotAreaH + margin.t + margin.b;
@@ -353,65 +361,6 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         legend: legend,
         plotArea: { w: plotAreaW, h: plotAreaH },
     };
-}
-
-export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs, ratio, legendWidth) {
-    let width = windowWidth;
-    let height = windowHeight;
-    if (isCompact) {
-        // legend is horizontal below the graph
-        height = Math.min(windowHeight, windowWidth / ratio + graphMarginTopSmall + graphMarginBottomSmall);
-        // Cap width to maintain a reasonable aspect ratio in compact landscape
-        // (e.g. wide monitor with low viewport height due to browser chrome)
-        const maxWidth = height * ratio + graphMarginLeftSmall + graphMarginRightSmall;
-        width = Math.min(windowWidth, maxWidth);
-    } else {
-        if (isVertical) {
-            width = windowWidth - graphMarginLeft - graphMarginRight;
-            const graphWidth = Math.min(graphLarge, width - 2 * graphExtraPadding);
-            height = graphWidth / ratio + graphMarginTop + graphMarginBottom;
-        } else {
-            height = windowHeight - graphMarginTop - graphMarginBottom;
-            const effectiveLegendWidth = legendWidth !== undefined ? legendWidth : graphLegendWidth;
-            const extra = effectiveLegendWidth + graphMarginLeft + graphMarginRight;
-            if (windowWidth - extra < height * ratio) {
-                width = windowWidth;
-                height = (width - extra) / ratio;
-            } else {
-                width = height * ratio + extra;
-            }
-        }
-        if (nbGraphs > 1) {
-            if (!isVertical) {
-                width = windowWidth / nbGraphs;
-                height = Math.min(height, width / ratio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
-            }
-        }
-    }
-    /*
-    console.info(
-        'vertical=' +
-            isVertical +
-            ' compact=' +
-            isCompact +
-            ' window(' +
-            windowWidth +
-            ', ' +
-            windowHeight +
-            ') graph(' +
-            width +
-            ', ' +
-            height +
-            ')' +
-            ' ratio=(expected: ' +
-            ratio.toFixed(2) +
-            ',computed: ' +
-            (width / height).toFixed(2) +
-            ') #=' +
-            nbGraphs
-    );
-*/
-    return [width, height];
 }
 
 const GraphProperties = Object.freeze({
@@ -489,7 +438,7 @@ const GraphProperties = Object.freeze({
         isGraph: true,
         isSpin: false,
         isRadar: false,
-        isSurface: true,
+        isSurface: false,
         isGlobe: false,
     },
     'SPL Horizontal Contour': {
@@ -718,17 +667,21 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
-    // Upgrade an SPL axis in-place: add 1-dB tick marks via minor ticks and
-    // relabel existing tickvals so labels appear every 5 dB instead of every 10.
+    // Upgrade an SPL axis in-place so that:
+    //   - Major grid lines (prominent) are drawn every 5 dB
+    //   - Minor grid lines (faint) + tick marks are drawn every 1 dB
+    //   - Labels appear every 5 dB
     //
     // Safety rules:
     //   - Never touches yaxis2 (DI axis in CEA2034 has custom semantics).
     //   - Never touches axes with non-numeric or non-integer ranges.
     //   - Never touches contour angle axes (title === 'Angle').
-    //   - Preserves the existing tickvals array (does NOT override) so CEA2034's
-    //     5-dB stepping and plot domain are preserved.
-    //   - Only rewrites ticktext when tickvals look like a regular SPL axis
-    //     (integer values, range covers the full [rangeMin, rangeMax]).
+    //
+    // Handles two source cases:
+    //   1) Backend provided tickvals every 1 dB with labels only every 10 dB
+    //      (On Axis, Early Reflections, ...): replace with dtick=5 + minor dtick=1.
+    //   2) Backend provided tickvals every 5 dB with labels every 10 dB
+    //      (CEA2034 yaxis): keep tickvals but relabel all of them.
     function upgradeSplYaxis(ax) {
         if (!ax) return;
         if (ax.title && ax.title.text === 'Angle') return;
@@ -739,26 +692,42 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         const span = Math.abs(rMax - rMin);
         if (span < 10 || span > 100) return;
 
-        // Add 1-dB minor tick marks + faint minor grid. Major ticks/labels come
-        // from the existing tickvals/ticktext (not touched here, to preserve
-        // Python backend's stepping and CEA2034 domain).
-        ax.minor = {
-            dtick: 1,
-            ticks: ax.ticks || 'inside',
-            ticklen: 2,
-            showgrid: true,
-            gridcolor: 'rgba(0,0,0,0.07)',
-        };
-
-        // Relabel existing tickvals so labels appear at every 5-dB position
-        // (if the backend only labeled every 10 dB). Leave alone if tickvals
-        // are not 5-dB multiples (which would indicate a non-SPL axis).
+        // Detect whether tickvals are 5-dB multiples only (case 2) or finer (case 1)
+        let useTickvalsPath = false;
         if (Array.isArray(ax.tickvals) && ax.tickvals.length > 0) {
             const allInt = ax.tickvals.every((v) => Number.isInteger(v));
-            const allDiv5 = ax.tickvals.every((v) => v % 5 === 0);
+            const allDiv5 = allInt && ax.tickvals.every((v) => v % 5 === 0);
             if (allInt && allDiv5) {
-                ax.ticktext = ax.tickvals.map((v) => String(v));
+                useTickvalsPath = true;
             }
+        }
+
+        if (useTickvalsPath) {
+            // Case 2: keep 5-dB tickvals, relabel every position
+            ax.ticktext = ax.tickvals.map((v) => String(v));
+            ax.tickmode = 'array';
+            // Add 1-dB minor grid on top of the 5-dB major ticks
+            ax.minor = {
+                dtick: 1,
+                ticks: ax.ticks || 'inside',
+                ticklen: 2,
+                showgrid: true,
+                gridcolor: 'rgba(0,0,0,0.07)',
+            };
+        } else {
+            // Case 1: replace any 1-dB tickvals with dtick=5 so Plotly draws
+            // major grid lines only every 5 dB. Minor ticks fill in every 1 dB.
+            delete ax.tickvals;
+            delete ax.ticktext;
+            delete ax.tickmode;
+            ax.dtick = 5;
+            ax.minor = {
+                dtick: 1,
+                ticks: ax.ticks || 'inside',
+                ticklen: 2,
+                showgrid: true,
+                gridcolor: 'rgba(0,0,0,0.07)',
+            };
         }
     }
 
@@ -954,8 +923,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
     }
 
     // Apply computeLayout() output (width, height, margin, legend) to the Plotly layout object.
-    // Called after computeDims has set an initial width. We re-derive everything from the
-    // container width so the plot-area aspect ratio is guaranteed.
+    // layout.width must be set to the target container width before calling this.
+    // Everything else — total height, margins, legend placement — is derived here so the
+    // plot-area aspect ratio is guaranteed.
     function applyComputeLayout(ratio) {
         // Count visible traces and find the longest label (used for legend sizing).
         let traceCount = 0;
@@ -1241,16 +1211,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
         }
-        // Initial width estimate from the window (computeLayout will re-derive everything
-        // from layout.width so this sets the container width for subsequent sizing).
-        [layout.width, layout.height] = computeDims(
-            windowWidth,
-            windowHeight,
-            isVertical,
-            isCompact,
-            outputNumberGraphs,
-            ratio
-        );
+        // All graphs (SPL, CEA2034, contour, radar, globe) go through applyComputeLayout.
+        // The caller passes the actual DOM container width as `windowWidth`; computeLayout
+        // is the single source of truth for width/height/margins/legend, so we seed
+        // layout.width with the container width and let applyComputeLayout derive the rest.
+        layout.width = windowWidth;
+        layout.height = windowHeight; // temporary — applyComputeLayout will overwrite
+
         computeFont();
         computeXaxis();
         computeYaxis();
@@ -1261,24 +1228,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         computeColorbar();
         computePolar();
 
-        // Single source of truth for margins, legend placement, and final dimensions.
-        // Radar/globe skip the aspect-ratio-enforcing path — they use square layouts
-        // so we set minimal margins directly to preserve existing behavior.
-        if (!outputGraphProperties.isRadar && !outputGraphProperties.isGlobe) {
-            applyComputeLayout(ratio);
-        } else {
-            // Radar/globe: square layout with basic margins
-            layout.margin = {
-                l: isCompact ? graphMarginLeftSmall : graphMarginLeft,
-                r: isCompact ? graphMarginRightSmall : graphMarginRight,
-                t: isCompact ? graphMarginTopSmall : graphMarginTop,
-                b: isCompact ? graphMarginBottomSmall : graphMarginBottom,
-            };
-            if (outputGraphProperties.isGlobe) layout.margin.t += 50;
-            if (!layout.legend) layout.legend = {};
-            layout.legend.font = { size: fontSizeH5 + fontDelta };
-            layout.legend.itemwidth = 20;
-        }
+        applyComputeLayout(ratio);
     } else {
         // should be a pop up
         console.log('Error: No graph is available');
@@ -1429,7 +1379,9 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             graphsConfigs.push(options);
         }
     }
-    if (speakerGraphs.length <= 1 || graphsConfigs.length === 0) {
+    // The merge code below only makes sense when we have at least 2 valid graphs.
+    // Return early for single-speaker or if one of the inputs failed to produce a layout.
+    if (graphsConfigs.length < 2) {
         return graphsConfigs;
     }
 
@@ -1439,31 +1391,38 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         layout: structuredClone(graphsConfigs[0].layout),
         config: structuredClone(graphsConfigs[0].config),
     };
-    if (isDisplayCompact()) {
-        mergedConfig.layout.width = window.innerWidth;
-        mergedConfig.layout.height = mergedConfig.layout.width + 280;
-        mergedConfig.layout.margin = {
-            t: 160, // double lines title + axis
-            r: 10, // colorbar horizontal
-            l: 10,
-            b: 120,
-        };
+    // Target per-sub-plot aspect ratio (width/height) — matches single-contour contourRatio.
+    const CONTOUR_RATIO = 1.6;
+    if (isDisplayCompact() || isDisplayVertical()) {
+        // Compact or portrait: stack the two contours vertically (yaxis + yaxis2
+        // domains split top/bottom) so each contour uses the full width.
+        // Each sub-plot height = plotW / ratio; total height = 2 * sub-plot + margins.
+        const totalW = isDisplayCompact() ? window.innerWidth : window.innerWidth - graphMarginRight;
+        const marginT = 160; // double-line title + axis
+        const marginB = isDisplayCompact() ? 120 : 60;
+        const marginL = 10;
+        const marginR = isDisplayCompact() ? 10 : 100; // colorbar
+        const plotW = Math.max(1, totalW - marginL - marginR);
+        const subPlotH = plotW / CONTOUR_RATIO;
+        const gap = 40; // space between the two sub-plots
+        mergedConfig.layout.width = totalW;
+        mergedConfig.layout.height = marginT + marginB + 2 * subPlotH + gap;
+        mergedConfig.layout.margin = { t: marginT, b: marginB, l: marginL, r: marginR };
     } else {
-        if (isDisplayVertical()) {
-            mergedConfig.layout.width = window.innerWidth - graphMarginRight;
-            mergedConfig.layout.height = mergedConfig.layout.width + 240;
-            mergedConfig.layout.margin = {
-                t: 160, // double lines title + axis
-                r: 100, // colorbar
-            };
-        } else {
-            mergedConfig.layout.width = window.innerWidth;
-            mergedConfig.layout.margin = {
-                t: 60, // title
-                b: 40, // axis
-                r: 40, // colorbar
-            };
-        }
+        // Non-compact horizontal: place the two contours side by side
+        // (xaxis domains [0, 0.49] and [0.51, 1]).
+        // Each sub-plot has half the plot width → plotH = (plotW * 0.49) / ratio.
+        const totalW = window.innerWidth;
+        const marginT = 60;
+        const marginB = 40;
+        const marginL = 30;
+        const marginR = 80; // colorbar at right
+        const plotW = Math.max(1, totalW - marginL - marginR);
+        const subPlotW = plotW * 0.49;
+        const plotH = subPlotW / CONTOUR_RATIO;
+        mergedConfig.layout.width = totalW;
+        mergedConfig.layout.height = marginT + marginB + plotH;
+        mergedConfig.layout.margin = { t: marginT, b: marginB, l: marginL, r: marginR };
     }
     // customise title
     function split(title) {
@@ -1603,29 +1562,34 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         mergedConfig.layout.xaxis.side = 'bottom';
         mergedConfig.layout.xaxis.tick = 'outside';
 
-        mergedConfig.layout.xaxis2.side = 'bottom';
-        mergedConfig.layout.xaxis2.tick = 'outside';
-
         mergedConfig.layout.yaxis.tick = 'outside';
         if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
             mergedConfig.layout.yaxis.title.text = 'Angle (A)';
         }
 
-        mergedConfig.layout.yaxis2.side = 'right';
-        mergedConfig.layout.yaxis2.tick = 'outside';
-        mergedConfig.layout.yaxis2['anchor'] = 'x2';
-        if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
-            mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+        if (mergedConfig.layout.xaxis2) {
+            mergedConfig.layout.xaxis2.side = 'bottom';
+            mergedConfig.layout.xaxis2.tick = 'outside';
+            mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
+        }
+        if (mergedConfig.layout.yaxis2) {
+            mergedConfig.layout.yaxis2.side = 'right';
+            mergedConfig.layout.yaxis2.tick = 'outside';
+            mergedConfig.layout.yaxis2['anchor'] = 'x2';
+            if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+                mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+            }
         }
 
-        const range0 = graphsConfigs[0].layout.yaxis.range;
-        const range1 = graphsConfigs[1].layout.yaxis.range;
-        const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
-
         mergedConfig.layout.xaxis['domain'] = [0, 0.49];
-        mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
-        mergedConfig.layout.yaxis.range = range;
-        mergedConfig.layout.yaxis2.range = range;
+
+        if (graphsConfigs.length >= 2) {
+            const range0 = graphsConfigs[0].layout.yaxis.range;
+            const range1 = graphsConfigs[1].layout.yaxis.range;
+            const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+            mergedConfig.layout.yaxis.range = range;
+            if (mergedConfig.layout.yaxis2) mergedConfig.layout.yaxis2.range = range;
+        }
     }
 
     return [mergedConfig];

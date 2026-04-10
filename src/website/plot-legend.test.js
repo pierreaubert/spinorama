@@ -19,7 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { estimateLegendSize, shouldUseShortLabels, computeDims, setGraphOptions, labelShort } from './plot.js';
+import { estimateLegendSize, shouldUseShortLabels, setGraphOptions, labelShort } from './plot.js';
 import { applyConfig, defaultConfig } from './plot-config.js';
 
 beforeEach(() => {
@@ -204,48 +204,6 @@ describe('computeLabel integration', () => {
 });
 
 // ---------------------------------------------------------------------------
-// computeDims ratio preservation
-// ---------------------------------------------------------------------------
-describe('computeDims ratio', () => {
-    const targetRatio = 4.0 / 3.0;
-
-    const screenSizes = [
-        { name: '1920x1080', w: 1920, h: 1080 },
-        { name: '768x1024', w: 768, h: 1024 },
-        { name: '375x667', w: 375, h: 667 },
-        { name: '400x400', w: 400, h: 400 },
-    ];
-
-    for (const { name, w, h } of screenSizes) {
-        const isVertical = w <= h;
-        const isCompact = w < 550 || h < 550;
-
-        it(`${name}, 1 graph`, () => {
-            const [gw, gh] = computeDims(w, h, isVertical, isCompact, 1, targetRatio);
-            if (!isCompact) {
-                const ratio = gw / gh;
-                // Allow deviation — the graph itself (minus margins/legend) should be reasonable
-                expect(ratio).toBeGreaterThan(0.5);
-                expect(ratio).toBeLessThan(3.0);
-            }
-        });
-
-        it(`${name}, 2 graphs`, () => {
-            const [gw, gh] = computeDims(w, h, isVertical, isCompact, 2, targetRatio);
-            expect(gw).toBeGreaterThan(0);
-            expect(gh).toBeGreaterThan(0);
-        });
-    }
-
-    it('custom legendWidth reduces horizontal extra', () => {
-        const [w1] = computeDims(1920, 1080, false, false, 1, targetRatio, 164);
-        const [w2] = computeDims(1920, 1080, false, false, 1, targetRatio, 100);
-        // Smaller legend → smaller total width or taller graph
-        expect(w2).toBeLessThanOrEqual(w1);
-    });
-});
-
-// ---------------------------------------------------------------------------
 // computeLegend (via setGraphOptions)
 // ---------------------------------------------------------------------------
 describe('computeLegend', () => {
@@ -293,12 +251,18 @@ describe('computeLegend', () => {
         }
     });
 
-    it('height cap at 1.5x for many vertical traces', () => {
+    it('layout height proportional to width for many traces (ratio preserved)', () => {
         const names = Array.from({ length: 40 }, (_, i) => `Trace ${i}`);
         const g = makeGraph(names);
         const result = setGraphOptions([g], 1920, 600, graphProps, 1);
-        // Height should not exceed 1.5x original
-        expect(result.layout.height).toBeLessThanOrEqual(600 * 1.5 + 200);
+        // Plot area ratio (width-margins) / (height-margins) should still be ~1.8
+        const ml = result.layout.margin?.l || 0;
+        const mr = result.layout.margin?.r || 0;
+        const mt = result.layout.margin?.t || 0;
+        const mb = result.layout.margin?.b || 0;
+        const pw = result.layout.width - ml - mr;
+        const ph = result.layout.height - mt - mb;
+        expect(pw / ph).toBeCloseTo(1.8, 1);
     });
 });
 

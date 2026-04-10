@@ -19,7 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { computeDims, decode64, decode, setGraphOptions } from './plot.js';
+import { decode64, decode, setGraphOptions } from './plot.js';
 import * as plotJs from './plot.js'; // Import all for spyOn module functions
 
 // Mock window properties
@@ -47,117 +47,7 @@ function graph_ratio(width, height) {
     return ratio;
 }
 
-describe('computeDims', () => {
-    // Constants from plot.js (or import them if possible/safer)
-    const graphLargeThreshold = 1024;
-    const baseGraphRatio = 4.0 / 3.0;
-    const graphMarginLeft = 30;
-    const graphMarginRight = 30;
-    const graphMarginTop = 60;
-    const graphMarginBottom = 30;
-    const graphExtraPadding = 40;
-    const graphLegendWidth = 164;
-
-    // Test cases: [windowWidth, windowHeight, isVertical, isCompact, nbGraphs, expectedWidthFn, expectedHeightFn]
-    // expectedWidthFn and expectedHeightFn are functions to calculate expected dimensions based on logic in computeDims
-    const testCases = [
-        // Compact, Vertical (existing logic was roughly this)
-        { ww: 375, wh: 667, v: true, c: true, n: 1, desc: 'iPhone SE, V, C, 1 graph' }, // width = ww, height = min(wh, ww / baseGraphRatio + marginTop + marginBottom + extraPadding)
-        { ww: 375, wh: 667, v: true, c: true, n: 2, desc: 'iPhone SE, V, C, 2 graphs' }, // Same as n=1 for V,C
-
-        // Compact, Horizontal
-        { ww: 667, wh: 375, v: false, c: true, n: 1, desc: 'iPhone SE landscape, H, C, 1 graph' }, // width = ww - extraPadding, height = min(wh, ww / baseGraphRatio + graphSpacer)
-        { ww: 667, wh: 375, v: false, c: true, n: 2, desc: 'iPhone SE landscape, H, C, 2 graphs' }, // Same as n=1 for H,C
-
-        // Non-Compact, Vertical
-        { ww: 800, wh: 1200, v: true, c: false, n: 1, desc: 'Tablet portrait, V, NC, 1 graph' },
-        // width = ww - marginLeft - marginRight; graphWidth = min(graphLarge, width - 2 * extraPadding); height = graphWidth / baseGraphRatio + marginTop + marginBottom
-        { ww: 1200, wh: 800, v: true, c: false, n: 1, desc: 'Tablet portrait wide, V, NC, 1 graph' }, // Test graphLarge limit
-
-        // Non-Compact, Horizontal
-        { ww: 1200, wh: 800, v: false, c: false, n: 1, desc: 'Tablet landscape, H, NC, 1 graph' },
-        // width = ww - marginRight - marginLeft; graphWidth = min(graphLarge, width - legendWidth - 2 * extraPadding); height = graphWidth / baseGraphRatio
-        { ww: 1920, wh: 1080, v: false, c: false, n: 1, desc: 'Desktop 2k, H, NC, 1 graph' }, // Test graphLarge limit
-
-        // Non-Compact, Horizontal, Multiple Graphs
-        { ww: 1920, wh: 1080, v: false, c: false, n: 2, desc: 'Desktop 2k, H, NC, 2 graphs' },
-        // width = ww / n; height = min(initialHeight, width / baseGraphRatio) + marginTop + marginBottom + extraPadding
-        // where initialHeight is from the n=1 case for H, NC.
-        { ww: 1920, wh: 1080, v: false, c: false, n: 3, desc: 'Desktop 2k, H, NC, 3 graphs' },
-    ];
-
-    it('should not produce an excessively wide graph on a wide monitor with low viewport height', () => {
-        // Wide monitor with browser chrome reducing effective height below 550 (compact threshold)
-        // e.g. 1536x500 — this triggers compact mode where width was uncapped
-        const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-
-        const [w, h] = computeDims(1536, 500, false, true, 1, baseGraphRatio);
-        const effectiveRatio = w / h;
-
-        // The graph ratio should stay reasonable (close to 4:3, not 3:1)
-        expect(effectiveRatio).toBeLessThan(2.0);
-        // Width should not be the full window width
-        expect(w).toBeLessThan(1536);
-
-        consoleInfoSpy.mockRestore();
-    });
-
-    it('should maintain reasonable ratio in compact landscape for various wide screens', () => {
-        const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-
-        // Test several wide-screen compact scenarios
-        for (const [ww, wh] of [[1920, 450], [2560, 500], [1536, 520], [1440, 400]]) {
-            const [w, h] = computeDims(ww, wh, false, true, 1, baseGraphRatio);
-            const ratio = w / h;
-            expect(ratio).toBeLessThan(2.0);
-        }
-
-        consoleInfoSpy.mockRestore();
-    });
-
-    testCases.forEach(({ ww, wh, v, c, n, desc }) => {
-        it(`should compute dimensions correctly for ${desc}`, () => {
-            // Suppress console.info during this test if it's noisy
-            const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-
-            const [computedWidth, computedHeight] = computeDims(ww, wh, v, c, n, baseGraphRatio);
-
-            // Use actual computed values as expected values since the code is correct
-            const expectedValues = {
-                'iPhone SE, V, C, 1 graph': [375, 351],
-                'iPhone SE, V, C, 2 graphs': [375, 351],
-                'iPhone SE landscape, H, C, 1 graph': [520, 375],
-                'iPhone SE landscape, H, C, 2 graphs': [520, 375],
-                'Tablet portrait, V, NC, 1 graph': [740, 595],
-                'Tablet portrait wide, V, NC, 1 graph': [1140, 868],
-                'Tablet landscape, H, NC, 1 graph': [1157, 700],
-                'Desktop 2k, H, NC, 1 graph': [1531, 980],
-                'Desktop 2k, H, NC, 2 graphs': [960, 860],
-                'Desktop 2k, H, NC, 3 graphs': [640, 620],
-            };
-
-            const [expectedWidth, expectedHeight] = expectedValues[desc] || [
-                Math.round(computedWidth),
-                Math.round(computedHeight),
-            ];
-
-            expect(Math.round(computedWidth)).toBe(expectedWidth);
-            expect(Math.round(computedHeight)).toBe(expectedHeight);
-
-            // Check ratio (optional, as direct width/height is more precise)
-            if (computedWidth > 0 && computedHeight > 0) {
-                const ratio = graph_ratio(computedWidth, computedHeight);
-                // The original tests had ratioMin = 0.9, ratioMax = 1.8.
-                // This is a very loose check. If direct w/h match, ratio should inherently match.
-                // For exact baseGraphRatio, it should be close to 1.333
-                // However, margins and other logic can alter this effective ratio.
-                // Let's keep a relaxed check or focus on width/height primarily.
-                expect(ratio).toBeGreaterThanOrEqual(1.0); // Assuming width is usually >= height or vice-versa, ratio >=1
-            }
-            consoleInfoSpy.mockRestore();
-        });
-    });
-});
+// computeDims has been removed — all sizing now goes through computeLayout/applyComputeLayout.
 
 describe('setGraphOptions', () => {
     let mockInputGraphsData;

@@ -302,18 +302,35 @@
   margin: 0 auto;
 }
 
-[data-graph-cols="2"] .graph-grid:not(.graph-grid--single) {
+[data-graph-cols="2"] .graph-grid:not(.graph-grid--single):not(.graph-grid--pairs) {
   grid-template-columns: repeat(2, 1fr);
 }
 
-[data-graph-cols="4"] .graph-grid:not(.graph-grid--single) {
+[data-graph-cols="4"] .graph-grid:not(.graph-grid--single):not(.graph-grid--pairs) {
   grid-template-columns: repeat(4, 1fr);
+}
+
+/* Pairs grid (ref-vs-eq): always shows 2 subgraphs per "logical column" so the
+   user's column count multiplies by 2. cols=1 → 2 subgraphs, cols=2 → 4, cols=4 → 8. */
+.graph-grid--pairs {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+[data-graph-cols="2"] .graph-grid--pairs {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+[data-graph-cols="4"] .graph-grid--pairs {
+  grid-template-columns: repeat(8, 1fr);
 }
 
 /* On narrow screens, cap to 2 columns max */
 @media (max-width: 1024px) {
-  [data-graph-cols="4"] .graph-grid:not(.graph-grid--single) {
+  [data-graph-cols="4"] .graph-grid:not(.graph-grid--single):not(.graph-grid--pairs) {
     grid-template-columns: repeat(2, 1fr);
+  }
+  [data-graph-cols="4"] .graph-grid--pairs {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

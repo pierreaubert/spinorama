@@ -248,7 +248,7 @@
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-4">
       <%include file="graph_shortcuts.html"/>
-      <div class="graph-grid" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="graph-grid graph-grid--pairs">
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
 %>
@@ -262,7 +262,7 @@
            const spec = fetch(graph_json)
              .then( (response) => response.json() )
              .then( (spec) => {
-               displayGraph("${freq}", graph_json, "comp-${g_key}-${freq}", spec, false, 2);
+               displayGraph("${freq}", graph_json, "comp-${g_key}-${freq}", spec, false, 1);
              });
           </script>
         </div>
@@ -275,7 +275,7 @@
            const spec = fetch(graph_json)
              .then( (response) => response.json() )
              .then( (spec) => {
-               displayGraph("${freq}", graph_json, "comp-${g_key_eq}-${freq}", spec, false, 2);
+               displayGraph("${freq}", graph_json, "comp-${g_key_eq}-${freq}", spec, false, 1);
              });
           </script>
         </div>

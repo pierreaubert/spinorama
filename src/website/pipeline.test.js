@@ -71,7 +71,10 @@ function makeCEA2034Input(title) {
     return [{
         data: [
             { name: 'On Axis', x: [20, 100, 1000, 20000], y: [0, 0, 0, -5], type: 'scatter', line: { color: 'blue' }, marker: {} },
-            { name: 'Listening Window', x: [20, 100, 1000, 20000], y: [-1, -1, -1, -6], type: 'scatter', line: { color: 'red' }, marker: {} },
+            { name: 'Listening Window', x: [20, 100, 1000, 20000], y: [-1, -1, -1, -6], type: 'scatter', line: { color: 'orange' }, marker: {} },
+            { name: 'Early Reflections', x: [20, 100, 1000, 20000], y: [-2, -2, -2, -7], type: 'scatter', line: { color: 'red' }, marker: {} },
+            { name: 'Sound Power', x: [20, 100, 1000, 20000], y: [-3, -3, -3, -8], type: 'scatter', line: { color: 'teal' }, marker: {} },
+            { name: 'Early Reflections DI', x: [20, 100, 1000, 20000], y: [-35, -35, -30, -35], type: 'scatter', yaxis: 'y2', line: { color: 'green' }, marker: {} },
             { name: 'Sound Power DI', x: [20, 100, 1000, 20000], y: [-35, -35, -30, -35], type: 'scatter', yaxis: 'y2', line: { color: 'gray' }, marker: {} },
         ],
         layout: {
@@ -506,12 +509,13 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         return w / h;
     }
 
-    // Target ratio for non-spin / spin graphs is 1.8 (graphRatio).
-    const TARGET_RATIO = 1.8;
+    // Target ratios (must match plot.js constants)
+    const SPL_RATIO = 1.8;
+    const CONTOUR_RATIO = 1.6;
     const RATIO_TOLERANCE = 0.10; // 10%
 
     // Run the sweep and collect failures so one assertion reports all bad viewports at once.
-    function sweep(inputFactory, graphType, label) {
+    function sweep(inputFactory, graphType, label, targetRatio, checkLegend) {
         const failures = [];
         for (const [w, h] of VIEWPORTS) {
             const input = inputFactory();
@@ -523,30 +527,32 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
             const layout = result.layout;
             const data = result.data || [];
 
-            // Invariant 1: legend is visible
-            if (layout.showlegend === false) {
-                failures.push(`${label} ${w}x${h}: legend is HIDDEN (showlegend=false)`);
-                continue;
-            }
+            if (checkLegend) {
+                // Invariant 1: legend is visible
+                if (layout.showlegend === false) {
+                    failures.push(`${label} ${w}x${h}: legend is HIDDEN (showlegend=false)`);
+                    continue;
+                }
 
-            // Invariant 2: legend does not overlap the plot area
-            if (!legendFits(layout, data)) {
-                const fp = estimateLegendFootprint(layout, data);
-                const orient = layout.legend?.orientation;
-                const avail = orient === 'v' ? layout.margin?.r : layout.margin?.b;
-                failures.push(
-                    `${label} ${w}x${h}: legend OVERLAPS plot ` +
-                    `(orient=${orient}, needed=${Math.round(orient === 'v' ? fp.width : fp.height)}px, ` +
-                    `margin=${Math.round(avail || 0)}px)`
-                );
+                // Invariant 2: legend does not overlap the plot area
+                if (!legendFits(layout, data)) {
+                    const fp = estimateLegendFootprint(layout, data);
+                    const orient = layout.legend?.orientation;
+                    const avail = orient === 'v' ? layout.margin?.r : layout.margin?.b;
+                    failures.push(
+                        `${label} ${w}x${h}: legend OVERLAPS plot ` +
+                        `(orient=${orient}, needed=${Math.round(orient === 'v' ? fp.width : fp.height)}px, ` +
+                        `margin=${Math.round(avail || 0)}px)`
+                    );
+                }
             }
 
             // Invariant 3: plot area ratio within 10% of target
             const ratio = plotRatio(layout);
-            const dev = Math.abs(ratio - TARGET_RATIO) / TARGET_RATIO;
+            const dev = Math.abs(ratio - targetRatio) / targetRatio;
             if (dev > RATIO_TOLERANCE) {
                 failures.push(
-                    `${label} ${w}x${h}: plot ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${TARGET_RATIO}`
+                    `${label} ${w}x${h}: plot ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${targetRatio.toFixed(2)}`
                 );
             }
         }
@@ -554,21 +560,29 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
     }
 
     it('F1: CEA2034 at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
-        const failures = sweep(() => makeCEA2034Input('CEA2034 for Test Speaker measured by ASR'), CEA2034_TYPE, 'CEA2034');
+        const failures = sweep(() => makeCEA2034Input('CEA2034 for Test Speaker measured by ASR'), CEA2034_TYPE, 'CEA2034', SPL_RATIO, true);
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
     });
 
     it('F2: SPL graph with 6 traces at all viewport sizes — legend visible, no overlap, ratio within 10% of 1.8', () => {
-        const failures = sweep(() => makeSPLInputWithTraces('On Axis for Test Speaker measured by ASR', 6), SPL_TYPE, 'SPL6');
+        const failures = sweep(() => makeSPLInputWithTraces('On Axis for Test Speaker measured by ASR', 6), SPL_TYPE, 'SPL6', SPL_RATIO, true);
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
     });
 
     it('F3: SPL graph with 16 traces (SPL Horizontal-like) at all viewport sizes', () => {
-        const failures = sweep(() => makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 16), SPL_TYPE, 'SPL16');
+        const failures = sweep(() => makeSPLInputWithTraces('SPL Horizontal for Test Speaker measured by ASR', 16), SPL_TYPE, 'SPL16', SPL_RATIO, true);
+        if (failures.length > 0) {
+            throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
+        }
+    });
+
+    it('F4: contour at all viewport sizes — plot area ratio within 10% of 1.6 (frequency × angle)', () => {
+        // Contour plots hide the legend; only check ratio invariant.
+        const failures = sweep(() => makeContourInput('SPL Horizontal Contour for Test Speaker measured by ASR'), CONTOUR_TYPE, 'Contour', CONTOUR_RATIO, false);
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }

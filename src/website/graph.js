@@ -214,10 +214,8 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
 
         // Set up resize handler — recompute base options since dimensions change
         let resizeTimer = null;
-        window.addEventListener('resize', () => {
-            if (resizeTimer) {
-                clearTimeout(resizeTimer);
-            }
+        const doResize = () => {
+            if (resizeTimer) clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
                 cachedBaseOptions = computeBaseOptions();
                 if (!cachedBaseOptions) return;
@@ -225,7 +223,23 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
                 const newOptions = applyConfigAndCompact(cachedBaseOptions, newConfig);
                 Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
             }, 150);
-        });
+        };
+        window.addEventListener('resize', doResize);
+
+        // Observe the target element so we re-render when a hidden tab becomes
+        // visible (offsetWidth transitions from 0 → container width) or when the
+        // user switches columns (cell width changes).
+        if (typeof ResizeObserver !== 'undefined') {
+            let lastKnownWidth = targetElement.offsetWidth || 0;
+            const ro = new ResizeObserver((entries) => {
+                const w = entries[0].contentRect.width;
+                if (w > 0 && Math.abs(w - lastKnownWidth) > 4) {
+                    lastKnownWidth = w;
+                    doResize();
+                }
+            });
+            ro.observe(targetElement);
+        }
     }
 
     return run();
