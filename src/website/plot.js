@@ -341,18 +341,24 @@ export function computeLayout(containerWidth, isVertical, isCompact, graphProps,
         }
     }
 
-    // For square-ratio plots (radar/globe) in a landscape container, we'd otherwise
-    // get an extremely wide plot area. Cap the plot width so the square plot area is
-    // not unreasonably large (use the smaller of containerWidth and available height-based width).
     let plotAreaW = Math.max(1, containerWidth - margin.l - margin.r);
-    if (Math.abs(ratio - 1.0) < 0.01) {
-        // Square plot: the caller usually passes a containerWidth from the DOM, and
-        // we keep the square sized to the width. This yields a tall plot in landscape
-        // viewports — same as before.
+    let plotAreaH;
+    let totalH;
+
+    if (graphProps.isSurface) {
+        // Contour plots: enforce the TOTAL layout ratio (not plot area ratio).
+        // The user perceives the visible cell, not just the data region inside
+        // the axes/colorbar. Solving totalH = containerWidth / ratio gives:
+        //   plotAreaH = totalH - margin.t - margin.b
+        totalH = containerWidth / ratio;
+        plotAreaH = Math.max(1, totalH - margin.t - margin.b);
+    } else {
+        // Line/CEA2034 graphs: enforce plot area ratio so the data region itself
+        // has consistent proportions across graphs (legend/title vary in size).
+        plotAreaH = plotAreaW / ratio;
+        totalH = plotAreaH + margin.t + margin.b;
     }
-    const plotAreaH = plotAreaW / ratio;
     const totalW = containerWidth;
-    const totalH = plotAreaH + margin.t + margin.b;
 
     return {
         width: totalW,
@@ -610,6 +616,10 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
     if (!isCompact) {
         fontDelta = Math.round(windowWidth / 300);
     }
+
+    // Title state shared between computeTitle (which decides font size and line
+    // count) and applyComputeLayout (which reserves enough margin.t).
+    const titleInfo = { lines: 1, fontSize: fontSizeH3 };
 
     function computeXaxis() {
         if (layout.xaxis && layout.xaxis.title) {
@@ -878,26 +888,50 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 }
             }
         }
-        if (isCompact) {
-            if (outputNumberGraphs === 1) {
-                const doSplit = !titleFitsOnOneLine(title, fontSizeH3, windowWidth);
-                if (doSplit) {
-                    // split title on 2 lines
-                    const measured_pos = title.indexOf(' measured ');
-                    if (measured_pos !== -1) {
-                        const vs_pos = title.indexOf(' v.s. ');
-                        if (vs_pos === -1) {
-                            title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
-                        }
-                    }
-                }
+        // Decide font size and whether to wrap. We measure against a
+        // generous "available width" — close to the full container width minus
+        // a small safety margin — so the title doesn't wrap unnecessarily when
+        // there's empty horizontal space (e.g. in a wide cell with a vertical
+        // legend on the right).
+        // Title font size: scale with viewport width but cap so it doesn't get
+        // huge at 4K.
+        const idealFontSize = isCompact ? fontSizeH3 : fontSizeH3 + 2 * fontDelta;
+        const minTitleFontSize = isCompact ? 10 : 12;
+        // Available width for the title — give it ~96% of the container width
+        // since the title is centered and uses xref='container'.
+        const availTitleWidth = windowWidth - 24;
+
+        // If the title already contains <br> from earlier (compare mode), keep
+        // it; otherwise, scale font down to fit on a single line. If we hit
+        // the minimum font and it still doesn't fit, insert a single <br>.
+        let chosenFontSize = idealFontSize;
+        let lineCount;
+        if (title.indexOf('<br>') !== -1) {
+            // Title was already wrapped (compare mode produced explicit <br>).
+            lineCount = title.split('<br>').length;
+        } else {
+            while (chosenFontSize > minTitleFontSize && !titleFitsOnOneLine(title, chosenFontSize, availTitleWidth)) {
+                chosenFontSize -= 1;
             }
+            if (titleFitsOnOneLine(title, chosenFontSize, availTitleWidth)) {
+                lineCount = 1;
+            } else {
+                // Genuinely doesn't fit even at min font — insert a <br> at
+                // the most natural break point.
+                const breakAt = title.lastIndexOf(' measured ');
+                if (breakAt > 0) {
+                    title = title.slice(0, breakAt) + '<br>' + title.slice(breakAt + 1);
+                }
+                lineCount = title.split('<br>').length;
+            }
+        }
+        titleInfo.fontSize = chosenFontSize;
+        titleInfo.lines = lineCount;
+
+        if (isCompact) {
             layout.title = {
                 text: title,
-                font: {
-                    size: fontSizeH3,
-                    color: '#000',
-                },
+                font: { size: chosenFontSize, color: '#000' },
                 xref: 'paper',
                 xanchor: 'left',
                 x: 0.0,
@@ -905,19 +939,15 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else {
             layout.title = {
                 text: title,
-                font: {
-                    size: fontSizeH3 + 2 * fontDelta,
-                    color: '#000',
-                },
-                // automargin: true,
-                xref: 'paper',
+                font: { size: chosenFontSize, color: '#000' },
+                xref: 'container',
                 xanchor: 'center',
-                // title start sligthly on the right
                 x: 0.5,
-                // keep title below modBar if title is long
                 yref: 'container',
                 yanchor: 'top',
-                y: 1.025,
+                // Plotly anchors at top of container; we leave a small visual
+                // gap from the very top edge.
+                y: 0.99,
             };
         }
     }
@@ -954,6 +984,17 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         layout.width = result.width;
         layout.height = result.height;
         layout.margin = result.margin;
+
+        // If the title wraps onto multiple lines, reserve extra top margin so
+        // the wrapped lines don't overlap the plot area. computeLayout uses a
+        // default margin.t = graphMarginTop (70) which already comfortably fits
+        // a single line. Each additional line needs ~ fontSize * 1.4 + small pad.
+        if (titleInfo.lines > 1) {
+            const extraLineH = titleInfo.fontSize * 1.4;
+            const extraTop = (titleInfo.lines - 1) * extraLineH + 8;
+            layout.margin.t += extraTop;
+            layout.height += extraTop;
+        }
 
         if (result.legend.hidden) {
             layout.showlegend = false;

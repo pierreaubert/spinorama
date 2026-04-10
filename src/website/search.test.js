@@ -164,6 +164,175 @@ describe('test full text search and filtering', () => {
         expect(results.includes('Genelec-8351B')).toBeTruthy();
     });
 
+    // Shapes for which the pref_score is shown on the speaker card.
+    // Must match misc.js validShape — speakers with other shapes (inwall,
+    // outdoor, surround, cbt, toursound, …) display *** instead of a score
+    // and are sorted as score-less.
+    const VALID_SHAPES = new Set([
+        'floorstanders',
+        'bookshelves',
+        'center',
+        'columns',
+        'liveportable',
+        'cinema',
+    ]);
+
+    // Helper: extract pref_score for a speaker key (returns -10 if no displayed score)
+    function getScore(key) {
+        const spk = metadata.get(key);
+        if (!spk) return -10;
+        if (!VALID_SHAPES.has(spk.shape)) return -10;
+        const def = spk.default_measurement;
+        if (!def) return -10;
+        const msr = spk.measurements?.[def];
+        if (!msr?.pref_rating?.pref_score) return -10;
+        return msr.pref_rating.pref_score;
+    }
+
+    it('search+sort: ?search=jbl&sort=score returns only JBL speakers sorted by score desc', () => {
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=20');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+
+        // Must return some results
+        expect(results.length).toBeGreaterThan(0);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+
+        // Every returned speaker must be a JBL (search filter honored)
+        for (const key of results) {
+            const spk = metadata.get(key);
+            expect(spk).toBeDefined();
+            expect(spk.brand.toLowerCase()).toBe('jbl');
+        }
+
+        // Results must be sorted by score in descending order (sort param honored)
+        for (let i = 1; i < results.length; i++) {
+            const prev = getScore(results[i - 1]);
+            const cur = getScore(results[i]);
+            expect(prev).toBeGreaterThanOrEqual(cur);
+        }
+
+        // The top result should be the highest-scoring JBL in the metadata.
+        // JBL-Control-HST-V2 has score 7.36 in the test fixture.
+        expect(results[0]).toBe('JBL-Control-HST-V2');
+    });
+
+    it('search+sort: ?search=jbl&sort=score places no-score speakers LAST', () => {
+        // Request enough results to include all 91 JBLs
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=200');
+        const params = urlParameters2Sort(url);
+        const [, results] = actualSearch(metadata, params);
+
+        // There should be at least one no-score speaker in the fixture (JBL-LSR308)
+        const scored = results.filter((k) => getScore(k) > -5);
+        const noScore = results.filter((k) => getScore(k) <= -5);
+        expect(noScore.length).toBeGreaterThan(0);
+
+        // All scored speakers must appear BEFORE any no-score speaker.
+        const lastScoredIdx = results.findLastIndex((k) => getScore(k) > -5);
+        const firstNoScoreIdx = results.findIndex((k) => getScore(k) <= -5);
+        expect(lastScoredIdx).toBeLessThan(firstNoScoreIdx);
+    });
+
+    it('search+sort: ?search=jbl&sort=score does not put inwall/cbt/outdoor speakers first', () => {
+        // Regression: JBL-Control-24CT (shape: inwall) has pref_score=7.07 in
+        // both the test fixture and the live data, but its score is hidden on
+        // the card (***), so it must NOT be the top result. The top result
+        // should be the highest-scoring JBL whose shape is in validShape.
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=20');
+        const params = urlParameters2Sort(url);
+        const [, results] = actualSearch(metadata, params);
+
+        // Top result must be a "valid shape" JBL
+        const top = metadata.get(results[0]);
+        expect(top).toBeDefined();
+        expect(VALID_SHAPES.has(top.shape)).toBe(true);
+
+        // The known offender from live data must not be #1
+        const idx24CT = results.indexOf('JBL-Control-24CT');
+        expect(idx24CT).not.toBe(0);
+
+        // And no inwall/outdoor/surround/cbt/toursound JBL should appear before
+        // any "valid shape" JBL (they're all sentinel-scored).
+        const lastValidIdx = results.findLastIndex((k) => {
+            const s = metadata.get(k);
+            return s && VALID_SHAPES.has(s.shape);
+        });
+        const firstInvalidIdx = results.findIndex((k) => {
+            const s = metadata.get(k);
+            return s && !VALID_SHAPES.has(s.shape);
+        });
+        if (firstInvalidIdx !== -1 && lastValidIdx !== -1) {
+            expect(lastValidIdx).toBeLessThan(firstInvalidIdx);
+        }
+    });
+
+    it('search+sort: robust against speakers with missing default_measurement', () => {
+        // Create a hybrid metadata with one JBL missing default_measurement entirely
+        const hybrid = new Map(metadata);
+        hybrid.set('JBL-Fake-NoDefault', {
+            brand: 'JBL',
+            model: 'Fake NoDefault',
+            type: 'passive',
+            shape: 'bookshelves',
+            // intentionally missing default_measurement
+            measurements: {},
+        });
+        hybrid.set('JBL-Fake-NoRating', {
+            brand: 'JBL',
+            model: 'Fake NoRating',
+            type: 'passive',
+            shape: 'bookshelves',
+            default_measurement: 'asr',
+            measurements: {
+                asr: {
+                    // measurement object with no pref_rating
+                    origin: 'ASR',
+                },
+            },
+        });
+
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=200');
+        const params = urlParameters2Sort(url);
+
+        // This must not throw — getScore should tolerate missing fields
+        let results;
+        expect(() => {
+            [, results] = actualSearch(hybrid, params);
+        }).not.toThrow();
+
+        // Both fake no-score speakers should be included, at the end
+        expect(results).toContain('JBL-Fake-NoDefault');
+        expect(results).toContain('JBL-Fake-NoRating');
+        // The highest-scoring JBL must still be first
+        expect(results[0]).toBe('JBL-Control-HST-V2');
+    });
+
+    it('search+sort: ?search=jbl&sort=price returns only JBL speakers sorted by price desc', () => {
+        const url = new URL(TEST_URL + '?search=jbl&sort=price&page=1&count=30');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+
+        expect(results.length).toBeGreaterThan(0);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+
+        for (const key of results) {
+            const spk = metadata.get(key);
+            expect(spk.brand.toLowerCase()).toBe('jbl');
+        }
+
+        // Prices should be monotonically non-increasing
+        function priceOf(key) {
+            const spk = metadata.get(key);
+            const p = parseFloat(spk?.price);
+            if (isNaN(p)) return -1;
+            return spk.amount === 'pair' ? p / 2 : p;
+        }
+        for (let i = 1; i < results.length; i++) {
+            expect(priceOf(results[i - 1])).toBeGreaterThanOrEqual(priceOf(results[i]));
+        }
+    });
+
     it('search by brand revel', () => {
         const url = new URL(TEST_URL + '?brand=Revel&count=14');
         const params = urlParameters2Sort(url);
@@ -953,9 +1122,12 @@ describe('non regression for bug discussions/343', () => {
         const [maxResults1, results1] = actualSearch(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
-        expect(maxResults1).toBe(31);
-        expect(results1[0]).toBe('KEF-R3');
-        expect(results1[1]).toBe('KEF-R3-Meta');
+        // Only the two exact-match KEF R3 variants should be returned
+        // (previously the test asserted 31, but that was the broken behavior
+        // where partial matches leaked through due to a Map.length/.size bug).
+        expect(maxResults1).toBe(2);
+        expect(results1).toContain('KEF-R3');
+        expect(results1).toContain('KEF-R3-Meta');
     });
 
     it('search for 4C Meta and check that the results are sane', () => {

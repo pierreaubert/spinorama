@@ -19,7 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import Fuse from 'fuse.js';
-import { show } from './misc.js';
+import { show, validShape } from './misc.js';
 import { pagination } from './pagination.js';
 
 const parametersMapping = [
@@ -322,130 +322,113 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1;
     }
 
-    function getScore(key) {
+    // All getScore* helpers must tolerate speakers with:
+    //   - no default_measurement
+    //   - no measurements object
+    //   - missing pref_rating / pref_rating_eq
+    //   - missing specific score fields
+    //   - shape not in validShape (e.g. inwall, outdoor, cbt — these have
+    //     CEA2034 data but the card UI displays *** instead of the score, so
+    //     we sort them to the end too, matching what the user sees on the card)
+    // A missing/invalid score returns -10 so those speakers sort to the end
+    // when used as the key for a descending sort.
+    function hasDisplayedScore(key) {
         const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        let score = -10;
-        if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
-            score = spk.measurements[def].pref_rating.pref_score;
-        }
-        return score;
+        if (!spk) return false;
+        return validShape.has(spk.shape);
+    }
+
+    function getScore(key) {
+        if (!hasDisplayedScore(key)) return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating ? msr.pref_rating.pref_score : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreWsub(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
-            return spk.measurements[def].pref_rating.pref_score_wsub;
-        }
-        return -10.0;
+        if (!hasDisplayedScore(key)) return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating ? msr.pref_rating.pref_score_wsub : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreEq(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating_eq) {
-            return spk.measurements[def].pref_rating_eq.pref_score;
-        }
-        return -10.0;
+        if (!hasDisplayedScore(key)) return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreEqWsub(key) {
+        if (!hasDisplayedScore(key)) return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score_wsub : undefined;
+        return typeof score === 'number' ? score : -10;
+    }
+
+    // Helper: return the default measurement object for a speaker, or null if
+    // the speaker has no default_measurement or no matching measurements entry.
+    function defMsr(key) {
         const spk = metadata.get(key);
+        if (!spk) return null;
         const def = spk.default_measurement;
+        if (!def || !spk.measurements) return null;
         const msr = spk.measurements[def];
-        if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating_eq) {
-            return spk.measurements[def].pref_rating_eq.pref_score_wsub;
-        }
-        return -10.0;
+        return msr || null;
     }
 
     function getF3(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_3dB;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_3dB : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getF6(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_6dB;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_6dB : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getFlatness(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_band' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_band;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_band : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getSensitivity(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('sensitivity' in msr && 'sensitivity_1m' in msr.sensitivity) {
-            return spk.measurements[def].sensitivity.sensitivity_1m;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.sensitivity ? msr.sensitivity.sensitivity_1m : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getWeight(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'weight' in msr.specifications) {
-            return spk.measurements[def].specifications.weight;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications ? msr.specifications.weight : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeWidth(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.width;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.width : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeDepth(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.depth;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.depth : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeHeight(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.height;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.height : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getBrand(key) {
         const spk = metadata.get(key);
-        return spk.brand + ' ' + spk.model;
+        if (!spk) return '';
+        return (spk.brand || '') + ' ' + (spk.model || '');
     }
 
     function getFullTextSearch(key, fts) {
@@ -971,32 +954,29 @@ export function isSearch(key, results, minScore, keywords) {
     // console.debug('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
-        // console.log('shouldShow is true');
         return shouldShow;
     }
 
     if (!results.has(key)) {
-        // console.debug('shouldShow is false (no key '+key+')');
         return false;
     }
 
     const result = results.get(key);
     const score = result.score;
 
+    // `results` is a Map (size, not length). When there is an exact match
+    // somewhere (minScore ≈ 0), drop entries with a clearly worse score so we
+    // don't show unrelated speakers matched via partial type/shape fields.
     if (minScore < Math.pow(10, -6)) {
-        // we have an exact match, only shouldShow other exact matches
-        if (score >= 0.01 && results.length > 5) {
-            // console.debug('filtered out (minscore)' + score);
+        // we have an exact match → only show other exact/near-exact matches
+        if (score >= 0.01 && results.size > 5) {
             shouldShow = false;
         }
     } else {
         // only partial match
         if (score > minScore * 100) {
-            // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
-        } /* else {
-            console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
-        } */
+        }
     }
     return shouldShow;
 }

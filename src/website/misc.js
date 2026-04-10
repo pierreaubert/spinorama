@@ -16,6 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// Shapes for which the CEA2034 preference score is meaningful and shown on the
+// speaker card. Pro/PA/cinema-fixture shapes (cbt, inwall, outdoor, surround,
+// toursound, etc.) have CEA2034 data but their pref_score is not displayed,
+// so the sort treats them as score-less to keep display and ordering aligned.
+export const validShape = Object.freeze(
+    new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema'])
+);
+
 // hide an element
 export const hide = (elem) => {
     if (elem?.classList) {

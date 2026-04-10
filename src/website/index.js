@@ -32,11 +32,10 @@ import {
     getSensitivity,
     getSPL,
     removeVendors,
+    validShape,
 } from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
-
-const validShape = Object.freeze(new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']));
 
 function getMeasurementCount(metadata) {
     let count = 0;

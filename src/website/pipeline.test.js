@@ -406,6 +406,38 @@ describe('Plot area ratio consistency across different legend sizes', () => {
         // Total height grows
         expect(r12.layout.height).toBeGreaterThanOrEqual(r2.layout.height);
     });
+
+    it('E7: long title at 4K with 4-col cell width fits on a single line', () => {
+        // 4K viewport / 4 columns ≈ 950px per cell. Typical CEA2034 title is ~57 chars.
+        // The title should fit on a single line (no <br>) at the chosen font size.
+        const input = makeCEA2034Input('CEA2034 for AsciLab C8C measured by Audio Science Review');
+        const r = setGraphOptions(input, 950, 1080, CEA2034_TYPE, 1);
+        // No <br> in the rendered title text
+        expect(r.layout.title.text).not.toContain('<br>');
+    });
+
+    it('E8: title that legitimately wraps gets extra top margin', () => {
+        // Compare a reasonable single-line title against an artificially long one
+        // at the same dimensions. The wrapped one should have a larger margin.t
+        // and a larger total height than the single-line one.
+        const shortInput = makeCEA2034Input('CEA2034 Short');
+        const longInput = makeCEA2034Input(
+            'CEA2034 for VeryLongSpeakerNameThatDefinitelyWillNotFit measured by AnEvenLongerReviewerNameLikeAudioScienceReviewExtended'
+        );
+        const w = 800, h = 1080;
+        const rShort = setGraphOptions(shortInput, w, h, CEA2034_TYPE, 1);
+        const rLong = setGraphOptions(longInput, w, h, CEA2034_TYPE, 1);
+
+        const longTitleHasBr = rLong.layout.title.text.includes('<br>');
+        const shortTitleHasBr = rShort.layout.title.text.includes('<br>');
+        // Sanity: the long title should require a wrap, the short one should not
+        expect(shortTitleHasBr).toBe(false);
+        if (longTitleHasBr) {
+            // Wrapped title must reserve more top margin (and total height) than the unwrapped one
+            expect(rLong.layout.margin.t).toBeGreaterThan(rShort.layout.margin.t);
+            expect(rLong.layout.height).toBeGreaterThan(rShort.layout.height);
+        }
+    });
 });
 
 // =========================================================================
@@ -499,6 +531,7 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         return (layout.margin?.b || 0) >= footprint.height + xTitleH - 2;
     }
 
+    // Plot area ratio: width/height of the data region inside the axes.
     function plotRatio(layout) {
         const ml = layout.margin?.l || 0;
         const mr = layout.margin?.r || 0;
@@ -509,13 +542,19 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         return w / h;
     }
 
+    // Layout (cell) ratio: width/height of the entire visible cell.
+    function layoutRatio(layout) {
+        return layout.width / layout.height;
+    }
+
     // Target ratios (must match plot.js constants)
     const SPL_RATIO = 1.8;
     const CONTOUR_RATIO = 1.6;
     const RATIO_TOLERANCE = 0.10; // 10%
 
     // Run the sweep and collect failures so one assertion reports all bad viewports at once.
-    function sweep(inputFactory, graphType, label, targetRatio, checkLegend) {
+    // ratioMode: 'plot' to check the inner data region, 'layout' to check the visible cell.
+    function sweep(inputFactory, graphType, label, targetRatio, checkLegend, ratioMode = 'plot') {
         const failures = [];
         for (const [w, h] of VIEWPORTS) {
             const input = inputFactory();
@@ -547,12 +586,12 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
                 }
             }
 
-            // Invariant 3: plot area ratio within 10% of target
-            const ratio = plotRatio(layout);
+            // Invariant 3: ratio within 10% of target
+            const ratio = ratioMode === 'layout' ? layoutRatio(layout) : plotRatio(layout);
             const dev = Math.abs(ratio - targetRatio) / targetRatio;
             if (dev > RATIO_TOLERANCE) {
                 failures.push(
-                    `${label} ${w}x${h}: plot ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${targetRatio.toFixed(2)}`
+                    `${label} ${w}x${h}: ${ratioMode} ratio ${ratio.toFixed(2)} deviates ${(dev * 100).toFixed(0)}% from ${targetRatio.toFixed(2)}`
                 );
             }
         }
@@ -580,9 +619,18 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         }
     });
 
-    it('F4: contour at all viewport sizes — plot area ratio within 10% of 1.6 (frequency × angle)', () => {
+    it('F4: contour at all viewport sizes — visible cell ratio within 10% of 1.6 (frequency × angle)', () => {
         // Contour plots hide the legend; only check ratio invariant.
-        const failures = sweep(() => makeContourInput('SPL Horizontal Contour for Test Speaker measured by ASR'), CONTOUR_TYPE, 'Contour', CONTOUR_RATIO, false);
+        // We check the LAYOUT (cell) ratio, not the inner plot area ratio, because
+        // the user perceives the bordered cell, not the data region.
+        const failures = sweep(
+            () => makeContourInput('SPL Horizontal Contour for Test Speaker measured by ASR'),
+            CONTOUR_TYPE,
+            'Contour',
+            CONTOUR_RATIO,
+            false,
+            'layout'
+        );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
         }
