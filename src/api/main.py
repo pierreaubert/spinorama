@@ -427,7 +427,14 @@ async def get_headphone_frequency_response(
         return {"error": f"Invalid version {meas_key}!"}
 
     csv_path = f"{HEADPHONE_FILES}/{headphone_name}/{meas_key}/frequency_response.csv"
-    if not os.path.exists(csv_path):
+
+    # Defense-in-depth: ensure the resolved path stays inside HEADPHONE_FILES
+    real_base = os.path.realpath(HEADPHONE_FILES)
+    real_csv = os.path.realpath(csv_path)
+    if os.path.commonpath([real_base, real_csv]) != real_base:
+        return {"error": f"Invalid path for {headphone_name} ({meas_key})"}
+
+    if not os.path.exists(real_csv):
         return {"error": f"No frequency response data for {headphone_name} ({meas_key})"}
 
-    return FileResponse(csv_path, media_type="text/csv")
+    return FileResponse(real_csv, media_type="text/csv")
