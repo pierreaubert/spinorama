@@ -261,7 +261,9 @@ export function computeLayout(
         };
         if (graphProps.isSurface && !isVertical) margin.r += 60;
         if (graphProps.isGlobe) margin.t += 50;
-        if (graphProps.isSurface) margin.t += 20;
+        // Reserve bottom margin for horizontal colorbar on portrait/vertical
+        // surface plots (the colorbar sits just under the x-axis title).
+        if (graphProps.isSurface && isVertical) margin.b += 55;
     }
 
     // --- Pass 2: Decide legend strategy and compute its footprint ---
@@ -366,21 +368,13 @@ export function computeLayout(
     let totalH;
 
     if (graphProps.isSurface) {
-        // Contour plots:
-        //   - Non-compact: enforce TOTAL layout ratio so the visible bordered
-        //     cell has the target shape (1.6:1). Margins are a small fraction
-        //     of the cell at desktop sizes.
-        //   - Compact (mobile): enforce PLOT AREA ratio instead. At narrow
-        //     widths the fixed margins (xtitle, colorbar, etc.) take up so
-        //     much of a 1.6:1 cell that the data region collapses to ~1:3.
-        //     Letting layout grow taller keeps the data region readable.
-        if (isCompact) {
-            plotAreaH = plotAreaW / ratio;
-            totalH = plotAreaH + margin.t + margin.b;
-        } else {
-            totalH = containerWidth / ratio;
-            plotAreaH = Math.max(1, totalH - margin.t - margin.b);
-        }
+        // Contour plots: enforce PLOT AREA ratio so the data region itself is
+        // ~1.6:1 regardless of title wrap, colorbar, or axis-title margin.
+        // (Previously the non-compact branch enforced TOTAL layout ratio, which
+        //  let automargin from the horizontal colorbar compress the plot area
+        //  into a ~2.5:1 shape.)
+        plotAreaH = plotAreaW / ratio;
+        totalH = plotAreaH + margin.t + margin.b;
     } else {
         // Line/CEA2034 graphs: enforce plot area ratio so the data region itself
         // has consistent proportions across graphs (legend/title vary in size).
@@ -927,8 +921,11 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         // legend on the right).
         // Title font size: scale with viewport width but cap so it doesn't get
         // huge at 4K.
-        const idealFontSize = isCompact ? fontSizeH3 : fontSizeH3 + 2 * fontDelta;
-        const minTitleFontSize = isCompact ? 10 : 12;
+        // Cap the non-compact ideal font size: fontSizeH3 + 2*fontDelta grows
+        // linearly with windowWidth and was producing ~25px titles at 4K that
+        // forced long titles onto 2 lines for no good reason.
+        const idealFontSize = isCompact ? fontSizeH3 : Math.min(fontSizeH3 + 2 * fontDelta, 18);
+        const minTitleFontSize = isCompact ? 10 : 11;
         // Available width for the title — give it ~96% of the container width
         // since the title is centered and uses xref='container'.
         const availTitleWidth = windowWidth - 24;
@@ -977,11 +974,15 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 xref: 'container',
                 xanchor: 'center',
                 x: 0.5,
-                yref: 'container',
-                yanchor: 'top',
-                // Plotly anchors at top of container; we leave a small visual
-                // gap from the very top edge.
-                y: 0.99,
+                // Anchor the BOTTOM of the title to the top of the plot area
+                // and let it extend upward into margin.t. This avoids the
+                // first line being clipped when the title wraps to 2 lines
+                // (which could happen with yref='container' y=0.99).
+                yref: 'paper',
+                yanchor: 'bottom',
+                y: 1.0,
+                // Visual gap between the title's bottom and the plot-area top.
+                pad: { b: 16 },
             };
         }
     }
@@ -1028,6 +1029,15 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             const extraTop = (titleInfo.lines - 1) * extraLineH + 8;
             layout.margin.t += extraTop;
             layout.height += extraTop;
+        }
+
+        // Non-compact titles use pad.b=16 to leave a visual gap between the
+        // title and the plot area. Grow margin.t by the same amount so the
+        // gap is taken out of the margin, not the breathing room above the title.
+        if (!isCompact) {
+            const titleGap = 16;
+            layout.margin.t += titleGap;
+            layout.height += titleGap;
         }
 
         if (result.legend.hidden) {
@@ -1243,13 +1253,16 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 datas[k].colorbar.xref = 'paper';
                 datas[k].colorbar.yref = 'paper';
                 if (isVertical) {
+                    // Horizontal colorbar sits just below the x-axis title.
+                    // Keep the offset small — large negative y values used to
+                    // balloon margin.b via automargin and compress the plot area.
                     datas[k].colorbar.orientation = 'h';
                     datas[k].colorbar.xanchor = 'center';
                     datas[k].colorbar.x = 0.5;
-                    datas[k].colorbar.yanchor = 'bottom';
-                    datas[k].colorbar.y = -0.5;
+                    datas[k].colorbar.yanchor = 'top';
+                    datas[k].colorbar.y = -0.12;
                     if (isCompact) {
-                        datas[k].colorbar.y = -0.7;
+                        datas[k].colorbar.y = -0.18;
                     }
                 } else {
                     datas[k].colorbar.orientation = 'v';
@@ -1260,7 +1273,7 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     datas[k].colorbar.y = 0.5;
                 }
                 datas[k].colorbar.xpad = 20;
-                datas[k].colorbar.ypad = 20;
+                datas[k].colorbar.ypad = 8;
                 datas[k].colorbar.len = 0.8;
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;

@@ -155,7 +155,8 @@ describe('setGraphOptions', () => {
             expect(options.layout.margin.l).toBe(30);
             // margin.r includes base (30) plus allocated legend width if legend is vertical (right)
             expect(options.layout.margin.r).toBeGreaterThanOrEqual(30);
-            expect(options.layout.margin.t).toBe(70);
+            // margin.t = graphMarginTop (70) + titleGap (16) for non-compact titles.
+            expect(options.layout.margin.t).toBe(70 + 16);
             expect(options.layout.margin.b).toBeGreaterThanOrEqual(30);
         });
 
@@ -171,17 +172,21 @@ describe('setGraphOptions', () => {
 
         it('should increase top margin for globe plots', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGlobe: true }, 1);
-            expect(options.layout.margin.t).toBe(70 + 50);
+            // graphMarginTop (70) + globe boost (50) + titleGap (16)
+            expect(options.layout.margin.t).toBe(70 + 50 + 16);
         });
 
-        it('should increase top margin for surface plots', () => {
+        it('surface plots use the base top margin (no surface-specific boost)', () => {
+            // Title positioning is now anchored to the plot-area top, so surface plots
+            // no longer need an extra surface-specific top-margin boost.
+            // The generic titleGap (16) still applies to all non-compact titles.
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
-            expect(options.layout.margin.t).toBe(70 + 20);
+            expect(options.layout.margin.t).toBe(70 + 16);
         });
 
         it('should increase top margin for radar plots', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isRadar: true }, 1);
-            expect(options.layout.margin.t).toBe(70);
+            expect(options.layout.margin.t).toBe(70 + 16);
         });
 
         it('should include legend height in bottom margin for spin plots in vertical display', () => {
@@ -326,8 +331,9 @@ describe('setGraphOptions', () => {
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.xanchor).toBe('center');
-            expect(cb.yanchor).toBe('bottom');
-            expect(cb.y).toBeCloseTo(-0.5);
+            expect(cb.yanchor).toBe('top');
+            expect(cb.y).toBeLessThan(0);
+            expect(cb.y).toBeGreaterThan(-0.3);
             expect(cb.title.text).toBe('dB (SPL)');
         });
 
@@ -375,7 +381,7 @@ describe('setGraphOptions', () => {
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.y).toBeLessThan(0);
-            expect(cb.yanchor).toBe('bottom');
+            expect(cb.yanchor).toBe('top');
         });
 
         it('should add right margin for surface/contour plots in landscape mode to fit colorbar', () => {
@@ -665,7 +671,8 @@ describe('setGraphOptions', () => {
             expect(options.layout.margin.l).toBe(30);
             // margin.r includes base (30) plus allocated legend width if legend is vertical (right)
             expect(options.layout.margin.r).toBeGreaterThanOrEqual(30);
-            expect(options.layout.margin.t).toBe(70);
+            // margin.t = graphMarginTop (70) + titleGap (16) for non-compact titles.
+            expect(options.layout.margin.t).toBe(70 + 16);
             expect(options.layout.margin.b).toBeGreaterThanOrEqual(30);
         });
 
@@ -681,17 +688,21 @@ describe('setGraphOptions', () => {
 
         it('should increase top margin for globe plots', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isGlobe: true }, 1);
-            expect(options.layout.margin.t).toBe(70 + 50);
+            // graphMarginTop (70) + globe boost (50) + titleGap (16)
+            expect(options.layout.margin.t).toBe(70 + 50 + 16);
         });
 
-        it('should increase top margin for surface plots', () => {
+        it('surface plots use the base top margin (no surface-specific boost)', () => {
+            // Title positioning is now anchored to the plot-area top, so surface plots
+            // no longer need an extra surface-specific top-margin boost.
+            // The generic titleGap (16) still applies to all non-compact titles.
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isSurface: true }, 1);
-            expect(options.layout.margin.t).toBe(70 + 20);
+            expect(options.layout.margin.t).toBe(70 + 16);
         });
 
         it('should increase top margin for radar plots', () => {
             const options = setGraphOptions(mockInputGraphsData, window.innerWidth, window.innerHeight, { isRadar: true }, 1);
-            expect(options.layout.margin.t).toBe(70);
+            expect(options.layout.margin.t).toBe(70 + 16);
         });
 
         it('should include legend height in bottom margin for spin plots in vertical display', () => {
@@ -910,8 +921,9 @@ describe('setGraphOptions', () => {
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.xanchor).toBe('center');
-            expect(cb.yanchor).toBe('bottom');
-            expect(cb.y).toBeCloseTo(-0.5);
+            expect(cb.yanchor).toBe('top');
+            expect(cb.y).toBeLessThan(0);
+            expect(cb.y).toBeGreaterThan(-0.3);
             expect(cb.title.text).toBe('dB (SPL)');
         });
 
@@ -959,7 +971,7 @@ describe('setGraphOptions', () => {
             const cb = options.data[0].colorbar;
             expect(cb.orientation).toBe('h');
             expect(cb.y).toBeLessThan(0);
-            expect(cb.yanchor).toBe('bottom');
+            expect(cb.yanchor).toBe('top');
         });
 
         it('should add right margin for surface/contour plots in landscape mode to fit colorbar', () => {

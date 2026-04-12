@@ -844,18 +844,18 @@ describe('Viewport sweep: CEA2034 legend/ratio invariants across all screen size
         }
     });
 
-    it('F4: contour at all viewport sizes — ratio within 10% of 1.6', () => {
+    it('F4: contour at all viewport sizes — plot area ratio within 10% of 1.6', () => {
         // Contour plots hide the legend; only check ratio invariant.
-        // 'auto-contour' picks plot-area ratio for compact viewports (where the
-        // visible cell ratio is dominated by margins) and layout ratio for
-        // non-compact viewports (where we want the bordered cell to be 1.6:1).
+        // The plot area (data region) is always enforced to the target ratio,
+        // regardless of viewport size — margins (title, xtitle, colorbar) grow
+        // additively rather than stealing plot height.
         const failures = sweep(
             () => makeContourInput('SPL Horizontal Contour for Test Speaker measured by ASR'),
             CONTOUR_TYPE,
             'Contour',
             CONTOUR_RATIO,
             false,
-            'auto-contour'
+            'plot'
         );
         if (failures.length > 0) {
             throw new Error(`${failures.length} viewport failures:\n  ` + failures.join('\n  '));
