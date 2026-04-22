@@ -14,3 +14,4 @@ ndarray = { version = "0.16.1", features = ["rayon"] }
 ndarray-stats = "0.6.0"
 num-traits = "0.2.19"
 rayon = "1.11.0"
+rand = "0.9.3"
