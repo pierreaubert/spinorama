@@ -27,9 +27,11 @@ if test "$OS" = "Linux"; then
   sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python${PYVERSION}-venv
   # ------------ LOCALE
   # add locale if they don't exist possibly C.utf8 would work
-  sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
-  # or maybe
-  # sudo apt -y install language-pack-en-base && localectl set-locale LANG=en_US.UTF-8
+  if command -v locale-gen >/dev/null 2>&1; then
+    sudo locale-gen en_US.UTF-8
+  elif command -v localedef >/dev/null 2>&1; then
+    sudo localedef -f UTF-8 -i en_US en_US.UTF-8
+  fi
 elif test "$OS" = "Darwin"; then
     brew install npm hdf5 c-blosc2 lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
     xattr -d com.apple.quarantine $(which chromedriver)
