@@ -36,6 +36,7 @@ from generate_common import (
 )
 
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.misc import sanitize_filename
 from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -118,7 +119,7 @@ def print_radar(meta_data, scale, speaker_data):
         logger.debug("skipping measurement no pref_rating and no estimates")
         return
     filename = "{}/{} {}/spider.json".format(
-        CPATH_DIST_SPEAKERS, meta_data["brand"], meta_data["model"]
+        CPATH_DIST_SPEAKERS, sanitize_filename(meta_data["brand"]), sanitize_filename(meta_data["model"])
     )
     # TODO: to add check for dependancies
     if pathlib.Path(filename).is_file():
@@ -140,7 +141,7 @@ def print_radar(meta_data, scale, speaker_data):
             continue
         # load eq
         eq_filename = "{}/{} {}/iir-{}.txt".format(
-            CPATH_DATAS_EQ, meta_data["brand"], meta_data["model"], eq_key.replace("_", "-")
+            CPATH_DATAS_EQ, sanitize_filename(meta_data["brand"]), sanitize_filename(meta_data["model"]), eq_key.replace("_", "-")
         )
         # print("loading eq {}".format(eq_filename))
         iir = parse_eq_iir_rews(eq_filename, 48000)

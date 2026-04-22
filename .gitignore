@@ -38,6 +38,8 @@ htmlcov
 *.mpeg
 .DS_Store
 .venv
+.venv312
+.tokensave
 spinorama-venv
 cache.*.json
 cache.*.h5

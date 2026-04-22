@@ -32,6 +32,7 @@ import {
     getSensitivity,
     getSPL,
     removeVendors,
+    sanitizeFilename,
     validShape,
 } from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
@@ -71,7 +72,7 @@ function getDefaultUrl(value) {
     if (def && value.measurements[def]) {
         const origin = value.measurements[def].origin;
         return encodeURI(
-            'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + def + '.html'
+            'speakers/' + sanitizeFilename(value.brand) + ' ' + sanitizeFilename(value.model) + '/' + removeVendors(origin) + '/index_' + def + '.html'
         );
     }
     return null;

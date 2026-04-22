@@ -26,7 +26,7 @@ import plotly.io
 from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.ltype import DataSpeaker
-from spinorama.misc import measurements_valid_freq_range, write_multiformat
+from spinorama.misc import measurements_valid_freq_range, sanitize_filename, write_multiformat
 from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.compute_misc import compute_minmax_slopes
 from spinorama.plot import (
@@ -387,7 +387,7 @@ def display_radar_vertical(
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
     filedir = (
-        CPATH_DIST_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + version
+        CPATH_DIST_SPEAKERS + "/" + sanitize_filename(speaker) + "/" + origin.replace("Vendors-", "") + "/" + version
     )
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     filename = filedir + "/" + graph_name.replace("_smoothed", "")

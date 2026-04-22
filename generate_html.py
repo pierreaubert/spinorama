@@ -41,7 +41,16 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
-from spinorama.misc import need_update, write_if_different
+from spinorama.misc import need_update, sanitize_filename, write_if_different
+
+
+def find_original_speaker_name(sanitized_name):
+    """Find original speaker name from metadata given a sanitized filesystem name."""
+    for speaker_name in extradata:
+        if sanitize_filename(speaker_name) == sanitized_name:
+            return speaker_name
+    return None
+
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
@@ -181,12 +190,15 @@ def generate_measurement(
         # TODO
         eq = {k: dfs[k] for k in eq_filter if k in dfs}
     # get index.html filename
-    dirname = "{}/{}/".format(cpaths.CPATH_DIST_SPEAKERS, speaker_name)
+    dirname = "{}/{}/".format(cpaths.CPATH_DIST_SPEAKERS, sanitize_filename(speaker_name))
     if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
         dirname += origin
     else:
         dirname += meta[speaker_name]["brand"]
     index_name = "{0}/index_{1}.html".format(dirname, key)
+
+    # ensure directory exists
+    os.makedirs(os.path.dirname(index_name), mode=0o755, exist_ok=True)
 
     # write index.html
     logger.info("Writing %s for %s", index_name, speaker_name)
@@ -232,10 +244,11 @@ def generate_measurement(
                 versions=versions,
             )
             graph_deps = [
-                *glob("./datas/measurements/{}/{}/*.*".format(speaker_name, key)),
+                *glob("./datas/measurements/{}/{}/*.*".format(sanitize_filename(speaker_name), key)),
                 *glob("./src/spinorama/*.py"),
             ]
             graph_force = need_update(graph_filename, graph_deps)
+            os.makedirs(os.path.dirname(graph_filename), mode=0o755, exist_ok=True)
             write_if_different(graph_content, graph_filename, graph_force)
 
 
@@ -276,7 +289,7 @@ def generate_speaker(
                     )
                 )
                 print("Maybe you forgot to cache the computations? Try running:")
-                print("./generate_graphs.py --speaker={} --uupdate-cache".format(key_error))
+                print("./generate_graphs.py --speaker='{}' --update-cache".format(speaker_name))
                 print("./generate_meta.py")
 
 
@@ -352,6 +365,10 @@ def main():
         speaker_name = speaker.replace(cpaths.CPATH_DIST_SPEAKERS + "/", "")
         if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
             continue
+        # Map sanitized filesystem name back to original metadata name
+        original_name = find_original_speaker_name(speaker_name)
+        if original_name is not None:
+            speaker_name = original_name
         main_df[speaker_name] = {}
         origins = glob(speaker + "/*")
         for origin in origins:

@@ -41,6 +41,7 @@ from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_DIST_METADATA_JSON, CPATH_DATAS_EQ
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_spl
+from spinorama.misc import sanitize_filename
 
 
 VERSION = 0.1
@@ -76,7 +77,7 @@ def check_eqs(data, force):
     model = data["model"]
     #
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
-    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
+    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, sanitize_filename(brand), sanitize_filename(model)))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
 

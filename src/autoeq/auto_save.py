@@ -28,7 +28,7 @@ import plotly.io
 from spinorama import logger, setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
-from spinorama.misc import measurements_complete_spl, measurements_complete_freq
+from spinorama.misc import measurements_complete_spl, measurements_complete_freq, sanitize_filename
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
@@ -146,7 +146,7 @@ def print_auto_graphs_seq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             base_filename = "{}/{}/{}/filters_{}".format(
-                CPATH_DIST_SPEAKERS, speaker_name, origin, name
+                CPATH_DIST_SPEAKERS, sanitize_filename(speaker_name), origin, name
             )
             if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
                 base_filename = "{}/filters_{}".format(
@@ -225,7 +225,7 @@ def build_eq_name(
     current_speaker_name: str,
     optim_config: dict,
 ) -> tuple[pathlib.Path, str]:
-    eq_dir = pathlib.Path("datas/eq/{}".format(current_speaker_name))
+    eq_dir = pathlib.Path("datas/eq/{}".format(sanitize_filename(current_speaker_name)))
     if optim_config["output_dir"]:
         output_dir = pathlib.Path(optim_config["output_dir"])
         if output_dir.exists():

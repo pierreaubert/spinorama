@@ -15,7 +15,7 @@
   speaker_price  = meta[speaker].get('price')
   speaker_amount = meta[speaker].get('amount')
   speaker_type   = meta[speaker].get('type')
-  speaker_path = '/speakers/{} {}/'.format(speaker_brand, speaker_model)
+  speaker_path = '/speakers/{} {}/'.format(util.sanitize_filename(speaker_brand), util.sanitize_filename(speaker_model))
 %>
 
 <%def name="speaker_header(measurement)">

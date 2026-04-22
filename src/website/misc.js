@@ -24,6 +24,14 @@ export const validShape = Object.freeze(
     new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema'])
 );
 
+const invalidChars = '|:<>"\\/\\?*';
+export function sanitizeFilename(name) {
+    for (const char of invalidChars) {
+        name = name.replace(char, '_');
+    }
+    return name;
+}
+
 // hide an element
 export const hide = (elem) => {
     if (elem?.classList) {
@@ -106,7 +114,7 @@ export function getPeq(peq) {
 }
 
 export function getPicture(brand, model, suffix) {
-    return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix);
+    return encodeURI('pictures/' + sanitizeFilename(brand) + ' ' + sanitizeFilename(model) + '.' + suffix);
 }
 
 export function removeVendors(str) {
@@ -201,7 +209,7 @@ export function getReviews(value) {
         let origin = measurement.origin;
         let originLong = measurement.origin;
         let originShort = measurement.origin;
-        const url = 'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html';
+        const url = 'speakers/' + sanitizeFilename(value.brand) + ' ' + sanitizeFilename(value.model) + '/' + removeVendors(origin) + '/index_' + version + '.html';
         if (origin === 'Misc') {
             origin = version.replace('misc-', '');
             originShort = version.replace('misc-', '');

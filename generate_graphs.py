@@ -39,6 +39,7 @@ from datas.helpers import measurement2distance
 from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker import print_graphs
 from spinorama.plot import plot_params_default
+from spinorama.misc import sanitize_filename
 
 VERSION = "2.07"  # Updated version
 ACTIVATE_TRACING: bool = True
@@ -70,6 +71,18 @@ def get_speaker_list(speakerpath: str) -> set[str]:
     return set(speakers)
 
 
+def find_original_speaker_name(sanitized_name: str) -> str | None:
+    """Find original speaker name from metadata given a sanitized filesystem name.
+
+    Speakers with | in their name get sanitized to _ in directory names.
+    This function does a reverse lookup to find the original metadata key.
+    """
+    for speaker_name in metadata.speakers_info:
+        if sanitize_filename(speaker_name) == sanitized_name:
+            return speaker_name
+    return None
+
+
 def process_single_measurement(
     speaker_info: tuple[str, str, str, dict[str, Any], int, str, bool],
 ) -> tuple[bool, str, str, str, dict[str, Any], Optional[Exception]]:
@@ -98,19 +111,19 @@ def process_single_measurement(
             "height": int(plot_params_default["height"]),
         }
 
-        # Process graphs
+        # Process graphs (use sanitized name for filesystem paths)
         results = parse_graphs_speaker(
             speaker_path=f"{data_dir}/datas/measurements",
             speaker_brand=brand,
-            speaker_name=speaker,
+            speaker_name=sanitize_filename(speaker),
             speaker_parameters=parameters,
             log_level=log_level,
         )
 
-        # Process EQ
+        # Process EQ (use sanitized name for filesystem paths)
         results_eq = parse_eq_speaker(
             speaker_path=f"{data_dir}/datas",
-            speaker_name=speaker,
+            speaker_name=sanitize_filename(speaker),
             df_ref=results,
             speaker_parameters=parameters,
             log_level=log_level,
@@ -163,9 +176,23 @@ def process_measurements_parallel(
     # Prepare tasks
     tasks = []
     for speaker in speakerlist:
-        if "speaker" in filters and speaker != filters["speaker"]:
-            logger.debug("skipping %s", speaker)
+        # Map sanitized filesystem name back to original metadata name
+        original_name = find_original_speaker_name(speaker)
+        if original_name is None:
+            logger.error("Metadata error: %s (sanitized: %s)", speaker, sanitize_filename(speaker))
             continue
+
+        # Check if speaker filter matches
+        if "speaker" in filters:
+            filter_name = filters["speaker"]
+            # Filter name should match either original or sanitized speaker name
+            if filter_name != original_name and sanitize_filename(filter_name) != speaker:
+                logger.debug("skipping %s (doesn't match filter %s)", speaker, filter_name)
+                continue
+            # Use original name for metadata operations
+            speaker = original_name
+        else:
+            speaker = original_name
 
         if speaker not in metadata.speakers_info:
             logger.error("Metadata error: %s", speaker)

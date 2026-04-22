@@ -76,6 +76,14 @@ def _encode_uri(text):
     return text.replace(" ", "%20").replace("&", "%26")
 
 
+def sanitize_filename(context, name: str) -> str:
+    """Replace characters invalid on Windows filesystems with underscores."""
+    invalid_chars = '|:<>"\\/\\?*'
+    for char in invalid_chars:
+        name = name.replace(char, "_")
+    return name
+
+
 def get_id(context, brand, model):
     return re.sub(r"['.+& |]", "-", brand + " " + model)
 
@@ -102,7 +110,7 @@ def get_dollar(context, price):
 
 
 def get_picture_url(context, brand, model, suffix):
-    return _encode_uri("pictures/" + brand + " " + model + "." + suffix)
+    return _encode_uri("pictures/" + sanitize_filename(context, brand) + " " + sanitize_filename(context, model) + "." + suffix)
 
 
 def icon_value(context, value):
@@ -213,9 +221,9 @@ def get_default_url(context, value):
         origin = measurements[defm].get("origin", "")
         return _encode_uri(
             "speakers/"
-            + value["brand"]
+            + sanitize_filename(context, value["brand"])
             + " "
-            + value["model"]
+            + sanitize_filename(context, value["model"])
             + "/"
             + _remove_vendors(origin)
             + "/index_"
@@ -249,9 +257,9 @@ def get_reviews(context, value):
 
         url = _encode_uri(
             "speakers/"
-            + value["brand"]
+            + sanitize_filename(context, value["brand"])
             + " "
-            + value["model"]
+            + sanitize_filename(context, value["model"])
             + "/"
             + _remove_vendors(origin)
             + "/index_"

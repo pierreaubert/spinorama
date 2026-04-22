@@ -29,6 +29,7 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.misc import sanitize_filename
 from spinorama.plot import plot_eqs
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -39,9 +40,9 @@ VERSION = 0.2
 def build_eq_figure_and_filename(data):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.json".format(CPATH_DIST_SPEAKERS, brand, model)
+    filename = "{}/{} {}/eq_compare.json".format(CPATH_DIST_SPEAKERS, sanitize_filename(brand), sanitize_filename(model))
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
-    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
+    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, sanitize_filename(brand), sanitize_filename(model)))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names)

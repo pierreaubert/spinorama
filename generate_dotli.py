@@ -46,6 +46,7 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
+from spinorama.misc import sanitize_filename
 
 DIST_DOTLI = "./dist-dotli"
 DIST_DOTLI_CHUNKS = f"{DIST_DOTLI}/chunks"
@@ -291,7 +292,7 @@ def load_metadata(logger):
 def get_thumbnail_base64(speaker_name, max_size_kb=5):
     """Get base64 encoded thumbnail for a speaker. Returns None if not found."""
     for ext in ("webp", "jpg", "png"):
-        pic_path = f"{cpaths.CPATH_DIST_PICTURES}/{speaker_name}.{ext}"
+        pic_path = f"{cpaths.CPATH_DIST_PICTURES}/{sanitize_filename(speaker_name)}.{ext}"
         if os.path.exists(pic_path):
             file_size = os.path.getsize(pic_path)
             if file_size <= max_size_kb * 1024:
@@ -402,7 +403,7 @@ def strip_plotly_graph(graph_data):
 
 def collect_speaker_graph_data(speaker_name, speaker_data):
     """Collect all graph JSON data for a speaker from dist/speakers/."""
-    speaker_dir = f"{cpaths.CPATH_DIST_SPEAKERS}/{speaker_name}"
+    speaker_dir = f"{cpaths.CPATH_DIST_SPEAKERS}/{sanitize_filename(speaker_name)}"
     if not os.path.isdir(speaker_dir):
         return None
 
