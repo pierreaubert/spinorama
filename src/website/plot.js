@@ -1195,6 +1195,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
         }
+        if (layout._ratioOverride) {
+            ratio = layout._ratioOverride;
+        }
         const useShort = shouldUseShortLabels(
             traceNames,
             layout.width,
@@ -1298,6 +1301,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             ratio = contourRatio;
         } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
+        }
+        if (layout._ratioOverride) {
+            ratio = layout._ratioOverride;
         }
         // All graphs (SPL, CEA2034, contour, radar, globe) go through applyComputeLayout.
         // The caller passes the actual DOM container width as `windowWidth`; computeLayout

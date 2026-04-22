@@ -930,6 +930,18 @@ svg { color: inherit; }
   height: auto;
 }
 
+.eq-graphs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.eq-graphs-row .eq-graph {
+  flex: 0 1 400px;
+  max-width: 400px;
+  min-width: 250px;
+}
+
 .eq-graph {
   margin-bottom: 0.75rem;
 }

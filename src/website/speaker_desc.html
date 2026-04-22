@@ -751,7 +751,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
   origin = default_origin.replace('+', '%20').replace(' ', '%20').replace('&', '%26')
   is_hist = 'hist' in graph
 %>
-<div class="eq-graph">
+<div class="eq-graph" style="max-width:400px">
   <div id="${origin}-${graph}"></div>
   <script type="module">
    import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
@@ -791,9 +791,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
        spec.layout.yaxis.title = { text: 'Count' };
        if (!spec.layout.xaxis) spec.layout.xaxis = {};
        spec.layout.xaxis.title = { text: 'Deviation (dB)' };
-       spec.layout.height = Math.round(spec.layout.width / 3);
-% else:
-       spec.layout.height = Math.round(spec.layout.width / 2);
+       spec.layout._ratioOverride = 3;
 % endif
        displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, ${ratio});
      });
@@ -857,24 +855,21 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 </%def>
 
 <%def name="eqs_spider(eq)">
-<!--
-<picture class="image">
-  <source srcset="../spider.webp" type="image/webp">
-  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600">
-</picture>
--->
-<div id="spider"></div>
-<script type="module">
- import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
- const spec = fetch("../spider.json")
-   .then( (response) => response.json() )
-   .then( (spec) => {
-       spec.layout.title = {
-	 text: 'Improvements made by EQ'
-       }
-     displayGraph("On Axis", "../spider.json", "spider", spec, false, 2);
-   });
-</script>
+<div class="eq-graph">
+  <div id="spider"></div>
+  <script type="module">
+   import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+   const spec = fetch("../spider.json")
+     .then( (response) => response.json() )
+     .then( (spec) => {
+         spec.layout.title = {
+           text: 'Improvements made by EQ'
+         }
+         spec.layout.showlegend = true;
+       displayGraph("On Axis", "../spider.json", "spider", spec, false, 2);
+     });
+  </script>
+</div>
 </%def>
 
 <%def name="eqs_print_eqs(current_eqs)">
@@ -892,12 +887,12 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 
 ${eqs_print_eqs(current_eqs)}
 
-<div class="desc-block desc-block-full">
-  ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 600, 400)}
-  ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 600, 400)}
-  ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200, 3)}
-  ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200, 3)}
-  ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200, 3)}
+<div class="desc-block desc-block-full eq-graphs-row">
+  ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 300, 200)}
+  ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 300, 200)}
+  ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 300, 100, 3)}
+  ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 300, 100, 3)}
+  ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 300, 100, 3)}
   ${eqs_spider(eq)}
 </div>
 % endif
