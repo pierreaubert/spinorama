@@ -1,0 +1,14 @@
+EQ for Aoshida Audio Musician Knight I V2 computed from ASR data
+Preference Score 3.92 with EQ 6.34
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-04-22-08:44:51
+
+Preamp: -2.4 dB
+
+Filter  1: ON PK Fc   105 Hz Gain +2.40 dB Q 0.26
+Filter  2: ON PK Fc   395 Hz Gain +2.19 dB Q 2.41
+Filter  3: ON PK Fc   504 Hz Gain -2.17 dB Q 1.18
+Filter  4: ON PK Fc  1083 Hz Gain +1.06 dB Q 0.75
+Filter  5: ON PK Fc  2094 Hz Gain -2.50 dB Q 1.52
+Filter  6: ON PK Fc  4342 Hz Gain -2.95 dB Q 1.35
+Filter  7: ON PK Fc  8694 Hz Gain -1.44 dB Q 1.50

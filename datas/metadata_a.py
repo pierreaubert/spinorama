@@ -966,6 +966,33 @@ speakers_info_a: SpeakerDatabase = {
             }
         },
     },
+    "Aoshida Audio Musician Knight I V2": {
+        "brand": "Aoshida Audio",
+        "model": "Musician Knight I V2",
+        "type": "passive",
+        "price": "1900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/musician-knight-i-v2-speaker-review.70943/",
+                },
+                "review_published": "20260422",
+                "specifications": {
+                    "sensitivit": 88,
+                    "impedance": 4,
+                    "SPL": { "peak": 107},
+                    "size": {"height": 390, "width": 230, "depth": 362},
+                    "weight": 16.0,
+                },
+            },
+        },
+    },
     "Aperion Audio Novus N5B": {
         "brand": "Aperion Audio",
         "model": "Novus N5B",
