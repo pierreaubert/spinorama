@@ -1,0 +1,141 @@
+---
+title: "Spinorama API"
+date: 2026-04-23
+abstract: >
+  How to use the Spinorama REST API to access speaker and headphone data programmatically.
+---
+
+# Spinorama API
+
+The API is available at [api.spinorama.org](https://api.spinorama.org). It provides read-only access to the speaker and headphone measurement database. The interactive documentation (Swagger UI) is available at [api.spinorama.org/docs](https://api.spinorama.org/docs).
+
+## Speaker endpoints
+
+### List all brands
+
+```
+GET /v1/brands
+```
+
+Returns a sorted list of all speaker brands in the database.
+
+### List all speakers
+
+```
+GET /v1/speakers
+```
+
+Returns a sorted list of all speaker names.
+
+### Get speaker metadata
+
+```
+GET /v1/speaker/{speaker_name}/metadata
+```
+
+Returns the full metadata for a given speaker (brand, model, type, shape, price, measurements, etc.).
+
+Example:
+``` {.shell}
+curl "https://api.spinorama.org/v1/speaker/Genelec%208341A/metadata"
+```
+
+### Get available measurement versions
+
+```
+GET /v1/speaker/{speaker_name}/versions
+```
+
+Returns the list of available measurement versions for a speaker (e.g. `asr`, `vendor`, `eac`).
+
+### List available measurements
+
+```
+GET /v1/speaker/{speaker_name}/version/{speaker_version}/measurements
+```
+
+Returns the list of available measurement names for a given speaker and version (e.g. `CEA2034`, `On Axis`, `SPL Horizontal Contour`).
+
+### Get measurement data
+
+```
+GET /v1/speaker/{speaker_name}/version/{speaker_version}/measurements/{measurement_name}
+```
+
+Returns the measurement data in JSON format.
+
+Available measurements include:
+
+- `CEA2034`
+- `On Axis`
+- `Estimated In-Room Response`
+- `Early Reflections`, `Horizontal Reflections`, `Vertical Reflections`
+- `SPL Horizontal`, `SPL Vertical` (and their normalized variants)
+- `SPL Horizontal Contour`, `SPL Vertical Contour` (and normalized, 3D variants)
+- `SPL Horizontal Radar`, `SPL Vertical Radar`
+
+Example:
+``` {.shell}
+curl "https://api.spinorama.org/v1/speaker/Genelec%208341A/version/asr/measurements/CEA2034"
+```
+
+## Headphone endpoints
+
+### List all headphones
+
+```
+GET /v1/headphones
+```
+
+Returns a sorted list of all headphone names. Supports optional query parameters for filtering:
+
+- `brand`: filter by brand
+- `shape`: filter by shape (`over-ear`, `on-ear`, `in-ear`)
+- `recommendation`: filter by recommendation (`Yes` / `No`)
+
+### List headphone brands
+
+```
+GET /v1/headphone/brands
+```
+
+### List headphone shapes
+
+```
+GET /v1/headphone/shapes
+```
+
+### Get headphone metadata
+
+```
+GET /v1/headphone/{headphone_name}/metadata
+```
+
+### Get headphone measurement versions
+
+```
+GET /v1/headphone/{headphone_name}/versions
+```
+
+### Get headphone frequency response
+
+```
+GET /v1/headphone/{headphone_name}/frequency_response
+```
+
+Returns the frequency response as a CSV file. Supports an optional `version` query parameter (defaults to the headphone's default measurement).
+
+## Validation endpoint
+
+```
+POST /v1/validate
+```
+
+Validates speaker metadata against Spinorama standards. Send a JSON body with the speaker data (including `brand` and `model` fields). Returns a validation result with `valid` (boolean) and `messages` (list of issues).
+
+Example:
+``` {.shell}
+curl -X POST "https://api.spinorama.org/v1/validate" \
+  -H "Content-Type: application/json" \
+  -d '{"brand": "MyBrand", "model": "MyModel", "type": "passive", "shape": "bookshelves"}'
+```

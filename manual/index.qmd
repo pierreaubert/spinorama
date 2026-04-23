@@ -12,14 +12,14 @@ copyright:
 
 funding: "The author received no specific funding for this work."
 
-date: 2026-03-12
+date: 2026-04-23
 
 abstract: >
   Help for the spinorama.org website and a manual for the associated library!
 
 ---
 
-Welcome to the documentationm page of [spinorama.org](https://spinorama.org).
+Welcome to the documentation page of [spinorama.org](https://spinorama.org).
 
 # Help with the website
 
@@ -34,3 +34,9 @@ Welcome to the documentationm page of [spinorama.org](https://spinorama.org).
 - [How to install it?](02_install.qmd)
 - [How to add a new speaker in the database](03_metadata.qmd)
 - [How to use the library?](04_library.qmd)
+- [How to compute a spinorama from your own measurements?](08_compute_spin.qmd)
+
+
+# API
+
+- [How to use the API?](09_api.qmd)

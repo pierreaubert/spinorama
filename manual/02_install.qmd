@@ -1,7 +1,17 @@
 ---
 title: "How to install the software?"
-date: 2025-02-08
+date: 2026-04-23
 ---
+
+# Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| Python | 3.12+ | Required |
+| Node.js / npm | LTS | Required |
+| git | any | Required |
+| Rust / cargo | latest | Optional, for the Rust scoring extension |
+| maturin | latest | Optional, `pip install maturin` |
 
 # How to use the software?
 
@@ -25,10 +35,22 @@ pip may also be pip3 depending on your system.
 
 ``` {.shell}
 export PYTHONPATH=src:src/website
-jupiter-lab &
+jupyter-lab &
 ```
 
-Your browser will open, go to _experiments_ directitory and click on _spinorama.ipynb_ and play around.
+Your browser will open, go to _experiments_ directory and click on _spinorama.ipynb_ and play around.
+
+## Windows (PowerShell)
+
+Install [Python 3.12](https://www.python.org/downloads/),
+[Node.js](https://nodejs.org/) and [git](https://git-scm.com/) manually, then
+run:
+
+``` {.powershell}
+.\scripts\setup.ps1
+```
+
+The script automatically sets the `PYTHONUTF8=1` environment variable so that Python reads files as UTF-8 by default (required on Windows).
 
 ## How to develop the software?
 
