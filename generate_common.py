@@ -98,6 +98,7 @@ def create_default_directories():
         cpaths.CPATH_DIST,
         cpaths.CPATH_DIST_PICTURES,
         cpaths.CPATH_DIST_SPEAKERS,
+        cpaths.CPATH_DIST_HEADPHONES,
         cpaths.CPATH_BUILD_EQ,
         cpaths.CPATH_BUILD_WEBSITE,
         cpaths.CPATH_BUILD_MAKO,

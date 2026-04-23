@@ -317,6 +317,204 @@ def main(log_level, args):
     return 0
 
 
+def generate_headphone_graphs(data_dir: str, force: bool):
+    """Generate plotly JSON graphs for headphone measurements.
+
+    Headphone graphs are simpler than speaker spinorama — just frequency
+    response curves loaded from CSV files.
+    """
+    import csv
+    import json as json_module
+    import numpy as np
+
+    hp_measurements_dir = os.path.join(data_dir, "datas", "headphone_measurements")
+    hp_targets_dir = os.path.join(data_dir, "datas", "headphone_targets")
+    hp_dist_dir = os.path.join(data_dir, "dist", "headphones")
+
+    if not os.path.isdir(hp_measurements_dir):
+        logger.info("No headphone measurements directory, skipping")
+        return
+
+    try:
+        from datas.headphone_metadata import headphones_info
+    except ImportError:
+        logger.info("No headphone metadata found, skipping graph generation")
+        return
+
+    def load_csv_curve(filepath):
+        """Load a frequency,spl CSV file."""
+        freq, spl = [], []
+        with open(filepath, "r") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if not row or row[0].startswith("#") or row[0].startswith("f"):
+                    continue
+                try:
+                    freq.append(float(row[0]))
+                    spl.append(float(row[1]))
+                except (ValueError, IndexError):
+                    continue
+        return np.array(freq), np.array(spl)
+
+    def make_plotly_json(traces, title, xaxis_title="Frequency (Hz)", yaxis_title="SPL (dB)"):
+        """Create a plotly JSON spec."""
+        return {
+            "data": traces,
+            "layout": {
+                "title": {"text": title},
+                "xaxis": {
+                    "title": {"text": xaxis_title},
+                    "type": "log",
+                    "range": [np.log10(20), np.log10(20000)],
+                },
+                "yaxis": {
+                    "title": {"text": yaxis_title},
+                },
+                "showlegend": True,
+            },
+        }
+
+    # Load target curves
+    targets = {}
+    for tname, tfile in (
+        ("harman_overear_2019", "harman_overear_2019.csv"),
+        ("harman_inear_2019", "harman_inear_2019.csv"),
+    ):
+        tpath = os.path.join(hp_targets_dir, tfile)
+        if os.path.isfile(tpath):
+            freq, spl = load_csv_curve(tpath)
+            targets[tname] = (freq, spl)
+
+    target_for_shape = {
+        "over-ear": "harman_overear_2019",
+        "on-ear": "harman_overear_2019",
+        "in-ear": "harman_inear_2019",
+        "earbud": "harman_inear_2019",
+    }
+
+    count = 0
+    for hp_name, hp_info in headphones_info.items():
+        if hp_info.get("skip", False):
+            continue
+
+        brand = hp_info["brand"]
+        model = hp_info["model"]
+        shape = hp_info.get("shape", "over-ear")
+        default_m = hp_info.get("default_measurement", "asr")
+
+        hp_m_dir = os.path.join(hp_measurements_dir, hp_name)
+        if not os.path.isdir(hp_m_dir):
+            logger.debug("No measurement dir for %s", hp_name)
+            continue
+
+        # Find frequency response CSV
+        fr_file = None
+        for candidate in ("freq_response.csv", "frequency_response.csv", "fr.csv"):
+            cpath = os.path.join(hp_m_dir, candidate)
+            if os.path.isfile(cpath):
+                fr_file = cpath
+                break
+        if fr_file is None:
+            logger.debug("No frequency response CSV for %s", hp_name)
+            continue
+
+        # Determine origin
+        origin = hp_info["measurements"].get(default_m, {}).get("origin", "ASR")
+
+        # Output directory
+        out_dir = os.path.join(hp_dist_dir, hp_name, origin, default_m)
+        os.makedirs(out_dir, exist_ok=True)
+
+        # Check if we need to regenerate
+        fr_json = os.path.join(out_dir, "Frequency Response.json")
+        if not force and os.path.isfile(fr_json) and os.path.getmtime(fr_json) > os.path.getmtime(fr_file):
+            logger.debug("Graphs up to date for %s", hp_name)
+            continue
+
+        freq, spl = load_csv_curve(fr_file)
+        if len(freq) == 0:
+            logger.warning("Empty frequency response for %s", hp_name)
+            continue
+
+        # Graph 1: Frequency Response
+        traces_fr = [
+            {
+                "x": freq.tolist(),
+                "y": spl.tolist(),
+                "type": "scatter",
+                "mode": "lines",
+                "name": "Frequency Response",
+                "line": {"color": "#1f77b4"},
+            }
+        ]
+        spec_fr = make_plotly_json(traces_fr, f"{brand} {model} - Frequency Response")
+        with open(fr_json, "w") as f:
+            json_module.dump(spec_fr, f)
+
+        # Graph 2: Frequency Response Compensated (with target)
+        target_key = target_for_shape.get(shape, "harman_overear_2019")
+        if target_key in targets:
+            t_freq, t_spl = targets[target_key]
+            # Interpolate target to measurement frequency grid
+            t_interp = np.interp(freq, t_freq, t_spl)
+
+            traces_comp = [
+                {
+                    "x": freq.tolist(),
+                    "y": spl.tolist(),
+                    "type": "scatter",
+                    "mode": "lines",
+                    "name": "Measurement",
+                    "line": {"color": "#1f77b4"},
+                },
+                {
+                    "x": freq.tolist(),
+                    "y": t_interp.tolist(),
+                    "type": "scatter",
+                    "mode": "lines",
+                    "name": f"Harman Target ({shape})",
+                    "line": {"color": "#ff7f0e", "dash": "dash"},
+                },
+            ]
+            spec_comp = make_plotly_json(
+                traces_comp, f"{brand} {model} - vs Harman Target"
+            )
+            comp_json = os.path.join(out_dir, "Frequency Response Compensated.json")
+            with open(comp_json, "w") as f:
+                json_module.dump(spec_comp, f)
+
+            # Graph 3: Target Deviation
+            deviation = spl - t_interp
+            traces_dev = [
+                {
+                    "x": freq.tolist(),
+                    "y": deviation.tolist(),
+                    "type": "scatter",
+                    "mode": "lines",
+                    "name": "Deviation from Target",
+                    "line": {"color": "#d62728"},
+                },
+                {
+                    "x": [20, 20000],
+                    "y": [0, 0],
+                    "type": "scatter",
+                    "mode": "lines",
+                    "name": "Zero",
+                    "line": {"color": "#888888", "dash": "dot"},
+                    "showlegend": False,
+                },
+            ]
+            spec_dev = make_plotly_json(traces_dev, f"{brand} {model} - Target Deviation")
+            dev_json = os.path.join(out_dir, "Target Deviation.json")
+            with open(dev_json, "w") as f:
+                json_module.dump(spec_dev, f)
+
+        count += 1
+        logger.info("Generated graphs for %s", hp_name)
+
+    logger.info("Generated headphone graphs for %d headphones", count)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
@@ -351,12 +549,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--processes", type=int, help="Number of processes to use (default: CPU count - 1)"
     )
+    parser.add_argument(
+        "--headphones", action="store_true", help="Generate headphone graphs only"
+    )
 
     args = parser.parse_args()
 
     # Set up logging
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
+
+    if args.headphones:
+        generate_headphone_graphs(data_dir=args.data_dir, force=args.force)
+        sys.exit(0)
 
     # Run main function
     sys.exit(main(log_level=LEVEL, args=args))

@@ -1,0 +1,222 @@
+<%namespace name="util" module="website.utils" import="*"/>
+<%
+  print_warning = False
+  default = meta[headphone].get('default_measurement')
+  default_origin = None
+  if default != g_key:
+      print_warning = True
+  default_origin = meta[headphone]['measurements'].get(default).get('origin')
+  default_origin = default_origin.replace('Vendors-', '')
+  current        = meta[headphone]['measurements'].get(g_key, None)
+  current_eqs    = meta[headphone].get('eqs', None)
+  hp_brand  = meta[headphone].get('brand')
+  hp_model  = meta[headphone].get('model')
+  hp_shape  = meta[headphone].get('shape')
+  hp_price  = meta[headphone].get('price')
+  hp_type   = meta[headphone].get('type')
+  hp_path = '/headphones/{} {}/'.format(hp_brand, hp_model)
+%>
+
+<%def name="headphone_header(measurement)">
+${hp_brand} ${hp_model} is
+% if hp_type == 'wireless':
+a wireless
+% elif hp_type == 'hybrid':
+a hybrid (wired+wireless)
+% else:
+a wired
+% endif
+${hp_shape} headphone
+% if hp_price not in ('?', '', None):
+that costs around ${hp_price} USD.
+% else:
+.
+% endif
+</%def>
+
+<%def name="headphone_quality(measurement)">
+<li>Quality of the measurement data is
+%   if measurement.get("quality", "?") != "?":
+  <b>${measurement["quality"]}</b>.
+%   else:
+  <b>unknown</b>,
+%   endif
+</li>
+</%def>
+
+<%def name="headphone_origin(measurement)">
+% if measurement.get("origin", "?") != "?":
+<li>
+  Origin of the data is ${measurement.get("origin").replace('Vendors-', '')}.
+</li>
+% endif
+</%def>
+
+<%def name="headphone_reviews(measurement)">
+<%
+  review = None
+  reviews = None
+  if measurement:
+    review = measurement.get("review", None)
+    reviews = measurement.get("reviews", None)
+%>
+% if review is not None:
+<li>Link to <a href="${review}">Original review</a>.</li>
+% endif
+% if reviews is not None:
+<li>
+%   for pos, (key, review) in enumerate(reviews.items()):
+%     if pos == 0:
+Link to original Review: <a href="${review}">${key} review</a>.
+%     elif pos == 1:
+Links to other reviews: <a href="${review}">${key} review</a>
+%     else:
+, <a href="${review}">${key} review</a>
+%     endif
+%   endfor
+.
+</li>
+% endif
+</%def>
+
+<%def name="headphone_notes(measurement)">
+<%
+  notes = measurement.get('notes', None)
+%>
+% if notes is not None:
+<li>
+    <span class="tag is-warning">Note:</span> ${notes}.
+</li>
+% endif
+</%def>
+
+<%def name="headphone_specifications(measurement)">
+<%
+  specifications = measurement.get('specifications', None)
+  if specifications is not None:
+    impedance = specifications.get('impedance')
+    sensitivity = specifications.get('sensitivity')
+    driver_size = specifications.get('driver_size')
+    weight = specifications.get('weight')
+    noise_cancelling = specifications.get('noise_cancelling')
+    bluetooth_codecs = specifications.get('bluetooth_codecs')
+%>
+% if specifications is not None:
+<li>
+  <b>Specifications</b>:
+  <ul>
+%     if impedance is not None:
+    <li>Impedance: ${impedance} Ohm</li>
+%     endif
+%     if sensitivity is not None:
+    <li>Sensitivity: ${sensitivity} dB</li>
+%     endif
+%     if driver_size is not None:
+    <li>Driver size: ${driver_size} mm</li>
+%     endif
+%     if weight is not None:
+    <li>Weight: ${weight} g</li>
+%     endif
+%     if noise_cancelling is not None:
+    <li>Active Noise Cancelling: ${'Yes' if noise_cancelling else 'No'}</li>
+%     endif
+%     if bluetooth_codecs is not None:
+    <li>Bluetooth codecs: ${', '.join(bluetooth_codecs)}</li>
+%     endif
+  </ul>
+</li>
+% endif
+</%def>
+
+% if print_warning:
+<article class="message is-warning">
+  <h4>Notice</h4>
+  <div class="message-header">
+    <p>Warning</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body">
+    We have multiple measurements for this headphone. Click <a href="../${default_origin | space2url}/index_${default}.html">here</a> to see the default one.
+  </div>
+</article>
+% endif
+
+<article class="message is-info">
+  <h4>What we know about the measurement:</h4>
+  <div class="message-header">
+    <p>
+      ${headphone_header(meta[headphone])}
+    </p>
+  </div>
+  <div class="message-body">
+    <div class="content">
+      % if current:
+      <ul>
+        ${headphone_quality(current)}
+        ${headphone_origin(current)}
+        ${headphone_reviews(current)}
+        ${headphone_notes(current)}
+        ${headphone_specifications(current)}
+      </ul>
+      % endif
+    </div>
+  </div>
+</article>
+
+<%def name="eqs_print_eq(eq)">
+<%
+  dev = 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop{}'.format(eq['filename'][1:])
+%>
+<table class="table is-striped">
+  <thead>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        ${eq['display_name']}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        Set preamp gain to: <b>${eq['preamp_gain']}dB</b>.
+      </td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <th>Freq</th>
+      <th>Q</th>
+      <th>Gain</th>
+    </tr>
+  </thead>
+  <tbody>
+    % for iir in eq['peq']:
+    <tr>
+      <td>${iir['type'] | eqtype2str}</td>
+      <td>${iir['freq']}</td>
+      <td>${iir['Q']}</td>
+      <td>${iir['dbGain']}</td>
+    </tr>
+    % endfor
+    <tr>
+      <td colspan="4" class="has-text-centered">
+      <a class="button is-link is-light" href="${dev | space2url}">Download</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</%def>
+
+<%def name="eqs_print_eqs(current_eqs)">
+% for i, (name, eq) in enumerate(current_eqs.items()):
+<article class="message is-primary">
+  <div class="message-header">
+    ${hp_brand} ${hp_model}
+  </div>
+  <div class="message-body">
+    ${eqs_print_eq(eq)}
+  </div>
+</article>
+% endfor
+</%def>
+
+% if current_eqs:
+${eqs_print_eqs(current_eqs)}
+% endif

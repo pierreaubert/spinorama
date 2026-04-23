@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title>Measurements for headphone ${headphone}</title>
+    <%include file="head.html"/>
+    <%include file="head_vega.html"/>
+  </head>
+  <body>
+    <%include file="nav_simple.html"/>
+    <%namespace name="util" module="website.utils" import="*"/>
+
+    <div class="tab-pane display:none" id="pane-1">
+      <div class="container">
+	<table>
+          <tr>
+            <td><%include file="headphone_desc.html"/></td>
+          </tr>
+	</table>
+      </div>
+    </div>
+
+    <!-- Graphs -->
+    <div class="tab-pane is-active display:block" id="pane-2">
+      <div class="section">
+      <table>
+        % for freq in g_freq:
+        <tr>
+          <td>
+            <div class="box has-background-white-bis m-1 p-1">
+              <a href="${g_key}/${freq | space2url}.html">
+		<div id="${g_key}-${freq}"></div>
+		<script type="module">
+		 import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+		 let graph = "${g_key}/${freq | space2url}";
+		 let graph_json = "./" + graph + ".json";
+		 const spec = fetch(graph_json)
+		   .then( (response) => response.json() )
+		   .then( (spec) => {
+		     displayGraph("${freq}", graph_json, "${g_key}-${freq}", spec, false, 1);
+		   });
+		</script>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+      </table>
+      </div>
+    </div>
+
+    <!-- Target curve selector -->
+    <div class="section">
+      <div class="container">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Target curve:</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="select">
+                  <select id="selectTarget">
+                    <option value="default">Default (Harman ${meta[headphone].get('shape', 'over-ear')})</option>
+                    <option value="custom">Custom (upload CSV)...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="field hidden" id="customTargetField">
+              <div class="control">
+                <input type="file" id="customTarget" accept=".csv,.txt" class="input">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%include file="footer.html"/>
+  </body>
+</html>

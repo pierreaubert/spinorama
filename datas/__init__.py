@@ -195,27 +195,49 @@ class Speaker(SpeakerRequired, total=False):
 SpeakerDatabase = dict[str, Speaker]
 
 
+# ---------------------------------------------------------------------------
 # Headphone types
+# ---------------------------------------------------------------------------
+
+DeviceKind = Literal["speaker", "headphone"]
+
+
 HeadphoneShape = Literal["over-ear", "on-ear", "in-ear", "earbud"]
 
 
-class HeadphoneMeasurementRequired(TypedDict):
+HeadphoneType = Literal["wired", "wireless", "hybrid"]
+
+
+HeadphoneMeasurementFormat = Literal["freq_response", "rew_text_dump"]
+
+
+class HeadphoneSpecifications(TypedDict, total=False):
+    impedance: float
+    sensitivity: float
+    sensitivity_mV_94dB: float
+    driver_size: float
+    weight: float
+    noise_cancelling: bool
+    bluetooth_codecs: list[str]
+
+
+class HeadphoneMeasurement(TypedDict, total=False):
     origin: str
-    format: MeasurementFormat
-
-
-class HeadphoneMeasurement(HeadphoneMeasurementRequired, total=False):
+    format: HeadphoneMeasurementFormat
     review: str
+    reviews: dict[str, str]
     review_published: str
     quality: MeasurementQuality
     notes: str
-    sensitivity_mV_94dB: float
     recommendation: str
+    specifications: HeadphoneSpecifications
+    extras: Extras
 
 
 class HeadphoneRequired(TypedDict):
     brand: str
     model: str
+    type: HeadphoneType
     shape: HeadphoneShape
     default_measurement: str
     measurements: dict[str, HeadphoneMeasurement]
@@ -224,10 +246,17 @@ class HeadphoneRequired(TypedDict):
 class Headphone(HeadphoneRequired, total=False):
     price: str
     skip: bool
+    default_eq: str
+    eqs: dict[str, EQ]
+    nearest: list[tuple[float, str]]
 
 
 HeadphoneDatabase = dict[str, Headphone]
 
+
+# ---------------------------------------------------------------------------
+# Common GLL extraction
+# ---------------------------------------------------------------------------
 
 # common GLL extraction
 gll_data_acquisition_std: DataAcquisition = {
