@@ -194,6 +194,9 @@ def get_sensitivity(context, value):
         specs = measurement.get("specifications", {})
         if specs and "sensitivity" in specs:
             return specs["sensitivity"]
+        computed = measurement.get("computed_sensitivity", {})
+        if computed:
+            return computed.get("sensitivity_1m") or computed.get("computed", 0)
     return 0
 
 
@@ -486,8 +489,8 @@ def is_short_reviews(context, reviews):
 def sensitivity_html(context, stype, sensitivity):
     if stype == "active":
         return "Active"
-    if str(sensitivity) != "0":
-        return 'Sensitivity: <b>{}</b>&nbsp;dB'.format(sensitivity)
+    if sensitivity and float(sensitivity) != 0:
+        return 'Sensitivity: <b>{:.0f}</b>&nbsp;dB'.format(float(sensitivity))
     return 'Sensitivity: <b>?</b>&nbsp;dB'
 
 

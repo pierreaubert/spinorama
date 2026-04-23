@@ -117,7 +117,11 @@ def speakers2results(speakers):
             data_format = measurement.get("format", "")
             quality = measurement.get("quality", "")
             specifications = measurement.get("specifications", {})
-            sensitivity_data = measurement.get("sensitivity", {})
+            sensitivity_data = measurement.get("computed_sensitivity", {})
+            if not sensitivity_data:
+                legacy = measurement.get("sensitivity")
+                if isinstance(legacy, dict):
+                    sensitivity_data = legacy
             sensitivity = sensitivity_data.get("computed", -1)
             sensitivity_distance = sensitivity_data.get("distance", 1.0)
             sensitivity_1m = sensitivity_data.get("sensitivity_1m", -1)

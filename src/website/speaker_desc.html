@@ -101,31 +101,49 @@ Warning: this measurement was already process with an equalizer.
 
 <%def name="speaker_sensitivity(measurement)">
 <%
-  sensitivity_data     = measurement.get('sensitivity', {})
-  sensitivity          = sensitivity_data.get('computed', None)
-  sensitivity_1m       = sensitivity_data.get('sensitivity_1m', None)
-  sensitivity_distance = sensitivity_data.get('distance', None)
+  from spinorama.constant_paths import SENSITIVITY_MIN_FREQ, SENSITIVITY_MAX_FREQ
+  freq_range = '{0}Hz-{1}kHz'.format(SENSITIVITY_MIN_FREQ, SENSITIVITY_MAX_FREQ // 1000)
+  sensitivity_data     = measurement.get('computed_sensitivity', {})
+  if not sensitivity_data:
+      legacy = measurement.get('sensitivity')
+      if isinstance(legacy, dict):
+          sensitivity_data = legacy
+  sensitivity          = sensitivity_data.get('computed', None) if sensitivity_data else None
+  sensitivity_1m       = sensitivity_data.get('sensitivity_1m', None) if sensitivity_data else None
+  sensitivity_distance = sensitivity_data.get('distance', None) if sensitivity_data else None
+  spec_sensitivity     = None
+  specs = measurement.get('specifications', {})
+  if specs:
+      spec_sensitivity = specs.get('sensitivity')
 %>
-% if sensitivity is not None:
+% if sensitivity is not None or spec_sensitivity is not None:
 <li>
-% if sensitivity_1m is not None:
-  % if sensitivity_distance is not None and sensitivity_distance != 1.0:
   Sensitivity:
   <ul>
+% if spec_sensitivity is not None:
     <li>
-      Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V estimated at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+      Company: <b>${spec_sensitivity}</b>&nbsp;dB
     </li>
-    <li>
-      Sensitivity: ${'{:.1f}dB'.format(sensitivity)} computed at the measurement distance (<span class="unit-value" data-unit="m" data-value="${sensitivity_distance}">${sensitivity_distance}</span><span class="unit-label" data-unit="m">m</span>) over the same frequency range.
-    </li>
-  </ul>
-  % else:
-  Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
-  % endif
-</li>
-% else:
-Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
 % endif
+% if sensitivity_1m is not None:
+  % if sensitivity_distance is not None and sensitivity_distance != 1.0:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V estimated at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+    <li>
+      Measured: ${'{:.1f}'.format(sensitivity)}&nbsp;dB computed at the measurement distance (<span class="unit-value" data-unit="m" data-value="${sensitivity_distance}">${sensitivity_distance}</span><span class="unit-label" data-unit="m">m</span>) over the same frequency range.
+    </li>
+  % else:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+  % endif
+% elif sensitivity is not None:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+% endif
+  </ul>
 </li>
 % endif
 </%def>
@@ -159,6 +177,8 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
 
 <%def name="speaker_directivity(measurement)">
 <%
+  from spinorama.constant_paths import DIRECTIVITY_MIN_FREQ, DIRECTIVITY_MAX_FREQ
+  dir_range = '{0}kHz and {1}kHz'.format(DIRECTIVITY_MIN_FREQ // 1000, DIRECTIVITY_MAX_FREQ // 1000)
   estimates = measurement.get('estimates', None)
 %>
 % if estimates is not None and (estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?'):
@@ -168,14 +188,14 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
     <li>
       Horizontal directivity
       is (<b>${estimates.get('dir_horizontal_m')}&deg;, ${estimates.get('dir_horizontal_p')}&deg;</b>)
-      between 1kHz and 10kHz. Angle computed for +/-6dB.
+      between ${dir_range}. Angle computed for +/-6dB.
     </li>
 %   endif
 %   if estimates.get('dir_vertical', '?') !=  '?':
     <li>
       Vertical directivity
       is (<b>${estimates.get('dir_vertical_m')}&deg;, ${estimates.get('dir_vertical_p')}&deg;</b>)
-      between 1kHz and 10kHz. Angle computed for +/-6dB.
+      between ${dir_range}. Angle computed for +/-6dB.
     </li>
 %   endif
   </ul>
@@ -325,9 +345,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
 %     if dispersion is not None:
     <li>Dispersion: ${horizontal}&deg; horizontal and ${vertical}&deg; vertical.</li>
 %     endif
-%     if sensitivity is not None:
-    <li>Sensitivity ${sensitivity} dB</li>
-%     endif
+## sensitivity is now displayed in speaker_sensitivity
 %     if impedance is not None:
     <li>Impedance ${impedance} Ohm</li>
 %     endif

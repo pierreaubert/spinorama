@@ -216,8 +216,8 @@ function sensitivityHtml(stype, sensitivity) {
     if (stype === 'active') {
         return 'Active';
     }
-    if (sensitivity !== '0') {
-        return `Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>`;
+    if (sensitivity !== '0' && sensitivity !== 0) {
+        return `Sensitivity: <b>${Math.round(sensitivity)}</b>&nbsp;dB</span>`;
     }
     return 'Sensitivity: <b>?</b>&nbsp;dB</span>';
 }

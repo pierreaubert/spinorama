@@ -155,13 +155,14 @@ export function getSensitivity(value, def) {
     if (def === undefined) {
         def = value.default_measurement;
     }
-    if (
-        value.type === 'passive' &&
-        value.measurements[def] &&
-        value.measurements[def].specifications &&
-        value.measurements[def].specifications.sensitivity
-    ) {
-        return value.measurements[def].specifications.sensitivity;
+    if (value.type === 'passive' && value.measurements[def]) {
+        const msr = value.measurements[def];
+        if (msr.specifications && msr.specifications.sensitivity) {
+            return msr.specifications.sensitivity;
+        }
+        if (msr.computed_sensitivity) {
+            return msr.computed_sensitivity.sensitivity_1m || msr.computed_sensitivity.computed || 0.0;
+        }
     }
     return 0.0;
 }

@@ -397,7 +397,8 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getSensitivity(key) {
         const msr = defMsr(key);
-        const v = msr && msr.sensitivity ? msr.sensitivity.sensitivity_1m : undefined;
+        const cs = msr?.computed_sensitivity ?? msr?.sensitivity;
+        const v = cs?.sensitivity_1m;
         return typeof v === 'number' ? v : 0.0;
     }
 
@@ -823,8 +824,9 @@ export function isFiltered(item, filter) {
             sensitivityMax = Number.MAX_SAFE_INTEGER;
         }
         const msr = item.measurements[item.default_measurement];
-        if ('sensitivity' in msr && 'computed' in msr.sensitivity) {
-            let sensitivity = parseFloat(msr.sensitivity.computed);
+        const cs = msr.computed_sensitivity ?? msr.sensitivity;
+        if (cs && 'computed' in cs) {
+            let sensitivity = parseFloat(cs.computed);
             if (isNaN(sensitivity)) {
                 shouldShow = false;
             } else {

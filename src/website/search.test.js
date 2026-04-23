@@ -548,6 +548,12 @@ describe('test full text search and filtering', () => {
         expect(results).toBeTypeOf('object');
         expect(results.length).toBe(422);
         expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeGreaterThanOrEqual(85);
+        });
     });
 
     it('filter by sensitivity max', () => {
@@ -558,6 +564,12 @@ describe('test full text search and filtering', () => {
         expect(results).toBeTypeOf('object');
         expect(results.length).toBe(209);
         expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeLessThanOrEqual(85);
+        });
     });
 
     it('filter by sensitivity min and max', () => {
@@ -571,10 +583,92 @@ describe('test full text search and filtering', () => {
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
-            const sensitivity = msr.sensitivity.computed;
-            expect(sensitivity).toBeGreaterThanOrEqual(80);
-            expect(sensitivity).toBeLessThanOrEqual(90);
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeGreaterThanOrEqual(80);
+            expect(cs.computed).toBeLessThanOrEqual(90);
         });
+    });
+
+    it('filter by sensitivity excludes speakers without sensitivity data', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=0&sensitivityMax=200&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        // only speakers with computed sensitivity should be included (631 passive)
+        // active speakers (no sensitivity) are excluded
+        expect(results.length).toBe(631);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs).toBeDefined();
+            expect(cs.computed).toBeDefined();
+        });
+    });
+
+    it('filter by sensitivity high min returns no results', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=200&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(0);
+    });
+
+    it('filter by sensitivity low max returns few results', () => {
+        const url = new URL(TEST_URL + '?sensitivityMax=70&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(8);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeLessThanOrEqual(70);
+        });
+    });
+
+    it('filter by sensitivity above 90dB', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=90&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(144);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeGreaterThanOrEqual(90);
+        });
+    });
+
+    it('filter by sensitivity combined with passive type', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=85&power=passive&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            expect(result.type).toBe('passive');
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs.computed).toBeGreaterThanOrEqual(85);
+        });
+    });
+
+    it('sort by sensitivity returns speakers in descending sensitivity order', () => {
+        const url = new URL(TEST_URL + '?sort=sensitivity&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBeGreaterThan(0);
+        // verify descending order for speakers that have sensitivity
+        let prevSensitivity = Infinity;
+        for (const key of results) {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr?.computed_sensitivity ?? msr?.sensitivity;
+            const v = cs?.sensitivity_1m;
+            if (typeof v === 'number') {
+                expect(v).toBeLessThanOrEqual(prevSensitivity);
+                prevSensitivity = v;
+            }
+        }
     });
 
     it('filter by impedance min', () => {

@@ -66,9 +66,35 @@ DIRECTIVITY_MAX_FREQ = 10000
 SLOPE_MIN_FREQ = 100
 SLOPE_MAX_FREQ = 12000
 
-# sensitivity defintion (no agreement here)
-SENSITIVITY_MIN_FREQ = 100
-SENSITIVITY_MAX_FREQ = 1000
+# Sensitivity definition: no agreement here but from IEC 60268-5 (the main standard):
+#
+# The IEC standard defines sensitivity as the sound pressure level (SPL) produced
+# at 1 meter on-axis when driven with 2.83 Vrms of pink noise (or a  specified
+# bandwidth), measured in an anechoic environment. The result is expressed as dB SPL / 2.83V / 1m.
+# - 2.83 Vrms delivers exactly 1 watt into 8 ohms (P = V²/R). This is why you often
+#   see sensitivity quoted as "dB/W/m."
+# - For speakers with a different nominal impedance (e.g., 4 ohms), 2.83V delivers 2W,
+# which inflates the number compared to a true 1W measurement. Some manufacturers exploit this.
+#
+# Key conventions and variants:
+#
+# +------------------------------------------------------------------------------------------------+
+# │       Convention        │                             Description                              |
+# +------------------------------------------------------------------------------------------------+
+# │ 2.83V / 1m              │ Most common today. Voltage-referenced, impedance-independent.        |
+# +------------------------------------------------------------------------------------------------+
+# | 1W / 1m                 │ Power-referenced. Adjusts voltage to deliver exactly 1W regardless   |
+# |                         | of impedance. More honest for cross-impedance comparisons.           |
+# +------------------------------------------------------------------------------------------------+
+# │ Half-space vs           │ Half-space (2π) adds ~3dB vs free-field (4π) due to the baffle/ground|
+# | Full space              | reflection. Spec sheets don't always clarify which.                  │
+# +------------------------------------------------------------------------------------------------+
+# │ Frequency range         │ Typically averaged over 300Hz – 3 kHz (or sometimes 1 kHz only). The |
+# |                         | chosen band matters a lot for the resulting number.                  |
+# +------------------------------------------------------------------------------------------------+
+
+SENSITIVITY_MIN_FREQ = 300
+SENSITIVITY_MAX_FREQ = 3000
 
 # default frequency range for plots
 DEFAULT_FREQ_RANGE = (20.0, 20000.0)

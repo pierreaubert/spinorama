@@ -463,7 +463,7 @@ getMetadata()
                 case 'lfx':
                     return msr?.pref_rating?.lfx_hz ?? null;
                 case 'sensitivity':
-                    return msr?.sensitivity?.computed ?? null;
+                    return (msr?.computed_sensitivity ?? msr?.sensitivity)?.computed ?? null;
                 case 'impedance':
                     return msr?.specifications?.impedance ? parseInt(msr.specifications.impedance) : null;
                 case 'weight':

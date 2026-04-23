@@ -183,7 +183,7 @@ describe('getFieldValue', () => {
             case 'lfx':
                 return msr?.pref_rating?.lfx_hz ?? null;
             case 'sensitivity':
-                return msr?.sensitivity?.computed ?? null;
+                return (msr?.computed_sensitivity ?? msr?.sensitivity)?.computed ?? null;
             case 'impedance':
                 return msr?.specifications?.impedance ? parseInt(msr.specifications.impedance) : null;
             case 'weight':
@@ -519,7 +519,9 @@ describe('statistics data processing', () => {
         let count = 0;
         metadata.forEach((speaker) => {
             const msr = speaker.measurements?.[speaker.default_measurement];
-            if (msr?.sensitivity?.computed) {
+            // computed_sensitivity is the canonical key; sensitivity (dict) is the legacy key
+            const cs = msr?.computed_sensitivity ?? msr?.sensitivity;
+            if (cs?.computed) {
                 count++;
             }
         });

@@ -133,8 +133,8 @@ class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
         self.sensitivity, self.sensitivity_1m = compute_sensitivity(
             self.df_unmelted, "gll_hv_txt", 10.0
         )
-        self.assertAlmostEqual(self.sensitivity, 81, delta=1)
-        self.assertAlmostEqual(self.sensitivity_1m, 101, delta=1)
+        self.assertAlmostEqual(self.sensitivity, 83.4, delta=1)
+        self.assertAlmostEqual(self.sensitivity_1m, 103.4, delta=1)
 
     def test_2(self):
         status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
