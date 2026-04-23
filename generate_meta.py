@@ -753,6 +753,78 @@ def dump_metadata(meta):
         dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
 
 
+def add_headphone_eq(headphone_meta):
+    """Load EQ data for headphones from APO format files."""
+    eq_base = cpaths.CPATH_DATAS_HEADPHONE_EQ
+    for hp_name, hp_info in headphone_meta.items():
+        if hp_info.get("skip", False):
+            continue
+        if "eqs" not in hp_info or not isinstance(hp_info.get("eqs"), dict):
+            hp_info["eqs"] = {}
+
+        for suffix, display in (
+            ("autoeq_score/iir-autoeq-score", "Harman Score EQ (IIR)"),
+            ("autoeq_flat/iir-autoeq-flat", "Flat Target EQ (IIR)"),
+        ):
+            eq_filename = "{}/{}/{}.txt".format(eq_base, hp_name, suffix)
+            iir = load_parse_eq_iir_rews(eq_filename, 48000)
+            if iir is not None and len(iir) > 0:
+                if "default_eq" not in hp_info:
+                    eq_key = suffix.split("/")[0]
+                    hp_info["default_eq"] = eq_key
+
+                eq_key = suffix.split("/")[0]
+                peq_list: list[Peq] = []
+                for iir_weight, iir_filter in iir:
+                    if iir_weight != 0.0:
+                        peq_list.append(
+                            Peq(
+                                type=iir_filter.biquad_type,
+                                freq=iir_filter.freq,
+                                srate=iir_filter.srate,
+                                Q=iir_filter.q,
+                                dbGain=iir_filter.db_gain,
+                            )
+                        )
+
+                current_eq: EQ = EQ(
+                    display_name=display,
+                    filename=eq_filename,
+                    preamp_gain=round(filter_peq_preamp_gain(iir), 1),
+                    type="peq",
+                    peq=peq_list,
+                )
+                hp_info["eqs"][eq_key] = current_eq
+                logger.debug("adding headphone eq: %s for %s", eq_key, hp_name)
+
+
+def dump_headphone_metadata(headphone_meta):
+    """Write headphone metadata to JSON files."""
+    metadir = cpaths.CPATH_DIST
+    os.makedirs(metadir, mode=0o755, exist_ok=True)
+    os.makedirs(cpaths.CPATH_DIST_JSON, mode=0o755, exist_ok=True)
+
+    hp_meta_full = {}
+    hp_eq_full = {}
+    for k, v in headphone_meta.items():
+        if v.get("skip", False):
+            continue
+        hp_meta_full[k] = {k2: v2 for k2, v2 in v.items() if k2 != "eqs"}
+        hp_meta_full[k]["kind"] = "headphone"
+        hp_eq_full[k] = {
+            k2: v2 for k2, v2 in v.items() if k2 in ("eqs", "brand", "model", "default_eq")
+        }
+
+    hp_metafile = cpaths.CPATH_DIST_HEADPHONE_METADATA_JSON
+    hp_eqfile = cpaths.CPATH_DIST_HEADPHONE_EQDATA_JSON
+
+    for filename, data in ((hp_metafile, hp_meta_full), (hp_eqfile, hp_eq_full)):
+        js = json.dumps(data)
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(js)
+        logger.info("Generated %s (%d entries)", filename, len(data))
+
+
 def main():
     main_df = None
     speaker = args.speaker
@@ -797,6 +869,17 @@ def main():
     logger.info("Write metadata")
     dump_metadata(metadata.speakers_info)
     steps.append(("dump", time.perf_counter()))
+
+    # headphone metadata
+    logger.info("Process headphone metadata")
+    try:
+        from datas.headphone_metadata import headphones_info
+
+        add_headphone_eq(headphones_info)
+        dump_headphone_metadata(headphones_info)
+        steps.append(("headphones", time.perf_counter()))
+    except ImportError:
+        logger.info("No headphone metadata found, skipping")
 
     logger.info("Bye")
 

@@ -467,6 +467,112 @@ def main():
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
 
+    # write headphone html pages
+    logger.info("Write headphone pages")
+    try:
+        hp_meta = None
+        hp_meta_file = cpaths.CPATH_DIST_HEADPHONE_METADATA_JSON
+        if os.path.isfile(hp_meta_file):
+            with open(hp_meta_file, "r") as f:
+                hp_meta = json.load(f)
+
+        if hp_meta:
+            hp_eqdata_file = cpaths.CPATH_DIST_HEADPHONE_EQDATA_JSON
+            if os.path.isfile(hp_eqdata_file):
+                with open(hp_eqdata_file, "r") as f:
+                    hp_eqs = json.load(f)
+                    for k, v in hp_eqs.items():
+                        if k in hp_meta and "eqs" in v:
+                            hp_meta[k]["eqs"] = v["eqs"]
+                        if k in hp_meta and "default_eq" in v:
+                            hp_meta[k]["default_eq"] = v["default_eq"]
+
+            # headphone index page
+            for hp_page in ("headphone_index", "headphone_eqs", "headphone_scores"):
+                hp_page_name = "{}.html".format(hp_page)
+                logger.info("Write %s", hp_page_name)
+                hp_page_html = mako_templates.get_template(hp_page_name)
+                hp_content = hp_page_html.render(
+                    df={},
+                    meta=hp_meta,
+                    site=site,
+                    use_search=True,
+                    use_sw=flag_sw,
+                    min=".min" if flag_optim else "",
+                    versions=versions,
+                )
+                # headphone_index.html -> /headphones.html etc
+                dist_name = hp_page_name.replace("headphone_index", "headphones").replace(
+                    "headphone_", "headphone_"
+                )
+                hp_filename = f"{cpaths.CPATH_DIST}/{dist_name}"
+                write_if_different(hp_content, hp_filename, force=False)
+
+            # per-headphone pages
+            hp_html = mako_templates.get_template("headphone.html")
+            graph_html = mako_templates.get_template("graph.html")
+
+            HEADPHONE_FREQ_FILTER = [
+                "Frequency Response",
+                "Frequency Response Compensated",
+                "Target Deviation",
+            ]
+
+            for hp_name, hp_data in hp_meta.items():
+                if hp_data.get("skip", False):
+                    continue
+                brand = hp_data.get("brand", "")
+                default_m = hp_data.get("default_measurement", "asr")
+                m_data = hp_data.get("measurements", {}).get(default_m, {})
+                origin = m_data.get("origin", "ASR")
+
+                hp_dist_dir = "{}/{}/{}/".format(
+                    cpaths.CPATH_DIST_HEADPHONES, hp_name, origin
+                )
+                os.makedirs(hp_dist_dir, exist_ok=True)
+
+                # Check which graphs exist
+                freq_graphs = {}
+                for gname in HEADPHONE_FREQ_FILTER:
+                    gpath = "{}/{}/{}.json".format(hp_dist_dir, default_m, gname)
+                    if os.path.isfile(gpath):
+                        freq_graphs[gname] = {}
+
+                if not freq_graphs:
+                    continue
+
+                index_name = "{}/index_{}.html".format(hp_dist_dir, default_m)
+                logger.info("Writing %s for %s", index_name, hp_name)
+                hp_content = hp_html.render(
+                    headphone=hp_name,
+                    g_freq=freq_graphs,
+                    g_key=default_m,
+                    meta=hp_meta,
+                    origin=origin,
+                    site=site,
+                    use_search=False,
+                    min=".min" if flag_optim else "",
+                    versions=versions,
+                )
+                write_if_different(hp_content, index_name, force=False)
+
+                # per-graph html pages
+                for graph_name in freq_graphs:
+                    graph_filename = "{}/{}/{}.html".format(hp_dist_dir, default_m, graph_name)
+                    graph_content = graph_html.render(
+                        speaker=hp_name,
+                        graph=graph_name,
+                        meta=hp_meta,
+                        site=site,
+                        min=".min" if flag_optim else "",
+                        versions=versions,
+                    )
+                    write_if_different(graph_content, graph_filename, force=False)
+    except Exception as e:
+        print("Generating headphone pages failed with {}".format(e))
+        import traceback
+        traceback.print_exc()
+
     # write a file per speaker
     if not skip_speakers:
         logger.info("Write a file per speaker")
@@ -517,6 +623,10 @@ def main():
         "statistics",
         "tabs",
         "theme",
+        "headphone_index",
+        "headphone_eqs",
+        "headphone_scores",
+        "headphone_target",
     ):
         try:
             # remove the ./dist parts

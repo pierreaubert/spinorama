@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title>EQ for headphones</title>
+    <%include file="head.html"/>
+    <script src="/js3rd/handlebars-${versions['HANDLEBARS']}${min}.js"></script>
+  </head>
+  <body>
+    <%include file="symbols.html"/>
+    <%include file="headphone_nav_search.html"/>
+    <%namespace name="util"  module="website.utils" import="*"/>
+
+    <script>
+      Handlebars.registerHelper("isNotEmpty", function (value) {
+        return Object.keys(value).length > 0;
+      });
+    </script>
+
+    <script id="templateEQ" type="text/x-handlebars-template">
+      <table class="table">
+        <tr>
+          <th>
+            {{brand}}
+            {{model}}
+          </th>
+        </tr>
+        <tr>
+          <td class="has-text-centered">
+            <nav class="level">
+              <div class="level-left">
+		{{#if (isNotEmpty othereq)}}
+                <div class="control">
+                  <div class="select is-small">
+                    <select id="eq-select-{{id}}">
+                      <option value="{{autoeq.key}}">{{autoeq.name}}</option>
+                      {{#each othereq}}
+                      <option value="{{key}}">{{name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+		{{else}}
+                <span>{{autoeq.name}}</span>
+		{{/if}}
+              </div>
+            </nav>
+          </td>
+        </tr>
+        <tr id="eq-{{id}}-autoeq">
+          <td>
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    Set preamp gain to: <b>{{autoeq.preamp_gain}}dB</b>.
+                  </td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <th>Freq</th>
+                  <th>Q</th>
+                  <th>Gain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each autoeq.peq}}
+                <tr>
+                    <td>{{this.type}}</td>
+                    <td>{{this.freq}}</td>
+                    <td>{{this.Q}}</td>
+                    <td>{{this.dbGain}}</td>
+                </tr>
+                {{/each}}
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    <a class="button is-link is-light" href="{{autoeq.url}}">Download EQ</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </script>
+
+    <div class="container has-background-white-bis">
+      <div class="section">
+        <div class="grid is-col-min-12 column-gap-0 row-gap-1" id="headphones" data-num="0">
+        </div>
+      </div>
+      <div class="section">
+	<div id="pagination">
+	</div>
+      </div>
+    </div>
+
+    <script type="module" src="/js/headphone_eqs-${versions['CACHE']}${min}.js"></script>
+
+    <%include file="search.html"/>
+    <%include file="error.html"/>
+  </body>
+</html>

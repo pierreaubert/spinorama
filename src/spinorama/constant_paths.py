@@ -31,6 +31,11 @@ CPATH_DATAS_SPEAKERS = f"{CPATH_DATAS}/measurements"
 CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
 CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphones"
 
+# where the headphone metadata and measurements are
+CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphone_measurements"
+CPATH_DATAS_HEADPHONE_EQ = f"{CPATH_DATAS}/headphone_eq"
+CPATH_DATAS_HEADPHONE_TARGETS = f"{CPATH_DATAS}/headphone_targets"
+
 # where the temporay files go
 CPATH_BUILD = f"{CPATH}/build"
 CPATH_BUILD_EQ = f"{CPATH_BUILD}/eq"
@@ -48,6 +53,11 @@ CPATH_DIST_EQDATA_JSON = f"{CPATH_DIST_JSON}/eqdata.json"
 CPATH_DIST_SPEAKERS = f"{CPATH_DIST}/speakers"
 CPATH_DIST_PICTURES = f"{CPATH_DIST}/pictures"
 CPATH_DIST_HEADPHONE_JSON = f"{CPATH_DIST_JSON}/headphone.json"
+
+# headphone generated output
+CPATH_DIST_HEADPHONES = f"{CPATH_DIST}/headphones"
+CPATH_DIST_HEADPHONE_METADATA_JSON = f"{CPATH_DIST_JSON}/headphone_metadata.json"
+CPATH_DIST_HEADPHONE_EQDATA_JSON = f"{CPATH_DIST_JSON}/headphone_eqdata.json"
 
 # mean is computed over a range
 MEAN_MIN = 300
