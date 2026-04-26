@@ -21,7 +21,7 @@
 
 import { urlSite } from './meta.js';
 import { getID, getPeq } from './misc.js';
-import { process, urlParameters2Sort } from './search.js';
+import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
 function getHeadphoneEQData() {
@@ -47,64 +47,76 @@ function getHeadphoneEQData() {
     });
 }
 
-getHeadphoneEQData()
-    .then((metadata) => {
-        const source = document.querySelector('#templateEQ').innerHTML;
-        const template = Handlebars.compile(source);
-        const container = document.querySelector('[data-num="0"');
+const source = document.querySelector('#templateEQ').innerHTML;
+const template = Handlebars.compile(source);
+const container = document.querySelector('[data-num="0"');
 
-        function getContext(pKey, pIndex, pValue) {
-            const defaultEQ = pValue.default_eq;
-            let otherEQ = {};
-            for (const eqType in pValue.eqs) {
-                if (eqType !== defaultEQ) {
-                    otherEQ[eqType] = {
-                        key: eqType,
-                        name: pValue.eqs[eqType].display_name,
-                        url:
-                            'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
-                            encodeURI(pValue.eqs[eqType].filename),
-                        preamp_gain: pValue.eqs[eqType].preamp_gain,
-                        peq: getPeq(pValue.eqs[eqType].peq),
-                    };
-                }
-            }
-            const defaultEqData = pValue.eqs[defaultEQ];
-            return {
-                id: getID(pValue.brand, pValue.model),
-                brand: pValue.brand,
-                model: pValue.model,
-                autoeq: {
-                    key: defaultEQ,
-                    name: defaultEqData.display_name,
-                    url:
-                        'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
-                        encodeURI(defaultEqData.filename),
-                    preamp_gain: defaultEqData.preamp_gain,
-                    peq: getPeq(defaultEqData.peq),
-                },
-                othereq: otherEQ,
+function getContext(pKey, pIndex, pValue) {
+    const defaultEQ = pValue.default_eq;
+    let otherEQ = {};
+    for (const eqType in pValue.eqs) {
+        if (eqType !== defaultEQ) {
+            otherEQ[eqType] = {
+                key: eqType,
+                name: pValue.eqs[eqType].display_name,
+                url:
+                    'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                    encodeURI(pValue.eqs[eqType].filename),
+                preamp_gain: pValue.eqs[eqType].preamp_gain,
+                peq: getPeq(pValue.eqs[eqType].peq),
             };
         }
+    }
+    const defaultEqData = pValue.eqs[defaultEQ];
+    return {
+        id: getID(pValue.brand, pValue.model),
+        brand: pValue.brand,
+        model: pValue.model,
+        autoeq: {
+            key: defaultEQ,
+            name: defaultEqData.display_name,
+            url:
+                'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                encodeURI(defaultEqData.filename),
+            preamp_gain: defaultEqData.preamp_gain,
+            peq: getPeq(defaultEqData.peq),
+        },
+        othereq: otherEQ,
+    };
+}
 
-        function printPage(metadata, params) {
-            const results = process(metadata, params);
-            container.innerHTML = '';
-            let index = 0;
-            results.forEach((value, key) => {
-                const context = getContext(key, index, value);
-                const html = template(context);
-                const div = document.createElement('div');
-                div.className = 'cell';
-                div.innerHTML = html;
-                container.appendChild(div);
-                index++;
-            });
-            pagination(container, metadata.size, params);
-        }
+function printEQ(key, index, value) {
+    const context = getContext(key, index, value);
+    const html = template(context);
+    const div = document.createElement('div');
+    div.className = 'cell';
+    div.id = getID(value.brand, value.model);
+    div.innerHTML = html;
+    return div;
+}
 
-        const params = urlParameters2Sort();
-        printPage(metadata, params);
+function clearContainer(c) {
+    while (c.firstChild) {
+        c.removeChild(c.firstChild);
+    }
+}
+
+function display(data, parentDiv) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const [maxResults, fragment] = process(data, params, printEQ);
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
+    return maxResults;
+}
+
+getHeadphoneEQData()
+    .then((metadata) => {
+        setupEventListener(metadata, printEQ, container);
+        clearContainer(container);
+        const maxResults = display(metadata, container);
+        pagination(maxResults);
     })
     .catch((error) => {
         console.error('Failed to load headphone EQ data:', error);

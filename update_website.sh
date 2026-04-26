@@ -62,13 +62,13 @@ fi
 ./scripts/update_pictures.sh
 
 # fetch missing headphone pictures
-command=$(${THEPYTHON} ./scripts/headphone_fetch_pictures.py 2>&1)
-status=$?
-if [ $status -ne 0 ]; then
-    echo "WARN: headphone picture fetch had failures (non-fatal)"
-else
-    echo "OK after headphone picture fetch!"
-fi
+#command=$(${THEPYTHON} ./scripts/headphone_fetch_pictures.py 2>&1)
+#status=$?
+#if [ $status -ne 0 ]; then
+#    echo "WARN: headphone picture fetch had failures (non-fatal)"
+#else
+#    echo "OK after headphone picture fetch!"
+#fi
 
 # generate headphone graphs
 command=$(${THEPYTHON} ./generate_graphs.py --headphones)

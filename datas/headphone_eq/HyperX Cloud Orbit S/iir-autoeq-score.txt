@@ -1,0 +1,14 @@
+# AutoEQ Parametric Equalizer Settings
+# Speaker: Unknown
+# Loss Type: HeadphoneScore
+# Filters: 7
+# Generated: 2026-04-23 14:58:03
+Preamp: -5.9 dB
+
+Filter  1: ON PK Fc    64 Hz Gain -3.42 dB Q 0.50
+Filter  2: ON PK Fc    70 Hz Gain +2.25 dB Q 2.83
+Filter  3: ON PK Fc   190 Hz Gain -2.54 dB Q 2.94
+Filter  4: ON PK Fc   303 Hz Gain -1.82 dB Q 0.55
+Filter  5: ON PK Fc   657 Hz Gain +2.80 dB Q 0.67
+Filter  6: ON PK Fc  1505 Hz Gain -2.08 dB Q 1.95
+Filter  7: ON PK Fc  8291 Hz Gain +5.93 dB Q 0.82

@@ -33,7 +33,7 @@ set -euo pipefail
 FORCE="${1:-}"
 THEPYTHON="${THEPYTHON:-python3.12}"
 
-MEASUREMENTS_DIR="datas/headphone_measurements"
+MEASUREMENTS_DIR="datas/headphones"
 EQ_DIR="datas/headphone_eq"
 TARGETS_DIR="datas/headphone_targets"
 
@@ -63,16 +63,17 @@ import sys
 sys.path.insert(0, 'src')
 sys.path.insert(0, '.')
 try:
-    from datas.headphone_metadata import headphones_info
+    from datas.headphones import headphones_info
 except ImportError:
-    print('ERROR: Cannot import headphone_metadata', file=sys.stderr)
+    print('ERROR: Cannot import headphones', file=sys.stderr)
     sys.exit(1)
 
 for name, info in headphones_info.items():
     if info.get('skip', False):
         continue
     shape = info.get('shape', 'over-ear')
-    print(f'{name}|{shape}')
+    origin = info.get('default_measurement', 'asr')
+    print(f'{name}|{shape}|{origin}')
 "
 }
 
@@ -96,21 +97,23 @@ computed=0
 skipped=0
 failed=0
 
-while IFS='|' read -r name shape; do
+while IFS='|' read -r name shape origin; do
     total=$((total + 1))
 
     hp_measurement_dir="${MEASUREMENTS_DIR}/${name}"
     hp_eq_dir="${EQ_DIR}/${name}"
 
-    # Find the frequency response CSV
+    # Find the frequency response CSV (inside the measurement origin subdir)
     curve_file=""
-    for candidate in "${hp_measurement_dir}/freq_response.csv" \
-                     "${hp_measurement_dir}/frequency_response.csv" \
-                     "${hp_measurement_dir}/fr.csv"; do
-        if [ -f "$candidate" ]; then
-            curve_file="$candidate"
-            break
-        fi
+    for origin_dir in "$origin" "asr"; do
+        for candidate in "${hp_measurement_dir}/${origin_dir}/frequency_response.csv" \
+                         "${hp_measurement_dir}/${origin_dir}/freq_response.csv" \
+                         "${hp_measurement_dir}/${origin_dir}/fr.csv"; do
+            if [ -f "$candidate" ]; then
+                curve_file="$candidate"
+                break 2
+            fi
+        done
     done
 
     if [ -z "$curve_file" ]; then

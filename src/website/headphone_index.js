@@ -39,26 +39,6 @@ function getHeadphoneMetadata() {
         });
 }
 
-function getContext(key, index, value) {
-    const price = getPrice(value.price, 'each');
-    return {
-        id: getID(value.brand, value.model),
-        brand: value.brand,
-        model: value.model,
-        type: value.type,
-        price: price,
-        shape: value.shape,
-        img: {
-            avif: getPicture(value.brand, value.model, 'avif'),
-            webp: getPicture(value.brand, value.model, 'webp'),
-            jpg: getPicture(value.brand, value.model, 'jpg'),
-            loading: getLoading(index),
-            decoding: getDecoding(index),
-        },
-        reviews: [],
-    };
-}
-
 function getShapeLabel(shape) {
     const labels = {
         'over-ear': 'Over-Ear',
@@ -88,56 +68,71 @@ function getReviewUrl(value) {
     return '#';
 }
 
-function printCard(container, key, index, value) {
-    const context = getContext(key, index, value);
+function printHeadphone(key, index, value) {
+    const id = getID(value.brand, value.model);
+    const price = getPrice(value.price, 'each');
+    const img = {
+        webp: getPicture(value.brand, value.model, 'webp'),
+        jpg: getPicture(value.brand, value.model, 'jpg'),
+        loading: getLoading(index),
+        decoding: getDecoding(index),
+    };
     const reviewUrl = getReviewUrl(value);
 
     const card = document.createElement('div');
     card.className = 'cell';
+    card.id = id;
     card.innerHTML = `
         <div class="card m-1">
             <a href="${reviewUrl}">
                 <div class="card-image">
                     <figure class="image is-4by3">
                         <picture>
-                            <source type="image/webp" srcset="${context.img.webp}">
-                            <img src="${context.img.jpg}" alt="${context.brand} ${context.model}"
-                                 loading="${context.img.loading}" decoding="${context.img.decoding}"
+                            <source type="image/webp" srcset="${img.webp}">
+                            <img src="${img.jpg}" alt="${value.brand} ${value.model}"
+                                 loading="${img.loading}" decoding="${img.decoding}"
                                  width="400" height="300">
                         </picture>
                     </figure>
                 </div>
                 <div class="card-content p-2">
-                    <p class="title is-6">${context.brand} ${context.model}</p>
+                    <p class="title is-6">${value.brand} ${value.model}</p>
                     <p class="subtitle is-7">
-                        ${getShapeLabel(context.shape)} &middot; ${getTypeLabel(context.type)}
-                        ${context.price !== '?' ? ' &middot; ' + context.price + ' USD' : ''}
+                        ${getShapeLabel(value.shape)}
+                        ${value.type ? ' &middot; ' + getTypeLabel(value.type) : ''}
+                        ${price !== '?' ? ' &middot; ' + price + ' USD' : ''}
                     </p>
                 </div>
             </a>
         </div>
     `;
-    container.appendChild(card);
+    return card;
+}
+
+const headphoneContainer = document.querySelector('[data-num="0"');
+
+function clearContainer(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
+
+function display(data, parentDiv) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const [maxResults, fragment] = process(data, params, printHeadphone);
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
+    return maxResults;
 }
 
 getHeadphoneMetadata()
     .then((metadata) => {
-        const speakerContainer = document.querySelector('[data-num="0"');
-
-        function printPage(metadata, params) {
-            const results = process(metadata, params);
-            speakerContainer.innerHTML = '';
-            let index = 0;
-            results.forEach((value, key) => {
-                printCard(speakerContainer, key, index, value);
-                index++;
-            });
-            pagination(speakerContainer, metadata.size, params);
-        }
-
-        const params = urlParameters2Sort();
-        printPage(metadata, params);
-        setupEventListener(metadata, printPage);
+        setupEventListener(metadata, printHeadphone, headphoneContainer);
+        clearContainer(headphoneContainer);
+        const maxResults = display(metadata, headphoneContainer);
+        pagination(maxResults);
     })
     .catch((error) => {
         console.error('Failed to load headphone metadata:', error);

@@ -41,10 +41,27 @@ function getReviewUrl(value) {
     return '#';
 }
 
-function printRow(container, key, index, value) {
+const container = document.querySelector('[data-num="0"');
+
+// Print header
+const header = document.createElement('div');
+header.className = 'cell is-col-span-11';
+header.innerHTML = `
+    <div class="columns is-mobile is-vcentered m-0 p-0 has-background-info-light">
+        <div class="column is-1 has-text-centered p-1"><b class="is-size-7">#</b></div>
+        <div class="column is-4 p-1"><b class="is-size-7">Name</b></div>
+        <div class="column is-2 p-1"><b class="is-size-7">Shape</b></div>
+        <div class="column is-2 p-1"><b class="is-size-7">Type</b></div>
+        <div class="column is-2 p-1"><b class="is-size-7">Price</b></div>
+    </div>
+`;
+container.appendChild(header);
+
+function printRow(key, index, value) {
     const reviewUrl = getReviewUrl(value);
     const row = document.createElement('div');
     row.className = 'cell is-col-span-11';
+    row.id = getID(value.brand, value.model);
     row.innerHTML = `
         <div class="columns is-mobile is-vcentered m-0 p-0">
             <div class="column is-1 has-text-centered p-1">
@@ -66,44 +83,32 @@ function printRow(container, key, index, value) {
             </div>
         </div>
     `;
-    container.appendChild(row);
+    return row;
+}
+
+function clearContainer(c) {
+    // Keep the header
+    while (c.children.length > 1) {
+        c.removeChild(c.lastChild);
+    }
+}
+
+function display(data, parentDiv) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const [maxResults, fragment] = process(data, params, printRow);
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
+    return maxResults;
 }
 
 getHeadphoneMetadata()
     .then((metadata) => {
-        const container = document.querySelector('[data-num="0"');
-
-        // Print header
-        const header = document.createElement('div');
-        header.className = 'cell is-col-span-11';
-        header.innerHTML = `
-            <div class="columns is-mobile is-vcentered m-0 p-0 has-background-info-light">
-                <div class="column is-1 has-text-centered p-1"><b class="is-size-7">#</b></div>
-                <div class="column is-4 p-1"><b class="is-size-7">Name</b></div>
-                <div class="column is-2 p-1"><b class="is-size-7">Shape</b></div>
-                <div class="column is-2 p-1"><b class="is-size-7">Type</b></div>
-                <div class="column is-2 p-1"><b class="is-size-7">Price</b></div>
-            </div>
-        `;
-        container.appendChild(header);
-
-        function printPage(metadata, params) {
-            // Clear all except header
-            while (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-            const results = process(metadata, params);
-            let index = 0;
-            results.forEach((value, key) => {
-                printRow(container, key, index, value);
-                index++;
-            });
-            pagination(container, metadata.size, params);
-        }
-
-        const params = urlParameters2Sort();
-        printPage(metadata, params);
-        setupEventListener(metadata, printPage);
+        setupEventListener(metadata, printRow, container);
+        clearContainer(container);
+        const maxResults = display(metadata, container);
+        pagination(maxResults);
     })
     .catch((error) => {
         console.error('Failed to load headphone metadata:', error);

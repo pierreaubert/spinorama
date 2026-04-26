@@ -327,7 +327,7 @@ def generate_headphone_graphs(data_dir: str, force: bool):
     import json as json_module
     import numpy as np
 
-    hp_measurements_dir = os.path.join(data_dir, "datas", "headphone_measurements")
+    hp_measurements_dir = os.path.join(data_dir, "datas", "headphones")
     hp_targets_dir = os.path.join(data_dir, "datas", "headphone_targets")
     hp_dist_dir = os.path.join(data_dir, "dist", "headphones")
 
@@ -336,7 +336,7 @@ def generate_headphone_graphs(data_dir: str, force: bool):
         return
 
     try:
-        from datas.headphone_metadata import headphones_info
+        from datas.headphones import headphones_info
     except ImportError:
         logger.info("No headphone metadata found, skipping graph generation")
         return
@@ -407,12 +407,15 @@ def generate_headphone_graphs(data_dir: str, force: bool):
             logger.debug("No measurement dir for %s", hp_name)
             continue
 
-        # Find frequency response CSV
+        # Find frequency response CSV (inside the measurement origin subdir)
         fr_file = None
-        for candidate in ("freq_response.csv", "frequency_response.csv", "fr.csv"):
-            cpath = os.path.join(hp_m_dir, candidate)
-            if os.path.isfile(cpath):
-                fr_file = cpath
+        for origin_dir in (default_m, "asr"):
+            for candidate in ("frequency_response.csv", "freq_response.csv", "fr.csv"):
+                cpath = os.path.join(hp_m_dir, origin_dir, candidate)
+                if os.path.isfile(cpath):
+                    fr_file = cpath
+                    break
+            if fr_file is not None:
                 break
         if fr_file is None:
             logger.debug("No frequency response CSV for %s", hp_name)

@@ -762,18 +762,15 @@ def add_headphone_eq(headphone_meta):
         if "eqs" not in hp_info or not isinstance(hp_info.get("eqs"), dict):
             hp_info["eqs"] = {}
 
-        for suffix, display in (
-            ("autoeq_score/iir-autoeq-score", "Harman Score EQ (IIR)"),
-            ("autoeq_flat/iir-autoeq-flat", "Flat Target EQ (IIR)"),
+        for eq_key, filename, display in (
+            ("autoeq_score", "iir-autoeq-score", "Harman Score EQ (IIR)"),
+            ("autoeq_flat", "iir-autoeq-flat", "Flat Target EQ (IIR)"),
         ):
-            eq_filename = "{}/{}/{}.txt".format(eq_base, hp_name, suffix)
+            eq_filename = "{}/{}/{}.txt".format(eq_base, hp_name, filename)
             iir = load_parse_eq_iir_rews(eq_filename, 48000)
             if iir is not None and len(iir) > 0:
                 if "default_eq" not in hp_info:
-                    eq_key = suffix.split("/")[0]
                     hp_info["default_eq"] = eq_key
-
-                eq_key = suffix.split("/")[0]
                 peq_list: list[Peq] = []
                 for iir_weight, iir_filter in iir:
                     if iir_weight != 0.0:
@@ -873,7 +870,7 @@ def main():
     # headphone metadata
     logger.info("Process headphone metadata")
     try:
-        from datas.headphone_metadata import headphones_info
+        from datas.headphones import headphones_info
 
         add_headphone_eq(headphones_info)
         dump_headphone_metadata(headphones_info)

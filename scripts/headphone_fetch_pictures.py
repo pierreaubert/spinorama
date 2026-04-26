@@ -17,10 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Fetch headphone product images from manufacturer websites.
+"""Fetch headphone product images via the Brave Image Search API.
 
 For each headphone in the metadata that lacks a picture in datas/pictures/,
-discover the product page URL, find the main product image, and download it.
+search for a product image using Brave and download the best result.
+
+Requires the BRAVE_KEY environment variable to be set.
 
 Usage:
     python3 scripts/headphone_fetch_pictures.py [--force] [--dry-run] [--headphone NAME]
@@ -34,11 +36,9 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Optional
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 import requests
-from bs4 import BeautifulSoup
 
 # ---------------------------------------------------------------------------
 # Setup
@@ -47,207 +47,88 @@ from bs4 import BeautifulSoup
 PICTURES_DIR = Path("datas/pictures")
 MIN_IMAGE_SIZE = 5_000  # bytes — skip tiny icons/placeholders
 REQUEST_TIMEOUT = 20
-DELAY_BETWEEN_REQUESTS = 1.0  # seconds — be polite
+DELAY_BETWEEN_REQUESTS = 1.0  # seconds — respect API rate limits
 
-USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-)
+BRAVE_IMAGE_SEARCH_URL = "https://api.search.brave.com/res/v1/images/search"
 
 logger = logging.getLogger("headphone_pictures")
 
 
 # ---------------------------------------------------------------------------
-# Brand URL patterns
+# Brave Image Search
 # ---------------------------------------------------------------------------
 
-def _slug(s: str) -> str:
-    return (
-        s.strip()
-        .lower()
-        .replace("®", "")
-        .replace("™", "")
-        .replace("/", "-")
-        .replace("_", "-")
-        .replace(" ", "-")
-    )
+def search_image(api_key: str, brand: str, model: str) -> list[dict]:
+    """Search Brave Image Search for a headphone product image.
 
-
-# Brand -> URL template. {model} is replaced with the slugified model name.
-BRAND_URL_PATTERNS: dict[str, list[str]] = {
-    "Sennheiser": [
-        "https://www.sennheiser.com/en-us/catalog/products/headphones/{model}",
-        "https://www.sennheiser.com/en-us/{model}",
-    ],
-    "Sony": [
-        "https://electronics.sony.com/audio/headphones/all-headphones/p/{model}",
-        "https://www.sony.com/en/headphones/{model}",
-    ],
-    "Beyerdynamic": [
-        "https://www.beyerdynamic.com/{model}.html",
-    ],
-    "Audio-Technica": [
-        "https://www.audio-technica.com/en-us/{model}",
-    ],
-    "AKG": [
-        "https://www.akg.com/headphones/{model}.html",
-        "https://www.akg.com/{model}.html",
-    ],
-    "HiFiMAN": [
-        "https://www.hifiman.com/products/detail/{model}",
-        "https://store.hifiman.com/index.php/hifiman-{model}.html",
-    ],
-    "Focal": [
-        "https://www.focal.com/en/headphones/{model}",
-    ],
-    "Dan Clark Audio": [
-        "https://danclarkaudio.com/{model}",
-    ],
-    "Meze Audio": [
-        "https://mezeaudio.com/products/{model}",
-    ],
-    "Moondrop": [
-        "https://www.moondroplab.com/en/products/{model}",
-    ],
-    "Shure": [
-        "https://www.shure.com/en-US/products/earphones/{model}",
-        "https://www.shure.com/en-US/products/headphones/{model}",
-    ],
-    "Apple": [
-        "https://www.apple.com/{model}/",
-    ],
-    "Bose": [
-        "https://www.bose.com/p/headphones/{model}",
-        "https://www.bose.com/p/earbuds/{model}",
-    ],
-    "JBL": [
-        "https://www.jbl.com/headphones/{model}.html",
-        "https://www.jbl.com/in-ear-headphones/{model}.html",
-    ],
-    "Samsung": [
-        "https://www.samsung.com/us/mobile-audio/{model}/",
-    ],
-    "1MORE": [
-        "https://usa.1more.com/products/{model}",
-    ],
-    "FiiO": [
-        "https://www.fiio.com/products/{model}",
-    ],
-    "KZ": [
-        "https://kz-audio.com/kz-{model}.html",
-    ],
-}
-
-
-def discover_product_urls(brand: str, model: str) -> list[str]:
-    """Generate candidate product page URLs for a headphone."""
-    b_slug = _slug(brand)
-    m_slug = _slug(model)
-
-    urls: list[str] = []
-
-    # Brand-specific patterns first
-    if brand in BRAND_URL_PATTERNS:
-        for pattern in BRAND_URL_PATTERNS[brand]:
-            urls.append(pattern.format(model=m_slug))
-
-    # Generic patterns
-    domains = [
-        f"https://www.{b_slug}.com",
-        f"https://{b_slug}.com",
-    ]
-    for d in domains:
-        urls.extend([
-            f"{d}/products/{m_slug}",
-            f"{d}/product/{m_slug}",
-            f"{d}/headphones/{m_slug}",
-            f"{d}/{m_slug}",
-        ])
-
-    return urls
-
-
-# ---------------------------------------------------------------------------
-# Image extraction
-# ---------------------------------------------------------------------------
-
-def _is_valid_image_url(url: str) -> bool:
-    """Check if a URL looks like a product image (not an icon/logo/svg)."""
-    parsed = urlparse(url)
-    path = parsed.path.lower()
-    # Skip SVGs, tiny icons, tracking pixels
-    if path.endswith(".svg") or path.endswith(".gif"):
-        return False
-    if "icon" in path or "logo" in path or "favicon" in path:
-        return False
-    if "1x1" in path or "pixel" in path:
-        return False
-    return True
-
-
-def find_product_image(html: str, base_url: str) -> Optional[str]:
-    """Find the main product image URL from an HTML page.
-
-    Heuristics in priority order:
-    1. og:image meta tag — used by virtually all major brands
-    2. <img> inside product/hero/gallery containers
-    3. First large <img> with product-related attributes
+    Returns a list of image result dicts with 'url', 'thumbnail', 'title', etc.
     """
-    soup = BeautifulSoup(html, "html.parser")
+    query = f"{brand} {model} headphone product photo"
+    headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip",
+        "X-Subscription-Token": api_key,
+    }
+    params = {
+        "q": query,
+        "count": 20,
+        "safesearch": "strict",
+    }
 
-    # 1. og:image
-    og = soup.find("meta", property="og:image")
-    if og and og.get("content"):
-        img_url = og["content"]
-        if _is_valid_image_url(img_url):
-            return urljoin(base_url, img_url)
+    resp = requests.get(
+        BRAVE_IMAGE_SEARCH_URL,
+        headers=headers,
+        params=params,
+        timeout=REQUEST_TIMEOUT,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("results", [])
 
-    # 2. twitter:image
-    tw = soup.find("meta", attrs={"name": "twitter:image"})
-    if tw and tw.get("content"):
-        img_url = tw["content"]
-        if _is_valid_image_url(img_url):
-            return urljoin(base_url, img_url)
 
-    # 3. Product image containers
-    selectors = [
-        'img[class*="product-image"]',
-        'img[class*="product_image"]',
-        'div[class*="product-image"] img',
-        'div[class*="product-gallery"] img',
-        'div[class*="hero"] img',
-        'div[class*="product-media"] img',
-        'section[class*="product"] img',
-        '[data-product-image] img',
-        'img[itemprop="image"]',
-    ]
-    for selector in selectors:
-        img = soup.select_one(selector)
-        if img:
-            src = img.get("src") or img.get("data-src") or img.get("data-lazy-src")
-            if src and _is_valid_image_url(src):
-                return urljoin(base_url, src)
+MIN_IMAGE_WIDTH = 400
+MIN_IMAGE_HEIGHT = 400
 
-    # 4. Largest explicit-size image
-    best_img = None
+
+def _pick_best_image(results: list[dict]) -> str | None:
+    """Pick the highest-resolution product image from Brave search results.
+
+    Filters out SVGs, icons, and tiny images, then returns the largest by pixel area.
+    """
+    best_url: str | None = None
     best_area = 0
-    for img in soup.find_all("img"):
-        src = img.get("src") or img.get("data-src")
-        if not src or not _is_valid_image_url(src):
+
+    for result in results:
+        props = result.get("properties", {})
+        src = props.get("url") or result.get("url", "")
+        if not src:
             continue
-        width = img.get("width", "0")
-        height = img.get("height", "0")
-        try:
-            w = int(str(width).replace("px", ""))
-            h = int(str(height).replace("px", ""))
-            area = w * h
-            if area > best_area and w >= 200 and h >= 200:
-                best_area = area
-                best_img = urljoin(base_url, src)
-        except (ValueError, TypeError):
+        path = urlparse(src).path.lower()
+        if path.endswith(".svg") or path.endswith(".gif"):
+            continue
+        if "icon" in path or "logo" in path or "favicon" in path:
+            continue
+        if "1x1" in path or "pixel" in path:
             continue
 
-    return best_img
+        width = result.get("width") or props.get("width") or 0
+        height = result.get("height") or props.get("height") or 0
+        try:
+            w = int(width)
+            h = int(height)
+        except (ValueError, TypeError):
+            w, h = 0, 0
+
+        if w >= MIN_IMAGE_WIDTH and h >= MIN_IMAGE_HEIGHT:
+            area = w * h
+            if area > best_area:
+                best_area = area
+                best_url = src
+        elif best_url is None and w == 0 and h == 0:
+            # No dimensions reported — keep as fallback if nothing better found
+            best_url = src
+
+    return best_url
 
 
 # ---------------------------------------------------------------------------
@@ -257,26 +138,10 @@ def find_product_image(html: str, base_url: str) -> Optional[str]:
 def _get_session() -> requests.Session:
     session = requests.Session()
     session.headers.update({
-        "User-Agent": USER_AGENT,
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
+        "User-Agent": "spinorama-headphone-pictures/1.0",
+        "Accept": "image/*,*/*;q=0.8",
     })
     return session
-
-
-def fetch_page(session: requests.Session, url: str) -> Optional[str]:
-    """Fetch an HTML page, return content or None on failure."""
-    try:
-        resp = session.get(url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
-        if resp.status_code != 200:
-            return None
-        content_type = resp.headers.get("content-type", "")
-        if "html" not in content_type and "text" not in content_type:
-            return None
-        return resp.text
-    except (requests.RequestException, Exception) as e:
-        logger.debug("  Failed to fetch %s: %s", url, e)
-        return None
 
 
 def download_image(session: requests.Session, url: str, dest: Path) -> bool:
@@ -292,14 +157,12 @@ def download_image(session: requests.Session, url: str, dest: Path) -> bool:
         if len(data) < MIN_IMAGE_SIZE:
             logger.debug("  Image too small (%d bytes): %s", len(data), url)
             return False
-        # Determine extension from content-type
         if "png" in content_type:
             ext = ".png"
         elif "webp" in content_type:
             ext = ".webp"
         else:
             ext = ".jpg"
-        # If dest has a different extension, adjust
         final_dest = dest.with_suffix(ext)
         final_dest.write_bytes(data)
         logger.info("  Downloaded: %s (%d bytes)", final_dest.name, len(data))
@@ -323,6 +186,7 @@ def picture_exists(brand: str, model: str) -> bool:
 
 
 def fetch_headphone_picture(
+    api_key: str,
     session: requests.Session,
     brand: str,
     model: str,
@@ -332,35 +196,32 @@ def fetch_headphone_picture(
     name = f"{brand} {model}"
     dest = PICTURES_DIR / f"{name}.jpg"
 
-    urls = discover_product_urls(brand, model)
-    logger.info("Trying %d URLs for %s", len(urls), name)
+    try:
+        results = search_image(api_key, brand, model)
+    except requests.RequestException as e:
+        logger.error("  Brave API error for %s: %s", name, e)
+        return False
 
-    for url in urls:
-        logger.debug("  Trying: %s", url)
-        html = fetch_page(session, url)
-        if html is None:
-            continue
+    if not results:
+        logger.warning("  No search results for %s", name)
+        return False
 
-        img_url = find_product_image(html, url)
-        if img_url is None:
-            logger.debug("  No product image found on: %s", url)
-            continue
+    img_url = _pick_best_image(results)
+    if img_url is None:
+        logger.warning("  No suitable image found for %s", name)
+        return False
 
-        logger.info("  Found image: %s", img_url)
-        if dry_run:
-            logger.info("  [DRY RUN] Would download: %s -> %s", img_url, dest)
-            return True
+    logger.info("  Found image for %s: %s", name, img_url)
+    if dry_run:
+        logger.info("  [DRY RUN] Would download: %s -> %s", img_url, dest)
+        return True
 
-        if download_image(session, img_url, dest):
-            return True
-
-    logger.warning("  No picture found for %s", name)
-    return False
+    return download_image(session, img_url, dest)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fetch headphone product images from manufacturer websites"
+        description="Fetch headphone product images via Brave Image Search"
     )
     parser.add_argument(
         "--force",
@@ -390,17 +251,22 @@ def main():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
+    api_key = os.environ.get("BRAVE_KEY", "")
+    if not api_key:
+        logger.error("BRAVE_KEY environment variable is not set")
+        sys.exit(1)
+
     # Add project paths
     sys.path.insert(0, "src")
     sys.path.insert(0, ".")
 
     # Import headphone metadata
     try:
-        from datas.headphone_metadata import headphones_info
+        from datas.headphones import headphones_info
     except ImportError:
         logger.error(
             "Cannot import headphone metadata. "
-            "Make sure datas/headphone_metadata.py exists."
+            "Make sure datas/headphones.py exists."
         )
         sys.exit(1)
 
@@ -412,7 +278,7 @@ def main():
     skipped = 0
     failed = 0
 
-    for name, info in headphones_info.items():
+    for name, info in sorted(headphones_info.items()):
         if info.get("skip", False):
             continue
 
@@ -429,7 +295,7 @@ def main():
             skipped += 1
             continue
 
-        if fetch_headphone_picture(session, brand, model, dry_run=args.dry_run):
+        if fetch_headphone_picture(api_key, session, brand, model, dry_run=args.dry_run):
             fetched += 1
         else:
             failed += 1
@@ -437,7 +303,7 @@ def main():
         time.sleep(DELAY_BETWEEN_REQUESTS)
 
     logger.info(
-        "Done: %d total, %d fetched, %d skipped, %d failed",
+        "Done: %d total, %d fetched, %d skipped (already have picture), %d failed",
         total,
         fetched,
         skipped,

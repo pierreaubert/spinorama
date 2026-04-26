@@ -1,0 +1,55 @@
+<div class="tabs is-centered is-boxed" id="navtab" style="flex: 1; margin-bottom: 0;">
+  <ul>
+    <li data-target="pane-1" id="1">
+      <a>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-database"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>Data</td></tr>
+	</table>
+	<span class="is-hidden-mobile">Data</span>
+      </a>
+    </li>
+    <li data-target="pane-2" id="2" class="is-active">
+      <a>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-horizontal"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>Ref.</td></tr>
+	  <tr><td>Graphs</td></tr>
+	</table>
+	<span class="is-hidden-mobile">Reference</span>
+      </a>
+    </li>
+    % if has_eq_flat:
+    <li data-target="pane-3" id="3">
+      <a>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-vertical"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>EQ</td></tr>
+	  <tr><td>Target</td></tr>
+	</table>
+	<span class="is-hidden-mobile">EQ for Target</span>
+      </a>
+    </li>
+    % endif
+    % if has_eq_score:
+    <li data-target="pane-4" id="4">
+      <a>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-combined"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>EQ</td></tr>
+	  <tr><td>Harman</td></tr>
+	</table>
+	<span class="is-hidden-mobile">EQ for Harman</span>
+      </a>
+    </li>
+    % endif
+  </ul>
+</div>

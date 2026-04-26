@@ -497,7 +497,6 @@ def main():
                     meta=hp_meta,
                     site=site,
                     use_search=True,
-                    use_sw=flag_sw,
                     min=".min" if flag_optim else "",
                     versions=versions,
                 )
@@ -541,6 +540,19 @@ def main():
                 if not freq_graphs:
                     continue
 
+                # Copy EQ visualization HTML files if they exist
+                hp_eq_dir = os.path.join(cpaths.CPATH_DATAS_HEADPHONE_EQ, hp_name)
+                has_eq_flat = False
+                has_eq_score = False
+                for eq_src_name in ("autoeq_flat.html", "autoeq_score.html"):
+                    eq_src = os.path.join(hp_eq_dir, eq_src_name)
+                    if os.path.isfile(eq_src):
+                        shutil.copy(eq_src, os.path.join(hp_dist_dir, eq_src_name))
+                        if "flat" in eq_src_name:
+                            has_eq_flat = True
+                        else:
+                            has_eq_score = True
+
                 index_name = "{}/index_{}.html".format(hp_dist_dir, default_m)
                 logger.info("Writing %s for %s", index_name, hp_name)
                 hp_content = hp_html.render(
@@ -549,6 +561,8 @@ def main():
                     g_key=default_m,
                     meta=hp_meta,
                     origin=origin,
+                    has_eq_flat=has_eq_flat,
+                    has_eq_score=has_eq_score,
                     site=site,
                     use_search=False,
                     min=".min" if flag_optim else "",

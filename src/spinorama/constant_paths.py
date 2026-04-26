@@ -30,9 +30,6 @@ CPATH_DATAS_PICTURES = f"{CPATH_DATAS}/pictures"
 CPATH_DATAS_SPEAKERS = f"{CPATH_DATAS}/measurements"
 CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
 CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphones"
-
-# where the headphone metadata and measurements are
-CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphone_measurements"
 CPATH_DATAS_HEADPHONE_EQ = f"{CPATH_DATAS}/headphone_eq"
 CPATH_DATAS_HEADPHONE_TARGETS = f"{CPATH_DATAS}/headphone_targets"
 
