@@ -1,6 +1,8 @@
+import { lookup } from 'node:dns/promises';
 import { createReadStream } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { isIP } from 'node:net';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -93,6 +95,9 @@ const handleSearch: Handler = async (_req, res, url) => {
   send(res, 200, { engine: engine.name, hits });
 };
 
+const PROXY_TIMEOUT_MS = 10_000;
+const PROXY_MAX_BYTES = 10 * 1024 * 1024;
+
 const handleProxy: Handler = async (_req, res, url) => {
   const target = url.searchParams.get('url');
   if (!target) {
@@ -110,10 +115,29 @@ const handleProxy: Handler = async (_req, res, url) => {
     send(res, 400, { error: 'Only http(s) urls allowed' });
     return;
   }
-  const upstream = await fetch(parsed, {
-    headers: { 'User-Agent': 'spinorama-headphone-image-editor/0.1' },
-    redirect: 'follow',
-  });
+  if (!(await isPublicHost(parsed.hostname))) {
+    send(res, 400, { error: 'Refusing to fetch from non-public host' });
+    return;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
+  let upstream: Response;
+  try {
+    upstream = await fetch(parsed, {
+      headers: { 'User-Agent': 'spinorama-headphone-image-editor/0.1' },
+      // Manual redirects: we re-validate before following anything else.
+      redirect: 'manual',
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (upstream.status >= 300 && upstream.status < 400) {
+    send(res, 502, { error: 'Upstream redirect not followed' });
+    return;
+  }
   if (!upstream.ok || !upstream.body) {
     send(res, 502, { error: `Upstream returned ${upstream.status}` });
     return;
@@ -123,13 +147,66 @@ const handleProxy: Handler = async (_req, res, url) => {
     send(res, 415, { error: `Refusing non-image content-type ${ctype}` });
     return;
   }
+  const declared = Number(upstream.headers.get('content-length') ?? '0');
+  if (declared > PROXY_MAX_BYTES) {
+    send(res, 413, { error: 'Upstream image exceeds size cap' });
+    return;
+  }
+
   res.writeHead(200, {
     'Content-Type': ctype,
     'Cache-Control': 'no-store',
   });
-  const { Readable } = await import('node:stream');
-  Readable.fromWeb(upstream.body).pipe(res);
+
+  let received = 0;
+  for await (const chunk of upstream.body as unknown as AsyncIterable<Uint8Array>) {
+    received += chunk.byteLength;
+    if (received > PROXY_MAX_BYTES) {
+      res.destroy(new Error('Upstream image exceeded size cap'));
+      return;
+    }
+    if (!res.write(chunk)) {
+      await new Promise<void>((r) => res.once('drain', () => r()));
+    }
+  }
+  res.end();
 };
+
+async function isPublicHost(host: string): Promise<boolean> {
+  if (!host) return false;
+  if (isIP(host)) return !isPrivateAddress(host);
+  try {
+    const addrs = await lookup(host, { all: true, verbatim: true });
+    if (addrs.length === 0) return false;
+    return addrs.every((a) => !isPrivateAddress(a.address));
+  } catch {
+    return false;
+  }
+}
+
+function isPrivateAddress(addr: string): boolean {
+  const a = addr.toLowerCase();
+  // IPv6
+  if (a === '::' || a === '::1') return true;
+  if (a.startsWith('fe80:') || a.startsWith('fec0:')) return true; // link/site-local
+  if (/^f[cd][0-9a-f]{2}:/.test(a)) return true; // unique local
+  if (/^ff[0-9a-f]{2}:/.test(a)) return true; // multicast
+  const v4mapped = /^::ffff:([0-9.]+)$/.exec(a);
+  if (v4mapped) return isPrivateAddress(v4mapped[1]);
+  // IPv4
+  const m = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(a);
+  if (!m) return false;
+  const [o1, o2] = [Number(m[1]), Number(m[2])];
+  if (o1 === 0) return true; // 0.0.0.0/8
+  if (o1 === 10) return true;
+  if (o1 === 127) return true;
+  if (o1 === 169 && o2 === 254) return true; // link-local
+  if (o1 === 172 && o2 >= 16 && o2 <= 31) return true;
+  if (o1 === 192 && o2 === 168) return true;
+  if (o1 === 100 && o2 >= 64 && o2 <= 127) return true; // CGNAT
+  if (o1 >= 224) return true; // multicast + reserved + broadcast
+  return false;
+}
 
 interface SaveBody {
   key?: unknown;
@@ -219,9 +296,9 @@ function handleError(res: ServerResponse, err: unknown): void {
     send(res, err.status, { error: err.message });
     return;
   }
-  const message = err instanceof Error ? err.message : String(err);
+  // Do not leak raw error / stack details to the client.
   console.error('[server] unhandled', err);
-  send(res, 500, { error: message });
+  send(res, 500, { error: 'Internal server error' });
 }
 
 async function loadEnvFile(): Promise<void> {
