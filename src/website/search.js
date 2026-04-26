@@ -825,8 +825,8 @@ export function isFiltered(item, filter) {
         }
         const msr = item.measurements[item.default_measurement];
         const cs = msr.computed_sensitivity ?? msr.sensitivity;
-        if (cs && 'computed' in cs) {
-            let sensitivity = parseFloat(cs.computed);
+        if (cs && ('sensitivity_1m' in cs || 'computed' in cs)) {
+            let sensitivity = parseFloat(cs.sensitivity_1m ?? cs.computed);
             if (isNaN(sensitivity)) {
                 shouldShow = false;
             } else {
