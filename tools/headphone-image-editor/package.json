@@ -1,0 +1,24 @@
+{
+  "name": "headphone-image-editor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local app to refresh headphone product photos in datas/pictures/.",
+  "scripts": {
+    "sync": "python3 scripts/dump_headphones.py",
+    "dev:server": "tsx watch server/index.ts",
+    "dev:client": "vite",
+    "dev": "node scripts/dev.mjs",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p server/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0"
+  }
+}
