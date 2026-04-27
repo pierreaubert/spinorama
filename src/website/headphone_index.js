@@ -86,12 +86,12 @@ function printHeadphone(key, index, value) {
         <div class="card m-1">
             <a href="${reviewUrl}">
                 <div class="card-image">
-                    <figure class="image is-4by3">
+                    <figure class="image is-2by3">
                         <picture>
                             <source type="image/webp" srcset="${img.webp}">
                             <img src="${img.jpg}" alt="${value.brand} ${value.model}"
                                  loading="${img.loading}" decoding="${img.decoding}"
-                                 width="400" height="300">
+                                 width="340" height="510">
                         </picture>
                     </figure>
                 </div>

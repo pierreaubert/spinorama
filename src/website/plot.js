@@ -568,6 +568,27 @@ const GraphProperties = Object.freeze({
         isSurface: false,
         isGlobe: false,
     },
+    'Frequency Response': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Frequency Response Compensated': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Target Deviation': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
 });
 
 export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraphProperties, outputNumberGraphs) {
@@ -1428,6 +1449,11 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
     return [option];
 }
 
+export function setHeadphone(measurement, speakerNames, speakerGraphs, width, height) {
+    const option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
+    return [option];
+}
+
 export function setRadar(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setRadar got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     for (const i in speakerGraphs) {
@@ -1932,6 +1958,14 @@ export function setPlotForMeasurement(measurement, speakersName, graphs, windowW
         measurement === 'SPL Vertical Globe Normalized'
     ) {
         return setGlobe(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (
+        measurement === 'Frequency Response' ||
+        measurement === 'Frequency Response Compensated' ||
+        measurement === 'Target Deviation'
+    ) {
+        return setHeadphone(measurement, speakersName, graphs, windowWidth, windowHeight);
     }
 
     console.error('Measurement ' + measurement + ' is unknown');

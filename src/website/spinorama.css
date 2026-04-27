@@ -806,6 +806,17 @@ svg { color: inherit; }
   color: var(--md3-on-surface-variant);
 }
 
+/* Light theme message header contrast fix */
+.message.is-info .message-header {
+  background-color: hsl(204, 70%, 35%);
+  color: white;
+}
+
+.message.is-primary .message-header {
+  background-color: hsl(171, 70%, 35%);
+  color: white;
+}
+
 /* Links */
 [data-theme="dark"] a {
   color: var(--md3-primary);
