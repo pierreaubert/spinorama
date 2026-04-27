@@ -1,0 +1,14 @@
+EQ for Yamaha HS8 computed from ASR data
+Preference Score 5.67 with EQ 6.83
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-04-27-12:10:18
+
+Preamp: -2.0 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +2.70 dB Q 0.52
+Filter  2: ON PK Fc    85 Hz Gain -1.99 dB Q 0.73
+Filter  3: ON PK Fc   252 Hz Gain +2.06 dB Q 0.76
+Filter  4: ON PK Fc   382 Hz Gain -1.65 dB Q 1.77
+Filter  5: ON PK Fc  1046 Hz Gain +1.36 dB Q 2.91
+Filter  6: ON PK Fc  1760 Hz Gain +2.67 dB Q 2.28
+Filter  7: ON PK Fc  2491 Hz Gain -1.46 dB Q 0.26

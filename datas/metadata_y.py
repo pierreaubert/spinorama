@@ -234,6 +234,33 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
+    "Yamaha HS8": {
+        "brand": "Yamaha",
+        "model": "HS8",
+        "type": "active",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/yamaha-hs8-studio-monitor-review.71023/",
+                "review_published": "20260427",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "size": {
+                        "height": 390,
+                        "width": 250,
+                        "depth": 134,
+                    },
+                    "weight": 10.2,
+                },
+            },
+        },
+    },
     "Yamaha NS-10M Studio": {
         "brand": "Yamaha",
         "model": "NS-10M Studio",
