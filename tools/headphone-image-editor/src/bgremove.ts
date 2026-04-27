@@ -27,6 +27,8 @@ export function loadPipeline(onProgress?: (msg: string) => void): Promise<Pipeli
   pipelinePromise = (async () => {
     const model = await AutoModel.from_pretrained(MODEL_ID, {
       config: { model_type: 'custom' } as never,
+      device: 'webgpu',
+      dtype: 'fp32',
     });
     const processor = await AutoProcessor.from_pretrained(MODEL_ID, {
       config: {
