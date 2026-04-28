@@ -546,13 +546,14 @@ describe('test full text search and filtering', () => {
         const [maxResults, results] = actualSearch(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(422);
+        expect(results.length).toBe(469);
         expect(maxResults).toBeGreaterThanOrEqual(results.length);
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeGreaterThanOrEqual(85);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(85);
         });
     });
 
@@ -562,13 +563,14 @@ describe('test full text search and filtering', () => {
         const [maxResults, results] = actualSearch(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(209);
+        expect(results.length).toBe(162);
         expect(maxResults).toBeGreaterThanOrEqual(results.length);
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeLessThanOrEqual(85);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeLessThanOrEqual(85);
         });
     });
 
@@ -578,14 +580,15 @@ describe('test full text search and filtering', () => {
         const [maxResults, results] = actualSearch(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(433);
+        expect(results.length).toBe(389);
         expect(maxResults).toBeGreaterThanOrEqual(results.length);
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeGreaterThanOrEqual(80);
-            expect(cs.computed).toBeLessThanOrEqual(90);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(80);
+            expect(sensitivity).toBeLessThanOrEqual(90);
         });
     });
 
@@ -601,7 +604,8 @@ describe('test full text search and filtering', () => {
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
             expect(cs).toBeDefined();
-            expect(cs.computed).toBeDefined();
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeDefined();
         });
     });
 
@@ -616,12 +620,13 @@ describe('test full text search and filtering', () => {
         const url = new URL(TEST_URL + '?sensitivityMax=70&count=1000');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = actualSearch(metadata, params);
-        expect(results.length).toBe(8);
+        expect(results.length).toBe(1);
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeLessThanOrEqual(70);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeLessThanOrEqual(70);
         });
     });
 
@@ -629,12 +634,13 @@ describe('test full text search and filtering', () => {
         const url = new URL(TEST_URL + '?sensitivityMin=90&count=1000');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = actualSearch(metadata, params);
-        expect(results.length).toBe(144);
+        expect(results.length).toBe(218);
         results.forEach((key) => {
             const result = metadata.get(key);
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeGreaterThanOrEqual(90);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(90);
         });
     });
 
@@ -648,7 +654,8 @@ describe('test full text search and filtering', () => {
             expect(result.type).toBe('passive');
             const msr = result.measurements[result.default_measurement];
             const cs = msr.computed_sensitivity ?? msr.sensitivity;
-            expect(cs.computed).toBeGreaterThanOrEqual(85);
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(85);
         });
     });
 
