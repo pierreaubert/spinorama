@@ -822,6 +822,10 @@ def plot_graph(
 ):
     layout = params.get("layout", "")
     fig = go.Figure()
+    trend_curve = "0°"
+    if "On Axis" in df:
+        trend_curve = "On Axis"
+
     for measurement in df:
         if measurement != "Freq":
             trace = go.Scatter(
@@ -839,6 +843,17 @@ def plot_graph(
             if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
+
+    if trend_curve in df:
+        restricted_df = df.loc[(df.Freq >= SLOPE_MIN_FREQ) & (df.Freq <= SLOPE_MAX_FREQ)]
+        if len(restricted_df) > 1:
+            slope, intercept, _, _, _ = stats.linregress(
+                np.log10(restricted_df["Freq"]), restricted_df[trend_curve]
+            )
+            trend_traces = plot_graph_traces(df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range)
+            # Skip the last trace (the data curve itself, already added in the for loop)
+            for t in trend_traces[:-1]:
+                fig.add_trace(t)
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
@@ -867,6 +882,16 @@ def plot_graph_spl(
 ):
     layout = params.get("layout", "")
     fig = go.Figure()
+    trend_curve = "On Axis"
+    trend_traces = []
+    if trend_curve in df:
+        restricted_df = df.loc[(df.Freq >= SLOPE_MIN_FREQ) & (df.Freq <= SLOPE_MAX_FREQ)]
+        if len(restricted_df) > 1:
+            slope, intercept, _, _, _ = stats.linregress(
+                np.log10(restricted_df["Freq"]), restricted_df[trend_curve]
+            )
+            trend_traces = plot_graph_traces(df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range)
+
     for measurement in df:
         if measurement != "Freq":
             visible = None
@@ -879,23 +904,48 @@ def plot_graph_spl(
                 visible = "legendonly"
             else:
                 continue
-            trace = go.Scatter(
-                x=df.Freq,
-                y=df[measurement],
-                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
-                visible=visible,
-                showlegend=True,
-                legendrank=angle if angle is not None else 0,
-            )
-            if layout == "compact":
-                trace.name = label_short.get(measurement, measurement)
+            # Add trend/band traces instead of the regular trace, plus the data curve itself
+            if measurement == trend_curve and trend_traces:
+                for t in trend_traces[:-1]:
+                    fig.add_trace(t)
+                # Also add the On Axis data curve
+                onaxis_trace = go.Scatter(
+                    x=df.Freq,
+                    y=df[trend_curve],
+                    marker_color=UNIFORM_COLORS.get(trend_curve, "black"),
+                    opacity=1,
+                    hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+                    visible=True,
+                    showlegend=True,
+                    legendrank=legend_rank.get(trend_curve, 0),
+                )
+                if layout == "compact":
+                    onaxis_trace.name = label_short.get(trend_curve, trend_curve)
+                else:
+                    onaxis_trace.name = trend_curve
+                    onaxis_trace.legendgroup = "measurements"
+                    onaxis_trace.legendgrouptitle = {"text": "Measurements"}
+                fig.add_trace(onaxis_trace)
+                continue
             else:
-                trace.name = measurement
-                trace.legendgroup = "measurements"
-                trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in UNIFORM_COLORS:
-                trace.marker = {"color": UNIFORM_COLORS[measurement]}
-            fig.add_trace(trace)
+                trace = go.Scatter(
+                    x=df.Freq,
+                    y=df[measurement],
+                    hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+                    visible=visible,
+                    showlegend=True,
+                )
+                if layout == "compact":
+                    trace.name = label_short.get(measurement, measurement)
+                else:
+                    trace.name = measurement
+                    trace.legendgroup = "measurements"
+                    trace.legendgrouptitle = {"text": "Measurements"}
+                if measurement in UNIFORM_COLORS:
+                    trace.marker = {"color": UNIFORM_COLORS[measurement]}
+                if measurement in legend_rank:
+                    trace.legendrank = legend_rank[measurement]
+                fig.add_trace(trace)
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
