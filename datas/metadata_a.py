@@ -2079,8 +2079,8 @@ speakers_info_a: SpeakerDatabase = {
                 },
                 "review_published": "20250606",
                 "specifications": {
-                    "size": {"height": 368, "width": 203, "depth": 154},
-                    "weight": 5.6,
+                    "size": {"height": 400, "width": 203, "depth": 265},
+                    "weight": 7.5,
                 },
             }
         },
