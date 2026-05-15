@@ -48,7 +48,6 @@ import zipfile
 import requests
 from bs4 import BeautifulSoup
 
-import spinorama.constant_paths as cpaths
 from api.load_headphone_csv import parse_headphone_csv
 
 logger = logging.getLogger("spinorama")
@@ -59,6 +58,12 @@ ASR_HEADPHONE_API = "https://www.audiosciencereview.com/asrdata/api/list/headpho
 PAGE_DELAY_S = 10.0
 DOWNLOAD_DELAY_S = 2.0
 MAX_ATTACHMENTS_TO_TRY = 10
+
+# Absolute path to datas/headphones, independent of cwd. The script lives at
+# <root>/src/api/scrape_asr_headphones.py, so the project root is three
+# os.path.dirname() calls up.
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+HEADPHONES_ROOT = os.path.join(_PROJECT_ROOT, "datas", "headphones")
 
 HEADERS = {
     "User-Agent": "spinorama-scraper/1.0 (headphone measurement collector)",
@@ -329,7 +334,7 @@ def _download_best_fr(
 
 def has_valid_csv(name: str) -> bool:
     """Return True if *name* already has a valid frequency response CSV on disk."""
-    csv_path = f"{cpaths.CPATH_DATAS_HEADPHONES}/{name}/asr/frequency_response.csv"
+    csv_path = os.path.join(HEADPHONES_ROOT, name, "asr", "frequency_response.csv")
     if not os.path.exists(csv_path):
         return False
     old_level = logger.level
@@ -350,8 +355,10 @@ def scrape_asr_headphones(
 ) -> list[dict]:
     """Scrape ASR headphone reviews.
 
-    When *rescrape_bad* is True, headphones whose existing CSV fails validation
-    are re-scraped (the bad file is removed first).
+    By default only headphones not already present in the local dataset (no
+    directory under ``datas/headphones/``) are scanned. When *rescrape_bad* is
+    True, headphones whose existing CSV fails validation are re-scraped (the
+    bad file is removed first).
     """
     entries = fetch_headphone_index()
     if not entries:
@@ -385,7 +392,8 @@ def scrape_asr_headphones(
         review_url = entry.get("ReviewLink", "")
         review_date = entry.get("ReviewDate", "").replace("-", "")
         price = entry.get("Price_Each_USD", "")
-        csv_path = f"{cpaths.CPATH_DATAS_HEADPHONES}/{full_name}/asr/frequency_response.csv"
+        headphone_dir = os.path.join(HEADPHONES_ROOT, full_name)
+        csv_path = os.path.join(headphone_dir, "asr", "frequency_response.csv")
 
         # Decide whether to process this headphone
         if rescrape_bad:
@@ -396,8 +404,8 @@ def scrape_asr_headphones(
                 logger.info("Removing bad CSV for %s", full_name)
                 os.unlink(csv_path)
         else:
-            if os.path.exists(csv_path):
-                logger.info("Skipping %s (already scraped)", full_name)
+            if os.path.isdir(headphone_dir):
+                logger.info("Skipping %s (already in dataset)", full_name)
                 continue
 
         result = {

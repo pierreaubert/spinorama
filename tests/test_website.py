@@ -7,6 +7,7 @@ import http.server
 import socketserver
 import os
 import socket
+import sys
 import time
 import urllib.request
 import urllib.error
@@ -56,6 +57,10 @@ SCORES = "/scores.html"
 DEV_PORT = 8080
 
 
+@unittest.skipIf(
+    sys.platform == "darwin",
+    "chromedriver-based selenium tests are disabled on macOS",
+)
 class SpinoramaWebsiteTests(unittest.TestCase):
     server = None
     server_thread = None

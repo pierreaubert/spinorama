@@ -32,11 +32,7 @@ from spinorama.filter_peq import peq_apply_measurements
 from spinorama.misc import graph_melt
 from autoeq.auto_misc import have_full_measurements
 
-# cython import
-try:
-    from compute_scores_rust import c_cea2034, c_score_peq_approx
-except ImportError:
-    from spinorama.compute_scores_cython.compute_scores_cython import c_cea2034, c_score_peq_approx
+from spinorama._native import c_cea2034, c_score_peq_approx
 
 
 # ------------------------------------------------------------------------------
