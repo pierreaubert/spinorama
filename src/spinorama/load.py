@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 import numpy as np
 import pandas as pd
@@ -42,13 +41,13 @@ from spinorama.misc import (
     measurements_complete_freq,
     measurements_complete_spl,
 )
-from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_princeton import parse_graphs_speaker_princeton
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
-from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
-from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
-from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.loaders import (
+    CURVE_LOADERS,
+    HV_LOADERS,
+    SpeakerLoadParams,
+    UnknownMeasurementFormatError,
+)
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 from spinorama.constant_paths import (
     MIDRANGE_MIN_FREQ,
@@ -257,8 +256,8 @@ def filter_graphs(
         # SPL V
         if sv_spl is not None and complete_spl:
             df_verticals = vertical_reflections(sv_spl)
-            dfs["Vectical Reflections_unmelted"] = df_verticals
-            dfs["Vectical Reflections"] = graph_melt(df_verticals)
+            dfs["Vertical Reflections_unmelted"] = df_verticals
+            dfs["Vertical Reflections"] = graph_melt(df_verticals)
         # that's all folks
         return dfs
 
@@ -532,6 +531,11 @@ def spin_compute_di_eir(
     return dfs
 
 
+def _mirror_angle(col: str) -> str:
+    """Return the opposite-sign angle column name (``"30°" → "-30°"``, ``"-40°" → "40°"``)."""
+    return col[1:] if col[0] == "-" else "-{}".format(col)
+
+
 def symmetrise_speaker_measurements(
     h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None, symmetry: str | None
 ) -> tuple[pd.DataFrame | None, pd.DataFrame | None]:
@@ -556,7 +560,7 @@ def symmetrise_speaker_measurements(
         new_spl = spl.copy()
         for col in cols:
             if col not in ("Freq", "On Axis", "180°") and "Phase" not in col:
-                m_angle = "{}".format(col[1:]) if col[0] == "-" else "-{}".format(col)
+                m_angle = _mirror_angle(col)
                 if m_angle not in spl.columns:
                     new_spl[m_angle] = spl[col]
         return sort_angles(new_spl)
@@ -607,6 +611,103 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
     return mean_min, mean_max
 
 
+def _parse_hv_speaker(
+    params: SpeakerLoadParams,
+    mean_min: float,
+    mean_max: float,
+) -> dict | None:
+    """Run an HV loader, symmetrise, and assemble the full per-axis graph dict."""
+    status, (h_spl, v_spl) = HV_LOADERS[params.mformat](params)
+
+    if not status:
+        logger.debug(
+            "Failed to load %s from measurement %s", params.speaker_name, params.mversion
+        )
+        if h_spl is not None and "Freq" not in h_spl:
+            h_spl = None
+        if v_spl is not None and "Freq" not in v_spl:
+            v_spl = None
+        if h_spl is None and v_spl is None:
+            logger.error(
+                "Failed to load %s from measurement %s", params.speaker_name, params.mversion
+            )
+            return None
+
+    h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, params.msymmetry)
+    if h_spl2 is None or v_spl2 is None:
+        logger.error(
+            "Failed to symmetrise %s from measurement %s",
+            params.speaker_name,
+            params.mversion,
+        )
+        return None
+
+    return filter_graphs(
+        params.speaker_name,
+        h_spl2,
+        v_spl2,
+        mean_min,
+        mean_max,
+        params.mformat,
+        params.distance,
+    )
+
+
+def _parse_curve_speaker(params: SpeakerLoadParams) -> dict | None:
+    """Run a single-curve loader and pipe through the partial-graph pipeline."""
+    status, (title, df_uneven) = CURVE_LOADERS[params.mformat](params)
+    if not status:
+        logger.info(
+            "Load %s failed for %s %s %s",
+            params.mformat,
+            params.speaker_name,
+            params.mversion,
+            params.morigin,
+        )
+        return None
+
+    df_even = graph_melt(unify_freq(df_uneven))
+    nan_count = check_nan({"test": df_even})
+    if nan_count > 0:
+        logger.error("df_uneven %s has %d NaNs", params.speaker_name, nan_count)
+
+    logger.debug("DEBUG title: %s", title)
+    if df_even is None:
+        logger.info("INFO df_even is None")
+        return None
+    logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+    logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+
+    try:
+        if title == "CEA2034":
+            df_full = spin_compute_di_eir(params.speaker_name, title, df_even)
+        else:
+            df_full = {title: unify_freq(graph_melt(df_even))}
+        nan_count = check_nan(df_full)
+        if nan_count > 0:
+            logger.error("df_full %s has %d NaNs", params.speaker_name, nan_count)
+            for k in df_full:
+                if isinstance(df_full[k], pd.DataFrame):
+                    logger.error("------------ %s -----------", k)
+                    logger.error(df_full[k].head())
+
+        df_graph = filter_graphs_partial(df_full, params.mformat, params.distance)
+        nan_count = check_nan(df_graph)
+        if nan_count > 0:
+            logger.error("df_graph %s has %d NaNs", params.speaker_name, nan_count)
+            for k in df_graph:
+                if isinstance(df_graph[k], pd.DataFrame):
+                    logger.error("------------ %s -----------", k)
+                    logger.error(df_graph[k].head())
+        return df_graph
+    except ValueError as ve:
+        logger.exception("ValueError for speaker %s: %s", params.speaker_name, ve)
+        return None
+    except KeyError as ke:
+        logger.exception("KeyError for speaker %s: %s", params.speaker_name, ke)
+        return None
+
+
 def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
@@ -616,138 +717,26 @@ def parse_graphs_speaker(
 ) -> dict:
     setup_logger(level=log_level)
 
-    mformat = speaker_parameters["mformat"]
-    morigin = speaker_parameters["morigin"]
-    mversion = speaker_parameters["mversion"]
-    msymmetry = speaker_parameters["msymmetry"]
-    mparameters = speaker_parameters["mparameters"]
-    distance = speaker_parameters["distance"]
-    shape = speaker_parameters["shape"]
-    df_graph = None
-    measurement_path = f"{speaker_path}"
-    mean_min, mean_max = get_mean_min_max(mparameters)
+    params = SpeakerLoadParams.from_legacy(
+        speaker_path, speaker_brand, speaker_name, speaker_parameters
+    )
+    mean_min, mean_max = get_mean_min_max(params.mparameters)
 
-    status = False
-    h_spl = pd.DataFrame()
-    v_spl = pd.DataFrame()
-    if mformat in ("klippel", "princeton", "spl_hv_txt", "gll_hv_txt"):
-        if mformat == "klippel":
-            status, (h_spl, v_spl) = parse_graphs_speaker_klippel(
-                measurement_path, speaker_brand, speaker_name, mversion, shape
-            )
-        elif mformat == "princeton":
-            status, (h_spl, v_spl) = parse_graphs_speaker_princeton(
-                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-            )
-        elif mformat == "spl_hv_txt":
-            status, (h_spl, v_spl) = parse_graphs_speaker_spl_hv_txt(
-                measurement_path, speaker_brand, speaker_name, mversion
-            )
-        elif mformat == "gll_hv_txt":
-            status, (h_spl, v_spl) = parse_graphs_speaker_gll_hv_txt(
-                measurement_path, speaker_name, mversion
-            )
-
-        if not status:
-            logger.debug("Failed to load %s from measurement %s", speaker_name, mversion)
-            if h_spl is not None and "Freq" not in h_spl:
-                h_spl = None
-            if v_spl is not None and "Freq" not in v_spl:
-                v_spl = None
-            if h_spl is None and v_spl is None:
-                logger.error("Failed to load %s from measurement %s", speaker_name, mversion)
-                return {}
-
-        h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, msymmetry)
-        if h_spl2 is None or v_spl2 is None:
-            logger.error("Failed to symmetrise %s from measurement %s", speaker_name, mversion)
-            return {}
-
-        df_graph = filter_graphs(
-            speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
-        )
-
-        # print('debug: after filter_graph {}'.format(df_graph['SPL Horizontal_unmelted'].keys()))
-        # print('debug: after filter_graph {}'.format(df_graph['SPL Vertical_unmelted'].keys()))
-    elif mformat in ("webplotdigitizer", "rew_text_dump"):
-        title = None
-        df_even = None
-        df_uneven = None
-        if mformat == "webplotdigitizer":
-            status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
-                measurement_path, speaker_brand, speaker_name, morigin, mversion
-            )
-            if not status:
-                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
-                return {}
-        elif mformat == "rew_text_dump":
-            status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
-                measurement_path, speaker_brand, speaker_name, morigin, mversion
-            )
-            if not status:
-                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
-                return {}
-
-        # normalize frequency for all graphs
-        df_even = graph_melt(unify_freq(df_uneven))
-
-        # check NaN
-        nan_count = check_nan({"test": df_even})
-        if nan_count > 0:
-            logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
-
-        logger.debug("DEBUG title: %s", title)
-        if df_even is not None:
-            logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
-            logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
-        else:
-            logger.info("INFO df_even is None")
-            return {}
-
-        try:
-            if title == "CEA2034":
-                df_full = spin_compute_di_eir(speaker_name, title, df_even)
-            else:
-                df_full = {title: unify_freq(graph_melt(df_even))}
-            nan_count = check_nan(df_full)
-            if nan_count > 0:
-                logger.error("df_full %s has %d NaNs", speaker_name, nan_count)
-                for k in df_full:
-                    if isinstance(df_full[k], pd.DataFrame):
-                        logger.error("------------ %s -----------", k)
-                        logger.error(df_full[k].head())
-
-            # for k in df_full:
-            #     logger.debug("-- DF FULL ---------- %s -----------", k)
-            #     if isinstance(df_full[k], pd.DataFrame):
-            #         logger.debug(df_full[k].head())
-
-            df_graph = filter_graphs_partial(df_full, mformat, distance)
-            nan_count = check_nan(df_graph)
-            if nan_count > 0:
-                logger.error("df_graph %s has %d NaNs", speaker_name, nan_count)
-                for k in df_graph:
-                    if isinstance(df_graph[k], pd.DataFrame):
-                        logger.error("------------ %s -----------", k)
-                        logger.error(df_graph[k].head())
-
-            # for k in df_graph:
-            #     if isinstance(df_graph[k], pd.DataFrame):
-            #         logger.debug("-- DF ---------- %s -----------", k)
-            #         logger.debug(df_graph[k].head())
-        except ValueError as ve:
-            logger.exception("ValueError for speaker %s: %s", speaker_name, ve)
-            return {}
-        except KeyError as ke:
-            logger.exception("KeyError for speaker %s: %s", speaker_name, ke)
-            return {}
-
+    if params.mformat in HV_LOADERS:
+        df_graph = _parse_hv_speaker(params, mean_min, mean_max)
+    elif params.mformat in CURVE_LOADERS:
+        df_graph = _parse_curve_speaker(params)
     else:
-        logger.fatal("Format %s is unkown", mformat)
-        sys.exit(1)
+        logger.fatal("Format %s is unkown", params.mformat)
+        raise UnknownMeasurementFormatError(params.mformat)
 
-    if df_graph is None:
-        logger.warning("Parsing failed for %s/%s/%s", measurement_path, speaker_name, mversion)
+    if df_graph is None or not df_graph:
+        logger.warning(
+            "Parsing failed for %s/%s/%s",
+            params.measurement_path,
+            params.speaker_name,
+            params.mversion,
+        )
         return {}
 
     return df_graph

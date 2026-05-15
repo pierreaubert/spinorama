@@ -71,7 +71,7 @@ def peq_preamp_gain_max(peq: Peq) -> float:
 
 def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     if "Measurements" in spl.columns:
-        logger.error("peq_apply_measurement called with a melted frame")
+        raise ValueError("peq_apply_measurements requires a wide-form frame, got a melted one")
     if len(peq) == 0:
         return spl
     freq = spl["Freq"].to_numpy()

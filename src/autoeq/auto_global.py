@@ -18,7 +18,6 @@
 
 import bisect
 import math
-from typing import List
 
 import numpy as np
 import scipy.optimize as opt
@@ -482,7 +481,7 @@ class GlobalOptimizer(object):
         auto_peq = self._x2peq(xk)
         peq_print(auto_peq)
 
-    def _create_smart_initial_guess(self, n: int) -> List[np.ndarray]:
+    def _create_smart_initial_guess(self, n: int) -> list[np.ndarray]:
         """Create smart initial guesses based on frequency response analysis"""
         initial_guesses = []
 

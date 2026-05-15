@@ -20,6 +20,7 @@ import os
 import pathlib
 import copy
 import math
+from typing import Callable
 
 import plotly.io
 
@@ -442,6 +443,234 @@ def print_a_graph(filename, chart, ext, force) -> int:
     return updated
 
 
+# Formats that produce per-axis (H/V) SPL sweeps. Drives the extra view rows
+# in ``build_figures`` (reflections, SPL, contour, radar).
+_HV_MFORMATS = frozenset({"klippel", "spl_hv_txt", "gll_hv_txt", "princeton"})
+
+# Always-on views: (graph name, display function). Each display function takes
+# ``(df_speaker, graph_params, valid_freq_range)``.
+_COMMON_VIEWS: tuple[tuple[str, Callable], ...] = (
+    ("CEA2034", display_spinorama),
+    ("CEA2034 Normalized", display_spinorama_normalized),
+    ("On Axis", display_onaxis),
+    ("Estimated In-Room Response", display_inroom),
+    ("Estimated In-Room Response Normalized", display_inroom_normalized),
+)
+
+_REFLECTION_VIEWS: tuple[tuple[str, Callable], ...] = (
+    ("Early Reflections", display_reflection_early),
+    ("Horizontal Reflections", display_reflection_horizontal),
+    ("Vertical Reflections", display_reflection_vertical),
+)
+
+_SPL_VIEWS: tuple[tuple[str, Callable], ...] = (
+    ("SPL Horizontal", display_spl_horizontal),
+    ("SPL Vertical", display_spl_vertical),
+    ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
+    ("SPL Vertical Normalized", display_spl_vertical_normalized),
+)
+
+_CONTOUR_VIEWS: tuple[tuple[str, Callable], ...] = (
+    ("SPL Horizontal Contour", display_contour_horizontal),
+    ("SPL Vertical Contour", display_contour_vertical),
+    ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
+    ("SPL Vertical Contour Normalized", display_contour_vertical_normalized),
+    ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
+    ("SPL Vertical Contour 3D", display_contour_vertical_3d),
+    ("SPL Horizontal Contour Normalized 3D", display_contour_horizontal_normalized_3d),
+    ("SPL Vertical Contour Normalized 3D", display_contour_vertical_normalized_3d),
+)
+
+_RADAR_VIEWS: tuple[tuple[str, Callable], ...] = (
+    ("SPL Horizontal Radar", display_radar_horizontal),
+    ("SPL Vertical Radar", display_radar_vertical),
+)
+
+
+def _safe_display(
+    op_title: str,
+    op_call,
+    df_speaker: dict,
+    *args,
+    speaker: str = "",
+    version: str = "",
+    origin: str = "",
+    **kwargs,
+):
+    """Invoke a ``display_*`` function and convert ``KeyError`` into a logged ``None``."""
+    try:
+        graph = op_call(df_speaker, *args, **kwargs)
+    except KeyError as ke:
+        logger.error(
+            "display %s failed with a key error (%s) for %s %s %s",
+            op_title,
+            ke,
+            speaker,
+            version,
+            origin,
+        )
+        return None
+    if graph is None:
+        logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
+    return graph
+
+
+def _make_graph_params(width: int, height: int, origins_info: dict, origin: str) -> dict:
+    params = copy.deepcopy(plot_params_default)
+    params["width"] = width
+    params["height"] = height
+    params["layout"] = "compact"
+    params["xmin"] = origins_info[origin]["min hz"]
+    params["xmax"] = origins_info[origin]["max hz"]
+    params["ymin"] = origins_info[origin]["min dB"]
+    params["ymax"] = origins_info[origin]["max dB"]
+    return params
+
+
+def _make_contour_params(width: int, height: int, origins_info: dict, origin: str) -> dict:
+    params = copy.deepcopy(contour_params_default)
+    params["width"] = width
+    params["height"] = height
+    params["layout"] = "compact"
+    params["xmin"] = origins_info[origin]["min hz"]
+    params["xmax"] = origins_info[origin]["max hz"]
+    return params
+
+
+def _make_radar_params(width: int, height: int, origins_info: dict, origin: str) -> dict:
+    params = copy.deepcopy(radar_params_default)
+    params["width"] = int(height * 4 / 5)
+    params["height"] = height
+    params["layout"] = "compact"
+    params["xmin"] = origins_info[origin]["min hz"]
+    params["xmax"] = origins_info[origin]["max hz"]
+    return params
+
+
+def build_figures(
+    df_speaker: dict,
+    speaker: str,
+    parameters: dict,
+    origins_info: dict,
+    iir: Peq,
+) -> dict:
+    """Build every figure for one speaker. Pure: no filesystem access.
+
+    Returns a ``{graph_name: plotly.Figure}`` dict. Entries are dropped (not
+    set to ``None``) when the corresponding display call fails, except for
+    contour/radar which match the legacy behaviour of always returning a
+    figure or ``None``.
+    """
+    mformat = parameters["mformat"]
+    version = parameters["mversion"]
+    origin = parameters["morigin"]
+    width = parameters["width"]
+    height = parameters["height"]
+
+    if width // height != 4 // 3:
+        logger.error("ratio width / height must be 4/3")
+        height = int(width * 3 / 4)
+
+    graph_params = _make_graph_params(width, height, origins_info, origin)
+    valid_freq_range = measurements_valid_freq_range(
+        speaker,
+        version,
+        df_speaker.get("SPL Horizontal", None),
+        df_speaker.get("SPL Vertical", None),
+    )
+
+    ctx = dict(speaker=speaker, version=version, origin=origin)
+    graphs: dict = {}
+
+    for op_title, op_call in _COMMON_VIEWS:
+        graph = _safe_display(op_title, op_call, df_speaker, graph_params, valid_freq_range, **ctx)
+        if graph is not None:
+            graphs[op_title] = graph
+
+    graph = _safe_display(
+        "Group Delay", display_group_delay, df_speaker, graph_params, valid_freq_range, **ctx
+    )
+    if graph is not None:
+        graphs["Group Delay"] = graph
+
+    if mformat in _HV_MFORMATS:
+        for op_title, op_call in _REFLECTION_VIEWS:
+            graph = _safe_display(
+                op_title, op_call, df_speaker, graph_params, valid_freq_range, **ctx
+            )
+            if graph is not None:
+                graphs[op_title] = graph
+
+        for op_title, op_call in _SPL_VIEWS:
+            graph = _safe_display(
+                op_title,
+                op_call,
+                df_speaker,
+                graph_params,
+                valid_freq_range,
+                include_all_angles=True,
+                **ctx,
+            )
+            if graph is not None:
+                graphs[op_title] = graph
+
+        contour_params = _make_contour_params(width, height, origins_info, origin)
+        for op_title, op_call in _CONTOUR_VIEWS:
+            graphs[op_title] = op_call(df_speaker, contour_params, valid_freq_range)
+
+        radar_params = _make_radar_params(width, height, origins_info, origin)
+        for op_title, op_call in _RADAR_VIEWS:
+            graphs[op_title] = op_call(df_speaker, radar_params, valid_freq_range)
+
+    for key, graph in graphs.items():
+        if graph is None:
+            continue
+        title = key.replace("_smoothed", "")
+        graph.update_layout(
+            title=dict(
+                text=build_title(origin, version, speaker, title, iir),
+                font=FONT_H1,
+            ),
+        )
+
+    return graphs
+
+
+def emit_figures(
+    graphs: dict,
+    speaker: str,
+    origin: str,
+    version_key: str,
+    force_print: bool,
+) -> int:
+    """Write each non-empty figure to its JSON sidecar. IO only.
+
+    Returns the number of JSON files actually written.
+    """
+    updated = 0
+    for key, graph in graphs.items():
+        if graph is None:
+            continue
+
+        filename_json = build_filename(speaker, origin, version_key, key, "json")
+        if not (
+            force_print
+            or not os.path.exists(filename_json)
+            or os.path.getsize(filename_json) == 0
+        ):
+            continue
+
+        try:
+            content = graph.to_json()
+            with open(filename_json, "w", encoding="utf-8") as f_d:
+                f_d.write(content)
+                updated += 1
+        except Exception:
+            logger.exception("Got unkown error for %s: %s", speaker, filename_json)
+
+    return updated
+
+
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
@@ -451,265 +680,22 @@ def print_graphs(
     log_level: int,
 ) -> int:
     setup_logger(level=log_level)
-    mformat = parameters["mformat"]
     version = parameters["mversion"]
     origin = parameters["morigin"]
     version_key = parameters.get("mversion_key", version)
-    width = parameters["width"]
-    height = parameters["height"]
-    #
-    df_speaker = {}
-    iir = []
+
     if isinstance(data, dict):
-        df_speaker = data
+        iir, df_speaker = [], data
     else:
         iir, df_speaker = data
 
-    # may happens at development time or for partial measurements
-    # or when the cache is confused (typically when you change the metadata)
     if df_speaker is None:
         logger.info("df_speaker is None for %s %s %s", speaker, version, origin)
         return 0
-
-    if len(df_speaker.keys()) == 0:
-        # if print_a_graph is called before df_speaker is ready
-        # fix: ray call above
+    if not df_speaker:
+        # Cache miss or partial measurement: nothing to emit.
         logger.info("df_speaker is Empty for %s %s %s", speaker, version, origin)
         return 0
 
-    graph_params = copy.deepcopy(plot_params_default)
-    if width // height != 4 // 3:
-        logger.error("ratio width / height must be 4/3")
-        height = int(width * 3 / 4)
-    graph_params["width"] = width
-    graph_params["height"] = height
-    graph_params["layout"] = "compact"
-    graph_params["xmin"] = origins_info[origin]["min hz"]
-    graph_params["xmax"] = origins_info[origin]["max hz"]
-    graph_params["ymin"] = origins_info[origin]["min dB"]
-    graph_params["ymax"] = origins_info[origin]["max dB"]
-
-    valid_freq_range = measurements_valid_freq_range(
-        speaker,
-        version,
-        df_speaker.get("SPL Horizontal", None),
-        df_speaker.get("SPL Vertical", None),
-    )
-
-    graphs = {}
-    for op_title, op_call in (
-        ("CEA2034", display_spinorama),
-        ("CEA2034 Normalized", display_spinorama_normalized),
-        ("On Axis", display_onaxis),
-        ("Estimated In-Room Response", display_inroom),
-        ("Estimated In-Room Response Normalized", display_inroom_normalized),
-    ):
-        logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
-        try:
-            graph = op_call(df_speaker, graph_params, valid_freq_range)
-            if graph is None:
-                logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
-                continue
-            graphs[op_title] = graph
-        except KeyError as ke:
-            logger.error(
-                "display %s failed with a key error (%s) for %s %s %s",
-                op_title,
-                str(ke),
-                speaker,
-                version,
-                origin,
-            )
-
-    logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
-    try:
-        graph = display_group_delay(df_speaker, graph_params, valid_freq_range)
-        if graph is not None:
-            graphs["Group Delay"] = graph
-    except KeyError as ke:
-        logger.error(
-            "display Group Delay failed with a key error (%s) for %s %s %s",
-            str(ke),
-            speaker,
-            version,
-            origin,
-        )
-
-    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
-        for op_title, op_call in (
-            ("Early Reflections", display_reflection_early),
-            ("Horizontal Reflections", display_reflection_horizontal),
-            ("Vertical Reflections", display_reflection_vertical),
-        ):
-            logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
-            try:
-                graph = op_call(df_speaker, graph_params, valid_freq_range)
-                if graph is None:
-                    logger.info(
-                        "display %s failed for %s %s %s", op_title, speaker, version, origin
-                    )
-                    continue
-                graphs[op_title] = graph
-            except KeyError as ke:
-                logger.error(
-                    "display %s failed with a key error (%s) for %s %s %s",
-                    op_title,
-                    str(ke),
-                    speaker,
-                    version,
-                    origin,
-                )
-
-        for op_title, op_call in (
-            ("SPL Horizontal", display_spl_horizontal),
-            ("SPL Vertical", display_spl_vertical),
-            ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
-            ("SPL Vertical Normalized", display_spl_vertical_normalized),
-        ):
-            logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
-            try:
-                graph = op_call(
-                    df_speaker, graph_params, valid_freq_range, include_all_angles=True
-                )
-                if graph is None:
-                    logger.info(
-                        "display %s failed for %s %s %s", op_title, speaker, version, origin
-                    )
-                    continue
-                graphs[op_title] = graph
-            except KeyError as ke:
-                logger.error(
-                    "display %s failed with a key error (%s) for %s %s %s",
-                    op_title,
-                    str(ke),
-                    speaker,
-                    version,
-                    origin,
-                )
-
-    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
-        # change params for contour
-        contour_params = copy.deepcopy(contour_params_default)
-        contour_params["width"] = width
-        contour_params["height"] = height
-        contour_params["layout"] = "compact"
-        contour_params["xmin"] = origins_info[origin]["min hz"]
-        contour_params["xmax"] = origins_info[origin]["max hz"]
-
-        graphs["SPL Horizontal Contour"] = display_contour_horizontal(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Vertical Contour"] = display_contour_vertical(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-            df_speaker, contour_params, valid_freq_range
-        )
-
-        graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
-            df_speaker, contour_params, valid_freq_range
-        )
-        graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
-            df_speaker, contour_params, valid_freq_range
-        )
-
-        # better square
-        radar_params = copy.deepcopy(radar_params_default)
-        radar_params["width"] = int(height * 4 / 5)
-        radar_params["height"] = height
-        radar_params["layout"] = "compact"
-        radar_params["xmin"] = origins_info[origin]["min hz"]
-        radar_params["xmax"] = origins_info[origin]["max hz"]
-
-        graphs["SPL Horizontal Radar"] = display_radar_horizontal(
-            df_speaker, radar_params, valid_freq_range
-        )
-        graphs["SPL Vertical Radar"] = display_radar_vertical(
-            df_speaker, radar_params, valid_freq_range
-        )
-
-    # add a title if needed
-    for key, graph in graphs.items():
-        title = key.replace("_smoothed", "")
-        # optimised for small screens / vertical orientation
-        if graph is None:
-            continue
-        text = build_title(origin, version, speaker, title, iir)
-        graphs[key].update_layout(
-            title=dict(
-                text=text,
-                font=FONT_H1,
-            ),
-        )
-
-    updated = 0
-    graphs_to_print = []
-    filenames_to_print = []
-    for key, graph in graphs.items():
-        # print('debug: {} {}'.format(speaker, key))
-        if graph is None:
-            # print('debug: {} graph empty'.format(speaker))
-            continue
-
-        # force_update = need_update()
-        force_update = False
-
-        filename_json = build_filename(speaker, origin, version_key, key, "json")
-
-        check = (
-            force_print
-            or not os.path.exists(filename_json)
-            or (os.path.exists(filename_json) and os.path.getsize(filename_json) == 0)
-        )
-
-        if not check:
-            # if os.path.exists(filename_json):
-            #     print('debug: {} {} already exist!'.format(speaker, filename_json))
-            continue
-
-        try:
-            content = graph.to_json()
-            with open(filename_json, "w", encoding="utf-8") as f_d:
-                f_d.write(content)
-                updated += 1
-                # print('debug: {} wrote {}'.format(speaker, filename_json))
-        except Exception:
-            logger.exception("Got unkown error for %s: %s", speaker, filename_json)
-            continue
-
-        filename_png = build_filename(speaker, origin, version_key, key, "png")
-
-        for ext in ("_large.png", ".jpg", ".webp"):
-            filename_ext = filename_png.replace("_large.png", ext)
-            if (
-                force_print
-                or not os.path.exists(filename_ext)
-                or (os.path.exists(filename_ext) and os.path.getsize(filename_ext) == 0)
-            ):
-                graphs_to_print.append(graph)
-                filenames_to_print.append(filename_ext)
-
-    # try:
-    #     if len(filenames_to_print) > 0:
-    #         # print('debug: calling plot io for speaker {} and graphs {}'.format(speaker, filenames_to_print))
-    #         plotly.io.write_images(
-    #             graphs_to_print,
-    #             filenames_to_print,
-    #             width=width,
-    #             height=height,
-    #         )
-    #         updated += 3
-    # except RuntimeError as rt:
-    #     logger.error("writing image %s crashed! %s", filename_png, rt)
-    #     return
-
-    return updated
+    graphs = build_figures(df_speaker, speaker, parameters, origins_info, iir)
+    return emit_figures(graphs, speaker, origin, version_key, force_print)

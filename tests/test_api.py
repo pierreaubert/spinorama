@@ -114,7 +114,7 @@ class TestSpeakerMeasurements:
     ensuring a speaker listed in /speakers is always findable here.
     """
 
-    @patch("src.api.main.glob")
+    @patch("src.api.routers.speaker.glob")
     @patch("os.path.exists", return_value=True)
     def test_success(
         self, mock_exists: Mock, mock_glob: Mock, client: TestClient
@@ -167,7 +167,7 @@ class TestSpeakerMeasurements:
     def test_vendor_origin_prefix_stripped(self, client: TestClient) -> None:
         """Version with 'Vendors-' origin prefix should strip it for path lookup."""
         with patch("os.path.exists") as mock_exists, patch(
-            "src.api.main.glob", return_value=["/path/CEA2034.json"]
+            "src.api.routers.speaker.glob", return_value=["/path/CEA2034.json"]
         ):
             mock_exists.return_value = True
             response = client.get(
@@ -266,7 +266,7 @@ class TestConsistency:
                 f"Speaker '{name}' listed in /speakers but /versions returned error: {data}"
             )
 
-    @patch("src.api.main.glob", return_value=["/path/CEA2034.json"])
+    @patch("src.api.routers.speaker.glob", return_value=["/path/CEA2034.json"])
     @patch("os.path.exists", return_value=True)
     def test_speakers_found_in_measurements(
         self, mock_exists: Mock, mock_glob: Mock, client: TestClient
@@ -288,13 +288,13 @@ class TestConsistency:
 
 
 class TestLoadMetadata:
-    @patch("src.api.main.METADATA", "/tmp/test_metadata.json")
+    @patch("src.api.state.METADATA", "/tmp/test_metadata.json")
     @patch("os.path.exists", return_value=False)
     def test_file_not_found(self, mock_exists: Mock) -> None:
         with pytest.raises(SystemExit):
             list(load_metadata())
 
-    @patch("src.api.main.METADATA", "/tmp/test_metadata.json")
+    @patch("src.api.state.METADATA", "/tmp/test_metadata.json")
     @patch("os.path.exists", return_value=True)
     def test_success(self, mock_exists: Mock) -> None:
         test_data = {"test": "data"}

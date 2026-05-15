@@ -65,7 +65,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     for key, df in curves.items():
         if df.index.duplicated().any():
-            print("ERROR we have duplicates for key {}: {}".format(key, df.index.duplicated()))
+            logger.error("duplicates for key %s: %s", key, df.index.duplicated())
         df_align = df.reindex(freq)
         df_interpolated = df_align.drop("Measurements", axis=1).interpolate(
             method="slinear",
