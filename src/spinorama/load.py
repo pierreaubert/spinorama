@@ -24,7 +24,6 @@ import pandas as pd
 from datas import Parameters
 
 from spinorama import logger, setup_logger
-from spinorama.ltype import DataSpeaker
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
 from spinorama.filter_peq import Peq, peq_apply_measurements
@@ -180,14 +179,11 @@ def filter_graphs(
     mean_max: float,
     mformat: str,
     mdistance: float,
-) -> dict:
+) -> Measurements:
     """Build the per-axis :class:`Measurements` from raw H/V SPL sweeps.
 
-    The result is rendered back to the legacy dict shape so existing consumers
-    (``display_*``, plotting, score computation) keep working unchanged. The
-    intermediate :class:`Measurements` is the source of truth: every derived
-    curve is computed once in wide form; ``to_legacy_dict`` mirrors it into
-    melted views at the boundary.
+    Every derived curve is computed once in wide form and stored on the
+    returned :class:`Measurements`; downstream code accesses fields directly.
     """
     m = Measurements()
 
@@ -241,12 +237,12 @@ def filter_graphs(
             m.horizontal_reflections = horizontal_reflections(sh_spl)
         if sv_spl is not None and complete_spl:
             m.vertical_reflections = vertical_reflections(sv_spl)
-        return m.to_legacy_dict()
+        return m
 
     # Full path: both axes present. On-axis is always computed.
     m.on_axis = _try_compute("On Axis", speaker_name, compute_onaxis, sh_spl, sv_spl)
     if not complete:
-        return m.to_legacy_dict()
+        return m
 
     m.early_reflections = _try_compute(
         "Early Reflections", speaker_name, early_reflections, sh_spl, sv_spl
@@ -276,7 +272,7 @@ def filter_graphs(
         normalize_spl(sv_spl),
     )
 
-    return m.to_legacy_dict()
+    return m
 
 
 def filter_graphs_partial(df_in, mformat, mdistance):
@@ -384,7 +380,7 @@ def filter_graphs_partial(df_in, mformat, mdistance):
 
     logger.debug("DEBUG filter_graphs_partial  IN (%s)", ", ".join(df_in.keys()))
     logger.debug("DEBUG filter_graphs_partial partial OUT (%s)", ", ".join(df_out.keys()))
-    return df_out
+    return Measurements.from_legacy_dict(df_out)
 
 
 def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
@@ -592,8 +588,8 @@ def _parse_hv_speaker(
     params: SpeakerLoadParams,
     mean_min: float,
     mean_max: float,
-) -> dict | None:
-    """Run an HV loader, symmetrise, and assemble the full per-axis graph dict."""
+) -> Measurements | None:
+    """Run an HV loader, symmetrise, and assemble the per-axis :class:`Measurements`."""
     status, (h_spl, v_spl) = HV_LOADERS[params.mformat](params)
 
     if not status:
@@ -630,7 +626,7 @@ def _parse_hv_speaker(
     )
 
 
-def _parse_curve_speaker(params: SpeakerLoadParams) -> dict | None:
+def _parse_curve_speaker(params: SpeakerLoadParams) -> Measurements | None:
     """Run a single-curve loader and pipe through the partial-graph pipeline."""
     status, (title, df_uneven) = CURVE_LOADERS[params.mformat](params)
     if not status:
@@ -668,15 +664,16 @@ def _parse_curve_speaker(params: SpeakerLoadParams) -> dict | None:
                     logger.error("------------ %s -----------", k)
                     logger.error(df_full[k].head())
 
-        df_graph = filter_graphs_partial(df_full, params.mformat, params.distance)
-        nan_count = check_nan(df_graph)
+        m_graph = filter_graphs_partial(df_full, params.mformat, params.distance)
+        legacy_view = m_graph.to_legacy_dict()
+        nan_count = check_nan(legacy_view)
         if nan_count > 0:
             logger.error("df_graph %s has %d NaNs", params.speaker_name, nan_count)
-            for k in df_graph:
-                if isinstance(df_graph[k], pd.DataFrame):
+            for k, v in legacy_view.items():
+                if isinstance(v, pd.DataFrame):
                     logger.error("------------ %s -----------", k)
-                    logger.error(df_graph[k].head())
-        return df_graph
+                    logger.error(v.head())
+        return m_graph
     except ValueError as ve:
         logger.exception("ValueError for speaker %s: %s", params.speaker_name, ve)
         return None
@@ -691,7 +688,7 @@ def parse_graphs_speaker(
     speaker_name: str,
     speaker_parameters: dict,
     log_level: int,
-) -> dict:
+) -> Measurements:
     setup_logger(level=log_level)
 
     params = SpeakerLoadParams.from_legacy(
@@ -700,32 +697,33 @@ def parse_graphs_speaker(
     mean_min, mean_max = get_mean_min_max(params.mparameters)
 
     if params.mformat in HV_LOADERS:
-        df_graph = _parse_hv_speaker(params, mean_min, mean_max)
+        m_graph = _parse_hv_speaker(params, mean_min, mean_max)
     elif params.mformat in CURVE_LOADERS:
-        df_graph = _parse_curve_speaker(params)
+        m_graph = _parse_curve_speaker(params)
     else:
         logger.fatal("Format %s is unkown", params.mformat)
         raise UnknownMeasurementFormatError(params.mformat)
 
-    if df_graph is None or not df_graph:
+    if m_graph is None or m_graph.is_empty():
         logger.warning(
             "Parsing failed for %s/%s/%s",
             params.measurement_path,
             params.speaker_name,
             params.mversion,
         )
-        return {}
+        return Measurements()
 
-    return df_graph
+    return m_graph
 
 
 def parse_eq_speaker(
     speaker_path: str,
     speaker_name: str,
-    df_ref: dict,
+    ref: Measurements,
     speaker_parameters: dict,
     log_level: int,
-) -> tuple[Peq, DataSpeaker]:
+) -> tuple[Peq, Measurements]:
+    """Apply an on-disk PEQ to ``ref`` and return ``(peq, equalised_measurements)``."""
     setup_logger(level=log_level)
     mformat = speaker_parameters["mformat"]
     mparameters = speaker_parameters["mparameters"]
@@ -733,20 +731,18 @@ def parse_eq_speaker(
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)
-    if df_ref is None or not isinstance(df_ref, dict) or not os.path.isfile(iirname):
-        return [], {}
+    if ref is None or ref.is_empty() or not os.path.isfile(iirname):
+        return [], Measurements()
 
     srate = 48000
     logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
     iir = parse_eq_iir_rews(iirname, srate)
 
     # full measurement
-    if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
-        h_spl = df_ref["SPL Horizontal_unmelted"]
-        v_spl = df_ref["SPL Vertical_unmelted"]
-        eq_h_spl = peq_apply_measurements(h_spl, iir)
-        eq_v_spl = peq_apply_measurements(v_spl, iir)
-        df_eq = filter_graphs(
+    if ref.h_spl is not None and ref.v_spl is not None:
+        eq_h_spl = peq_apply_measurements(ref.h_spl, iir)
+        eq_v_spl = peq_apply_measurements(ref.v_spl, iir)
+        return iir, filter_graphs(
             speaker_name,
             eq_h_spl,
             eq_v_spl,
@@ -755,14 +751,12 @@ def parse_eq_speaker(
             mformat,
             distance,
         )
-        return iir, df_eq
 
-    # partial_measurements: apply EQ to the curves we have and build a typed
-    # Measurements; the legacy dict is reconstructed at the boundary.
+    # partial_measurements: apply EQ to the pre-computed curves.
     m = Measurements(eq=iir)
 
-    if "CEA2034" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
+    if ref.cea2034 is not None:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(ref, iir, False)
         if spin_eq is not None:
             m.cea2034 = graph_unmelt(spin_eq)
         if eir_eq is not None:
@@ -770,8 +764,8 @@ def parse_eq_speaker(
         if on_eq is not None:
             m.on_axis = graph_unmelt(on_eq)
 
-    if "CEA2034 Normalized" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, True)
+    if ref.cea2034_normalized is not None:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(ref, iir, True)
         if spin_eq is not None:
             m.cea2034_normalized = graph_unmelt(spin_eq)
         if eir_eq is not None:
@@ -779,9 +773,8 @@ def parse_eq_speaker(
         if on_eq is not None:
             m.on_axis = graph_unmelt(on_eq)
 
-    # If neither path filled anything, return an empty dict (no eq either —
-    # an EQ with no curves to attach to is useless to the caller).
+    # An EQ with no curves to attach to is useless to the caller.
     if m.cea2034 is None and m.cea2034_normalized is None:
-        return iir, {}
+        return iir, Measurements()
 
-    return iir, m.to_legacy_dict()
+    return iir, m

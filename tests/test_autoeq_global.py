@@ -28,6 +28,7 @@ import pandas as pd
 
 # from spinorama.filter_peq import peq_print
 from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.measurements import Measurements
 from autoeq.auto_global import GlobalOptimizer, _resample
 
 pd.set_option("display.max_rows", 202)
@@ -81,11 +82,9 @@ class GlobalOptimizerTests(unittest.TestCase):
             "use_all_biquad": False,
         }
         # speaker data
-        df_speaker = {
-            "CEA2034_unmelted": self.spin_unmelted,
-        }
+        m = Measurements(cea2034=self.spin_unmelted)
         # create an optimizer object
-        self.go = GlobalOptimizer(df_speaker, optim_config)
+        self.go = GlobalOptimizer(m, optim_config)
 
     def test_smoke_test(self):
         self.assertEqual(self.go.freq_min, 80)

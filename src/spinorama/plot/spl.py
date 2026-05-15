@@ -329,27 +329,34 @@ def plot_graph_flat(df, measurement, params, valid_freq_range):
     return fig
 
 
-def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized, valid_freq_range):
+def plot_graph_regression(
+    curve,
+    measurement,
+    spin_for_zone,
+    params,
+    minmax_slopes,
+    is_normalized,
+    valid_freq_range,
+):
+    """Render a curve with regression bands and an optional confidence-zone overlay.
+
+    ``curve`` is the wide-form frame for ``measurement``. ``spin_for_zone`` is
+    the matching CEA2034 spin used to anchor the recommended zone (may be
+    ``None`` to suppress that layer).
+    """
     fig = go.Figure()
 
-    measurement_unmelted = "{}_unmelted".format(measurement)
-
-    if measurement_unmelted in df:
-        curve = df["{}_unmelted".format(measurement)]
+    if curve is not None:
         fig.add_traces(plot_graph_regression_traces(curve, measurement, params, valid_freq_range))
 
     if (
         FLAG_FEATURE_CONFIDENCE_ZONES
         and ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
-        and (
-            (is_normalized and "CEA2034 Normalized_unmelted" in df)
-            or (not is_normalized and "CEA2034_unmelted" in df)
-        )
+        and spin_for_zone is not None
+        and curve is not None
         and minmax_slopes is not None
     ):
-        spin = df["CEA2034_unmelted"]
-        if is_normalized:
-            spin = df["CEA2034 Normalized_unmelted"]
+        spin = spin_for_zone
         freq = spin.Freq.to_numpy()
         slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
         slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
@@ -389,11 +396,11 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
     return fig
 
 
-def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid_freq_range):
+def plot_graph_onaxis(onaxis_df, h_spl, params, valid_freq_range):
+    """Plot the on-axis frequency response with optional phase overlay from H SPL."""
     fig_onaxis = make_subplots(specs=[[{"secondary_y": True}]])
 
-    curve = onaxis_df
-    traces = plot_graph_regression_traces(curve, "On Axis", params, valid_freq_range)
+    traces = plot_graph_regression_traces(onaxis_df, "On Axis", params, valid_freq_range)
     for trace in traces:
         fig_onaxis.add_trace(trace, secondary_y=False)
 
@@ -403,38 +410,36 @@ def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid
     fig_onaxis.update_layout(common_layout(params))
     fig_onaxis.update_traces(mode="lines")
 
-    if "SPL Horizontal_unmelted" in df:
-        spl_h = df["SPL Horizontal_unmelted"]
-        if "Phase On Axis" in spl_h:
-            freq = spl_h.Freq
-            phase = spl_h["Phase On Axis"]
-            phase_min = np.min(phase)
-            phase_max = np.max(phase)
-            if phase_max - phase_min <= 2 * math.pi + 1:
-                phase = np.rad2deg(phase)
-            phase = np.array(phase) - 180 - phase_min
-            fig_onaxis.add_trace(
-                go.Scatter(
-                    x=freq,
-                    y=phase.tolist(),
-                    name="Phase (deg)",
-                ),
-                secondary_y=True,
-            )
-            fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
-            fig_onaxis.update_layout(margin_r=50)
-            # Add "Phase (deg)" as an annotation centered on the visible range [-180, 180].
-            # In paper coordinates, y=0.25 is the midpoint of [-180, 180] within [-180, 540].
-            fig_onaxis.add_annotation(
-                text="Phase (deg)",
-                xref="paper",
-                yref="paper",
-                x=1.05,
-                y=0.25,
-                showarrow=False,
-                textangle=-90,
-                font=FONT_H3,
-            )
+    if h_spl is not None and "Phase On Axis" in h_spl:
+        freq = h_spl.Freq
+        phase = h_spl["Phase On Axis"]
+        phase_min = np.min(phase)
+        phase_max = np.max(phase)
+        if phase_max - phase_min <= 2 * math.pi + 1:
+            phase = np.rad2deg(phase)
+        phase = np.array(phase) - 180 - phase_min
+        fig_onaxis.add_trace(
+            go.Scatter(
+                x=freq,
+                y=phase.tolist(),
+                name="Phase (deg)",
+            ),
+            secondary_y=True,
+        )
+        fig_onaxis.update_yaxes(generate_yaxis_phases(), secondary_y=True)
+        fig_onaxis.update_layout(margin_r=50)
+        # Add "Phase (deg)" as an annotation centered on the visible range [-180, 180].
+        # In paper coordinates, y=0.25 is the midpoint of [-180, 180] within [-180, 540].
+        fig_onaxis.add_annotation(
+            text="Phase (deg)",
+            xref="paper",
+            yref="paper",
+            x=1.05,
+            y=0.25,
+            showarrow=False,
+            textangle=-90,
+            font=FONT_H3,
+        )
 
     fig_onaxis.add_traces(
         plot_valid_freq_ranges(fig_onaxis, valid_freq_range, (params["ymin"], params["ymax"]))
@@ -443,15 +448,14 @@ def plot_graph_onaxis(onaxis_df, df, params, minmax_slopes, is_normalized, valid
     return fig_onaxis
 
 
-def plot_graph_group_delay(df, params, valid_freq_range):
+def plot_graph_group_delay(h_spl, params, valid_freq_range):
+    """Plot group delay (ms) derived from the horizontal-SPL on-axis phase."""
     fig_group_delay = go.Figure()
 
-    if "SPL Horizontal_unmelted" not in df:
+    if h_spl is None or "Phase On Axis" not in h_spl:
         return None
 
-    spl_h = df["SPL Horizontal_unmelted"]
-    if "Phase On Axis" not in spl_h:
-        return None
+    spl_h = h_spl
 
     freq = spl_h.Freq
     phase = spl_h["Phase On Axis"]

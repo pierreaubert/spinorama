@@ -52,7 +52,8 @@ from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating as compute_speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain as filter_peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
-from spinorama.misc import sanitize_filename
+from spinorama.measurements import Measurements
+from spinorama.misc import graph_melt, sanitize_filename
 
 # Local application imports
 from datas import (
@@ -228,6 +229,12 @@ def add_measurement(speaker_name, origin, version, dfs):
     if dfs is None:
         return result
 
+    # Accept legacy dicts or a Measurements; normalise to typed form.
+    if isinstance(dfs, Measurements):
+        m = dfs
+    else:
+        m = Measurements.from_legacy_dict(dfs)
+
     default_version = metadata.speakers_info[speaker_name].get("default_measurement")
     if default_version is None:
         logger.exception(
@@ -240,25 +247,22 @@ def add_measurement(speaker_name, origin, version, dfs):
     if version_is_eq(version):
         eq_tag = "_eq"
 
-    sensitivity = dfs.get("sensitivity{}".format(eq_tag), None)
     if (
-        sensitivity is not None
+        m.sensitivity is not None
         and metadata.speakers_info[speaker_name].get("type") == "passive"
         and version == default_version
     ):
         result["computed_sensitivity{}".format(eq_tag)] = {
-            "computed": sensitivity,
-            "distance": dfs.get("sensitivity_distance", 1.0),
-            "sensitivity_1m": dfs.get("sensitivity_1m"),
+            "computed": m.sensitivity.spl,
+            "distance": m.sensitivity.distance,
+            "sensitivity_1m": m.sensitivity.spl_at_1m,
         }
 
-    spin = dfs.get("CEA2034")
-    if spin is None or "Estimated In-Room Response" not in dfs:
+    if m.cea2034 is None or m.eir is None:
         return result
 
-    spl_h = dfs.get("SPL Horizontal_unmelted", None)
-    spl_v = dfs.get("SPL Vertical_unmelted", None)
-    est = estimates(spin, spl_h, spl_v)
+    cea2034_melted = graph_melt(m.cea2034)
+    est = estimates(cea2034_melted, m.h_spl, m.v_spl)
     scaled_flatness_val = None
     if est is not None:
         result["estimates{}".format(eq_tag)] = est
@@ -266,12 +270,10 @@ def add_measurement(speaker_name, origin, version, dfs):
         if flatness is not None and not math.isnan(flatness):
             scaled_flatness_val = compute_scaled_flatness(flatness)
 
-    inroom = dfs["Estimated In-Room Response"]
-    if inroom is not None:
-        pref_rating = compute_speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
-        score_penalty = 0.0
-        extras_dict = dfs.get("extras")
-        score_penalty = extras_dict.get("score_penalty", 0.0) if extras_dict else 0.0
+    eir_melted = graph_melt(m.eir)
+    pref_rating = compute_speaker_pref_rating(cea2034=cea2034_melted, pir=eir_melted, rounded=True)
+    score_penalty = m._extras.get("extras", {}).get("score_penalty", 0.0) if m._extras else 0.0
+    if pref_rating is not None:
         pref_rating["pref_score"] += score_penalty
 
         if pref_rating is None:
@@ -297,12 +299,12 @@ def add_score(speaker_name, speaker_data):
         for version, dfs in measurements.items():
             try:
                 result = None
-                if isinstance(dfs, dict):
+                if isinstance(dfs, (dict, Measurements)):
                     result = add_measurement(speaker_name, origin, version, dfs)
                 elif isinstance(dfs, tuple):
                     # could be other stuff like an EQ as a list
                     for i in dfs:
-                        if isinstance(i, dict):
+                        if isinstance(i, (dict, Measurements)):
                             result = add_measurement(speaker_name, origin, version, i)
                 if result:
                     results.append(result)
@@ -560,10 +562,10 @@ def get_spin_data(freq, speaker_name, speaker_data):
         for key, dfs in measurements.items():
             if "_eq" in key:
                 continue
-            if dfs is None or "CEA2034" not in dfs:
+            if dfs is None:
                 return None
-
-            spin = dfs["CEA2034_unmelted"]
+            m = dfs if isinstance(dfs, Measurements) else Measurements.from_legacy_dict(dfs)
+            spin = m.cea2034
             if spin is None or "Listening Window" not in spin or "Sound Power" not in spin:
                 return None
 

@@ -124,7 +124,7 @@ def process_single_measurement(
         results_eq = parse_eq_speaker(
             speaker_path=f"{data_dir}/datas",
             speaker_name=sanitize_filename(speaker),
-            df_ref=results,
+            ref=results,
             speaker_parameters=parameters,
             log_level=log_level,
         )

@@ -26,7 +26,7 @@ import plotly.io
 
 from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
-from spinorama.ltype import DataSpeaker
+from spinorama.measurements import Measurements
 from spinorama.misc import measurements_valid_freq_range, sanitize_filename, write_multiformat
 from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.compute_misc import compute_minmax_slopes
@@ -72,41 +72,32 @@ def scale_params(params, factor):
     return new_params
 
 
-def get_spin_unmelted(df, is_normalized):
-    spin = df.get("CEA2034_unmelted")
-    if is_normalized:
-        spin = df.get("CEA2034 Normalized_unmelted")
+def _spin_for(m: Measurements, is_normalized: bool):
+    """Return the wide CEA2034 frame for ``is_normalized``, or ``None``."""
+    spin = m.cea2034_normalized if is_normalized else m.cea2034
     if spin is None or spin.Freq.shape[0] == 0:
-        logger.info(
-            "CEA2034 not in dataframe (known keys are %s) is_normalized=%s",
-            ", ".join(df.keys()),
-            str(is_normalized),
-        )
         return None
     return spin
 
 
-def get_minmax_slopes(df, is_normalized):
-    spin_unmelted = get_spin_unmelted(df, is_normalized)
-    if spin_unmelted is not None:
-        slopes = compute_minmax_slopes(spin=spin_unmelted.copy(), is_normalized=is_normalized)
-        return spin_unmelted, slopes
-    return None, None
+def _slopes_for(m: Measurements, is_normalized: bool):
+    """Return (spin, slopes) for the requested normalisation, ``(None, None)`` if missing."""
+    spin = _spin_for(m, is_normalized)
+    if spin is None:
+        return None, None
+    slopes = compute_minmax_slopes(spin=spin.copy(), is_normalized=is_normalized)
+    return spin, slopes
 
 
 # ----------------------------------------------------------------------
-# provide "as measured" and "normalized" versions
+# Spinorama (CEA2034) line plots — "as measured" and "normalized"
 # ----------------------------------------------------------------------
 def _display_spinorama_common(
-    df, graph_params, is_normalized, valid_freq_range: tuple[float, float]
+    m: Measurements, graph_params, is_normalized, valid_freq_range: tuple[float, float]
 ):
-    spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
+    spin, slopes = _slopes_for(m, is_normalized=is_normalized)
     if spin is None:
-        logger.debug(
-            "plot_spinorama failed, cannot get Spin with is_normalized=%s. Known keys are %s",
-            str(is_normalized),
-            ", ".join(df.keys()),
-        )
+        logger.debug("plot_spinorama: no CEA2034 (is_normalized=%s)", is_normalized)
         return None
 
     fig = plot_spinorama(
@@ -114,276 +105,274 @@ def _display_spinorama_common(
     )
     if fig is None:
         logger.info("plot_spinorama failed")
-        return None
     return fig
 
 
 def display_spinorama(
-    df, graph_params=plot_params_default, valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE
+    m: Measurements,
+    graph_params=plot_params_default,
+    valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE,
 ):
-    return _display_spinorama_common(
-        df, graph_params, is_normalized=False, valid_freq_range=valid_freq_range
-    )
+    return _display_spinorama_common(m, graph_params, False, valid_freq_range)
 
 
 def display_spinorama_normalized(
-    df, graph_params=plot_params_default, valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE
+    m: Measurements,
+    graph_params=plot_params_default,
+    valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE,
 ):
-    return _display_spinorama_common(
-        df, graph_params, is_normalized=True, valid_freq_range=valid_freq_range
-    )
+    return _display_spinorama_common(m, graph_params, True, valid_freq_range)
 
 
 def _display_inroom_common(
-    df: dict, graph_params: dict, is_normalized: bool, valid_freq_range: tuple[float, float]
+    m: Measurements,
+    graph_params: dict,
+    is_normalized: bool,
+    valid_freq_range: tuple[float, float],
 ):
-    spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
+    spin, slopes = _slopes_for(m, is_normalized=is_normalized)
     if spin is None:
-        logger.debug("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
+        logger.debug("plot_inroom: no CEA2034 (is_normalized=%s)", is_normalized)
         return None
 
-    if "Estimated In-Room Response_unmelted" not in df:
-        logger.debug("plot_inroom failed, likely partial measurements")
+    eir = m.eir_normalized if is_normalized else m.eir
+    if eir is None:
+        logger.debug("plot_inroom: no EIR (partial measurements)")
         return None
 
     return plot_graph_regression(
-        df, "Estimated In-Room Response", graph_params, slopes, False, valid_freq_range
+        eir,
+        "Estimated In-Room Response",
+        spin,
+        graph_params,
+        slopes,
+        is_normalized,
+        valid_freq_range,
     )
 
 
-def display_inroom(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
-    return _display_inroom_common(df, graph_params, False, valid_freq_range)
+def display_inroom(m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+    return _display_inroom_common(m, graph_params, False, valid_freq_range)
 
 
 def display_inroom_normalized(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return _display_inroom_common(df, graph_params, True, valid_freq_range)
+    return _display_inroom_common(m, graph_params, True, valid_freq_range)
 
 
 # ----------------------------------------------------------------------
-# provide "as measured" graphs
+# Per-curve plots
 # ----------------------------------------------------------------------
-def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
-    onaxis = df.get("CEA2034_unmelted")
-    if onaxis is None:
-        onaxis = df.get("On Axis_unmelted")
-
-    if onaxis is None:
-        logger.debug("Display On Axis failed")
+def display_onaxis(
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    # Prefer the dedicated on-axis frame; fall back to the on-axis column of
+    # the CEA2034 spin (partial measurements path).
+    onaxis = m.on_axis if m.on_axis is not None else m.cea2034
+    if onaxis is None or "On Axis" not in onaxis:
+        logger.debug("display_onaxis: no on-axis curve available")
         return None
+    return plot_graph_onaxis(onaxis, m.h_spl, graph_params, valid_freq_range)
 
-    if "On Axis" not in onaxis:
-        logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
+
+def display_group_delay(
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    if m.h_spl is None or "Phase On Axis" not in m.h_spl:
+        logger.debug("display_group_delay: no horizontal-SPL phase available")
         return None
-
-    _, slopes = get_minmax_slopes(df, False)
-    # Pass the actual dataframe that contains the On Axis data, not the whole dict
-    fig = plot_graph_onaxis(onaxis, df, graph_params, slopes, False, valid_freq_range)
-    return fig
-
-
-def display_group_delay(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
-    onaxis = df.get("CEA2034_unmelted")
-    if onaxis is None:
-        onaxis = df.get("On Axis_unmelted")
-
-    if onaxis is None:
-        logger.debug("Display On Axis failed")
-        return None
-
-    if "On Axis" not in onaxis:
-        logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
-        return None
-
-    fig = plot_graph_group_delay(df, graph_params, valid_freq_range)
-    return fig
+    return plot_graph_group_delay(m.h_spl, graph_params, valid_freq_range)
 
 
 def display_reflection_early(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    try:
-        if "Early Reflections_unmelted" not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display Early Reflections failed with %s", ke)
+    if m.early_reflections is None:
         return None
-    else:
-        return plot_graph(df["Early Reflections_unmelted"], graph_params, valid_freq_range)
+    return plot_graph(m.early_reflections, graph_params, valid_freq_range)
 
 
 def display_reflection_horizontal(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    try:
-        if "Horizontal Reflections_unmelted" not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display Horizontal Reflections failed with %s", ke)
+    if m.horizontal_reflections is None:
         return None
-    else:
-        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params, valid_freq_range)
+    return plot_graph(m.horizontal_reflections, graph_params, valid_freq_range)
 
 
 def display_reflection_vertical(
-    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    try:
-        if "Vertical Reflections_unmelted" not in df:
-            return None
-    except KeyError:
+    if m.vertical_reflections is None:
         return None
-    else:
-        return plot_graph(df["Vertical Reflections_unmelted"], graph_params, valid_freq_range)
+    return plot_graph(m.vertical_reflections, graph_params, valid_freq_range)
+
+
+# (axis, normalized) → field-name lookup. Drives the four SPL line plots and
+# the four contour/contour-3D variants below.
+_SPL_FIELD = {
+    ("horizontal", False): "h_spl",
+    ("horizontal", True): "h_spl_normalized",
+    ("vertical", False): "v_spl",
+    ("vertical", True): "v_spl_normalized",
+}
+
+
+def _spl_frame(m: Measurements, axis: str, normalized: bool):
+    return getattr(m, _SPL_FIELD[(axis, normalized)])
 
 
 def display_spl(
-    df,
-    axis,
+    m: Measurements,
+    axis: str,
     graph_params=plot_params_default,
     valid_freq_range=DEFAULT_FREQ_RANGE,
     include_all_angles: bool = False,
+    normalized: bool = False,
 ):
-    try:
-        if axis not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display SPL failed with %s", ke)
+    frame = _spl_frame(m, axis, normalized)
+    if frame is None:
         return None
-    else:
-        return plot_graph_spl(df[axis], graph_params, valid_freq_range, include_all_angles)
+    return plot_graph_spl(frame, graph_params, valid_freq_range, include_all_angles)
 
 
 def display_spl_horizontal(
-    df,
+    m: Measurements,
     graph_params=plot_params_default,
     valid_freq_range=DEFAULT_FREQ_RANGE,
     include_all_angles: bool = False,
 ):
-    return display_spl(
-        df, "SPL Horizontal_unmelted", graph_params, valid_freq_range, include_all_angles
-    )
+    return display_spl(m, "horizontal", graph_params, valid_freq_range, include_all_angles)
 
 
 def display_spl_vertical(
-    df,
+    m: Measurements,
     graph_params=plot_params_default,
     valid_freq_range=DEFAULT_FREQ_RANGE,
     include_all_angles: bool = False,
 ):
-    return display_spl(
-        df, "SPL Vertical_unmelted", graph_params, valid_freq_range, include_all_angles
-    )
+    return display_spl(m, "vertical", graph_params, valid_freq_range, include_all_angles)
 
 
 def display_spl_horizontal_normalized(
-    df,
+    m: Measurements,
     graph_params=plot_params_default,
     valid_freq_range=DEFAULT_FREQ_RANGE,
     include_all_angles: bool = False,
 ):
     return display_spl(
-        df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+        m, "horizontal", graph_params, valid_freq_range, include_all_angles, normalized=True
     )
 
 
 def display_spl_vertical_normalized(
-    df,
+    m: Measurements,
     graph_params=plot_params_default,
     valid_freq_range=DEFAULT_FREQ_RANGE,
     include_all_angles: bool = False,
 ):
     return display_spl(
-        df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range, include_all_angles
+        m, "vertical", graph_params, valid_freq_range, include_all_angles, normalized=True
     )
 
 
 def display_contour(
-    df, direction, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements,
+    axis: str,
+    graph_params=contour_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    normalized: bool = False,
 ):
-    if direction not in df:
+    frame = _spl_frame(m, axis, normalized)
+    if frame is None:
         return None
-    return plot_contour(df[direction], graph_params, valid_freq_range)
+    return plot_contour(frame, graph_params, valid_freq_range)
 
 
 def display_contour_horizontal(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
+    return display_contour(m, "horizontal", graph_params, valid_freq_range)
 
 
 def display_contour_vertical(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
+    return display_contour(m, "vertical", graph_params, valid_freq_range)
 
 
 def display_contour_horizontal_normalized(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour(df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range)
+    return display_contour(m, "horizontal", graph_params, valid_freq_range, normalized=True)
 
 
 def display_contour_vertical_normalized(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour(df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range)
+    return display_contour(m, "vertical", graph_params, valid_freq_range, normalized=True)
 
 
 def display_contour_3d(
-    df, direction, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements,
+    axis: str,
+    graph_params=contour_params_default,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+    normalized: bool = False,
 ):
-    if direction not in df:
+    frame = _spl_frame(m, axis, normalized)
+    if frame is None:
         return None
-    return plot_contour_3d(df[direction], graph_params, valid_freq_range)
+    return plot_contour_3d(frame, graph_params, valid_freq_range)
 
 
 def display_contour_horizontal_3d(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour_3d(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
+    return display_contour_3d(m, "horizontal", graph_params, valid_freq_range)
 
 
 def display_contour_vertical_3d(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour_3d(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
+    return display_contour_3d(m, "vertical", graph_params, valid_freq_range)
 
 
 def display_contour_horizontal_normalized_3d(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour_3d(
-        df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range
-    )
+    return display_contour_3d(m, "horizontal", graph_params, valid_freq_range, normalized=True)
 
 
 def display_contour_vertical_normalized_3d(
-    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_contour_3d(
-        df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range
-    )
+    return display_contour_3d(m, "vertical", graph_params, valid_freq_range, normalized=True)
 
 
-def display_radar(df, direction, graph_params, valid_freq_range=DEFAULT_FREQ_RANGE):
-    dfs = df.get(direction)
-    if dfs is None:
+def display_radar(
+    m: Measurements,
+    axis: str,
+    graph_params,
+    valid_freq_range=DEFAULT_FREQ_RANGE,
+):
+    frame = _spl_frame(m, axis, False)
+    if frame is None:
         return None
-    return plot_radar(dfs, graph_params, valid_freq_range)
+    return plot_radar(frame, graph_params, valid_freq_range)
 
 
 def display_radar_horizontal(
-    df, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_radar(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
+    return display_radar(m, "horizontal", graph_params, valid_freq_range)
 
 
 def display_radar_vertical(
-    df, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+    m: Measurements, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    return display_radar(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
+    return display_radar(m, "vertical", graph_params, valid_freq_range)
 
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
@@ -490,7 +479,7 @@ _RADAR_VIEWS: tuple[tuple[str, Callable], ...] = (
 def _safe_display(
     op_title: str,
     op_call,
-    df_speaker: dict,
+    m: Measurements,
     *args,
     speaker: str = "",
     version: str = "",
@@ -499,7 +488,7 @@ def _safe_display(
 ):
     """Invoke a ``display_*`` function and convert ``KeyError`` into a logged ``None``."""
     try:
-        graph = op_call(df_speaker, *args, **kwargs)
+        graph = op_call(m, *args, **kwargs)
     except KeyError as ke:
         logger.error(
             "display %s failed with a key error (%s) for %s %s %s",
@@ -548,7 +537,7 @@ def _make_radar_params(width: int, height: int, origins_info: dict, origin: str)
 
 
 def build_figures(
-    df_speaker: dict,
+    m: Measurements,
     speaker: str,
     parameters: dict,
     origins_info: dict,
@@ -575,29 +564,27 @@ def build_figures(
     valid_freq_range = measurements_valid_freq_range(
         speaker,
         version,
-        df_speaker.get("SPL Horizontal", None),
-        df_speaker.get("SPL Vertical", None),
+        m.h_spl,
+        m.v_spl,
     )
 
     ctx = dict(speaker=speaker, version=version, origin=origin)
     graphs: dict = {}
 
     for op_title, op_call in _COMMON_VIEWS:
-        graph = _safe_display(op_title, op_call, df_speaker, graph_params, valid_freq_range, **ctx)
+        graph = _safe_display(op_title, op_call, m, graph_params, valid_freq_range, **ctx)
         if graph is not None:
             graphs[op_title] = graph
 
     graph = _safe_display(
-        "Group Delay", display_group_delay, df_speaker, graph_params, valid_freq_range, **ctx
+        "Group Delay", display_group_delay, m, graph_params, valid_freq_range, **ctx
     )
     if graph is not None:
         graphs["Group Delay"] = graph
 
     if mformat in _HV_MFORMATS:
         for op_title, op_call in _REFLECTION_VIEWS:
-            graph = _safe_display(
-                op_title, op_call, df_speaker, graph_params, valid_freq_range, **ctx
-            )
+            graph = _safe_display(op_title, op_call, m, graph_params, valid_freq_range, **ctx)
             if graph is not None:
                 graphs[op_title] = graph
 
@@ -605,7 +592,7 @@ def build_figures(
             graph = _safe_display(
                 op_title,
                 op_call,
-                df_speaker,
+                m,
                 graph_params,
                 valid_freq_range,
                 include_all_angles=True,
@@ -616,11 +603,11 @@ def build_figures(
 
         contour_params = _make_contour_params(width, height, origins_info, origin)
         for op_title, op_call in _CONTOUR_VIEWS:
-            graphs[op_title] = op_call(df_speaker, contour_params, valid_freq_range)
+            graphs[op_title] = op_call(m, contour_params, valid_freq_range)
 
         radar_params = _make_radar_params(width, height, origins_info, origin)
         for op_title, op_call in _RADAR_VIEWS:
-            graphs[op_title] = op_call(df_speaker, radar_params, valid_freq_range)
+            graphs[op_title] = op_call(m, radar_params, valid_freq_range)
 
     for key, graph in graphs.items():
         if graph is None:
@@ -672,30 +659,27 @@ def emit_figures(
 
 
 def print_graphs(
-    data: DataSpeaker | tuple[Peq, DataSpeaker],
+    data: Measurements | tuple[Peq, Measurements],
     speaker: str,
     parameters: dict,
     origins_info: dict,
     force_print: bool,
     log_level: int,
 ) -> int:
+    """Build and emit every figure for one speaker."""
     setup_logger(level=log_level)
     version = parameters["mversion"]
     origin = parameters["morigin"]
     version_key = parameters.get("mversion_key", version)
 
-    if isinstance(data, dict):
-        iir, df_speaker = [], data
+    if isinstance(data, tuple):
+        iir, m = data
     else:
-        iir, df_speaker = data
+        iir, m = [], data
 
-    if df_speaker is None:
-        logger.info("df_speaker is None for %s %s %s", speaker, version, origin)
-        return 0
-    if not df_speaker:
-        # Cache miss or partial measurement: nothing to emit.
-        logger.info("df_speaker is Empty for %s %s %s", speaker, version, origin)
+    if m is None or m.is_empty():
+        logger.info("measurements empty for %s %s %s", speaker, version, origin)
         return 0
 
-    graphs = build_figures(df_speaker, speaker, parameters, origins_info, iir)
+    graphs = build_figures(m, speaker, parameters, origins_info, iir)
     return emit_figures(graphs, speaker, origin, version_key, force_print)

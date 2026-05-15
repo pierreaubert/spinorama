@@ -27,7 +27,8 @@ from scipy.ndimage import gaussian_filter1d
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
-from spinorama.ltype import Vector, DataSpeaker
+from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl, peq_print
 from autoeq.auto_misc import get3db
@@ -78,10 +79,12 @@ class GlobalOptimizer(object):
 
     def __init__(
         self,
-        df_speaker: DataSpeaker,
+        m: Measurements,
         optim_config: dict,
     ):
-        self.df_speaker = df_speaker
+        if m.cea2034 is None:
+            raise ValueError("GlobalOptimizer requires a Measurements with CEA2034")
+        self.m = m
         self.config = optim_config
         logger.debug(
             "GlobalOptimizer config {%s}",
@@ -91,7 +94,7 @@ class GlobalOptimizer(object):
         # get min/max
         self.freq_min = optim_config["target_min_freq"]
         if self.freq_min is None:
-            status, self.freq_min = get3db(df_speaker, 3.0)
+            status, self.freq_min = get3db(m, 3.0)
             if not status:
                 self.freq_min = 80
         self.freq_max = optim_config.get("target_max_freq", 16000)
@@ -118,15 +121,13 @@ class GlobalOptimizer(object):
         self.freq_midrange_index = self._freq2index(MIDRANGE_MAX_FREQ / 2)
         self.freq_max_index = self._freq2index(self.freq_max)
 
-        # get lw/on/pir & freq
-        self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
-        self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
+        cea = m.cea2034
+        self.lw = cea["Listening Window"].to_numpy()
+        self.on = cea["On Axis"].to_numpy()
         self.pir = None
-        if "Estimated In-Room Response_unmelted" in df_speaker:
-            self.pir = df_speaker["Estimated In-Room Response_unmelted"][
-                "Estimated In-Room Response"
-            ].to_numpy()
-        self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
+        if m.eir is not None:
+            self.pir = m.eir["Estimated In-Room Response"].to_numpy()
+        self.freq = cea["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
         lw_slope = self.config.get("slope_listening_window", -0.5)
@@ -210,7 +211,7 @@ class GlobalOptimizer(object):
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_on = np.add(self.target_on, peq_freq)
         # split flatness of ON on various ranges
         flatness_on_bass_mid = np.linalg.norm(
@@ -226,7 +227,7 @@ class GlobalOptimizer(object):
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_lw = np.add(self.target_lw, peq_freq)
         flatness_lw_bass_mid = np.linalg.norm(
             flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2
@@ -240,7 +241,7 @@ class GlobalOptimizer(object):
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_pir = np.add(self.target_pir, peq_freq)
         flatness_pir_bass_mid = np.linalg.norm(
             flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2
@@ -630,6 +631,6 @@ class GlobalOptimizer(object):
         )
 
         auto_peq = self._x2peq(res.x)
-        auto_score = score_loss(self.df_speaker, auto_peq)
+        auto_score = score_loss(self.m, auto_peq)
 
         return True, ((0, res.fun, auto_score), auto_peq)

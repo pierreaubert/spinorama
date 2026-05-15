@@ -209,20 +209,30 @@ def parse_partial_each_format():
     return dfs
 
 
+def _count_filled(m) -> int:
+    """Count populated frame slots + sensitivity + extras on a Measurements."""
+    n = sum(1 for name in m._FRAME_FIELDS if getattr(m, name) is not None)
+    if m.sensitivity is not None:
+        n += 1
+    if m.eq is not None:
+        n += 1
+    return n
+
+
 class SpinoramaLoaderCommon(unittest.TestCase):
     def test_full(self):
         measurements = parse_full_each_format()
-        for m in measurements.values():
-            ln = len(m["graphs"])
-            if m["full"]:
-                self.assertEqual(len(m["graphs"].keys()), 25)
-            else:
-                self.assertEqual(len(m["graphs"].keys()), 11)
+        # Full HV: 9 frame fields + 2 normalized SPL + sensitivity.
+        # Limited HV: on_axis + h_spl + v_spl + normalized SPL + sensitivity = 6.
+        for entry in measurements.values():
+            m = entry["graphs"]
+            expected = 13 if entry["full"] else 6
+            self.assertEqual(_count_filled(m), expected, entry["speaker_name"])
 
     def test_partial(self):
-        measurements = parse_partial_each_format()
-        for m in measurements.values():
-            self.assertEqual(len(m.keys()), 13)
+        # Partial: on_axis + cea2034 + cea2034_normalized + eir + eir_normalized + sensitivity = 6
+        for m in parse_partial_each_format().values():
+            self.assertEqual(_count_filled(m), 6)
 
 
 if __name__ == "__main__":

@@ -16,70 +16,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import pandas as pd
 from spinorama.compute_estimates import estimates_spin
+from spinorama.measurements import Measurements
 
 
-def get3db(spin: dict[str, pd.DataFrame], db_point: float) -> tuple[bool, float]:
-    """Get -3dB point"""
-    est = {}
-    if "CEA2034_unmelted" in spin:
-        est = estimates_spin(spin["CEA2034_unmelted"])
-    elif "CEA2034" in spin and "Measurements" in spin:
-        est = estimates_spin(spin["CEA2034"])
+_REQUIRED_HORIZONTAL_ANGLES = [
+    "On Axis",
+    *[f"{i}°" for i in range(10, 190, 10)],
+    *[f"-{i}°" for i in range(10, 180, 10)],
+]
+
+
+def get3db(m: Measurements, db_point: float) -> tuple[bool, float]:
+    """Return the -3 dB rolloff frequency derived from the CEA2034 spin."""
+    if m.cea2034 is None:
+        return False, 0.0
+    est = estimates_spin(m.cea2034)
     spl = est.get("ref_3dB", None)
     if spl is None:
         return False, 0.0
     return True, spl
 
 
-def have_full_measurements(df_speaker: dict[str, pd.DataFrame]) -> bool:
-    nb_cols = 0
-    required_cols = [
-        "On Axis",
-        "10°",
-        "20°",
-        "30°",
-        "40°",
-        "50°",
-        "60°",
-        "70°",
-        "80°",
-        "90°",
-        "100°",
-        "110°",
-        "120°",
-        "130°",
-        "140°",
-        "150°",
-        "160°",
-        "170°",
-        "180°",
-        "-10°",
-        "-20°",
-        "-30°",
-        "-40°",
-        "-50°",
-        "-60°",
-        "-70°",
-        "-80°",
-        "-90°",
-        "-100°",
-        "-110°",
-        "-120°",
-        "-130°",
-        "-140°",
-        "-150°",
-        "-160°",
-        "-170°",
-    ]
-    check_required_h = False
-    check_required_v = False
-    if "SPL Horizontal_unmelted" in df_speaker:
-        nb_cols += df_speaker["SPL Horizontal_unmelted"].shape[1]
-        check_required_h = all([r in df_speaker["SPL Horizontal_unmelted"] for r in required_cols])
-    if "SPL Vertical_unmelted" in df_speaker:
-        nb_cols += df_speaker["SPL Horizontal_unmelted"].shape[1]
-        check_required_v = all([r in df_speaker["SPL Vertical_unmelted"] for r in required_cols])
-    check_nb_cols = nb_cols >= 72
-    return check_nb_cols and check_required_v and check_required_h
+def have_full_measurements(m: Measurements) -> bool:
+    """``True`` iff both H and V SPL sweeps contain every required angle column."""
+    if m.h_spl is None or m.v_spl is None:
+        return False
+    have_all_h = all(angle in m.h_spl for angle in _REQUIRED_HORIZONTAL_ANGLES)
+    have_all_v = all(angle in m.v_spl for angle in _REQUIRED_HORIZONTAL_ANGLES)
+    if not (have_all_h and have_all_v):
+        return False
+    return m.h_spl.shape[1] + m.v_spl.shape[1] >= 72

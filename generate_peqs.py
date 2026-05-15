@@ -77,11 +77,11 @@ def print_scores(aggregated_scores):
     df_scores.to_csv("build/results_scores.csv", index=False)
 
 
-def _peq_worker(current_speaker_name, default_origin, df_speaker, optim_config):
+def _peq_worker(current_speaker_name, default_origin, m, optim_config):
     """Worker: compute EQ for a single speaker."""
     return (
         current_speaker_name,
-        optim_save_peq(current_speaker_name, default_origin, df_speaker, optim_config),
+        optim_save_peq(current_speaker_name, default_origin, m, optim_config),
     )
 
 
@@ -149,22 +149,19 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 df_all_speakers[current_speaker_name][default_origin][default],
             )
 
-        df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
+        from spinorama.measurements import Measurements as _M
 
-        if not (
-            ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
-            or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
-        ):
-            logger.info(
-                "not enough data for %s known measurements are (%s)",
-                current_speaker_name,
-                ", ".join(df_speaker),
-            )
+        raw = df_all_speakers[current_speaker_name][default_origin][default]
+        m = raw if isinstance(raw, _M) else _M.from_legacy_dict(raw)
+
+        have_hv = m.h_spl is not None and m.v_spl is not None
+        have_partial = m.cea2034 is not None and m.eir is not None
+        if not (have_hv or have_partial):
+            logger.info("not enough data for %s", current_speaker_name)
             continue
-        else:
-            logger.debug("processing %s", current_speaker_name)
 
-        tasks.append((current_speaker_name, default_origin, df_speaker, optim_config))
+        logger.debug("processing %s", current_speaker_name)
+        tasks.append((current_speaker_name, default_origin, m, optim_config))
 
     num_processes = max(1, multiprocessing.cpu_count() - 1)
     with multiprocessing.Pool(processes=num_processes) as pool:

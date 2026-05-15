@@ -21,6 +21,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq
 from autoeq.auto_loss import loss, score_loss
@@ -37,7 +38,7 @@ from autoeq.auto_preflight import optim_preflight
 
 def optim_greedy(
     speaker_name: str,
-    df_speaker: dict[str, pd.DataFrame],
+    m: Measurements,
     freq: Vector,
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
@@ -51,7 +52,7 @@ def optim_greedy(
     This could speed up convergence when adding successive filters.
     """
 
-    if not optim_preflight(freq, auto_target, auto_target_interp, df_speaker):
+    if not optim_preflight(freq, auto_target, auto_target_interp, m):
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
@@ -60,10 +61,10 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
 
-    best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
+    best_loss = loss(m, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1000.0
     if use_score:
-        pref_score = score_loss(df_speaker, auto_peq)
+        pref_score = score_loss(m, auto_peq)
 
     results = [(0, best_loss, -pref_score)]
     logger.info(
@@ -164,7 +165,7 @@ def optim_greedy(
                 current_loss,
                 current_nit,
             ) = find_best_biquad(
-                df_speaker,
+                m,
                 freq,
                 current_auto_target,
                 init_freq_range,
@@ -185,7 +186,7 @@ def optim_greedy(
                 current_loss,
                 current_nit,
             ) = find_best_peak(
-                df_speaker,
+                m,
                 freq,
                 current_auto_target,
                 init_freq_range,
@@ -205,7 +206,7 @@ def optim_greedy(
             auto_peq.append(biquad)
             best_loss: float = current_loss
             if use_score:
-                pref_score = score_loss(df_speaker, auto_peq)
+                pref_score = score_loss(m, auto_peq)
             results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
                 "Speaker %s Iter %2d Optim converged loss %2.2f pref score %2.2f biquad %2s F:%5.0fHz Q:%2.2f G:%+2.2fdB in %d iterations",
@@ -239,7 +240,7 @@ def optim_greedy(
     if results[-1][1] < best_loss:
         best_loss = results[-1][1]
         if use_score:
-            pref_score = score_loss(df_speaker, auto_peq)
+            pref_score = score_loss(m, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
 
     # best score is not necessary the last one

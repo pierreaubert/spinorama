@@ -24,7 +24,8 @@ import warnings
 import pandas as pd
 
 from spinorama.load import parse_graphs_speaker  # , parse_eq_speaker
-from tests.test_common import EXPECTED_FULL_SET, EXPECTED_LIMITED_SET  # , EXPECTED_PARTIAL_SET
+from spinorama.measurements import Measurements
+from tests.test_common import _count_filled
 
 from spinorama.speaker import (
     display_spinorama,
@@ -184,156 +185,81 @@ class SpinoramaDisplayTests(unittest.TestCase):
             log_level=self.log_level,
         )
 
+    _FULL_DISPLAYS = (
+        display_spinorama,
+        display_spinorama_normalized,
+        display_onaxis,
+        display_inroom,
+        display_inroom_normalized,
+        display_reflection_early,
+        display_reflection_horizontal,
+        display_reflection_vertical,
+        display_spl_horizontal,
+        display_spl_vertical,
+        display_spl_horizontal_normalized,
+        display_spl_vertical_normalized,
+    )
+    _CONTOUR_DISPLAYS = (
+        display_contour_horizontal,
+        display_contour_horizontal_normalized,
+        display_contour_horizontal_3d,
+        display_contour_horizontal_normalized_3d,
+        display_contour_vertical,
+        display_contour_vertical_normalized,
+        display_contour_vertical_3d,
+        display_contour_vertical_normalized_3d,
+    )
+    _RADAR_DISPLAYS = (display_radar_horizontal, display_radar_vertical)
+    _LIMITED_DISPLAYS = (
+        display_onaxis,
+        display_spl_horizontal,
+        display_spl_vertical,
+        display_spl_horizontal_normalized,
+        display_spl_vertical_normalized,
+    )
+    _PARTIAL_DISPLAYS = (
+        display_spinorama,
+        display_spinorama_normalized,
+        display_onaxis,
+        display_inroom,
+        display_inroom_normalized,
+    )
+
     def test_dfs_full(self):
-        for df in self.dfs_full.values():
-            self.assertIsNotNone(df)
-            self.assertSetEqual(EXPECTED_FULL_SET, set(df.keys()))
-
-            for k in df:
-                if isinstance(df[k], pd.DataFrame):
-                    if "_unmelted" in k:
-                        self.assertIn("Freq", df[k])
-                    else:
-                        self.assertIn("Freq", df[k])
-                        self.assertIn("Measurements", df[k])
-                        self.assertIn("dB", df[k])
-
-            # check all spin graphs
-            for _, op_call in (
-                ("CEA2034", display_spinorama),
-                ("CEA2034 Normalized", display_spinorama_normalized),
-                ("On Axis", display_onaxis),
-                ("Estimated In-Room Response", display_inroom),
-                ("Estimated In-Room Response Normalized", display_inroom_normalized),
-                ("Early Reflections", display_reflection_early),
-                ("Horizontal Reflections", display_reflection_horizontal),
-                ("Vertical Reflections", display_reflection_vertical),
-                ("SPL Horizontal", display_spl_horizontal),
-                ("SPL Vertical", display_spl_vertical),
-                ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
-                ("SPL Vertical Normalized", display_spl_vertical_normalized),
-            ):
-                graph = op_call(df, plot_params_default)
-                self.assertIsNotNone(graph)
-
-            # check all contour graphs
-            for _, op_call in (
-                ("SPL Horizontal Contour", display_contour_horizontal),
-                ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
-                ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
-                ("SPL Horizontal Contour Normalized 3D", display_contour_horizontal_normalized_3d),
-                ("SPL Vertical Contour", display_contour_vertical),
-                ("SPL Vertical Contour Normalized", display_contour_vertical_normalized),
-                ("SPL Vertical Contour 3D", display_contour_vertical_3d),
-                ("SPL Vertical Contour Normalized 3D", display_contour_vertical_normalized_3d),
-            ):
-                graph = op_call(df, contour_params_default)
-                self.assertIsNotNone(graph)
-
-            # check all radar graphs
-            for _, op_call in (
-                ("SPL Horizontal Radar", display_radar_horizontal),
-                ("SPL Vertical Radar", display_radar_vertical),
-            ):
-                graph = op_call(df, radar_params_default)
-                self.assertIsNotNone(graph)
+        for m in self.dfs_full.values():
+            self.assertIsNotNone(m)
+            self.assertEqual(_count_filled(m), 13)
+            for op_call in self._FULL_DISPLAYS:
+                self.assertIsNotNone(op_call(m, plot_params_default))
+            for op_call in self._CONTOUR_DISPLAYS:
+                self.assertIsNotNone(op_call(m, contour_params_default))
+            for op_call in self._RADAR_DISPLAYS:
+                self.assertIsNotNone(op_call(m, radar_params_default))
 
     def test_dfs_limited(self):
-        for df in self.dfs_limited.values():
-            self.assertIsNotNone(df)
-            self.assertSetEqual(EXPECTED_LIMITED_SET, set(df.keys()))
-
-            for k in df:
-                if isinstance(df[k], pd.DataFrame):
-                    if "_unmelted" in k:
-                        self.assertIn("Freq", df[k])
-                    else:
-                        self.assertIn("Freq", df[k])
-                        self.assertIn("Measurements", df[k])
-                        self.assertIn("dB", df[k])
-
-            # check all spin graphs
-            for _, op_call in (
-                ("On Axis", display_onaxis),
-                ("SPL Horizontal", display_spl_horizontal),
-                ("SPL Vertical", display_spl_vertical),
-                ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
-                ("SPL Vertical Normalized", display_spl_vertical_normalized),
-            ):
-                graph = op_call(df, plot_params_default)
-                self.assertIsNotNone(graph)
-
-            # check all contour graphs
-            for _, op_call in (
-                ("SPL Horizontal Contour", display_contour_horizontal),
-                ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
-                ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
-                ("SPL Horizontal Contour Normalized 3D", display_contour_horizontal_normalized_3d),
-                ("SPL Vertical Contour", display_contour_vertical),
-                ("SPL Vertical Contour Normalized", display_contour_vertical_normalized),
-                ("SPL Vertical Contour 3D", display_contour_vertical_3d),
-                ("SPL Vertical Contour Normalized 3D", display_contour_vertical_normalized_3d),
-            ):
-                graph = op_call(df, contour_params_default)
-                self.assertIsNotNone(graph)
-
-            # check all radar graphs
-            for _, op_call in (
-                ("SPL Horizontal Radar", display_radar_horizontal),
-                ("SPL Vertical Radar", display_radar_vertical),
-            ):
-                graph = op_call(df, radar_params_default)
-                self.assertIsNotNone(graph)
+        for m in self.dfs_limited.values():
+            self.assertIsNotNone(m)
+            self.assertEqual(_count_filled(m), 6)
+            for op_call in self._LIMITED_DISPLAYS:
+                self.assertIsNotNone(op_call(m, plot_params_default))
+            for op_call in self._CONTOUR_DISPLAYS:
+                self.assertIsNotNone(op_call(m, contour_params_default))
+            for op_call in self._RADAR_DISPLAYS:
+                self.assertIsNotNone(op_call(m, radar_params_default))
 
     def test_dfs_partial(self):
-        partial_set = set(
-            [
-                "sensitivity",
-                "sensitivity_distance",
-                "sensitivity_1m",
-                "Estimated In-Room Response_unmelted",
-                "Estimated In-Room Response",
-                "Estimated In-Room Response Normalized_unmelted",
-                "Estimated In-Room Response Normalized",
-                "On Axis_unmelted",
-                "On Axis",
-                "CEA2034_unmelted",
-                "CEA2034",
-                "CEA2034 Normalized_unmelted",
-                "CEA2034 Normalized",
-            ]
-        )
-        for _, df in self.dfs_partial.items():
-            self.assertIsNotNone(df)
-            self.assertSetEqual(partial_set, set(df.keys()))
+        for m in self.dfs_partial.values():
+            self.assertIsNotNone(m)
+            # cea2034 + normalized + on_axis + eir + normalized + sensitivity
+            self.assertEqual(_count_filled(m), 6)
+            for op_call in self._PARTIAL_DISPLAYS:
+                self.assertIsNotNone(op_call(m, plot_params_default))
 
-        for _, df in self.dfs_full.items():
-            self.assertIsNotNone(df)
-            # Full measurements should contain all partial measurements plus additional ones
-            self.assertTrue(
-                partial_set.issubset(set(df.keys())),
-                f"Full measurements should contain all partial measurements. Missing: {partial_set - set(df.keys())}",
-            )
-
-            for k in df:
-                if isinstance(df[k], pd.DataFrame):
-                    if "_unmelted" in k:
-                        self.assertIn("Freq", df[k])
-                    else:
-                        self.assertIn("Freq", df[k])
-                        self.assertIn("Measurements", df[k])
-                        self.assertIn("dB", df[k])
-
-            # check all spin graphs
-            for _, op_call in (
-                ("CEA2034", display_spinorama),
-                ("CEA2034 Normalized", display_spinorama_normalized),
-                ("On Axis", display_onaxis),
-                ("Estimated In-Room Response", display_inroom),
-                ("Estimated In-Room Response Normalized", display_inroom_normalized),
-            ):
-                graph = op_call(df, plot_params_default)
-                self.assertIsNotNone(graph)
+        # Full measurements should also satisfy the partial set of displays.
+        for m in self.dfs_full.values():
+            self.assertIsNotNone(m)
+            for op_call in self._PARTIAL_DISPLAYS:
+                self.assertIsNotNone(op_call(m, plot_params_default))
 
 
 if __name__ == "__main__":

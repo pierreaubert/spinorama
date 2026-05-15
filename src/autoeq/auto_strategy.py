@@ -22,12 +22,13 @@ import numpy as np
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.ltype import DataSpeaker, OptimResult
+from spinorama.ltype import OptimResult
 from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import Peq
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_print
 from spinorama.filter_scores import scores_apply_filter
+from spinorama.measurements import Measurements
 from autoeq.auto_misc import get3db, have_full_measurements
 from autoeq.auto_target import get_freq, get_target
 from autoeq.auto_msteps import optim_multi_steps
@@ -38,7 +39,7 @@ TRACE = False
 
 def optim_eval_strategy(
     current_speaker_name: str,
-    df_speaker: DataSpeaker,
+    m: Measurements,
     optim_config: dict,
     use_score: bool,
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, float]]:
@@ -47,7 +48,7 @@ def optim_eval_strategy(
     curve_names = optim_config["curve_names"]
 
     # get freq and targets
-    curve_data, curve_freq, curve_target = get_freq(df_speaker, optim_config)
+    curve_data, curve_freq, curve_target = get_freq(m, optim_config)
     if curve_data is None or curve_freq is None or curve_target is None:
         logger.error("Cannot compute freq for %s", current_speaker_name)
         return False, ({}, (0, 0, 0), [], 0.0)
@@ -63,7 +64,7 @@ def optim_eval_strategy(
     )
     auto_status, (auto_results, auto_peq) = optim_multi_steps(
         current_speaker_name,
-        df_speaker,
+        m,
         curve_freq,
         curve_target,
         curve_target_interp,
@@ -74,7 +75,7 @@ def optim_eval_strategy(
     auto_score = {}
     auto_slope_lw = 0.0
     if use_score and auto_status:
-        auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
+        auto_spin, _, auto_score = scores_apply_filter(m, auto_peq)
         if auto_spin is not None:
             unmelted_auto_spin = graph_unmelt(auto_spin)
             try:
@@ -102,13 +103,13 @@ def optim_eval_strategy(
 
 def optim_strategy(
     current_speaker_name: str,
-    df_speaker: DataSpeaker,
+    m: Measurements,
     optim_config: dict,
     use_score: bool,
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, dict]]:
     # do we use -3dB point for target?
     if optim_config["target_min_freq"] is None:
-        status, spl = get3db(df_speaker, 3.0)
+        status, spl = get3db(m, 3.0)
         if status is None:
             logger.debug("error: cannot get -3dB point for %s", current_speaker_name)
             optim_config["target_min_freq"] = 80  # arbitrary
@@ -225,7 +226,7 @@ def optim_strategy(
                 "loss": "leastsquare_loss",
             }
         )
-        if have_full_measurements(df_speaker):
+        if have_full_measurements(m):
             configs.append(
                 {
                     "curve_names": ["Listening Window", "Estimated In-Room Response"],
@@ -264,7 +265,7 @@ def optim_strategy(
 
         # compute
         auto_status, (auto_score, auto_results, auto_peq, auto_slope_lw) = optim_eval_strategy(
-            current_speaker_name, df_speaker, current_optim_config, use_score
+            current_speaker_name, m, current_optim_config, use_score
         )
         logger.debug(
             "strategy: status %s score %s results %s peq %s slope %s",
@@ -296,7 +297,7 @@ def optim_strategy(
             continue
 
         if (
-            "CEA2034_unmelted" in df_speaker
+            m.cea2034 is not None
             and auto_slope_lw is not None
             and optim_config.get("loss", "") != "score_loss"
             and not constraint_optim
@@ -344,7 +345,7 @@ def optim_strategy(
                         auto_slope_lw2,
                     ),
                 ) = optim_eval_strategy(
-                    current_speaker_name, df_speaker, current_optim_config, use_score
+                    current_speaker_name, m, current_optim_config, use_score
                 )
                 logger.debug(
                     "strategy2: %s %s %s %s %s",

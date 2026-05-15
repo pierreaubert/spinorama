@@ -115,11 +115,5 @@ C_PIR = "Estimated In-Room Response"
 C_SP = "Sound Power"
 C_ER = "Early Reflections"
 
-U_ON = f"{C_ON}_unmelted"
-U_LW = f"{C_LW}_unmelted"
-U_PIR = f"{C_PIR}_unmelted"
-U_SP = f"{C_SP}_unmelted"
-U_ER = f"{C_ER}_unmelted"
-
 # flags
 flags_ADD_HASH = False  # noqa: N816

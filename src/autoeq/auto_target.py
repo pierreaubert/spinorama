@@ -23,6 +23,7 @@ from scipy.stats import linregress
 
 from spinorama import logger
 from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
@@ -47,8 +48,9 @@ def get_selector(df, optim_config):
     return (df["Freq"] > optim_config["freq_reg_min"]) & (df["Freq"] < optim_config["freq_reg_max"])
 
 
-def get_freq(df_speaker_data, optim_config):
-    """extract freq and one curve"""
+def get_freq(m: Measurements, optim_config):
+    """Extract the working DataFrame (curves of interest + Freq), the
+    target frequency axis, and the per-curve target arrays."""
     curves = optim_config["curve_names"]
     with_pir = False
     local_curves = []
@@ -66,30 +68,30 @@ def get_freq(df_speaker_data, optim_config):
     local_df = pd.DataFrame()
     if len(local_curves) > 0:
         columns = {"Freq"}.union(local_curves)
-        if "CEA2034_unmelted" in df_speaker_data:
-            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
-        elif "CEA2034" in df_speaker_data:
-            df_tmp = df_speaker_data["CEA2034"]
-            try:
-                df_pivoted = graph_unmelt(df_tmp)
-                local_df = df_pivoted.loc[:, columns]
-            except ValueError as value_error:
-                logger.debug("%s %s", df_tmp.keys(), value_error)
-                return None, None, None
-            except KeyError as key_error:
-                logger.debug("columns %s %s", columns, key_error)
-                return None, None, None
-        else:
+        if m.cea2034 is None:
+            return None, None, None
+        try:
+            local_df = m.cea2034.loc[:, list(columns)]
+        except KeyError as key_error:
+            logger.debug("columns %s missing from cea2034: %s", columns, key_error)
             return None, None, None
 
     if with_pir:
-        pir_source = df_speaker_data["Estimated In-Room Response"]
+        if m.eir is None:
+            return None, None, None
+        # ``Estimated In-Room Response`` is the single column in m.eir.
+        pir_source = m.eir
         if local_df.empty:
             local_df = pd.DataFrame(
-                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
+                {
+                    "Freq": pir_source.Freq,
+                    "Estimated In-Room Response": pir_source["Estimated In-Room Response"],
+                }
             )
         else:
-            local_df["Estimated In-Room Response"] = pir_source.dB.to_numpy()
+            local_df["Estimated In-Room Response"] = pir_source[
+                "Estimated In-Room Response"
+            ].to_numpy()
 
     # sselector
     selector = get_selector(local_df, optim_config)
@@ -107,15 +109,15 @@ def get_freq(df_speaker_data, optim_config):
     return local_df, local_freq, local_target
 
 
-def get_target(df_speaker_data, freq, current_curve_name, optim_config):
+def get_target(cea_wide, freq, current_curve_name, optim_config):
     # freq
-    selector = get_selector(df_speaker_data, optim_config)
-    current_curve = df_speaker_data.loc[selector, current_curve_name].to_numpy()
+    selector = get_selector(cea_wide, optim_config)
+    current_curve = cea_wide.loc[selector, current_curve_name].to_numpy()
     # compute linear reg on current_curve
     slope, intercept, _, _, _ = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
-        lw_curve = df_speaker_data.loc[selector, "Listening Window"].to_numpy()
+        lw_curve = cea_wide.loc[selector, "Listening Window"].to_numpy()
         slope_lw, _, _, _, _ = linregress(np.log10(freq), lw_curve)
         if slope_lw > -0.5:
             slope -= slope_lw + 0.5

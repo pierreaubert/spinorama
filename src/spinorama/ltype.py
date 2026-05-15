@@ -16,15 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# local types
+"""Project-local type aliases.
+
+For the typed measurement container, see :class:`spinorama.measurements.Measurements`.
+"""
+
 from typing import Literal, TypeVar
 
 import numpy.typing as npt
-import pandas as pd
 
 Vector = npt.ArrayLike
-
-DataSpeaker = dict[str, pd.DataFrame]
 
 Zone = list[tuple[float, float]]
 
@@ -33,7 +34,3 @@ OptimResult = tuple[int, float, float]
 T = TypeVar("T")
 Status = Literal[True] | Literal[False]
 StatusOr = tuple[Status, T]
-
-ScoreError = tuple[None, None, dict[str, float]]
-ScoreSuccess = tuple[DataSpeaker, DataSpeaker, dict[str, float]]
-ScoreType = ScoreError | ScoreSuccess

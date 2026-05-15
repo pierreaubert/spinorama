@@ -64,7 +64,7 @@ from spinorama.speaker import (
     radar_params_default,
 )
 from spinorama.misc import write_multiformat, measurements_valid_freq_range
-from spinorama.ltype import DataSpeaker
+from spinorama.measurements import Measurements
 from spinorama.constant_paths import DEFAULT_FREQ_RANGE
 
 # Import format-specific loaders
@@ -150,10 +150,10 @@ def detect_format(data_dir: str, speaker_name: str) -> tuple[str, str] | None:
 
 def load_speaker_data(
     data_dir: str, speaker_name: str, fmt: str, version: str, symmetry: str | None = None
-) -> tuple[bool, DataSpeaker, dict]:
+) -> tuple[bool, Measurements, dict]:
     """Load speaker data from the specified directory and format.
 
-    Returns (success, data_dict, parameters)
+    Returns ``(success, measurements, parameters)``.
     """
     # When user points directly to a speaker directory (not a parent),
     # we need to construct the path correctly for the loaders.
@@ -184,7 +184,7 @@ def load_speaker_data(
 
     h_spl = None
     v_spl = None
-    df_graph = {}
+    df_graph: Measurements = Measurements()
 
     try:
         if fmt == "klippel":
@@ -192,7 +192,7 @@ def load_speaker_data(
                 parent_dir, "", dir_name, actual_version, shape
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_graph = filter_graphs(speaker_name, h_spl, v_spl, 300, 3000, fmt, 1.0)
 
         elif fmt == "princeton":
@@ -200,7 +200,7 @@ def load_speaker_data(
                 parent_dir, "", dir_name, actual_version, symmetry
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_graph = filter_graphs(speaker_name, h_spl, v_spl, 300, 3000, fmt, 1.0)
 
         elif fmt == "spl_hv_txt":
@@ -208,7 +208,7 @@ def load_speaker_data(
                 parent_dir, "", dir_name, actual_version, symmetry
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_graph = filter_graphs(speaker_name, h_spl, v_spl, 300, 3000, fmt, 1.0)
 
         elif fmt == "gll_hv_txt":
@@ -216,7 +216,7 @@ def load_speaker_data(
                 parent_dir, dir_name, actual_version
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_graph = filter_graphs(speaker_name, h_spl, v_spl, 300, 3000, fmt, 1.0)
 
         elif fmt == "rew_text_dump":
@@ -224,59 +224,46 @@ def load_speaker_data(
                 parent_dir, "", dir_name, "compute_spin", actual_version
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_even = graph_melt(unify_freq(df_uneven))
-            # Minimal processing for REW format
-            df_graph = {"CEA2034": df_even}
-            # Compute additional graphs
-            df_graph = filter_graphs_partial(df_graph, fmt, 1.0)
+            df_graph = filter_graphs_partial({"CEA2034": df_even}, fmt, 1.0)
 
         elif fmt == "webplotdigitizer":
             status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
                 parent_dir, "", dir_name, "compute_spin", actual_version
             )
             if not status:
-                return False, {}, parameters
+                return False, Measurements(), parameters
             df_even = graph_melt(unify_freq(df_uneven))
-            df_graph = {"CEA2034": df_even}
-            df_graph = filter_graphs_partial(df_graph, fmt, 1.0)
+            df_graph = filter_graphs_partial({"CEA2034": df_even}, fmt, 1.0)
 
         else:
             logger.error(f"Unknown format: {fmt}")
-            return False, {}, parameters
+            return False, Measurements(), parameters
 
     except Exception as e:
         logger.exception(f"Error loading speaker data: {e}")
-        return False, {}, parameters
+        return False, Measurements(), parameters
 
-    if not df_graph:
+    if df_graph.is_empty():
         logger.error("No data loaded - graph generation failed")
-        return False, {}, parameters
+        return False, Measurements(), parameters
 
     return True, df_graph, parameters
 
 
-def compute_preference_score(df_graph: DataSpeaker) -> dict[str, Any]:
+def compute_preference_score(m: Measurements) -> dict[str, Any]:
     """Compute preference score from the generated graphs."""
-    cea2034 = df_graph.get("CEA2034")
-    pir = df_graph.get("Estimated In-Room Response")
-
-    if cea2034 is None:
+    if m.cea2034 is None:
         logger.warning("CEA2034 data not found - cannot compute preference score")
         return {}
-
-    # Ensure data is in melted format
-    if "Measurements" not in cea2034.columns:
-        cea2034 = graph_melt(cea2034)
-
-    if pir is not None and "Measurements" not in pir.columns:
-        pir = graph_melt(pir)
-
+    cea2034 = graph_melt(m.cea2034)
+    pir = graph_melt(m.eir) if m.eir is not None else None
     return speaker_pref_rating(cea2034, pir, rounded=True)
 
 
 def generate_graphs(
-    df_graph: DataSpeaker,
+    m: Measurements,
     speaker_name: str,
     output_dir: str,
     parameters: dict,
@@ -299,19 +286,13 @@ def generate_graphs(
     graph_params["ymax"] = DEFAULT_ORIGIN_INFO["max dB"]
 
     # Determine valid frequency range
-    h_spl = df_graph.get("SPL Horizontal_unmelted")
-    v_spl = df_graph.get("SPL Vertical_unmelted")
     valid_freq_range = (20.0, 20000.0)
-    if h_spl is not None and "Freq" in h_spl:
-        valid_freq_range = (
-            max(valid_freq_range[0], h_spl.Freq.min()),
-            min(valid_freq_range[1], h_spl.Freq.max()),
-        )
-    if v_spl is not None and "Freq" in v_spl:
-        valid_freq_range = (
-            max(valid_freq_range[0], v_spl.Freq.min()),
-            min(valid_freq_range[1], v_spl.Freq.max()),
-        )
+    for spl in (m.h_spl, m.v_spl):
+        if spl is not None and "Freq" in spl:
+            valid_freq_range = (
+                max(valid_freq_range[0], spl.Freq.min()),
+                min(valid_freq_range[1], spl.Freq.max()),
+            )
 
     # Generate main graphs
     graphs_to_generate = [
@@ -322,7 +303,7 @@ def generate_graphs(
     ]
 
     # Add in-room response if available
-    if "Estimated In-Room Response" in df_graph:
+    if m.eir is not None:
         graphs_to_generate.extend([
             ("Estimated_In-Room_Response", display_inroom, False),
             ("Estimated_In-Room_Response_Normalized", display_inroom_normalized, False),
@@ -331,7 +312,7 @@ def generate_graphs(
     # Generate and save each graph
     for graph_name, display_func, _is_contour in graphs_to_generate:
         try:
-            fig = display_func(df_graph, graph_params, valid_freq_range)
+            fig = display_func(m, graph_params, valid_freq_range)
             if fig is None:
                 logger.debug(f"Failed to generate {graph_name} graph (data may not be available)")
                 continue
@@ -375,7 +356,7 @@ def generate_graphs(
 
         for graph_name, display_func in reflection_graphs:
             try:
-                fig = display_func(df_graph, graph_params, valid_freq_range)
+                fig = display_func(m, graph_params, valid_freq_range)
                 if fig is None:
                     continue
 
@@ -398,7 +379,7 @@ def generate_graphs(
 
         for graph_name, display_func in spl_graphs:
             try:
-                fig = display_func(df_graph, graph_params, valid_freq_range, include_all_angles=True)
+                fig = display_func(m, graph_params, valid_freq_range, include_all_angles=True)
                 if fig is None:
                     continue
 
@@ -425,7 +406,7 @@ def generate_graphs(
 
         for graph_name, display_func, is_3d in contour_graphs:
             try:
-                fig = display_func(df_graph, contour_params, valid_freq_range)
+                fig = display_func(m, contour_params, valid_freq_range)
                 if fig is None:
                     continue
 
@@ -446,7 +427,7 @@ def generate_graphs(
 
         for graph_name, display_func in radar_graphs:
             try:
-                fig = display_func(df_graph, radar_params, valid_freq_range)
+                fig = display_func(m, radar_params, valid_freq_range)
                 if fig is None:
                     continue
 

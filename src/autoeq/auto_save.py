@@ -26,15 +26,21 @@ import pathlib
 
 import plotly.io
 from spinorama import logger, setup_logger
-from spinorama.ltype import DataSpeaker, OptimResult
+from spinorama.ltype import OptimResult
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
-from spinorama.misc import measurements_complete_spl, measurements_complete_freq, sanitize_filename
+from spinorama.misc import (
+    graph_melt,
+    measurements_complete_spl,
+    measurements_complete_freq,
+    sanitize_filename,
+)
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
     scores_apply_filter,
     scores_print,
 )
+from spinorama.measurements import Measurements
 from autoeq.auto_target import get_freq, get_target
 from autoeq.auto_plot import graph_results as auto_graph_results
 from autoeq.auto_strategy import optim_strategy
@@ -98,7 +104,7 @@ def write_eq_to_file(
 def print_auto_graphs_seq(
     speaker_name: str,
     speaker_origin: str,
-    df_speaker: DataSpeaker,
+    m: Measurements,
     auto_peq: Peq,
     auto_spin,
     auto_pir,
@@ -111,12 +117,13 @@ def print_auto_graphs_seq(
         logger.debug("skipping printing graphs")
         return
 
-    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+    data_frame, freq, auto_target = get_freq(m, optim_config)
     auto_target_interp = []
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
 
-        # print('DEBUG: #{} freq0={}'.format(len(freq), freq[0]))
+        cea2034_melted = graph_melt(m.cea2034) if m.cea2034 is not None else None
+        eir_melted = graph_melt(m.eir) if m.eir is not None else None
         graphs = auto_graph_results(
             speaker_name,
             speaker_origin,
@@ -124,9 +131,9 @@ def print_auto_graphs_seq(
             auto_peq,
             auto_target,
             auto_target_interp,
-            df_speaker["CEA2034"],
+            cea2034_melted,
             auto_spin,
-            df_speaker["Estimated In-Room Response"],
+            eir_melted,
             auto_pir,
             optim_config,
             score,
@@ -242,18 +249,12 @@ def build_eq_name(
 
 
 def smoke_test_cea2034(
-    current_speaker_name: str, current_speaker_origin: str, df_speaker: DataSpeaker
+    current_speaker_name: str, current_speaker_origin: str, m: Measurements
 ) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
-    if "CEA2034_unmelted" not in df_speaker and "CEA2034" not in df_speaker:
+    if m.cea2034 is None:
         # this should not happen
-        if current_speaker_origin == "Princeton":
-            logger.debug(
-                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
-            )
-        else:
-            logger.error(
-                "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
-            )
+        log = logger.debug if current_speaker_origin == "Princeton" else logger.error
+        log("%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin)
         return False, ("", (0, 0, 0), [])
     return True, ("", (0, 0, 0), [])
 
@@ -261,7 +262,7 @@ def smoke_test_cea2034(
 def optim_save_peq(
     current_speaker_name: str,
     current_speaker_origin: str,
-    df_speaker: DataSpeaker,
+    m: Measurements,
     optim_config: dict,
 ) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
     """Compute and then save PEQ for this speaker"""
@@ -279,24 +280,20 @@ def optim_save_peq(
 
     # do we have CEA2034 data (temporary test, should be much smarter)
     smoke_test, smoke_empty = smoke_test_cea2034(
-        current_speaker_name, current_speaker_origin, df_speaker
+        current_speaker_name, current_speaker_origin, m
     )
     if not smoke_test:
         return smoke_test, smoke_empty
 
-    # do we have the full data?
-    use_score = "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker
-    if use_score and (
-        not measurements_complete_spl(
-            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        )
-        or not measurements_complete_freq(
-            df_speaker["SPL Horizontal_unmelted"], df_speaker["SPL Vertical_unmelted"]
-        )
-    ):
-        use_score = False
+    # do we have full H/V sweep data?
+    use_score = (
+        m.h_spl is not None
+        and m.v_spl is not None
+        and measurements_complete_spl(m.h_spl, m.v_spl)
+        and measurements_complete_freq(m.h_spl, m.v_spl)
+    )
     # maybe we only have partial data but enough to compute the Spin
-    if not use_score and ("CEA2034" in df_speaker or "CEA2034_unmelted" in df_speaker):
+    if not use_score and m.cea2034 is not None:
         use_score = True
 
     # don't optimise below the minimum freq found in measurements
@@ -305,14 +302,14 @@ def optim_save_peq(
         use_score = False
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
-    else:
-        min_freq = max(20, df_speaker["CEA2034_unmelted"].Freq.to_numpy().min())
+    elif m.cea2034 is not None:
+        min_freq = max(20, m.cea2034.Freq.to_numpy().min())
         optim_config["freq_reg_min"] = max(min_freq, optim_config["freq_reg_min"])
 
     score: dict[str, float] = {}
     if use_score:
         logger.debug("Computing init score for %s", current_speaker_name)
-        _, _, score = scores_apply_filter(df_speaker, [])
+        _, _, score = scores_apply_filter(m, [])
 
     # compute pref score from speaker if possible
     auto_score: dict[str, float] = {}
@@ -320,7 +317,7 @@ def optim_save_peq(
     if not optim_config["generate_images_only"]:
         logger.debug("Calling strategy for %s", current_speaker_name)
         auto_status, (auto_score, auto_results, auto_peq, auto_config) = optim_strategy(
-            current_speaker_name, df_speaker, optim_config, use_score
+            current_speaker_name, m, optim_config, use_score
         )
         if auto_status is False:
             logger.error("EQ generation failed for %s", current_speaker_name)
@@ -381,7 +378,7 @@ def optim_save_peq(
             print("Current run is not a winner:")
             print_small_summary(current_speaker_name, score, auto_score)
 
-        auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir, auto_score = scores_apply_filter(m, auto_peq)
         if score is not None:
             scores = [
                 score.get("pref_score", -1000),
@@ -401,7 +398,7 @@ def optim_save_peq(
         print_auto_graphs_seq(
             current_speaker_name,
             current_speaker_origin,
-            df_speaker,
+            m,
             auto_peq,
             auto_spin,
             auto_pir,

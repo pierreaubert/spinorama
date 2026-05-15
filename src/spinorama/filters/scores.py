@@ -19,7 +19,7 @@
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import DataSpeaker
+from spinorama.measurements import Measurements
 from spinorama.misc import graph_melt, graph_unmelt
 from spinorama.compute_scores import speaker_pref_rating, nbd
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
@@ -27,22 +27,21 @@ from spinorama.filter_peq import Peq, peq_apply_measurements
 
 
 def scores_apply_filter(
-    df_speaker: DataSpeaker, peq: Peq
+    m: Measurements, peq: Peq
 ) -> tuple[pd.DataFrame | None, pd.DataFrame | None, dict[str, float] | None]:
-    spin_filtered = pd.DataFrame()
-    pir_filtered = pd.DataFrame()
-    score_filtered = None
-    if "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker:
-        # get SPL H & V
-        spl_h = df_speaker["SPL Horizontal_unmelted"]
-        spl_v = df_speaker["SPL Vertical_unmelted"]
-        # apply EQ to all horizontal and vertical measurements
-        spl_h_filtered = peq_apply_measurements(spl_h, peq)
-        spl_v_filtered = peq_apply_measurements(spl_v, peq)
+    """Apply a PEQ to the H/V sweeps (when available) and return the resulting
+    CEA2034 spin, PIR, and preference score. Falls back to per-curve EQ on the
+    pre-computed CEA2034 when H/V sweeps are not present.
+    """
+    spin_filtered: pd.DataFrame | None = pd.DataFrame()
+    pir_filtered: pd.DataFrame | None = pd.DataFrame()
+    if m.h_spl is not None and m.v_spl is not None:
+        spl_h_filtered = peq_apply_measurements(m.h_spl, peq)
+        spl_v_filtered = peq_apply_measurements(m.v_spl, peq)
         spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
         pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     else:
-        spin_filtered, pir_filtered, _ = noscore_apply_filter(df_speaker, peq, False)
+        spin_filtered, pir_filtered, _ = noscore_apply_filter(m, peq, False)
 
     score_filtered = speaker_pref_rating(cea2034=spin_filtered, pir=pir_filtered, rounded=False)
     if score_filtered is None:
@@ -52,47 +51,39 @@ def scores_apply_filter(
 
 
 def noscore_apply_filter(
-    df_speaker: DataSpeaker, peq: Peq, is_normalized: bool
+    m: Measurements, peq: Peq, is_normalized: bool
 ) -> tuple[pd.DataFrame | None, pd.DataFrame | None, pd.DataFrame | None]:
+    """Apply a PEQ to the pre-computed CEA2034 / EIR / On Axis curves and
+    return the three filtered melted frames (any may be ``None``).
+    """
     spin_filtered = None
     pir_filtered = None
     on_filtered = None
 
-    key_cea2034 = "CEA2034 Normalized_unmelted" if is_normalized else "CEA2034_unmelted"
-    if key_cea2034 in df_speaker:
-        spin = df_speaker[key_cea2034]
+    spin = m.cea2034_normalized if is_normalized else m.cea2034
+    if spin is not None:
         try:
             spin_filtered = peq_apply_measurements(spin, peq)
         except ValueError:
             logger.error("Peq apply measurement failed %s", ",".join(list(spin.keys())))
             return None, None, None
 
-    key_pir = (
-        "Estimated In-Room Response Normalized_unmelted"
-        if is_normalized
-        else "Estimated In-Room Response_unmelted"
-    )
-    if key_pir in df_speaker:
-        pir = df_speaker[key_pir]
+    pir = m.eir_normalized if is_normalized else m.eir
+    if pir is not None:
         pir_filtered = peq_apply_measurements(pir, peq)
 
-    if "On Axis_unmelted" in df_speaker:
-        on = df_speaker["On Axis_unmelted"]
+    if m.on_axis is not None:
+        on = m.on_axis
         if is_normalized:
+            # The normalised on-axis curve is identically zero; copy so we
+            # don't mutate the caller's frame.
+            on = on.copy()
             on["On Axis"] = 0.0
         on_filtered = peq_apply_measurements(on, peq)
 
-    spin_melted = None
-    if spin_filtered is not None:
-        spin_melted = graph_melt(spin_filtered)
-
-    pir_melted = None
-    if pir_filtered is not None:
-        pir_melted = graph_melt(pir_filtered)
-
-    on_melted = None
-    if on_filtered is not None:
-        on_melted = graph_melt(on_filtered)
+    spin_melted = graph_melt(spin_filtered) if spin_filtered is not None else None
+    pir_melted = graph_melt(pir_filtered) if pir_filtered is not None else None
+    on_melted = graph_melt(on_filtered) if on_filtered is not None else None
 
     return spin_melted, pir_melted, on_melted
 
@@ -187,24 +178,17 @@ def scores_print2(score: dict, score1: dict, score2: dict):
     return "\n".join(res)
 
 
-def scores_loss(df_speaker: dict, peq: Peq) -> float:
-    # optimise for score directly
-    _, _, score_filtered = scores_apply_filter(df_speaker, peq)
-    # optimize max score is the same as optimize min -score
+def scores_loss(m: Measurements, peq: Peq) -> float:
+    """Negated preference score, suitable as a scipy minimisation objective."""
+    _, _, score_filtered = scores_apply_filter(m, peq)
     return -score_filtered["pref_score"]
 
 
-def lw_loss(df_speaker: dict, peq: Peq) -> float:
-    # optimise LW
-    # get SPL H & V
-    spl_h = df_speaker["SPL Horizontal_unmelted"]
-    spl_v = df_speaker["SPL Vertical_unmelted"]
-    # apply EQ to all horizontal and vertical measurements
-    spl_h_filtered = peq_apply_measurements(spl_h, peq)
-    spl_v_filtered = peq_apply_measurements(spl_v, peq)
-    # compute LW
+def lw_loss(m: Measurements, peq: Peq) -> float:
+    """Listening-window NBD after applying ``peq`` to the H/V sweeps."""
+    if m.h_spl is None or m.v_spl is None:
+        raise ValueError("lw_loss requires H and V SPL sweeps")
+    spl_h_filtered = peq_apply_measurements(m.h_spl, peq)
+    spl_v_filtered = peq_apply_measurements(m.v_spl, peq)
     lw_filtered = listening_window(spl_h_filtered, spl_v_filtered)
-    # optimize nbd
-    score = nbd(dfu=lw_filtered, min_freq=100)
-    # print("LW score: {}".format(score))
-    return score
+    return nbd(dfu=lw_filtered, min_freq=100)

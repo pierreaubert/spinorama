@@ -105,6 +105,10 @@ class Measurements:
     # class is lossless during the migration.
     _extras: dict[str, Any] = field(default_factory=dict)
 
+    # Memoised, optim-only scratch space (e.g. the precomputed CEA2034 score
+    # inputs used by autoeq's hot path). Never serialised.
+    _score_cache: Any = field(default=None, repr=False, compare=False)
+
     # All the dataclass field names that hold a DataFrame, in legacy-dict order.
     _FRAME_FIELDS: ClassVar[tuple[str, ...]] = (
         "h_spl",

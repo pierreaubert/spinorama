@@ -25,6 +25,7 @@ import numpy as np
 
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_spl
+from spinorama.measurements import Measurements
 from autoeq.auto_loss import loss
 from autoeq.auto_biquad import find_best_peak
 
@@ -78,7 +79,8 @@ class BiquadRangeTests(unittest.TestCase):
             ]
             auto_target = peq_spl(self.freq, test_peq)
 
-            init_fun = loss({}, self.freq, [auto_target], [], 0, self.config)
+            empty_m = Measurements()
+            init_fun = loss(empty_m, self.freq, [auto_target], [], 0, self.config)
 
             # super guess
             freq_range = [test_peq[0][1].freq * 0.5, test_peq[0][1].freq / 0.5]
@@ -94,7 +96,7 @@ class BiquadRangeTests(unittest.TestCase):
                 auto_fun,
                 auto_iter,
             ) = find_best_peak(
-                df_speaker={},
+                m=empty_m,
                 freq=self.freq,
                 auto_target=[auto_target],
                 freq_range=freq_range,
@@ -107,7 +109,7 @@ class BiquadRangeTests(unittest.TestCase):
             )
 
             last_peq = [(1.0, Biquad(3, auto_freq, 48000, auto_q, auto_db))]
-            last_fun = loss({}, self.freq, [auto_target], last_peq, 0, self.config)
+            last_fun = loss(empty_m, self.freq, [auto_target], last_peq, 0, self.config)
 
             # print(
             #    "{:6s} {:1d} {:+5.0f}Hz {:0.2f}Q {:+0.2f}dB func=[init {:+0.3f} algo {:+0.3f} end {:+0.3f}] iter={}".format(

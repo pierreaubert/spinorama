@@ -26,6 +26,7 @@ import numpy.testing as npt
 from spinorama.compute_misc import unify_freq
 from spinorama.filter_iir import Biquad
 from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
+from spinorama.measurements import Measurements
 from spinorama.misc import graph_melt, graph_unmelt
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.load_klippel import parse_graphs_speaker_klippel

@@ -38,6 +38,7 @@ from generate_common import (
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.misc import sanitize_filename
 from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
+from spinorama.measurements import Measurements
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
@@ -148,14 +149,13 @@ def print_radar(meta_data, scale, speaker_data):
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
+        _m = Measurements.from_legacy_dict(
+            speaker_data[measurement["origin"]][def_measurement]
+        )
         if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
-            _, _, pref_rating_eq = scores_apply_filter(
-                speaker_data[measurement["origin"]][def_measurement], iir
-            )
+            _, _, pref_rating_eq = scores_apply_filter(_m, iir)
         else:
-            _, _, pref_rating_eq = noscore_apply_filter(
-                speaker_data[measurement["origin"]][def_measurement], iir, is_normalized=False
-            )
+            _, _, pref_rating_eq = noscore_apply_filter(_m, iir, is_normalized=False)
         # pprint(pref_rating_eq)
         # add results to data
         pretty_name = {
