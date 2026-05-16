@@ -135,18 +135,19 @@ def _display_inroom_common(
         logger.debug("plot_inroom: no CEA2034 (is_normalized=%s)", is_normalized)
         return None
 
-    eir = m.eir_normalized if is_normalized else m.eir
-    if eir is None:
+    # Match legacy behaviour: the main curve is always the non-normalised EIR
+    # regardless of ``is_normalized`` — only the confidence-zone spin changes.
+    if m.eir is None:
         logger.debug("plot_inroom: no EIR (partial measurements)")
         return None
 
     return plot_graph_regression(
-        eir,
+        m.eir,
         "Estimated In-Room Response",
         spin,
         graph_params,
         slopes,
-        is_normalized,
+        False,
         valid_freq_range,
     )
 
@@ -167,9 +168,9 @@ def display_inroom_normalized(
 def display_onaxis(
     m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
 ):
-    # Prefer the dedicated on-axis frame; fall back to the on-axis column of
-    # the CEA2034 spin (partial measurements path).
-    onaxis = m.on_axis if m.on_axis is not None else m.cea2034
+    # Match legacy preference: prefer CEA2034's On Axis column, then the
+    # standalone on-axis frame.
+    onaxis = m.cea2034 if m.cea2034 is not None else m.on_axis
     if onaxis is None or "On Axis" not in onaxis:
         logger.debug("display_onaxis: no on-axis curve available")
         return None

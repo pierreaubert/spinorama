@@ -8,22 +8,22 @@
     <%include file="symbols.html"/>
     <%include file="headphone_nav_search.html"/>
 
-    <article class="message is-warning banner">
-      <h4>Please read:</h4>
-      <div class="message-header">
-        <p>Warning</p>
-        <button class="delete" aria-label="delete"></button>
-      </div>
-      <div class="message-body">
-        Headphone measurements are evaluated against the Harman target curve.
-        Over-ear and on-ear headphones use the Harman Over-Ear 2019 target,
-        while in-ear and earbud use the Harman In-Ear 2019 target.
-      </div>
-    </article>
-
     <%namespace name="util" module="website.utils" import="*"/>
 
     <div class="container">
+      <h1 class="title is-4">Headphone measurements ranking</h1>
+      <article class="message is-warning banner">
+        <h2 class="message-header">
+          <span>Please read</span>
+          <button class="delete" aria-label="delete"></button>
+        </h2>
+        <div class="message-body">
+          Headphone measurements are evaluated against the Harman target curve.
+          Over-ear and on-ear headphones use the Harman Over-Ear 2019 target,
+          while in-ear and earbud use the Harman In-Ear 2019 target.
+        </div>
+      </article>
+
       <div class="fixed-grid has-11-cols gap-0 has-6-cols-mobile">
 	<div class="grid" id="headphones" data-num="0">
 	</div>

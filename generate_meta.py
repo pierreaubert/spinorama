@@ -272,21 +272,20 @@ def add_measurement(speaker_name, origin, version, dfs):
 
     eir_melted = graph_melt(m.eir)
     pref_rating = compute_speaker_pref_rating(cea2034=cea2034_melted, pir=eir_melted, rounded=True)
+    if pref_rating is None:
+        return result
+
     score_penalty = m._extras.get("extras", {}).get("score_penalty", 0.0) if m._extras else 0.0
-    if pref_rating is not None:
-        pref_rating["pref_score"] += score_penalty
+    pref_rating["pref_score"] += score_penalty
 
-        if pref_rating is None:
-            return result
-
-        result["pref_rating{}".format(eq_tag)] = pref_rating
-        result["scaled_pref_rating{}".format(eq_tag)] = {
-            "scaled_flatness": scaled_flatness_val,
-            "scaled_pref_score": compute_scaled_pref_score(pref_rating["pref_score"]),
-            "scaled_pref_wsub": compute_scaled_pref_score(pref_rating["pref_score_wsub"]),
-            "scaled_lfx_hz": compute_scaled_lfx_hz(pref_rating["lfx_hz"]),
-            "scaled_sm_pred_in_room": compute_scaled_lfx_hz(pref_rating["sm_pred_in_room"]),
-        }
+    result["pref_rating{}".format(eq_tag)] = pref_rating
+    result["scaled_pref_rating{}".format(eq_tag)] = {
+        "scaled_flatness": scaled_flatness_val,
+        "scaled_pref_score": compute_scaled_pref_score(pref_rating["pref_score"]),
+        "scaled_pref_wsub": compute_scaled_pref_score(pref_rating["pref_score_wsub"]),
+        "scaled_lfx_hz": compute_scaled_lfx_hz(pref_rating["lfx_hz"]),
+        "scaled_sm_pred_in_room": compute_scaled_lfx_hz(pref_rating["sm_pred_in_room"]),
+    }
     return result
 
 

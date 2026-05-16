@@ -130,11 +130,10 @@ Links to other reviews: <a href="${review}">${key} review</a>
 
 % if print_warning:
 <article class="message is-warning">
-  <h4>Notice</h4>
-  <div class="message-header">
-    <p>Warning</p>
+  <h2 class="message-header">
+    <span>Notice</span>
     <button class="delete" aria-label="delete"></button>
-  </div>
+  </h2>
   <div class="message-body">
     We have multiple measurements for this headphone. Click <a href="../${default_origin | space2url}/index_${default}.html">here</a> to see the default one.
   </div>
@@ -142,12 +141,9 @@ Links to other reviews: <a href="${review}">${key} review</a>
 % endif
 
 <article class="message is-info">
-  <h4>What we know about the measurement:</h4>
-  <div class="message-header">
-    <p>
-      ${headphone_header(meta[headphone])}
-    </p>
-  </div>
+  <h2 class="message-header">
+    ${headphone_header(meta[headphone])}
+  </h2>
   <div class="message-body">
     <div class="content">
       % if current:
@@ -207,9 +203,9 @@ Links to other reviews: <a href="${review}">${key} review</a>
 <%def name="eqs_print_eqs(current_eqs)">
 % for i, (name, eq) in enumerate(current_eqs.items()):
 <article class="message is-primary">
-  <div class="message-header">
+  <h2 class="message-header">
     ${hp_brand} ${hp_model}
-  </div>
+  </h2>
   <div class="message-body">
     ${eqs_print_eq(eq)}
   </div>
