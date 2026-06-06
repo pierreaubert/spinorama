@@ -125,6 +125,26 @@ export function setupCustomTarget() {
 }
 
 /**
+ * Compute mean SPL inside [fmin, fmax] Hz.
+ * @param {number[]} freq
+ * @param {number[]} spl
+ * @param {number} fmin
+ * @param {number} fmax
+ * @returns {number}
+ */
+function meanInBand(freq, spl, fmin, fmax) {
+    let sum = 0;
+    let count = 0;
+    for (let i = 0; i < freq.length; i++) {
+        if (freq[i] >= fmin && freq[i] <= fmax) {
+            sum += spl[i];
+            count++;
+        }
+    }
+    return count > 0 ? sum / count : 0;
+}
+
+/**
  * Apply a custom target curve by updating the compensation and deviation graphs.
  * @param {{freq: number[], spl: number[]}} target
  */
@@ -147,17 +167,23 @@ function applyCustomTarget(target) {
         // Interpolate custom target to measurement grid
         const interpTarget = interpolateTarget(measFreq, target.freq, target.spl);
 
+        // Normalize target over [300, 3000] Hz to match server-side graphs
+        const meanTarget = meanInBand(measFreq, interpTarget, 300, 3000);
+        const targetNorm = interpTarget.map((v) => v - meanTarget);
+
         // Update the target trace (second trace)
         if (compDiv.data.length > 1) {
             /* global Plotly */
-            Plotly.restyle(compDiv, { y: [interpTarget] }, [1]);
+            Plotly.restyle(compDiv, { y: [targetNorm] }, [1]);
             Plotly.relayout(compDiv, { 'data[1].name': 'Custom Target' });
         }
 
         // Update deviation graph
         if (devDiv && devDiv.data && devDiv.data.length > 0) {
-            const deviation = measSpl.map((v, i) => v - interpTarget[i]);
-            Plotly.restyle(devDiv, { y: [deviation] }, [0]);
+            const deviation = measSpl.map((v, i) => v - targetNorm[i]);
+            const meanDeviation = meanInBand(measFreq, deviation, 300, 3000);
+            const deviationNorm = deviation.map((v) => v - meanDeviation);
+            Plotly.restyle(devDiv, { y: [deviationNorm] }, [0]);
         }
     }
 }

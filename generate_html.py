@@ -540,18 +540,32 @@ def main():
                 if not freq_graphs:
                     continue
 
-                # Copy EQ visualization HTML files if they exist
-                hp_eq_dir = os.path.join(cpaths.CPATH_DATAS_HEADPHONE_EQ, hp_name)
+                # Check which EQ graphs exist
+                eq_graph_names = ["Frequency Response", "Target Deviation"]
+                eq_graphs = {}
                 has_eq_flat = False
                 has_eq_score = False
-                for eq_src_name in ("autoeq_flat.html", "autoeq_score.html"):
-                    eq_src = os.path.join(hp_eq_dir, eq_src_name)
-                    if os.path.isfile(eq_src):
-                        shutil.copy(eq_src, os.path.join(hp_dist_dir, eq_src_name))
-                        if "flat" in eq_src_name:
-                            has_eq_flat = True
-                        else:
-                            has_eq_score = True
+                eq_flat_key = None
+                eq_score_key = None
+                for eq_key in ("autoeq_score", "autoeq_flat"):
+                    eq_subdir = "{}_eq_{}".format(default_m, eq_key)
+                    eq_subdir_path = os.path.join(hp_dist_dir, eq_subdir)
+                    if not os.path.isdir(eq_subdir_path):
+                        continue
+                    graphs = {}
+                    for gname in eq_graph_names:
+                        gpath = os.path.join(eq_subdir_path, "{}.json".format(gname))
+                        if os.path.isfile(gpath):
+                            graphs[gname] = {}
+                    if not graphs:
+                        continue
+                    eq_graphs[eq_key] = (eq_subdir, graphs)
+                    if eq_key == "autoeq_flat":
+                        has_eq_flat = True
+                        eq_flat_key = eq_subdir
+                    else:
+                        has_eq_score = True
+                        eq_score_key = eq_subdir
 
                 index_name = "{}/index_{}.html".format(hp_dist_dir, default_m)
                 logger.info("Writing %s for %s", index_name, hp_name)
@@ -563,6 +577,10 @@ def main():
                     origin=origin,
                     has_eq_flat=has_eq_flat,
                     has_eq_score=has_eq_score,
+                    eq_flat_key=eq_flat_key,
+                    eq_score_key=eq_score_key,
+                    g_eq_flat=eq_graphs.get("autoeq_flat", ({}, {}))[1],
+                    g_eq_score=eq_graphs.get("autoeq_score", ({}, {}))[1],
                     site=site,
                     use_search=False,
                     min=".min" if flag_optim else "",
@@ -582,6 +600,22 @@ def main():
                         versions=versions,
                     )
                     write_if_different(graph_content, graph_filename, force=False)
+
+                # per-EQ-graph html pages
+                for eq_subdir, graphs in eq_graphs.values():
+                    for graph_name in graphs:
+                        graph_filename = "{}/{}/{}.html".format(
+                            hp_dist_dir, eq_subdir, graph_name
+                        )
+                        graph_content = graph_html.render(
+                            speaker=hp_name,
+                            graph=graph_name,
+                            meta=hp_meta,
+                            site=site,
+                            min=".min" if flag_optim else "",
+                            versions=versions,
+                        )
+                        write_if_different(graph_content, graph_filename, force=False)
     except Exception as e:
         print("Generating headphone pages failed with {}".format(e))
         import traceback

@@ -40,6 +40,10 @@ from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker import print_graphs
 from spinorama.plot import plot_params_default
 from spinorama.misc import sanitize_filename
+import spinorama.constant_paths as cpaths
+from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
+from spinorama.filter_peq import peq_preamp_gain, peq_spl
+from spinorama.load_rew_eq import parse_eq_iir_rews
 
 VERSION = "2.07"  # Updated version
 ACTIVATE_TRACING: bool = True
@@ -349,12 +353,21 @@ def generate_headphone_graphs(data_dir: str, force: bool):
             for row in reader:
                 if not row or row[0].startswith("#") or row[0].startswith("f"):
                     continue
-                try:
-                    freq.append(float(row[0]))
-                    spl.append(float(row[1]))
-                except (ValueError, IndexError):
+                if len(row) < 2:
                     continue
+                try:
+                    f_val = float(row[0])
+                    s_val = float(row[1])
+                except ValueError:
+                    continue
+                freq.append(f_val)
+                spl.append(s_val)
         return np.array(freq), np.array(spl)
+
+    def mean_in_band(freq, spl, fmin, fmax):
+        """Compute mean SPL inside [fmin, fmax] Hz."""
+        mask = (freq >= fmin) & (freq <= fmax)
+        return float(np.mean(spl[mask])) if np.any(mask) else 0.0
 
     def make_plotly_json(traces, title, xaxis_title="Frequency (Hz)", yaxis_title="SPL (dB)"):
         """Create a plotly JSON spec."""
@@ -461,10 +474,16 @@ def generate_headphone_graphs(data_dir: str, force: bool):
             # Interpolate target to measurement frequency grid
             t_interp = np.interp(freq, t_freq, t_spl)
 
+            # Normalize measurement and target over [MEAN_MIN, MEAN_MAX] Hz
+            mean_spl = mean_in_band(freq, spl, MEAN_MIN, MEAN_MAX)
+            mean_target = mean_in_band(freq, t_interp, MEAN_MIN, MEAN_MAX)
+            spl_norm = spl - mean_spl
+            target_norm = t_interp - mean_target
+
             traces_comp = [
                 {
                     "x": freq.tolist(),
-                    "y": spl.tolist(),
+                    "y": spl_norm.tolist(),
                     "type": "scatter",
                     "mode": "lines",
                     "name": "Measurement",
@@ -472,7 +491,7 @@ def generate_headphone_graphs(data_dir: str, force: bool):
                 },
                 {
                     "x": freq.tolist(),
-                    "y": t_interp.tolist(),
+                    "y": target_norm.tolist(),
                     "type": "scatter",
                     "mode": "lines",
                     "name": f"Harman Target ({shape})",
@@ -487,7 +506,9 @@ def generate_headphone_graphs(data_dir: str, force: bool):
                 json_module.dump(spec_comp, f)
 
             # Graph 3: Target Deviation
-            deviation = spl - t_interp
+            deviation = spl_norm - target_norm
+            mean_deviation = mean_in_band(freq, deviation, MEAN_MIN, MEAN_MAX)
+            deviation = deviation - mean_deviation
             traces_dev = [
                 {
                     "x": freq.tolist(),
@@ -511,6 +532,114 @@ def generate_headphone_graphs(data_dir: str, force: bool):
             dev_json = os.path.join(out_dir, "Target Deviation.json")
             with open(dev_json, "w") as f:
                 json_module.dump(spec_dev, f)
+
+        # Generate EQ graphs if corresponding EQ files exist
+        eq_dir = os.path.join(cpaths.CPATH_DATAS_HEADPHONE_EQ, hp_name)
+        if target_key in targets and os.path.isdir(eq_dir):
+            t_freq, t_spl = targets[target_key]
+            t_interp = np.interp(freq, t_freq, t_spl)
+            mean_spl = mean_in_band(freq, spl, MEAN_MIN, MEAN_MAX)
+            mean_target = mean_in_band(freq, t_interp, MEAN_MIN, MEAN_MAX)
+            spl_norm = spl - mean_spl
+            target_norm = t_interp - mean_target
+            for eq_key, filename, display in (
+                ("autoeq_score", "iir-autoeq-score", "Harman Score EQ (IIR)"),
+                ("autoeq_flat", "iir-autoeq-flat", "Flat Target EQ (IIR)"),
+            ):
+                eq_file = os.path.join(eq_dir, "{}.txt".format(filename))
+                if not os.path.isfile(eq_file):
+                    continue
+                iir = parse_eq_iir_rews(eq_file, 48000)
+                peq = [(w, b) for w, b in iir if w != 0.0]
+                if not peq:
+                    continue
+                eq_out_dir = "{}_eq_{}".format(out_dir, eq_key)
+                os.makedirs(eq_out_dir, exist_ok=True)
+                fr_eq_json = os.path.join(eq_out_dir, "Frequency Response.json")
+                if (
+                    not force
+                    and os.path.isfile(fr_eq_json)
+                    and os.path.getmtime(fr_eq_json) > os.path.getmtime(eq_file)
+                ):
+                    logger.debug("EQ graphs up to date for %s %s", hp_name, eq_key)
+                    continue
+                preamp = peq_preamp_gain(peq)
+                eq_response = np.array(peq_spl(freq, peq)) + preamp
+                spl_eq = spl + eq_response
+                spl_eq_norm = spl_eq - mean_spl
+                traces_fr_eq = [
+                    {
+                        "x": freq.tolist(),
+                        "y": spl_norm.tolist(),
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": "Frequency Response",
+                        "line": {"color": "#1f77b4"},
+                    },
+                    {
+                        "x": freq.tolist(),
+                        "y": target_norm.tolist(),
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": f"Harman Target ({shape})",
+                        "line": {"color": "#ff7f0e", "dash": "dash"},
+                    },
+                    {
+                        "x": freq.tolist(),
+                        "y": spl_eq_norm.tolist(),
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": "With EQ",
+                        "line": {"color": "#2ca02c"},
+                    },
+                ]
+                spec_fr_eq = make_plotly_json(
+                    traces_fr_eq,
+                    f"{brand} {model} - Frequency Response ({display})",
+                )
+                with open(fr_eq_json, "w") as f:
+                    json_module.dump(spec_fr_eq, f)
+                deviation = spl_norm - target_norm
+                mean_deviation = mean_in_band(freq, deviation, MEAN_MIN, MEAN_MAX)
+                deviation = deviation - mean_deviation
+                deviation_eq = spl_eq_norm - target_norm
+                mean_deviation_eq = mean_in_band(freq, deviation_eq, MEAN_MIN, MEAN_MAX)
+                deviation_eq = deviation_eq - mean_deviation_eq
+                traces_dev_eq = [
+                    {
+                        "x": freq.tolist(),
+                        "y": deviation.tolist(),
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": "Deviation",
+                        "line": {"color": "#d62728"},
+                    },
+                    {
+                        "x": freq.tolist(),
+                        "y": deviation_eq.tolist(),
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": "With EQ",
+                        "line": {"color": "#2ca02c"},
+                    },
+                    {
+                        "x": [20, 20000],
+                        "y": [0, 0],
+                        "type": "scatter",
+                        "mode": "lines",
+                        "name": "Zero",
+                        "line": {"color": "#888888", "dash": "dot"},
+                        "showlegend": False,
+                    },
+                ]
+                spec_dev_eq = make_plotly_json(
+                    traces_dev_eq,
+                    f"{brand} {model} - Target Deviation ({display})",
+                )
+                dev_eq_json = os.path.join(eq_out_dir, "Target Deviation.json")
+                with open(dev_eq_json, "w") as f:
+                    json_module.dump(spec_dev_eq, f)
+                logger.info("Generated EQ graphs for %s %s", hp_name, eq_key)
 
         count += 1
         logger.info("Generated graphs for %s", hp_name)
