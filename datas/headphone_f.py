@@ -38,40 +38,6 @@ headphones_info_f: HeadphoneDatabase = {
             },
         },
     },
-    'Focal Clear': {
-        "brand": 'Focal',
-        "model": 'Clear',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '1490.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-clear-review-headphone.18585/',
-                'review_published': '20201219',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 0.0,
-            },
-        },
-    },
-    'Focal Elegia': {
-        "brand": 'Focal',
-        "model": 'Elegia',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '543.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-elegia-review-closed-back-headphone.27977/',
-                'review_published': '20211109',
-                'recommendation': 'Yes',
-                "sensitivity_mV_94dB": 82.0,
-            },
-        },
-    },
     'Focal Stellia': {
         "brand": 'Focal',
         "model": 'Stellia',

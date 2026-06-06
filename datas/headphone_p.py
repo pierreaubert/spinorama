@@ -21,23 +21,6 @@ headphones_info_p: HeadphoneDatabase = {
             },
         },
     },
-    'Panasonic RP-HT16-k': {
-        "brand": 'Panasonic',
-        "model": 'RP-HT16-k',
-        "shape": 'on-ear',
-        "default_measurement": 'asr',
-        "price": '9.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/panasonic-rp-ht16-headphone-review.46679/',
-                'review_published': '20230726',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 169.0,
-            },
-        },
-    },
     'Panasonic RP-TCM125': {
         "brand": 'Panasonic',
         "model": 'RP-TCM125',

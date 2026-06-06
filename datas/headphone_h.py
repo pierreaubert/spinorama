@@ -4,23 +4,6 @@
 from . import HeadphoneDatabase
 
 headphones_info_h: HeadphoneDatabase = {
-    'HEDD HEDDphone': {
-        "brand": 'HEDD',
-        "model": 'HEDDphone',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '1900.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/hedd-heddphone-review-headphone.18976/',
-                'review_published': '20201231',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 583.0,
-            },
-        },
-    },
     'HiFiMAN Ananda': {
         "brand": 'HiFiMAN',
         "model": 'Ananda',
@@ -86,23 +69,6 @@ headphones_info_h: HeadphoneDatabase = {
                 'review_published': '20211104',
                 'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 214.0,
-            },
-        },
-    },
-    'HiFiMAN HE-400i V2016': {
-        "brand": 'HiFiMAN',
-        "model": 'HE-400i V2016',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '450.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/hifiman-he400i-review-planar-headphone.18544/',
-                'review_published': '20201218',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 0.0,
             },
         },
     },

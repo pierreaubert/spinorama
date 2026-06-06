@@ -4,23 +4,6 @@
 from . import HeadphoneDatabase
 
 headphones_info_n: HeadphoneDatabase = {
-    'NAD Viso HP50': {
-        "brand": 'NAD',
-        "model": 'Viso HP50',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '250.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nad-viso-hp50-review-headphone.19121/',
-                'review_published': '20210105',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 55.0,
-            },
-        },
-    },
     'NICE HCK NX8': {
         "brand": 'NICE HCK',
         "model": 'NX8',

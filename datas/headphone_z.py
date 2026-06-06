@@ -21,23 +21,6 @@ headphones_info_z: HeadphoneDatabase = {
             },
         },
     },
-    'ZMF Atticus': {
-        "brand": 'ZMF',
-        "model": 'Atticus',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '1099.00',
-        "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/zmf-atticus-review-headphone.24191/',
-                'review_published': '20210613',
-                'recommendation': 'No',
-                "sensitivity_mV_94dB": 239.0,
-            },
-        },
-    },
     'ZMF Bokeh': {
         "brand": 'ZMF',
         "model": 'Bokeh',
