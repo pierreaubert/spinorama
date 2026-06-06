@@ -23,7 +23,7 @@ from glob import glob
 logger = logging.getLogger("spinorama")
 
 # not our autoeq (this is autoeq.app)
-AUTOEQ_MEASUREMENTS_DIR = "/Volumes/home_ext1/Src/AutoEq/measurements"
+AUTOEQ_MEASUREMENTS_DIR = "/Volumes/home_ext1/src_3rdparties/AutoEq/measurements"
 
 
 def normalize_name(name: str) -> str:

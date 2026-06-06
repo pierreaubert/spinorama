@@ -68,3 +68,14 @@ sources = "src"
 markers = [
     "qt: marks tests that use Qt",
 ]
+
+[tool.pyrefly]
+project-includes = [
+    ".",
+    "datas",
+    "src",
+    "tests",
+]
+python-platform = "linux"
+python-version = "3.12.0"
+infer-with-first-use = false
