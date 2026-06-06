@@ -51,7 +51,8 @@ header.innerHTML = `
         <div class="column is-1 has-text-centered p-1"><b class="is-size-7">#</b></div>
         <div class="column is-4 p-1"><b class="is-size-7">Name</b></div>
         <div class="column is-2 p-1"><b class="is-size-7">Shape</b></div>
-        <div class="column is-2 p-1"><b class="is-size-7">Type</b></div>
+        <div class="column is-1 has-text-centered p-1"><b class="is-size-7">Score</b></div>
+        <div class="column is-1 has-text-centered p-1"><b class="is-size-7">w/EQ</b></div>
         <div class="column is-2 p-1"><b class="is-size-7">Price</b></div>
     </div>
 `;
@@ -62,6 +63,8 @@ function printRow(key, index, value) {
     const row = document.createElement('div');
     row.className = 'cell is-col-span-11';
     row.id = getID(value.brand, value.model);
+    const score = typeof value.score === 'number' ? value.score.toFixed(1) : '';
+    const scoreEq = typeof value.score_eq === 'number' ? value.score_eq.toFixed(1) : '';
     row.innerHTML = `
         <div class="columns is-mobile is-vcentered m-0 p-0">
             <div class="column is-1 has-text-centered p-1">
@@ -75,8 +78,11 @@ function printRow(key, index, value) {
             <div class="column is-2 p-1">
                 <span class="is-size-7">${value.shape || ''}</span>
             </div>
-            <div class="column is-2 p-1">
-                <span class="is-size-7">${value.type || ''}</span>
+            <div class="column is-1 has-text-centered p-1">
+                <span class="is-size-7">${score}</span>
+            </div>
+            <div class="column is-1 has-text-centered p-1">
+                <span class="is-size-7">${scoreEq}</span>
             </div>
             <div class="column is-2 p-1">
                 <span class="is-size-7">${value.price && value.price !== '?' ? value.price + ' USD' : ''}</span>

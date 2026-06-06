@@ -335,11 +335,18 @@ export function sortMetadata2(metadata, sorter, results) {
     function hasDisplayedScore(key) {
         const spk = metadata.get(key);
         if (!spk) return false;
+        // Headphones always display their score
+        if (spk.kind === 'headphone') return true;
         return validShape.has(spk.shape);
     }
 
     function getScore(key) {
         if (!hasDisplayedScore(key)) return -10;
+        const spk = metadata.get(key);
+        // Headphones store scores at the top level
+        if (spk && spk.kind === 'headphone' && typeof spk.score === 'number') {
+            return spk.score;
+        }
         const msr = defMsr(key);
         const score = msr && msr.pref_rating ? msr.pref_rating.pref_score : undefined;
         return typeof score === 'number' ? score : -10;
@@ -347,6 +354,9 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getScoreWsub(key) {
         if (!hasDisplayedScore(key)) return -10;
+        const spk = metadata.get(key);
+        // Headphones don't have a wsub score
+        if (spk && spk.kind === 'headphone') return -10;
         const msr = defMsr(key);
         const score = msr && msr.pref_rating ? msr.pref_rating.pref_score_wsub : undefined;
         return typeof score === 'number' ? score : -10;
@@ -354,6 +364,11 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getScoreEq(key) {
         if (!hasDisplayedScore(key)) return -10;
+        const spk = metadata.get(key);
+        // Headphones store EQ scores at the top level
+        if (spk && spk.kind === 'headphone' && typeof spk.score_eq === 'number') {
+            return spk.score_eq;
+        }
         const msr = defMsr(key);
         const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score : undefined;
         return typeof score === 'number' ? score : -10;
@@ -361,6 +376,9 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getScoreEqWsub(key) {
         if (!hasDisplayedScore(key)) return -10;
+        const spk = metadata.get(key);
+        // Headphones don't have a wsub score
+        if (spk && spk.kind === 'headphone') return -10;
         const msr = defMsr(key);
         const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score_wsub : undefined;
         return typeof score === 'number' ? score : -10;

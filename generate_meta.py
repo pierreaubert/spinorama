@@ -796,6 +796,25 @@ def add_headphone_eq(headphone_meta):
                 logger.debug("adding headphone eq: %s for %s", eq_key, hp_name)
 
 
+def add_headphone_scores(headphone_meta):
+    """Load pre/post EQ scores from autoeq QA output."""
+    eq_base = cpaths.CPATH_DATAS_HEADPHONE_EQ
+    for hp_name, hp_info in headphone_meta.items():
+        if hp_info.get("skip", False):
+            continue
+        score_file = "{}/{}/autoeq_score.json".format(eq_base, hp_name)
+        if os.path.exists(score_file):
+            try:
+                with open(score_file, "r", encoding="utf-8") as f:
+                    score_data = json.load(f)
+                if "pre_score" in score_data:
+                    hp_info["score"] = score_data["pre_score"]
+                if "post_score" in score_data:
+                    hp_info["score_eq"] = score_data["post_score"]
+            except (json.JSONDecodeError, OSError):
+                pass
+
+
 def dump_headphone_metadata(headphone_meta):
     """Write headphone metadata to JSON files."""
     metadir = cpaths.CPATH_DIST
@@ -874,6 +893,7 @@ def main():
         from datas.headphones import headphones_info
 
         add_headphone_eq(headphones_info)
+        add_headphone_scores(headphones_info)
         dump_headphone_metadata(headphones_info)
         steps.append(("headphones", time.perf_counter()))
     except ImportError:

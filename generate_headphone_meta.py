@@ -202,6 +202,19 @@ def build_headphone_metadata(headphones_info: dict) -> dict:
 
             entry["measurements"][meas_key] = meas_entry
 
+        # Load pre/post EQ scores if available
+        score_json_path = f"{cpaths.CPATH_DATAS_HEADPHONE_EQ}/{name}/autoeq_score.json"
+        if os.path.exists(score_json_path):
+            try:
+                with open(score_json_path, "r", encoding="utf-8") as sf:
+                    score_data = json.load(sf)
+                if "pre_score" in score_data:
+                    entry["score"] = score_data["pre_score"]
+                if "post_score" in score_data:
+                    entry["score_eq"] = score_data["post_score"]
+            except (json.JSONDecodeError, OSError):
+                pass
+
         output[name] = entry
 
     return output

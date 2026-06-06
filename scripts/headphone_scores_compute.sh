@@ -16,17 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Compute EQ filters for headphones using the Rust autoeq binary.
+# Compute headphone preference scores (pre/post EQ) using the Rust autoeq binary.
 #
-# For each headphone measurement directory, run autoeq with the correct
-# Harman target curve (over-ear or in-ear) based on metadata.
+# For each headphone, runs autoeq in QA mode to extract the pre-optimization
+# and post-optimization Harman headphone scores. Results are written as JSON
+# alongside the existing EQ files.
 #
 # Usage:
-#   ./scripts/headphone_eqs_compute.sh [--force]
+#   ./scripts/headphone_scores_compute.sh [--force]
 #
 # Requires:
 #   - autoeq binary in PATH (from sotf/crates/autoeq)
 #   - Python 3 with datas/ importable
+#   - EQ files already computed by headphone_eqs_compute.sh
 
 set -euo pipefail
 
@@ -56,7 +58,6 @@ for t in "$TARGET_OVEREAR" "$TARGET_INEAR"; do
 done
 
 # Get the shape for each headphone from Python metadata
-# Outputs lines like: "Brand Model|over-ear"
 get_headphone_shapes() {
     ${THEPYTHON} -c "
 import sys
@@ -90,7 +91,7 @@ target_for_shape() {
     esac
 }
 
-echo "=== Headphone EQ computation ==="
+echo "=== Headphone score computation ==="
 
 total=0
 computed=0
@@ -102,8 +103,9 @@ while IFS='|' read -r name shape origin; do
 
     hp_measurement_dir="${MEASUREMENTS_DIR}/${name}"
     hp_eq_dir="${EQ_DIR}/${name}"
+    score_file="${hp_eq_dir}/autoeq_score.json"
 
-    # Find the frequency response CSV (inside the measurement origin subdir)
+    # Find the frequency response CSV
     curve_file=""
     for origin_dir in "$origin" "asr"; do
         for candidate in "${hp_measurement_dir}/${origin_dir}/frequency_response.csv" \
@@ -122,9 +124,9 @@ while IFS='|' read -r name shape origin; do
         continue
     fi
 
-    # Skip if EQ already exists (unless --force)
-    if [ "$FORCE" != "--force" ] && [ -f "${hp_eq_dir}/iir-autoeq-score.txt" ]; then
-        echo "SKIP ${name}: EQ already computed"
+    # Skip if score already exists (unless --force)
+    if [ "$FORCE" != "--force" ] && [ -f "$score_file" ]; then
+        echo "SKIP ${name}: score already computed"
         skipped=$((skipped + 1))
         continue
     fi
@@ -134,37 +136,32 @@ while IFS='|' read -r name shape origin; do
 
     mkdir -p "$hp_eq_dir"
 
-    # Run autoeq with headphone-score loss (Harman preference)
-    if autoeq \
+    # Run autoeq with headphone-score loss in QA mode to extract scores
+    output=$(autoeq \
         --curve "$curve_file" \
         --target "$target" \
         --loss headphone-score \
         --peq-model pk \
         -n 7 \
         --preset balanced \
-        --output "${hp_eq_dir}/autoeq_score" \
-        2>&1 | tail -3; then
-        echo "  OK: score EQ computed"
-    else
-        echo "  FAIL: score EQ failed for ${name}"
+        --qa 0.0 \
+        2>&1) || {
+        echo "  FAIL: score computation failed for ${name}"
+        failed=$((failed + 1))
+        continue
+    }
+
+    pre_score=$(echo "$output" | grep 'Headphone Score:' | sed -n '1s/.*Pre-Optimization Headphone Score: //p' || true)
+    post_score=$(echo "$output" | grep 'Headphone Score:' | sed -n '2s/.*Post-Optimization Headphone Score: //p' || true)
+
+    if [ -z "$pre_score" ] || [ -z "$post_score" ]; then
+        echo "  FAIL: could not parse scores for ${name}"
         failed=$((failed + 1))
         continue
     fi
 
-    # Also run with headphone-flat loss (minimum deviation)
-    if autoeq \
-        --curve "$curve_file" \
-        --target "$target" \
-        --loss headphone-flat \
-        --peq-model pk \
-        -n 7 \
-        --preset balanced \
-        --output "${hp_eq_dir}/autoeq_flat" \
-        2>&1 | tail -3; then
-        echo "  OK: flat EQ computed"
-    else
-        echo "  WARN: flat EQ failed for ${name} (non-fatal)"
-    fi
+    printf '{"pre_score": %s, "post_score": %s}\n' "$pre_score" "$post_score" > "$score_file"
+    echo "  OK: pre=${pre_score} post=${post_score}"
 
     computed=$((computed + 1))
 
