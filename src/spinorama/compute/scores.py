@@ -194,9 +194,28 @@ def sm(dfu: pd.DataFrame) -> float:
     smoother frequency response curves.
     """
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
-    log_freq = np.log10(data.Freq)
-    _, _, r_value, _, _ = linregress(log_freq, data.dB)
-    return r_value**2
+    x = np.log10(data.Freq).to_numpy()
+    y = data.dB.to_numpy()
+
+    x_mean = np.mean(x)
+    y_mean = np.mean(y)
+
+    ss_xx = np.sum((x - x_mean) ** 2)
+    ss_yy = np.sum((y - y_mean) ** 2)
+
+    if ss_xx == 0 or ss_yy == 0:
+        # Degenerate case: all frequencies identical or all dB values identical.
+        # A perfectly flat response is perfectly smooth.
+        return 1.0
+
+    ss_xy = np.sum((x - x_mean) * (y - y_mean))
+    slope = ss_xy / ss_xx
+    intercept = y_mean - slope * x_mean
+    y_pred = intercept + slope * x
+
+    ss_res = np.sum((y - y_pred) ** 2)
+    r2 = 1.0 - ss_res / ss_yy
+    return float(max(0.0, min(1.0, r2)))
 
 
 """

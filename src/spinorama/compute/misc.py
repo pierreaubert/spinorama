@@ -453,16 +453,33 @@ def compute_slope_smoothness(
     last_freq = slopes_freq[-1]
     slope_octave = math.log2(last_freq / first_freq)
     # compute regression to get the slope and the smoothness
-    res = stats.linregress(x=np.log10(slopes_freq), y=slopes_spl)
-    slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
-    first_spl = res.intercept + res.slope * math.log10(first_freq)
-    last_spl = res.intercept + res.slope * math.log10(last_freq)
+    x = np.log10(slopes_freq)
+    y = np.array(slopes_spl)
+    x_mean = np.mean(x)
+    y_mean = np.mean(y)
+    ss_xx = np.sum((x - x_mean) ** 2)
+    ss_yy = np.sum((y - y_mean) ** 2)
+    if ss_xx == 0 or ss_yy == 0:
+        # Degenerate case: perfectly flat or single point
+        slope = 0.0
+        intercept = float(y_mean)
+        sm_val = 1.0
+    else:
+        ss_xy = np.sum((x - x_mean) * (y - y_mean))
+        slope = ss_xy / ss_xx
+        intercept = y_mean - slope * x_mean
+        y_pred = intercept + slope * x
+        ss_res = np.sum((y - y_pred) ** 2)
+        sm_val = max(0.0, min(1.0, 1.0 - ss_res / ss_yy))
+    slope_dboct = slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
+    first_spl = intercept + slope * math.log10(first_freq)
+    last_spl = intercept + slope * math.log10(last_freq)
     # print(
     #    "{:30s} freq [{:6.0f}, {:6.0f}] spl [{:+4.2f},{:+4.2f}] slope {:+4.2f} sm {:4.2f}".format(
-    #        measurement, first_freq, last_freq, first_spl, last_spl, slope_dboct, res.rvalue**2
+    #        measurement, first_freq, last_freq, first_spl, last_spl, slope_dboct, sm_val
     #    )
     # )
-    return first_spl, last_spl, slope_dboct, res.rvalue**2
+    return first_spl, last_spl, slope_dboct, sm_val
 
 
 def compute_statistics(
