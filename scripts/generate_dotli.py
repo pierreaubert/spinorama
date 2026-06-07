@@ -266,7 +266,7 @@ def _estimate_speaker_size(speaker_name, speaker_data_map):
 
 
 def load_metadata(logger):
-    """Load full metadata + eqdata, same as generate_html.py."""
+    """Load full metadata + eqdata, same as ./scripts/generate_html.py."""
     metadata_json_filename, eqdata_json_filename = find_metadata_file()
 
     for radical, json_check in (
@@ -274,7 +274,7 @@ def load_metadata(logger):
         ("eqdata", eqdata_json_filename),
     ):
         if json_check is None:
-            logger.error("Cannot find %s, run generate_meta.py first!", radical)
+            logger.error("Cannot find %s, run ./scripts/generate_meta.py first!", radical)
             sys.exit(1)
 
     with open(metadata_json_filename, "r") as f:
@@ -868,7 +868,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate blockchain-optimized static site for spinorama."
     )
-    parser.add_argument("--version", action="version", version="generate_dotli.py version 0.1")
+    parser.add_argument("--version", action="version", version="./scripts/generate_dotli.py version 0.1")
     parser.add_argument(
         "--log-level",
         default="INFO",

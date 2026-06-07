@@ -37,7 +37,7 @@ from pathlib import Path
 # Global configuration
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
-GENERATE_PEQS = os.path.join(ROOT_DIR, "generate_peqs.py")
+GENERATE_PEQS = os.path.join(ROOT_DIR, "scripts", "generate_peqs.py")
 LOG_LEVEL = "INFO"
 
 

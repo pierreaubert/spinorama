@@ -777,7 +777,7 @@ def main():
     except ValueError as v_e:
         if speaker_name is not None:
             print(
-                "ERROR: Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
+                "ERROR: Speaker {0} is not in the cache. Did you run ./scripts/generate_graphs.py --speaker='{0}' --update-cache ?".format(
                     speaker_name
                 )
             )

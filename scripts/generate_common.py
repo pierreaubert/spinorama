@@ -181,7 +181,7 @@ def cache_load_seq(filters, smoke_test):
     if len(cache_files) == 0:
         cache_files = glob("../{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
-        print("Cannot find cache directory or files! Did you run ./generate_graphs.py ?")
+        print("Cannot find cache directory or files! Did you run ./scripts/generate_graphs.py ?")
         return df_all
     count = 0
     print("Found {} cache files".format(len(cache_files)))

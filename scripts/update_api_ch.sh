@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 echo "Update starts"
-export PYTHONPATH=src:src/website:src/spinorama:.
+export PYTHONPATH=src:src/website:src/spinorama:scripts:.
 
 DIST=/var/www/html/spinorama-api
 

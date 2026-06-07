@@ -864,7 +864,7 @@ def main():
     steps.append(("loaded", time.perf_counter()))
 
     if main_df is None:
-        logger.error("Load failed! Please run ./generate_graphs.py")
+        logger.error("Load failed! Please run ./scripts/generate_graphs.py")
         sys.exit(1)
 
     # add computed data to metadata
@@ -910,7 +910,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate metadata for spinorama speakers.")
-    parser.add_argument("--version", action="version", version="generate_meta.py version 1.6")
+    parser.add_argument("--version", action="version", version="./scripts/generate_meta.py version 1.6")
     parser.add_argument(
         "--log-level",
         default="WARNING",

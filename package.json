@@ -32,9 +32,9 @@
     "w3c-html-validator": "2.2.0"
   },
   "scripts": {
-    "local": "./generate_html.py --dev --sitedev=http://localhost:8888 --skip-speakers",
-    "dev": "./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org",
-    "build": "./generate_html.py --optim",
+    "local": "./scripts/generate_html.py --dev --sitedev=http://localhost:8888 --skip-speakers",
+    "dev": "./scripts/generate_html.py --dev --optim --sitedev=https://dev.spinorama.org",
+    "build": "./scripts/generate_html.py --optim",
     "test": "npx vitest",
     "coverage": "npx vitest run --coverage",
     "format": "npx prettier --write \"src/website/*.js\"",

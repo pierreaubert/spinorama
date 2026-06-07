@@ -48,7 +48,7 @@ import zipfile
 import requests
 from bs4 import BeautifulSoup
 
-from api.load_headphone_csv import parse_headphone_csv
+from load_headphone_csv import parse_headphone_csv
 
 logger = logging.getLogger("spinorama")
 
@@ -60,9 +60,9 @@ DOWNLOAD_DELAY_S = 2.0
 MAX_ATTACHMENTS_TO_TRY = 10
 
 # Absolute path to datas/headphones, independent of cwd. The script lives at
-# <root>/src/api/scrape_asr_headphones.py, so the project root is three
+# <root>/scripts/scrape_asr_headphones.py, so the project root is two
 # os.path.dirname() calls up.
-_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HEADPHONES_ROOT = os.path.join(_PROJECT_ROOT, "datas", "headphones")
 
 HEADERS = {

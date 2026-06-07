@@ -650,7 +650,7 @@ def generate_headphone_graphs(data_dir: str, force: bool):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    parser.add_argument("--version", action="version", version=f"generate_graphs_mp.py v{VERSION}")
+    parser.add_argument("--version", action="version", version=f"./scripts/generate_graphs.py v{VERSION}")
     parser.add_argument("--width", type=int, help="Width size in pixel for graphs")
     parser.add_argument("--height", type=int, help="Height size in pixel for graphs")
     parser.add_argument("--force", action="store_true", help="Force regeneration of all graphs")

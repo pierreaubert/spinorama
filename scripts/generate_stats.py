@@ -311,7 +311,7 @@ def main():
     # load all metadata from generated json file
     meta_filename, eq_filename = find_metadata_file()
     if meta_filename is None:
-        logger.error("Cannot find metadata file, did you ran generate_meta.py ?")
+        logger.error("Cannot find metadata file, did you ran ./scripts/generate_meta.py ?")
         sys.exit(1)
 
     jsmeta = None

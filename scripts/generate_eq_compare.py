@@ -93,7 +93,7 @@ def main(force, batch_size):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate EQ comparison plots.")
     parser.add_argument(
-        "--version", action="version", version=f"generate_eq_compare.py version {VERSION:.1f}"
+        "--version", action="version", version=f"./scripts/generate_eq_compare.py version {VERSION:.1f}"
     )
     parser.add_argument(
         "--force", action="store_true", help="Regenerate pictures even if they already exist."

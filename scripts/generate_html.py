@@ -289,8 +289,8 @@ def generate_speaker(
                     )
                 )
                 print("Maybe you forgot to cache the computations? Try running:")
-                print("./generate_graphs.py --speaker='{}' --update-cache".format(speaker_name))
-                print("./generate_meta.py")
+                print("./scripts/generate_graphs.py --speaker='{}' --update-cache".format(speaker_name))
+                print("./scripts/generate_meta.py")
 
 
 def generate_speakers(mako, dataframe, meta, site, use_search, versions):
@@ -336,7 +336,7 @@ def main():
         ("eqdata", eqdata_json_filename),
     ):
         if json_check is None:
-            logger.error("Cannot find %s, you should run generate_meta.py again!", radical)
+            logger.error("Cannot find %s, you should run ./scripts/generate_meta.py again!", radical)
             sys.exit(1)
 
     meta = None
@@ -802,7 +802,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate HTML website for spinorama data.")
-    parser.add_argument("--version", action="version", version="generate_html.py version 1.23")
+    parser.add_argument("--version", action="version", version="./scripts/generate_html.py version 1.23")
     parser.add_argument(
         "--dev",
         action="store_true",

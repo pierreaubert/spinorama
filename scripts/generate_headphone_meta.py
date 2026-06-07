@@ -29,7 +29,7 @@ import zipfile
 import numpy as np
 
 import spinorama.constant_paths as cpaths
-from api.load_headphone_csv import parse_headphone_csv
+from load_headphone_csv import parse_headphone_csv
 
 logger = logging.getLogger("spinorama")
 
@@ -44,7 +44,7 @@ def discover_headphones() -> dict:
 
     # Try API first for accurate metadata
     try:
-        from api.scrape_asr_headphones import (
+        from scrape_asr_headphones import (
             DEVICE_TYPE_MAP,
             SKIP_DEVICE_TYPES,
             fetch_headphone_index,

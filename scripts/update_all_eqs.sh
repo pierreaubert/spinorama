@@ -10,4 +10,4 @@ for d in datas/eq/*; do
     rm -f dist/speakers/"$speaker"/*.png ;
 done
 
-./generate_peqs.py --force --verbose
+./scripts/generate_peqs.py --force --verbose

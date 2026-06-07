@@ -99,7 +99,7 @@ def createscript(speakers):
     lines.append('  rm -rf "docs/speakers/$SPEAKER"/*/*_eq')
     lines.append('  rm -f "datas/eq/$SPEAKER/iir-autoeq.txt"')
     lines.append(
-        '  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Flat'
+        '  ./scripts/generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Flat'
     )
     lines.append(
         '  mv "./datas/eq/$SPEAKER/iir-autoeq.txt" "./datas/eq/$SPEAKER/iir-autoeq-lw.txt"'
@@ -107,14 +107,14 @@ def createscript(speakers):
     lines.append('  rm -f "datas/eq/$SPEAKER/iir-autoeq.txt"')
     lines.append('  rm -f "docs/speakers/$SPEAKER"/*/filters_*')
     lines.append(
-        '  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Score'
+        '  ./scripts/generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Score'
     )
     lines.append(
         '  mv "./datas/eq/$SPEAKER/iir-autoeq.txt" "./datas/eq/$SPEAKER/iir-autoeq-score.txt"'
     )
     lines.append('  rm -f "./datas/eq/$SPEAKER/iir.txt"')
     lines.append('  ln -s "./iir-autoeq-score.txt" "./datas/eq/$SPEAKER/iir.txt"')
-    lines.append('  ./generate_graphs.py --speaker="$SPEAKER" --update-cache')
+    lines.append('  ./scripts/generate_graphs.py --speaker="$SPEAKER" --update-cache')
     lines.append("done")
 
     lines = ["{}\n".format(l) for l in lines]

@@ -229,7 +229,7 @@ def main(args):
     # load all metadata from generated json file
     json_filename, eq_filename = find_metadata_file()
     if json_filename is None:
-        logger.error("Cannot find metadata file, did you ran generate_meta.py ?")
+        logger.error("Cannot find metadata file, did you ran ./scripts/generate_meta.py ?")
         sys.exit(1)
 
     jsmeta = None
@@ -267,7 +267,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate radar plots for speaker data.")
     parser.add_argument(
-        "--version", action="version", version=f"generate_radar.py version {VERSION:.1f}"
+        "--version", action="version", version=f"./scripts/generate_radar.py version {VERSION:.1f}"
     )
     parser.add_argument("--origin", help="Filter by origin")
     parser.add_argument("--speaker", help="Filter by speaker")
