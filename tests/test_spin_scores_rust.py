@@ -103,5 +103,8 @@ def test_c_score_peq_paths_parity(n_freq: int, nh: int, nv: int) -> None:
         assert abs(score_py[k] - score_rs[k]) < 1e-6
 
     # Approx path should be close to full path
-    score_rs_ap = spinorama_rust.c_score_peq_approx(freq, intervals, spin_rs, spl_h[17], peq)
+    # c_score_peq_approx expects spin WITHOUT PEQ; compute original spin from raw SPL
+    spl_full = np.concatenate((spl_h, spl_v), axis=0)
+    spin_orig = spinorama_rust.c_cea2034(spl_full, idx, weights)
+    score_rs_ap = spinorama_rust.c_score_peq_approx(freq, intervals, spin_orig, spl_h[17], peq)
     assert abs(score_rs_ap["pref_score"] - score_rs["pref_score"]) < 1e-6
