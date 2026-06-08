@@ -66,9 +66,6 @@ npm install .
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv
 
-# install deepsource
-[ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
-
 # install 3rd parties
 ./scripts/update_3rdparties.sh
 

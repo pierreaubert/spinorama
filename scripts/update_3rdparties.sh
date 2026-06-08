@@ -2,10 +2,10 @@
 
 # warning this section is read by a python script (generate_html) to grab the versions
 
-PLOTLY=3.4.0
-HANDLEBARS=4.7.8
+PLOTLY=3.6.0
+HANDLEBARS=4.7.9
 BULMA=1.0.4
-FUSE=7.0.0
+FUSE=7.4.2
 # end section
 
 ASSETS=./dist

@@ -1,6 +1,4 @@
-node_modules/
-dist/
-data/headphones.json
-.env
-.env.local
-*.log
+/.env
+/data
+/dist
+/node_modules
