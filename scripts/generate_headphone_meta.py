@@ -29,7 +29,7 @@ import zipfile
 import numpy as np
 
 import spinorama.constant_paths as cpaths
-from load_headphone_csv import parse_headphone_csv
+from load_headphone_csv import average_headphone_channels, parse_headphone_csv
 
 logger = logging.getLogger("spinorama")
 
@@ -131,18 +131,15 @@ def compute_flatness_score(filepath: str) -> float | None:
 
     Lower is flatter / better.
     Handles both 2-column (Freq, dB) and 4-column (Freq_L, dB_L, Freq_R, dB_R) formats.
-    For 4-column data the left and right channels are averaged first.
+    For 4-column data the left and right channels are pressure-averaged first.
     """
     df = parse_headphone_csv(filepath)
     if df is None:
         return None
 
-    if "Freq_L" in df.columns:
-        freq = df["Freq_L"]
-        db = (df["dB_L"] + df["dB_R"]) / 2
-    else:
-        freq = df["Freq"]
-        db = df["dB"]
+    df_avg = average_headphone_channels(df)
+    freq = df_avg["Freq"]
+    db = df_avg["dB"]
 
     mask = (freq >= 20) & (freq <= 20000)
     db_values = np.asarray(db[mask])

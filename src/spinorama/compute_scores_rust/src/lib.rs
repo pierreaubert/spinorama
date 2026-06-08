@@ -122,24 +122,38 @@ fn consecutive_groups_first_group(indices: &[(usize, f64)]) -> Vec<(usize, f64)>
 }
 
 fn r_squared(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
-    // Pearson correlation squared
+    // Coefficient of determination (R²) from residuals.
+    // More numerically stable than Pearson correlation squared
+    // when the slope is close to 0.
     let n = x.len() as f64;
     if n == 0.0 { return f64::NAN; }
     let mx = x.mean().unwrap_or(0.0);
     let my = y.mean().unwrap_or(0.0);
-    let mut num = 0.0;
     let mut sxx = 0.0;
     let mut syy = 0.0;
+    let mut sxy = 0.0;
     for (xi, yi) in x.iter().zip(y.iter()) {
         let dx = *xi - mx;
         let dy = *yi - my;
-        num += dx * dy;
         sxx += dx * dx;
         syy += dy * dy;
+        sxy += dx * dy;
     }
-    if sxx == 0.0 || syy == 0.0 { return f64::NAN; }
-    let r = num / (sxx.sqrt() * syy.sqrt());
-    r * r
+    if sxx == 0.0 || syy == 0.0 {
+        // Degenerate case: all x identical or all y identical.
+        // A perfectly flat response is perfectly smooth.
+        return 1.0;
+    }
+    let slope = sxy / sxx;
+    let intercept = my - slope * mx;
+    let mut ss_res = 0.0;
+    for (xi, yi) in x.iter().zip(y.iter()) {
+        let y_pred = intercept + slope * xi;
+        let dy = *yi - y_pred;
+        ss_res += dy * dy;
+    }
+    let r2 = 1.0 - ss_res / syy;
+    if r2 < 0.0 { 0.0 } else if r2 > 1.0 { 1.0 } else { r2 }
 }
 
 #[pyfunction]

@@ -919,7 +919,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--metadata",
-        default="./datas/metadata.py",
+        default="./datas/speaker.py",
         help="Metadata file to use (default: ./datas/metadata.py).",
     )
     parser.add_argument(

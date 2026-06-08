@@ -31,9 +31,33 @@ Output columns are normalised:
 
 import logging
 
+import numpy as np
 import pandas as pd
 
 logger = logging.getLogger("spinorama")
+
+
+def average_headphone_channels(df: pd.DataFrame) -> pd.DataFrame:
+    """Average multiple headphone channels using pressure averaging.
+
+    For stereo (L+R) data, converts each channel from dB to pressure,
+    computes the mean pressure, and converts back to dB.
+    For mono data, returns the input unchanged.
+
+    Returns a DataFrame with Freq and dB columns.
+    """
+    if "Freq_L" not in df.columns:
+        # Mono / single channel — already in Freq, dB format
+        return df[["Freq", "dB"]].copy()
+
+    # Pressure average: dB → pressure → mean → dB
+    # Using the same reference as the codebase: p = 10^((dB-105)/20)
+    p_left = np.power(10, (df["dB_L"] - 105.0) / 20.0)
+    p_right = np.power(10, (df["dB_R"] - 105.0) / 20.0)
+    p_avg = (p_left + p_right) / 2.0
+    db_avg = 20.0 * np.log10(p_avg) + 105.0
+
+    return pd.DataFrame({"Freq": df["Freq_L"], "dB": db_avg})
 
 # Strict keywords for detecting the header row (no x/y — too generic)
 _HEADER_FREQ_KW = {"frequency", "freq", "hz"}

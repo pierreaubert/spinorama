@@ -24,7 +24,7 @@ import pandas as pd
 import plotly.io
 
 from datas import Measurement
-from datas.metadata import speakers_info
+from datas.speaker import speakers_info
 from datas.helpers import measurement_valid_freq
 from spinorama import logger
 

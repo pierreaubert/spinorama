@@ -80,7 +80,7 @@ Please add tests and run them.
 For Python files:
 ```
 export PYTHONPATH=src
-python3 -m pytest --cov=src tests
+LC_ALL=en_US.UTF-8 pytest tests
 ```
 and for javascript files:
 ```

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # you can check the syntax with pylint or with ../scripts/check_meta.py
 """All speaker measurements metadata are stored in this format
-Due to the size of the file (metadata.py) it has been splitted into several files, one per letter of the alphabet.
+Due to the size of the file (speaker.py) it has been splitted into several files, one per letter of the alphabet.
 """
 
 from typing import TypedDict, Literal

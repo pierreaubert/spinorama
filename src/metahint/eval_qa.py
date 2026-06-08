@@ -13,7 +13,7 @@ from typer.testing import CliRunner
 from metahint.cli import app as scrape_app
 
 # Ground truth database
-from datas.metadata import speakers_info  # type: ignore
+from datas.speaker import speakers_info  # type: ignore
 
 
 @dataclass

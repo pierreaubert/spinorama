@@ -59,7 +59,7 @@ mv /tmp/Revel\ W522L.jpg ./datas/pictures
 (Note the *.jpg* not *.jpeg*)
 - Generates various scaled version:```sh ./update_pictures.sh'```
 
-## Generate an entry in `./datas/metadata.py`
+## Generate an entry in `./datas/speaker.py`
 
 - Please keep it sorted
 - Copy / Paste from the template file (speaker.tmpl) and add the relevant informations that you can find.
@@ -80,7 +80,7 @@ mv /tmp/Revel\ W522L.jpg ./datas/pictures
      },
  },
 ```
-Add the change to the relevant metadata_x.py file for a revel, first letter is r, so metadata_r.py.
+Add the change to the relevant metadata_x.py file for a revel, first letter is r, so speaker_r.py.
 - Test your changes with ```./scripts/check_meta.py```: if you see no output, then it is working.
 
 ## Test it works with:

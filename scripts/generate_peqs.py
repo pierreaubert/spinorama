@@ -22,7 +22,7 @@ import sys
 import argparse
 import pandas as pd
 
-from datas.metadata import speakers_info as metadata
+from datas.speaker import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
 from generate_common import (

@@ -24,7 +24,7 @@ def target_letter(brand: str) -> str:
 
 
 def target_module_and_attr(letter: str) -> Tuple[str, str]:
-    mod = f"datas.metadata_{letter}"
+    mod = f"datas.speaker_{letter}"
     attr = f"speakers_info_{letter}"
     return mod, attr
 

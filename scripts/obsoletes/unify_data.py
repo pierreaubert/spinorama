@@ -5,7 +5,7 @@ import glob
 import os
 import pathlib
 
-import datas.metadata as metadata
+import datas.speaker as metadata
 
 known_brands = set(v["brand"] for _, v in metadata.speakers_info.items())
 

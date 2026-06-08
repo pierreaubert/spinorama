@@ -28,7 +28,7 @@ import logging
 import sys
 from typing import cast, Dict, Any
 
-from datas import metadata
+from datas import speaker as metadata
 from datas.checks import validate_speaker_database
 
 logging.basicConfig(

@@ -9,7 +9,7 @@ import shutil
 
 from string import Template
 
-import datas.metadata as metadata
+import datas.speaker as metadata
 
 known_brands = set(v["brand"].lower() for k, v in metadata.speakers_info.items())
 # other new brands which are ok

@@ -30,7 +30,7 @@ import argparse
 
 from mako.lookup import TemplateLookup
 
-from datas.metadata import speakers_info as extradata
+from datas.speaker import speakers_info as extradata
 from generate_common import (
     args2level,
     get_custom_logger,
@@ -221,7 +221,7 @@ def generate_measurement(
         "./src/website/speaker.html",
         "./src/website/speaker_desc.html",
         "./src/website/utils.py",
-        "./datas/metadata.py",
+        "./datas/speaker.py",
         meta_file,
         eq_file,
         *find_metadata_chunks().values(),

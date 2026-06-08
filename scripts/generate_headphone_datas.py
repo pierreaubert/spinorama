@@ -280,7 +280,7 @@ def main():
     groups = group_by_key(headphones)
 
     # Write individual files
-    datas_dir = os.path.join(os.path.dirname(__file__), "datas")
+    datas_dir = os.path.join(os.path.dirname(__file__), "../datas")
     for key in ALL_KEYS:
         write_headphone_file(key, groups[key], datas_dir)
 

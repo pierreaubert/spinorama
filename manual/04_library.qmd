@@ -55,7 +55,7 @@ sys.path.append(os.path.expanduser("../src"))
 sys.path.append(os.path.expanduser(".."))
 
 from generate_common import cache_load_seq, get_custom_logger
-import datas.metadata as metadata
+import datas.speaker as metadata
 ```
 
 Set logging level:

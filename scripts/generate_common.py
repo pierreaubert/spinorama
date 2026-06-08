@@ -46,7 +46,7 @@ try:
 except Exception as e:
     print(f"Warning: Could not set file descriptor limit: {e}", file=sys.stderr)
 
-import datas.metadata as metadata
+import datas.speaker as metadata
 
 import spinorama.constant_paths as cpaths
 from spinorama.constant_paths import flags_ADD_HASH
