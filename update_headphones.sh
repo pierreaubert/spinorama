@@ -19,8 +19,19 @@
 echo "Update starts"
 mkdir -p .cache
 mkdir -p build/website
+
 export THEPYTHON=python3.12
 export PYTHONPATH=src:src/website:src/spinorama:.
+
+# regenerate SVG symbols sprite (picks up new icons)
+command=$(${THEPYTHON} ./scripts/svg2symbols.py > build/website/symbols.html)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after updating SVG symbols!"
+    exit 1;
+else
+    echo "OK after updating SVG symbols!"
+fi
 
 # fetch missing headphone pictures
 #command=$(${THEPYTHON} ./scripts/headphone_fetch_pictures.py 2>&1)
@@ -35,7 +46,7 @@ ${THEPYTHON} ./scripts/generate_headphone_datas.py
 ${THEPYTHON} ./scripts/generate_headphone_meta.py
 
 # generate headphone graphs
-command=$(${THEPYTHON} ./scripts/generate_graphs.py --headphones)
+command=$(${THEPYTHON} ./scripts/generate_graphs.py --headphones --force)
 status=$?
 if [ $status -ne 0 ]; then
     echo "WARN: headphone graph generation had failures (non-fatal)"
@@ -66,6 +77,7 @@ else
 fi
 
 command=$(./scripts/check_html.sh)
+status=$?
 if [ $status -ne 0 ]; then
     echo "KO after checking HTML!"
     exit 1;
@@ -77,9 +89,9 @@ fi
 command=$(./scripts/update_dev.sh)
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO Update $TARGET!"
+    echo "KO after update_dev!"
     exit 1;
 else
-    echo "OK Update $TARGET!"
+    echo "OK after update_dev!"
 fi
 exit 0;

@@ -2,7 +2,7 @@
 # Speaker: Unknown
 # Loss Type: HeadphoneScore
 # Filters: 7
-# Generated: 2026-06-08 08:32:13
+# Generated: 2026-06-08 11:31:15
 Preamp: -5.4 dB
 
 Filter  1: ON PK Fc    60 Hz Gain -1.15 dB Q 2.59

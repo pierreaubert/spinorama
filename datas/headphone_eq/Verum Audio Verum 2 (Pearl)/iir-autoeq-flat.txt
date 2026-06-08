@@ -2,7 +2,7 @@
 # Speaker: Unknown
 # Loss Type: HeadphoneFlat
 # Filters: 7
-# Generated: 2026-06-08 08:33:07
+# Generated: 2026-06-08 11:32:09
 Preamp: -5.6 dB
 
 Filter  1: ON PK Fc    60 Hz Gain +0.42 dB Q 2.04
