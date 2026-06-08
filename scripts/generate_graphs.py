@@ -34,7 +34,7 @@ from generate_common import (
     cache_update,
     get_custom_logger,
 )
-from datas import metadata, Symmetry, Parameters
+from datas import speaker as metadata, Symmetry, Parameters
 from datas.helpers import measurement2distance
 from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker import print_graphs
@@ -327,7 +327,6 @@ def generate_headphone_graphs(data_dir: str, force: bool):
     Headphone graphs are simpler than speaker spinorama — just frequency
     response curves loaded from CSV files.
     """
-    import csv
     import json as json_module
     import numpy as np
 
@@ -345,24 +344,17 @@ def generate_headphone_graphs(data_dir: str, force: bool):
         logger.info("No headphone metadata found, skipping graph generation")
         return
 
+    from load_headphone_csv import parse_headphone_csv, average_headphone_channels
+
     def load_csv_curve(filepath):
-        """Load a frequency,spl CSV file."""
-        freq, spl = [], []
-        with open(filepath, "r") as f:
-            reader = csv.reader(f)
-            for row in reader:
-                if not row or row[0].startswith("#") or row[0].startswith("f"):
-                    continue
-                if len(row) < 2:
-                    continue
-                try:
-                    f_val = float(row[0])
-                    s_val = float(row[1])
-                except ValueError:
-                    continue
-                freq.append(f_val)
-                spl.append(s_val)
-        return np.array(freq), np.array(spl)
+        """Load a frequency,spl CSV file, averaging L+R channels if present."""
+        df = parse_headphone_csv(filepath)
+        if df is None:
+            return np.array([]), np.array([])
+        df_avg = average_headphone_channels(df)
+        freq = np.asarray(df_avg["Freq"], dtype=float)
+        spl = np.asarray(df_avg["dB"], dtype=float)
+        return freq, spl
 
     def mean_in_band(freq, spl, fmin, fmax):
         """Compute mean SPL inside [fmin, fmax] Hz."""

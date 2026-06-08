@@ -68,13 +68,41 @@ _COL_FREQ_KW = ("frequency", "freq", "hz", "x")
 _COL_DB_KW = ("raw", "spl", "db", "dbspl", "level", "y")
 
 
-def _find_header_row(lines: list[str]) -> int | None:
-    """Return the line index that contains recognisable column headers."""
+def _find_header_rows(lines: list[str]) -> list[tuple[int, int, int]]:
+    """Find all candidate header rows and return their (index, n_freq_cols, n_db_cols).
+
+    Scans *lines* for rows that contain both frequency and dB keywords.
+    For each candidate, counts how many frequency-like and dB-like columns it has.
+    """
+    candidates = []
     for i, line in enumerate(lines):
         parts = {p.strip().strip('"').lower() for p in line.split(",")}
         if parts & _HEADER_FREQ_KW and parts & _HEADER_DB_KW:
-            return i
-    return None
+            cols = [p.strip().strip('"').lower() for p in line.split(",")]
+            n_freq = sum(
+                1 for c in cols if c and any(c.startswith(k) for k in ("hz", "freq"))
+            )
+            n_db = sum(
+                1 for c in cols if c and any(c.startswith(k) for k in ("dbspl", "spl", "db"))
+            )
+            candidates.append((i, n_freq, n_db))
+    return candidates
+
+
+def _choose_header_row(candidates: list[tuple[int, int, int]]) -> int | None:
+    """Pick the best header row from *candidates*.
+
+    Prefers the *first* candidate with at least 2 frequency and 2 dB columns
+    (indicating a stereo L+R header). Falls back to the first candidate.
+    Using the first match avoids later repeated header blocks that some REW
+    exports contain (e.g. smoothed versions with amplitude offsets).
+    """
+    if not candidates:
+        return None
+    for idx, n_freq, n_db in candidates:
+        if n_freq >= 2 and n_db >= 2:
+            return idx
+    return candidates[0][0]
 
 
 def _find_first_numeric_row(lines: list[str]) -> int | None:
@@ -89,6 +117,19 @@ def _find_first_numeric_row(lines: list[str]) -> int | None:
             except ValueError:
                 pass
     return None
+
+
+def _pandas_header_for_line(lines: list[str], target_idx: int) -> int:
+    """Compute the pandas ``header=`` value for a line at *target_idx*.
+
+    Pandas skips blank lines when counting, so this returns the number of
+    non-blank lines that appear *before* *target_idx*.
+    """
+    non_blank_before = 0
+    for i in range(target_idx):
+        if lines[i].strip():
+            non_blank_before += 1
+    return non_blank_before
 
 
 def _extract_columns(df: pd.DataFrame, filepath: str) -> pd.DataFrame | None:
@@ -110,7 +151,14 @@ def _extract_columns(df: pd.DataFrame, filepath: str) -> pd.DataFrame | None:
                     "dB_R": pd.to_numeric(df[db_cols[1]], errors="coerce"),
                 }
             ).dropna()
+            # Some REW exports repeat the same measurement multiple times
+            # with different processing. Keep only the first contiguous
+            # section where frequency is monotonically increasing.
             if len(result) >= 10:
+                resets = result[result["Freq_L"] < result["Freq_L"].shift(1)].index
+                if len(resets) > 0:
+                    first_reset = resets[0]
+                    result = result.loc[: first_reset - 1]
                 logger.info(
                     "Loaded %d points (L+R) from %s (%.0f-%.0f Hz)",
                     len(result),
@@ -174,21 +222,26 @@ def parse_headphone_csv(filepath: str) -> pd.DataFrame | None:
       - ``Freq, dB`` (2-column sources)
       - ``Freq_L, dB_L, Freq_R, dB_R`` (4-column ASR sources)
     or *None* on failure.
+
+    Handles REW-style exports where Channel 1 data is followed by a second
+    header block and Channel 2 data.
     """
     try:
         with open(filepath, "r", encoding="utf-8", errors="replace") as f:
-            peek = [f.readline() for _ in range(15)]
+            lines = f.readlines()
     except OSError as e:
         logger.error("Failed to read %s: %s", filepath, e)
         return None
 
-    header_row = _find_header_row(peek)
+    candidates = _find_header_rows(lines)
+    header_idx = _choose_header_row(candidates)
 
     try:
-        if header_row is not None:
-            df = pd.read_csv(filepath, header=header_row, on_bad_lines="skip")
+        if header_idx is not None:
+            pandas_header = _pandas_header_for_line(lines, header_idx)
+            df = pd.read_csv(filepath, header=pandas_header, on_bad_lines="skip")
         else:
-            skip = _find_first_numeric_row(peek)
+            skip = _find_first_numeric_row(lines)
             if skip is None:
                 logger.error("No recognisable header or numeric data in %s", filepath)
                 return None
