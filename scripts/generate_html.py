@@ -512,7 +512,6 @@ def main():
             graph_html = mako_templates.get_template("graph.html")
 
             HEADPHONE_FREQ_FILTER = [
-                "Frequency Response",
                 "Frequency Response Compensated",
                 "Target Deviation",
             ]

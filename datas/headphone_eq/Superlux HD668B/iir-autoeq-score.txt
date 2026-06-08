@@ -2,13 +2,13 @@
 # Speaker: Unknown
 # Loss Type: HeadphoneScore
 # Filters: 7
-# Generated: 2026-06-08 11:32:03
-Preamp: -6.1 dB
+# Generated: 2026-06-08 15:10:41
+Preamp: -5.9 dB
 
-Filter  1: ON PK Fc    60 Hz Gain +2.30 dB Q 2.07
-Filter  2: ON PK Fc    86 Hz Gain +1.40 dB Q 2.28
-Filter  3: ON PK Fc   158 Hz Gain -2.78 dB Q 0.58
-Filter  4: ON PK Fc   296 Hz Gain -3.89 dB Q 0.50
-Filter  5: ON PK Fc   872 Hz Gain -1.49 dB Q 2.44
-Filter  6: ON PK Fc  1943 Hz Gain +0.92 dB Q 1.55
-Filter  7: ON PK Fc  3414 Hz Gain +6.00 dB Q 1.51
+Filter  1: ON PK Fc    25 Hz Gain +6.00 dB Q 0.50
+Filter  2: ON PK Fc   102 Hz Gain -2.05 dB Q 4.83
+Filter  3: ON PK Fc   140 Hz Gain -2.33 dB Q 5.06
+Filter  4: ON PK Fc   260 Hz Gain -6.15 dB Q 0.75
+Filter  5: ON PK Fc   759 Hz Gain -2.45 dB Q 3.78
+Filter  6: ON PK Fc  1140 Hz Gain -1.12 dB Q 5.08
+Filter  7: ON PK Fc  3523 Hz Gain +6.00 dB Q 1.31

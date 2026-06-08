@@ -136,12 +136,15 @@ while IFS='|' read -r name shape origin; do
 
     # Run autoeq with headphone-score loss (Harman preference)
     if autoeq \
+        --preset balanced \
         --curve "$curve_file" \
         --target "$target" \
         --loss headphone-score \
         --peq-model pk \
         -n 7 \
-        --preset balanced \
+	--min-freq 20 \
+	--max-freq 6000 \
+	--algo autoeq:cmaes \
         --output "${hp_eq_dir}/autoeq_score" \
         2>&1 | tail -3; then
         echo "  OK: score EQ computed"
@@ -153,12 +156,15 @@ while IFS='|' read -r name shape origin; do
 
     # Also run with headphone-flat loss (minimum deviation)
     if autoeq \
+        --preset balanced \
         --curve "$curve_file" \
         --target "$target" \
         --loss headphone-flat \
         --peq-model pk \
         -n 7 \
-        --preset balanced \
+	--min-freq 20 \
+	--max-freq 6000 \
+	--algo autoeq:cmaes \
         --output "${hp_eq_dir}/autoeq_flat" \
         2>&1 | tail -3; then
         echo "  OK: flat EQ computed"

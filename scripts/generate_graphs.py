@@ -558,7 +558,8 @@ def generate_headphone_graphs(data_dir: str, force: bool):
                 preamp = peq_preamp_gain(peq)
                 eq_response = np.array(peq_spl(freq, peq)) + preamp
                 spl_eq = spl + eq_response
-                spl_eq_norm = spl_eq - mean_spl
+                mean_spl_eq = mean_in_band(freq, spl_eq, MEAN_MIN, MEAN_MAX)
+                spl_eq_norm = spl_eq - mean_spl_eq
                 traces_fr_eq = [
                     {
                         "x": freq.tolist(),
