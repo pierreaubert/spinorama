@@ -2,13 +2,13 @@
 # Speaker: Unknown
 # Loss Type: HeadphoneFlat
 # Filters: 7
-# Generated: 2026-04-23 14:58:00
-Preamp: -4.2 dB
+# Generated: 2026-06-08 08:32:39
+Preamp: -3.5 dB
 
-Filter  1: ON PK Fc    64 Hz Gain +3.00 dB Q 0.64
-Filter  2: ON PK Fc   162 Hz Gain +3.96 dB Q 2.04
-Filter  3: ON PK Fc   164 Hz Gain -5.32 dB Q 1.42
-Filter  4: ON PK Fc   984 Hz Gain -3.28 dB Q 0.90
-Filter  5: ON PK Fc  1460 Hz Gain +0.42 dB Q 1.94
-Filter  6: ON PK Fc  2011 Hz Gain +5.30 dB Q 2.11
-Filter  7: ON PK Fc  4317 Hz Gain -5.35 dB Q 3.31
+Filter  1: ON PK Fc    60 Hz Gain +1.12 dB Q 1.79
+Filter  2: ON PK Fc    68 Hz Gain +1.92 dB Q 0.75
+Filter  3: ON PK Fc   163 Hz Gain -0.65 dB Q 1.84
+Filter  4: ON PK Fc   300 Hz Gain -1.15 dB Q 0.68
+Filter  5: ON PK Fc  1030 Hz Gain -3.60 dB Q 1.31
+Filter  6: ON PK Fc  1980 Hz Gain +4.55 dB Q 1.48
+Filter  7: ON PK Fc  4278 Hz Gain -5.71 dB Q 3.15
