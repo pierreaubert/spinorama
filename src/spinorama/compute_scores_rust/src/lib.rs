@@ -271,70 +271,69 @@ fn c_sm(freq: PyReadonlyArray1<'_, f64>, spl: PyReadonlyArray1<'_, f64>) -> PyRe
 }
 
 #[pyfunction]
-fn c_score(
+fn c_score<'py>(
+    py: Python<'py>,
     freq: PyReadonlyArray1<'_, f64>,
     intervals: Vec<(usize, usize)>,
     on: PyReadonlyArray1<'_, f64>,
     lw: PyReadonlyArray1<'_, f64>,
     sp: PyReadonlyArray1<'_, f64>,
     pir: PyReadonlyArray1<'_, f64>,
-) -> PyResult<PyObject> {
-    Python::with_gil(|py| {
-        let freq = freq.as_array();
-        let on = on.as_array();
-        let lw = lw.as_array();
-        let sp = sp.as_array();
-        let pir = pir.as_array();
+) -> PyResult<Bound<'py, PyAny>> {
+    let freq = freq.as_array();
+    let on = on.as_array();
+    let lw = lw.as_array();
+    let sp = sp.as_array();
+    let pir = pir.as_array();
 
-        // nbd_on, nbd_pir
-        let mut nbd_on = 0.0;
-        let mut nbd_pir = 0.0;
-        let mut cnt = 0.0;
-        for (imin, imax) in intervals.iter().copied() {
-            nbd_on += mad(&on.to_owned(), imin, imax);
-            nbd_pir += mad(&pir.to_owned(), imin, imax);
-            cnt += 1.0;
+    // nbd_on, nbd_pir
+    let mut nbd_on = 0.0;
+    let mut nbd_pir = 0.0;
+    let mut cnt = 0.0;
+    for (imin, imax) in intervals.iter().copied() {
+        nbd_on += mad(&on.to_owned(), imin, imax);
+        nbd_pir += mad(&pir.to_owned(), imin, imax);
+        cnt += 1.0;
+    }
+    if cnt > 0.0 { nbd_on /= cnt; nbd_pir /= cnt; } else { nbd_on = f64::NAN; nbd_pir = f64::NAN; }
+
+    // sm_pir
+    let f_min = freq.iter().position(|&f| f > 100.0).unwrap_or(freq.len());
+    let f_max = freq.iter().position(|&f| f >= 16000.0).unwrap_or(freq.len());
+    if f_min >= f_max { return Err(PyValueError::new_err("invalid frequency range for c_score")); }
+    let x = freq.slice(s![f_min..f_max]).mapv(|v| v.log10());
+    let y = pir.slice(s![f_min..f_max]).to_owned();
+    let sm_pir = r_squared(&x, &y);
+
+    // lfx
+    let lw_min = freq.iter().position(|&f| f > 300.0).unwrap_or(freq.len());
+    let lw_max = freq.iter().position(|&f| f >= 10000.0).unwrap_or(freq.len());
+    let lf_x = if lw_min < lw_max {
+        let lw_ref = lw.slice(s![lw_min..lw_max]).mean().unwrap_or(0.0) - 6.0;
+        let mut lfx_range: Vec<(usize, f64)> = Vec::new();
+        for (i, (&f, &spv)) in freq.iter().take(lw_min).zip(sp.iter().take(lw_min)).enumerate() {
+            if spv <= lw_ref { lfx_range.push((i, f)); }
         }
-        if cnt > 0.0 { nbd_on /= cnt; nbd_pir /= cnt; } else { nbd_on = f64::NAN; nbd_pir = f64::NAN; }
-
-        // sm_pir
-        let f_min = freq.iter().position(|&f| f > 100.0).unwrap_or(freq.len());
-        let f_max = freq.iter().position(|&f| f >= 16000.0).unwrap_or(freq.len());
-        if f_min >= f_max { return Err(PyValueError::new_err("invalid frequency range for c_score")); }
-        let x = freq.slice(s![f_min..f_max]).mapv(|v| v.log10());
-        let y = pir.slice(s![f_min..f_max]).to_owned();
-        let sm_pir = r_squared(&x, &y);
-
-        // lfx
-        let lw_min = freq.iter().position(|&f| f > 300.0).unwrap_or(freq.len());
-        let lw_max = freq.iter().position(|&f| f >= 10000.0).unwrap_or(freq.len());
-        let lf_x = if lw_min < lw_max {
-            let lw_ref = lw.slice(s![lw_min..lw_max]).mean().unwrap_or(0.0) - 6.0;
-            let mut lfx_range: Vec<(usize, f64)> = Vec::new();
-            for (i, (&f, &spv)) in freq.iter().take(lw_min).zip(sp.iter().take(lw_min)).enumerate() {
-                if spv <= lw_ref { lfx_range.push((i, f)); }
+        if lfx_range.is_empty() { freq[0].log10() } else {
+            let group = consecutive_groups_first_group(&lfx_range);
+            if group.len() <= 1 { (300.0f64).log10() } else {
+                let mut pos = group.last().unwrap().0;
+                if freq.len() < pos - 1 { pos += 1; }
+                freq[pos].log10()
             }
-            if lfx_range.is_empty() { freq[0].log10() } else {
-                let group = consecutive_groups_first_group(&lfx_range);
-                if group.len() <= 1 { (300.0f64).log10() } else {
-                    let mut pos = group.last().unwrap().0;
-                    if freq.len() < pos - 1 { pos += 1; }
-                    freq[pos].log10()
-                }
-            }
-        } else {
-            (300.0f64).log10()
-        };
+        }
+    } else {
+        (300.0f64).log10()
+    };
 
-        let score = 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir;
-        let dict = PyDict::new(py);
-        dict.set_item("nbd_on", nbd_on)?;
-        dict.set_item("nbd_pir", nbd_pir)?;
-        dict.set_item("lfx", lf_x)?;
-        dict.set_item("sm_pir", sm_pir)?;
-        dict.set_item("pref_score", score)?;
-        Ok(dict.into())
-    })
+    let score = 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir;
+    let dict = PyDict::new(py);
+    dict.set_item("nbd_on", nbd_on)?;
+    dict.set_item("nbd_pir", nbd_pir)?;
+    dict.set_item("lfx", lf_x)?;
+    dict.set_item("sm_pir", sm_pir)?;
+    dict.set_item("pref_score", score)?;
+    Ok(dict.into_any())
 }
 
 #[pyfunction]
@@ -347,7 +346,7 @@ fn c_score_peq<'py>(
     spl_h: PyReadonlyArray2<'_, f64>,
     spl_v: PyReadonlyArray2<'_, f64>,
     peq: PyReadonlyArray1<'_, f64>,
-) -> PyResult<(Bound<'py, PyArray2<f64>>, PyObject)> {
+) -> PyResult<(Bound<'py, PyArray2<f64>>, Bound<'py, PyAny>)> {
     let weights = weights.as_array();
     let spl_h = spl_h.as_array();
     let spl_v = spl_v.as_array();
@@ -422,34 +421,34 @@ fn c_score_peq<'py>(
 
     // Return spin as Bound PyArray2
     let spin_py = numpy::PyArray2::from_owned_array(py, spin_nd);
-    Ok((spin_py, dict.into()))
+    Ok((spin_py, dict.into_any()))
 }
 
 #[pyfunction]
-fn c_score_peq_approx(
+fn c_score_peq_approx<'py>(
+    py: Python<'py>,
     freq: PyReadonlyArray1<'_, f64>,
     intervals: Vec<(usize, usize)>,
     spin: PyReadonlyArray2<'_, f64>,
     on: PyReadonlyArray1<'_, f64>,
     peq: PyReadonlyArray1<'_, f64>,
-) -> PyResult<PyObject> {
-    Python::with_gil(|py| {
-        let spin = spin.as_array();
-        let on = on.as_array();
-        let peq = peq.as_array();
-        let on2 = &on.to_owned() + &peq;
-        let lw = spin.row(0).to_owned()+ &peq;
-        let sp = spin.row(spin.shape()[0]-2).to_owned()+&peq;
-        let pir = spin.row(spin.shape()[0]-1).to_owned()+&peq;
-        c_score(
-            freq,
-            intervals,
-            on2.view().to_pyarray(py).readonly(),
-            lw.view().to_pyarray(py).readonly(),
-            sp.view().to_pyarray(py).readonly(),
-            pir.view().to_pyarray(py).readonly(),
-        )
-    })
+) -> PyResult<Bound<'py, PyAny>> {
+    let spin = spin.as_array();
+    let on = on.as_array();
+    let peq = peq.as_array();
+    let on2 = &on.to_owned() + &peq;
+    let lw = spin.row(0).to_owned()+ &peq;
+    let sp = spin.row(spin.shape()[0]-2).to_owned()+&peq;
+    let pir = spin.row(spin.shape()[0]-1).to_owned()+&peq;
+    c_score(
+        py,
+        freq,
+        intervals,
+        on2.view().to_pyarray(py).readonly(),
+        lw.view().to_pyarray(py).readonly(),
+        sp.view().to_pyarray(py).readonly(),
+        pir.view().to_pyarray(py).readonly(),
+    )
 }
 
 #[pymodule]
