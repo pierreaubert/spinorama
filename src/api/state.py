@@ -131,5 +131,35 @@ async def lifespan(app: FastAPI):
 
 
 def safe_segment(value: str) -> bool:
-    """Return ``True`` if ``value`` is a single path segment (no separator or traversal)."""
-    return "/" not in value and ".." not in value
+    """Return ``True`` if ``value`` is a single safe path segment.
+
+    Rejects empty strings, current/parent directory references, path separators,
+    backslashes and NUL bytes.
+    """
+    if not value or value in (".", ".."):
+        return False
+    if "\x00" in value or "/" in value or "\\" in value:
+        return False
+    return ".." not in value
+
+
+def safe_path(base: str, *parts: str) -> str | None:
+    """Join ``parts`` under ``base`` and ensure the result stays inside ``base``.
+
+    Each part is checked for traversal characters before normalising the
+    complete path and verifying that the candidate starts with the base
+    directory.  Returns the normalised path on success, or ``None`` if the
+    path would escape ``base``.
+    """
+    for part in parts:
+        if not safe_segment(part):
+            return None
+    try:
+        norm_base = os.path.normpath(base)
+        candidate = os.path.normpath(os.path.join(norm_base, *parts))
+    except (OSError, ValueError):
+        return None
+    separator = os.sep
+    if candidate != norm_base and not candidate.startswith(norm_base + separator):
+        return None
+    return candidate

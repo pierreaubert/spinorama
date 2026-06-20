@@ -16,6 +16,7 @@ from ..state import (
     KNOWN_MEASUREMENTS,
     SPINFILES,
     load_metadata,
+    safe_path,
     safe_segment,
 )
 
@@ -73,11 +74,11 @@ async def get_speaker_measurements(
     if not speaker_name:
         return {"error": "Speaker name and measurement name are mandatory"}
 
+    if not (safe_segment(speaker_name) and safe_segment(speaker_version)):
+        return {"error": f"Invalid speaker_name {speaker_name} or speaker_version {speaker_version}!"}
+
     if speaker_name not in metadata:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
-
-    if not safe_segment(speaker_version):
-        return {"error": f"Invalid speaker_version {speaker_version}!"}
 
     meta_data = metadata[speaker_name]
 
@@ -88,8 +89,18 @@ async def get_speaker_measurements(
         }
 
     origin = _vendor_stripped(meta_data["measurements"][speaker_version]["origin"])
-    upper_dir = f"{SPINFILES}/{speaker_name}"
-    dir_data = f"{upper_dir}/{origin}/{speaker_version}"
+    if not safe_segment(origin):
+        return {"error": f"Invalid origin {origin}!"}
+
+    upper_dir = safe_path(SPINFILES, speaker_name)
+    if upper_dir is None:
+        return {"error": f"Invalid path for speaker {speaker_name}!"}
+
+    dir_data = safe_path(upper_dir, origin, speaker_version)
+    if dir_data is None:
+        return {
+            "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {speaker_version}!"
+        }
 
     if not os.path.exists(upper_dir):
         return {"error": f"Speaker {speaker_name} does not have precomputed measurements!"}
@@ -116,13 +127,17 @@ async def get_speaker_measurements_data(
     if not speaker_name or not measurement_name:
         return {"error": "Speaker name and measurement name are mandatory"}
 
+    if not (
+        safe_segment(speaker_name)
+        and safe_segment(speaker_version)
+        and safe_segment(measurement_name)
+    ):
+        return {
+            "error": f"Invalid speaker_name {speaker_name}, speaker_version {speaker_version} or measurement_name {measurement_name}!"
+        }
+
     if speaker_name not in metadata:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
-
-    if not (safe_segment(speaker_version) and safe_segment(measurement_name)):
-        return {
-            "error": f"Invalid speaker_version {speaker_version} or speaker_name {speaker_name}!"
-        }
 
     meta_data = metadata[speaker_name]
 
@@ -133,8 +148,18 @@ async def get_speaker_measurements_data(
         }
 
     origin = _vendor_stripped(meta_data["measurements"][speaker_version]["origin"])
-    upper_dir = f"{SPINFILES}/{speaker_name}"
-    dir_data = f"{upper_dir}/{origin}/{speaker_version}"
+    if not safe_segment(origin):
+        return {"error": f"Invalid origin {origin}!"}
+
+    upper_dir = safe_path(SPINFILES, speaker_name)
+    if upper_dir is None:
+        return {"error": f"Invalid path for speaker {speaker_name}!"}
+
+    dir_data = safe_path(upper_dir, origin, speaker_version)
+    if dir_data is None:
+        return {
+            "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {speaker_version}!"
+        }
 
     if not os.path.exists(upper_dir):
         return {"error": f"Speaker {speaker_name} does not have precomputed measurements!"}
@@ -157,9 +182,15 @@ async def get_speaker_measurements_data(
             "error": f"Version {measurement_format} is not known! Only valid options is None or json."
         }
 
-    measurement_file = f"{dir_data}/{measurement_name}.{measurement_format}"
+    file_name = f"{measurement_name}.{measurement_format}"
     if measurement_format == "png":
-        measurement_file = f"{dir_data}/{measurement_name}_large.{measurement_format}"
+        file_name = f"{measurement_name}_large.{measurement_format}"
+
+    measurement_file = safe_path(dir_data, file_name)
+    if measurement_file is None:
+        return {
+            "error": f"Speaker {speaker_name} does not have precomputed {measurement_name} in format {measurement_format} for origin {origin} and version {speaker_version}!"
+        }
 
     if not os.path.exists(measurement_file):
         return {

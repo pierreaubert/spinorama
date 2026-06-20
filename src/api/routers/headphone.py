@@ -14,6 +14,7 @@ from ..state import (
     API_VERSION,
     HEADPHONE_FILES,
     load_headphone_metadata,
+    safe_path,
     safe_segment,
 )
 
@@ -111,15 +112,11 @@ async def get_headphone_frequency_response(
     if not safe_segment(meas_key):
         return {"error": f"Invalid version {meas_key}!"}
 
-    csv_path = f"{HEADPHONE_FILES}/{headphone_name}/{meas_key}/frequency_response.csv"
-
-    # Defense-in-depth: ensure the resolved path stays inside HEADPHONE_FILES
-    real_base = os.path.realpath(HEADPHONE_FILES)
-    real_csv = os.path.realpath(csv_path)
-    if os.path.commonpath([real_base, real_csv]) != real_base:
+    csv_path = safe_path(HEADPHONE_FILES, headphone_name, meas_key, "frequency_response.csv")
+    if csv_path is None:
         return {"error": f"Invalid path for {headphone_name} ({meas_key})"}
 
-    if not os.path.exists(real_csv):
+    if not os.path.exists(csv_path):
         return {"error": f"No frequency response data for {headphone_name} ({meas_key})"}
 
-    return FileResponse(real_csv, media_type="text/csv")
+    return FileResponse(csv_path, media_type="text/csv")
