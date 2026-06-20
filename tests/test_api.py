@@ -287,6 +287,116 @@ class TestConsistency:
                 )
 
 
+class TestSpeakerMeasurementsPathTraversal:
+    """Path-injection defences for the measurements list endpoint."""
+
+    def test_speaker_name_with_dotdot_rejected(self, client: TestClient) -> None:
+        # %2E%2E is decoded to '..' inside the path parameter.
+        response = client.get(
+            "/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "error" in data
+        assert "Invalid" in data["error"]
+
+
+class TestSpeakerMeasurementsDataPathTraversal:
+    """Path-injection defences for the measurement data endpoint."""
+
+    def test_speaker_name_with_dotdot_rejected(self, client: TestClient) -> None:
+        response = client.get(
+            "/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements/CEA2034"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "error" in data
+        assert "Invalid" in data["error"]
+
+    def test_version_with_dotdot_rejected(self, client: TestClient) -> None:
+        response = client.get(
+            "/v1/speaker/Test Speaker 1/version/%2E%2Ev1/measurements/CEA2034"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "error" in data
+        assert "Invalid" in data["error"]
+
+    def test_measurement_with_dotdot_rejected(self, client: TestClient) -> None:
+        response = client.get(
+            "/v1/speaker/Test Speaker 1/version/version1/measurements/%2E%2ECEA2034"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "error" in data
+        assert "Invalid" in data["error"]
+
+
+class TestSafeSegment:
+    """Unit tests for ``src.api.state.safe_segment``."""
+
+    def test_valid_segments(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment("Test Speaker 1") is True
+        assert safe_segment("version1") is True
+        assert safe_segment("CEA2034") is True
+        assert safe_segment(".hidden") is True
+
+    def test_rejects_empty(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment("") is False
+
+    def test_rejects_dot_and_dotdot(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment(".") is False
+        assert safe_segment("..") is False
+
+    def test_rejects_separators(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment("a/b") is False
+        assert safe_segment("a\\b") is False
+
+    def test_rejects_dotdot_anywhere(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment("a..b") is False
+
+    def test_rejects_null_byte(self) -> None:
+        from src.api.state import safe_segment
+
+        assert safe_segment("a\x00b") is False
+
+
+class TestSafePath:
+    """Unit tests for ``src.api.state.safe_path``."""
+
+    def test_valid_path_inside_base(self) -> None:
+        from src.api.state import safe_path
+
+        result = safe_path("/var/www/html", "speakers", "Test Speaker 1")
+        assert result == "/var/www/html/speakers/Test Speaker 1"
+
+    def test_rejects_traversal(self) -> None:
+        from src.api.state import safe_path
+
+        assert safe_path("/var/www/html", "..", "etc") is None
+        assert safe_path("/var/www/html", "speakers", "..", "etc") is None
+
+    def test_rejects_absolute_path(self) -> None:
+        from src.api.state import safe_path
+
+        assert safe_path("/var/www/html", "/etc/passwd") is None
+
+    def test_base_alone_is_valid(self) -> None:
+        from src.api.state import safe_path
+
+        assert safe_path("/var/www/html") == "/var/www/html"
+
+
 class TestLoadMetadata:
     @patch("src.api.state.METADATA", "/tmp/test_metadata.json")
     @patch("os.path.exists", return_value=False)
