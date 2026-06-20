@@ -57,7 +57,6 @@ from spinorama.misc import graph_melt, sanitize_filename
 
 # Local application imports
 from datas import (
-    metadata,
     Peq,
     EQ,
     PrefRating,
@@ -72,6 +71,8 @@ from datas import (
     Symmetry,
     MeasurementQuality,
 )
+
+from datas.speaker import speakers_info
 
 # Typing imports
 from typing import Any, cast, Optional, TypedDict
@@ -203,9 +204,9 @@ def update_metadata(speaker_name, version, target, data):
     if version_is_eq(version):
         key = version[:-3]
 
-    if key not in metadata.speakers_info[speaker_name]["measurements"]:
+    if key not in speakers_info[speaker_name]["measurements"]:
         # print("update metadata: create new key {}".format(key))
-        metadata.speakers_info[speaker_name]["measurements"][key] = Measurement(
+        speakers_info[speaker_name]["measurements"][key] = Measurement(
             {
                 "origin": "unknown",
                 "format": "klippel",
@@ -217,7 +218,7 @@ def update_metadata(speaker_name, version, target, data):
         return
 
     # print("update metadata: update key {} with target {}".format(key, target))
-    metadata.speakers_info[speaker_name]["measurements"][key][target] = data
+    speakers_info[speaker_name]["measurements"][key][target] = data
 
 
 def add_measurement(speaker_name, origin, version, dfs):
@@ -235,7 +236,7 @@ def add_measurement(speaker_name, origin, version, dfs):
     else:
         m = Measurements.from_legacy_dict(dfs)
 
-    default_version = metadata.speakers_info[speaker_name].get("default_measurement")
+    default_version = speakers_info[speaker_name].get("default_measurement")
     if default_version is None:
         logger.exception(
             "Got an version error exception for speaker_name %s default measurement",
@@ -249,7 +250,7 @@ def add_measurement(speaker_name, origin, version, dfs):
 
     if (
         m.sensitivity is not None
-        and metadata.speakers_info[speaker_name].get("type") == "passive"
+        and speakers_info[speaker_name].get("type") == "passive"
         and version == default_version
     ):
         result["computed_sensitivity{}".format(eq_tag)] = {
@@ -384,7 +385,7 @@ def add_quality(parse_max: Optional[int], filters: dict):
     This can be overriden by setting the correct value in the metadata file
     """
     parsed = 0
-    for speaker_name, speaker_data in metadata.speakers_info.items():
+    for speaker_name, speaker_data in speakers_info.items():
         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
@@ -470,7 +471,7 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
-        if speaker_name not in metadata.speakers_info:
+        if speaker_name not in speakers_info:
             logger.info("Error: %s is not in metadata", speaker_name)
             continue
         tasks.append((speaker_path, speaker_name))
@@ -480,7 +481,7 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
         all_results = pool.starmap(_eq_worker, tasks)
 
     for speaker_name, default_eq, eqs in all_results:
-        speaker_info = metadata.speakers_info[speaker_name]
+        speaker_info = speakers_info[speaker_name]
         if "eqs" not in speaker_info or not isinstance(speaker_info["eqs"], dict):
             speaker_info["eqs"] = {}
         if default_eq is not None:
@@ -545,11 +546,11 @@ SPIN_DATA_FORMATS = {"klippel", "gll_hv_txt", "spl_hv_txt", "rew_text_dump"}
 def get_spin_data(freq, speaker_name, speaker_data):
     default_key = None
     try:
-        default_key = metadata.speakers_info[speaker_name]["default_measurement"]
+        default_key = speakers_info[speaker_name]["default_measurement"]
     except KeyError:
         return None
 
-    default_format = metadata.speakers_info[speaker_name]["measurements"][default_key]["format"]
+    default_format = speakers_info[speaker_name]["measurements"][default_key]["format"]
     if default_format not in SPIN_DATA_FORMATS:
         return None
 
@@ -610,7 +611,7 @@ def add_near(dataframe, parse_max: int, filters: dict):
             distribution.append(delta)
 
         closest = sorted(deltas, key=lambda x: x[0])[:10]
-        metadata.speakers_info[speaker_name1]["nearest"] = closest
+        speakers_info[speaker_name1]["nearest"] = closest
 
     # print some stats
     print_stats = True
@@ -884,7 +885,7 @@ def main():
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")
-    dump_metadata(metadata.speakers_info)
+    dump_metadata(speakers_info)
     steps.append(("dump", time.perf_counter()))
 
     # headphone metadata

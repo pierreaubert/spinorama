@@ -1219,6 +1219,31 @@ speakers_info_a: SpeakerDatabase = {
             }
         },
     },
+    "Arendal Sound 1610 Tower 8": {
+        "brand": "Arendal Sound",
+        "model": "1610 Tower 8",
+        "type": "passive",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "ahl": "https://www.audioholics.com/tower-speaker-reviews/arendal-sound-1610-series-8",
+                },
+                "review_published": "20260611",
+                "specifications": {
+                    "sensitivity": 89.5,
+                    "impedance": 4,
+                    "size": {"height": 1002, "width": 407, "depth": 450},
+                    "weight": 45,
+                },
+            }
+        },
+    },
     "Arendal Sound 1723 Bookshelf S THX": {
         "brand": "Arendal Sound",
         "model": "1723 Bookshelf S THX",
