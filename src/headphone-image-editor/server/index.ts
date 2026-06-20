@@ -1,8 +1,6 @@
-import { lookup } from 'node:dns/promises';
 import { createReadStream } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { isIP } from 'node:net';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,6 +12,7 @@ import {
   savePicture,
   UnsafeKeyError,
 } from './pictures.ts';
+import { PROXY_MAX_BYTES, PROXY_TIMEOUT_MS, validateProxyUrl } from './proxy.ts';
 import { getEngine } from './search/registry.ts';
 import { SearchEngineError } from './search/types.ts';
 
@@ -95,27 +94,14 @@ const handleSearch: Handler = async (_req, res, url) => {
   send(res, 200, { engine: engine.name, hits });
 };
 
-const PROXY_TIMEOUT_MS = 10_000;
-const PROXY_MAX_BYTES = 10 * 1024 * 1024;
-
 const handleProxy: Handler = async (_req, res, url) => {
   const target = url.searchParams.get('url');
   if (!target) {
     send(res, 400, { error: 'Missing url' });
     return;
   }
-  let parsed: URL;
-  try {
-    parsed = new URL(target);
-  } catch {
-    send(res, 400, { error: 'Invalid url' });
-    return;
-  }
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    send(res, 400, { error: 'Only http(s) urls allowed' });
-    return;
-  }
-  if (!(await isPublicHost(parsed.hostname))) {
+  const parsed = await validateProxyUrl(target);
+  if (!parsed) {
     send(res, 400, { error: 'Refusing to fetch from non-public host' });
     return;
   }
@@ -171,42 +157,6 @@ const handleProxy: Handler = async (_req, res, url) => {
   }
   res.end();
 };
-
-async function isPublicHost(host: string): Promise<boolean> {
-  if (!host) return false;
-  if (isIP(host)) return !isPrivateAddress(host);
-  try {
-    const addrs = await lookup(host, { all: true, verbatim: true });
-    if (addrs.length === 0) return false;
-    return addrs.every((a) => !isPrivateAddress(a.address));
-  } catch {
-    return false;
-  }
-}
-
-function isPrivateAddress(addr: string): boolean {
-  const a = addr.toLowerCase();
-  // IPv6
-  if (a === '::' || a === '::1') return true;
-  if (a.startsWith('fe80:') || a.startsWith('fec0:')) return true; // link/site-local
-  if (/^f[cd][0-9a-f]{2}:/.test(a)) return true; // unique local
-  if (/^ff[0-9a-f]{2}:/.test(a)) return true; // multicast
-  const v4mapped = /^::ffff:([0-9.]+)$/.exec(a);
-  if (v4mapped) return isPrivateAddress(v4mapped[1]);
-  // IPv4
-  const m = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(a);
-  if (!m) return false;
-  const [o1, o2] = [Number(m[1]), Number(m[2])];
-  if (o1 === 0) return true; // 0.0.0.0/8
-  if (o1 === 10) return true;
-  if (o1 === 127) return true;
-  if (o1 === 169 && o2 === 254) return true; // link-local
-  if (o1 === 172 && o2 >= 16 && o2 <= 31) return true;
-  if (o1 === 192 && o2 === 168) return true;
-  if (o1 === 100 && o2 >= 64 && o2 <= 127) return true; // CGNAT
-  if (o1 >= 224) return true; // multicast + reserved + broadcast
-  return false;
-}
 
 interface SaveBody {
   key?: unknown;
