@@ -471,45 +471,52 @@ export function getScore(value, def) {
     if (def) {
         def = value.default_measurement;
     }
-    let score = 0.0;
-    let lfx = 0.0;
+    const measurement = value?.measurements[def];
+    let score = '***';
+    let lfx = '***';
     let flatness = 0.0;
-    let smoothness = 0.0;
-    let scoreScaled = 0.0;
-    let lfxScaled = 0.0;
+    let smoothness = '***';
+    let scoreScaled = '***';
+    let lfxScaled = '***';
     let flatnessScaled = 0.0;
-    let smoothnessScaled = 0.0;
-    if (value?.measurements[def].pref_rating) {
-        const measurement = value.measurements[def];
-        const pref = measurement.pref_rating;
-        score = pref.pref_score;
-        if (pref.lfx_hz) {
-            lfx = pref.lfx_hz;
-        }
-        smoothness = pref.sm_pred_in_room;
-        const prefScaled = measurement.scaled_pref_rating;
-        scoreScaled = prefScaled.scaled_pref_score;
-        if (prefScaled.scaled_lfx_hz) {
-            lfxScaled = prefScaled.scaled_lfx_hz;
-        }
-        smoothnessScaled = prefScaled.scaled_sm_pred_in_room;
+    let smoothnessScaled = '***';
 
+    if (measurement) {
         const estimates = measurement.estimates;
         if (estimates?.ref_band) {
             flatness = estimates.ref_band;
         }
-        flatnessScaled = prefScaled.scaled_flatness;
+
+        const prefScaled = measurement.scaled_pref_rating;
+        if (prefScaled?.scaled_flatness !== undefined) {
+            flatnessScaled = prefScaled.scaled_flatness;
+        }
+
+        const pref = measurement.pref_rating;
+        if (pref) {
+            score = pref.pref_score;
+            if (pref.lfx_hz !== undefined && pref.lfx_hz !== null) {
+                lfx = pref.lfx_hz;
+            }
+            smoothness = pref.sm_pred_in_room;
+            scoreScaled = prefScaled?.scaled_pref_score ?? '***';
+            if (prefScaled?.scaled_lfx_hz !== undefined && prefScaled?.scaled_lfx_hz !== null) {
+                lfxScaled = prefScaled.scaled_lfx_hz;
+            }
+            smoothnessScaled = prefScaled?.scaled_sm_pred_in_room ?? '***';
+        }
     }
+
     let specifications = {};
-    if (value?.measurements[def].specifications) {
-        specifications = value.measurements[def].specifications;
+    if (measurement?.specifications) {
+        specifications = measurement.specifications;
     }
     return {
-        score: parseFloat(score).toFixed(1),
-        lfx: lfx.toFixed(0),
+        score: score === '***' ? score : parseFloat(score).toFixed(1),
+        lfx: lfx === '***' ? lfx : lfx.toFixed(0),
         flatness: flatness.toFixed(1),
-        smoothness: smoothness.toFixed(1),
-        scoreScaled: scoreScaled.toFixed(1),
+        smoothness: smoothness === '***' ? smoothness : smoothness.toFixed(1),
+        scoreScaled: scoreScaled === '***' ? scoreScaled : scoreScaled.toFixed(1),
         lfxScaled: lfxScaled,
         flatnessScaled: flatnessScaled,
         smoothnessScaled: smoothnessScaled,

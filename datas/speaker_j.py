@@ -1592,6 +1592,9 @@ speakers_info_j: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/jbl-l100/conclusion",
                 "quality": "low",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

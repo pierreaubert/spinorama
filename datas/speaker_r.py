@@ -16,6 +16,9 @@ speakers_info_r: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-r-5/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -1116,6 +1119,9 @@ speakers_info_r: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1133,6 +1139,9 @@ speakers_info_r: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -1668,6 +1677,9 @@ speakers_info_r: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/revel-performa-m126be/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

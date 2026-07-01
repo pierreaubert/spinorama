@@ -2212,6 +2212,9 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/kali-audio-lp-8/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2301,6 +2304,9 @@ speakers_info_k: SpeakerDatabase = {
                 "specifications": {
                     "size": {"height": 254, "width": 227, "depth": 383},
                     "weight": 1.0,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             }
         },

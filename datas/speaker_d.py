@@ -2321,6 +2321,9 @@ speakers_info_d: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/b452-air-speaker/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2354,6 +2357,9 @@ speakers_info_d: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/b452-air-speaker/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2371,6 +2377,9 @@ speakers_info_d: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mk402-and-mk442-review/page-2",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2405,6 +2414,9 @@ speakers_info_d: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mk402-and-mk442-review/page-2",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },

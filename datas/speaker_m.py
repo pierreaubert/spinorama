@@ -789,6 +789,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/martinlogan-motion-35xti/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2317,6 +2320,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mp-65rt/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2334,6 +2340,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/mp-t65rt/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2351,6 +2360,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2431,6 +2443,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monolith-k-bs-1/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -2483,6 +2498,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -2532,6 +2550,9 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

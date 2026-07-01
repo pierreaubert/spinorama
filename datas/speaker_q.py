@@ -232,6 +232,9 @@ speakers_info_q: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-r-5/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -249,6 +252,9 @@ speakers_info_q: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/sv-61r/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -266,6 +272,9 @@ speakers_info_q: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-pm-8-monitor/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

@@ -125,6 +125,9 @@ speakers_info_p: SpeakerDatabase = {
                     "paradigm": "https://www.paradigm.com/en/center/founder-70lcr",
                 },
                 "review_published": "20220109",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -637,6 +640,9 @@ speakers_info_p: SpeakerDatabase = {
                     "adh": "https://www.audioholics.com/tower-speaker-reviews/perlisten-s7t/conclusion",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -957,6 +963,9 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/polk-l200-l400/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -974,6 +983,9 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/polk-legend-l800/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1619,6 +1631,9 @@ speakers_info_p: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/presonus-eris-e8-xt/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1987,6 +2002,9 @@ speakers_info_p: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/bmr-philharmonitor-1/conclusion",
                 "review_published": "20211121",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

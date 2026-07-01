@@ -885,6 +885,9 @@ speakers_info_g: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.youtube.com/watch?v=xqsTFc8MdvA",
                 "review_published": "20211118",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -920,6 +923,9 @@ speakers_info_g: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.youtube.com/watch?v=xqsTFc8MdvA",
                 "review_published": "20211118",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },

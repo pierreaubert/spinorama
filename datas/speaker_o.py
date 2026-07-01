@@ -388,6 +388,9 @@ speakers_info_o: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -405,12 +408,18 @@ speakers_info_o: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "misc-audioholics-horizontal": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

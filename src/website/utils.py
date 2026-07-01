@@ -143,40 +143,43 @@ def get_decoding(context, index):
 
 def get_score(context, value):
     defm = value.get("default_measurement")
-    score = 0.0
-    lfx = 0.0
+    score = "***"
+    lfx = "***"
     flatness = 0.0
-    smoothness = 0.0
-    score_scaled = 0.0
-    lfx_scaled = 0.0
+    smoothness = "***"
+    score_scaled = "***"
+    lfx_scaled = "***"
     flatness_scaled = 0.0
-    smoothness_scaled = 0.0
+    smoothness_scaled = "***"
 
     measurements = value.get("measurements", {})
     if defm and defm in measurements:
         measurement = measurements[defm]
+
+        estimates = measurement.get("estimates", {})
+        if estimates:
+            flatness = estimates.get("ref_band", 0.0)
+
+        scaled = measurement.get("scaled_pref_rating", {})
+        if scaled and "scaled_flatness" in scaled:
+            flatness_scaled = scaled["scaled_flatness"]
+
         pref = measurement.get("pref_rating")
         if pref:
             score = pref.get("pref_score", 0.0)
             lfx = pref.get("lfx_hz", 0.0)
             smoothness = pref.get("sm_pred_in_room", 0.0)
 
-            scaled = measurement.get("scaled_pref_rating", {})
             score_scaled = scaled.get("scaled_pref_score", 0.0)
             lfx_scaled = scaled.get("scaled_lfx_hz", 0.0)
             smoothness_scaled = scaled.get("scaled_sm_pred_in_room", 0.0)
-            flatness_scaled = scaled.get("scaled_flatness", 0.0)
-
-            estimates = measurement.get("estimates", {})
-            if estimates:
-                flatness = estimates.get("ref_band", 0.0)
 
     return {
-        "score": "{:.1f}".format(float(score)),
-        "lfx": "{:.0f}".format(float(lfx)),
+        "score": "{:.1f}".format(float(score)) if score != "***" else score,
+        "lfx": "{:.0f}".format(float(lfx)) if lfx != "***" else lfx,
         "flatness": "{:.1f}".format(float(flatness)),
-        "smoothness": "{:.1f}".format(float(smoothness)),
-        "scoreScaled": "{:.1f}".format(float(score_scaled)),
+        "smoothness": "{:.1f}".format(float(smoothness)) if smoothness != "***" else smoothness,
+        "scoreScaled": "{:.1f}".format(float(score_scaled)) if score_scaled != "***" else score_scaled,
         "lfxScaled": lfx_scaled,
         "flatnessScaled": flatness_scaled,
         "smoothnessScaled": smoothness_scaled,

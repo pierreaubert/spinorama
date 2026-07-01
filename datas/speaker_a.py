@@ -405,6 +405,9 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/adam-audio-t7v/conclusion",
                 "notes": "done by James Larson in free air",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             }
         },
     },
@@ -1314,6 +1317,9 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/arendal-1723/conclusion",
                 "review_published": "20210705",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "eac": {
                 "origin": "ErinsAudioCorner",

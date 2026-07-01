@@ -14,11 +14,12 @@ __pycache__
 TAGS
 .coverage
 .idea
-dist
-dist-dotli
+/dist
+/dist-dotli
 tmp
 extracted
-logs
+/logs
+/docs
 asrbook.aux
 asrbook.bbl
 asrbook.blg

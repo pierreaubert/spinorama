@@ -192,6 +192,44 @@ def version_is_eq(version: str) -> bool:
     return version[-3:] == "_eq"
 
 
+def is_partial_measurement(speaker_name: str, version: str) -> bool:
+    """Return True when a measurement is known to be truncated below 20 Hz.
+
+    If the metadata explicitly declares ``data_acquisition.min_valid_freq``
+    and the value is above the project default of 20 Hz, computed scores
+    such as LFX and preference rating are unreliable and should not be
+    emitted.
+    """
+    key = version
+    if version_is_eq(version):
+        key = version[:-3]
+
+    measurement = speakers_info.get(speaker_name, {}).get("measurements", {}).get(key)
+    if measurement is None:
+        return False
+
+    data_acquisition = measurement.get("data_acquisition")
+    if data_acquisition is None:
+        return False
+
+    min_valid_freq = data_acquisition.get("min_valid_freq")
+    if min_valid_freq is None:
+        return False
+
+    try:
+        min_valid_freq_value = float(min_valid_freq)
+    except (ValueError, TypeError):
+        logger.warning(
+            "Invalid min_valid_freq for %s %s: %s",
+            speaker_name,
+            version,
+            min_valid_freq,
+        )
+        return False
+
+    return min_valid_freq_value > 20.0
+
+
 def update_metadata(speaker_name, version, target, data):
     # this naming convention is a bad idea and should be change to something
     # more sensible in the future
@@ -270,6 +308,23 @@ def add_measurement(speaker_name, origin, version, dfs):
         flatness = est.get("ref_band")
         if flatness is not None and not math.isnan(flatness):
             scaled_flatness_val = compute_scaled_flatness(flatness)
+
+    # Partial measurements (declared min_valid_freq > 20 Hz) do not contain
+    # enough low-frequency information to compute meaningful LFX or preference
+    # scores. Estimates (directivity, flatness, sensitivity) are still valid and
+    # are kept above; only the Olive preference rating is skipped below. We still
+    # emit scaled_flatness so the flatness icon can be rendered correctly.
+    if is_partial_measurement(speaker_name, version):
+        logger.debug(
+            "Skipping pref_rating for %s %s due to partial measurement",
+            speaker_name,
+            version,
+        )
+        if scaled_flatness_val is not None:
+            result["scaled_pref_rating{}".format(eq_tag)] = {
+                "scaled_flatness": scaled_flatness_val,
+            }
+        return result
 
     eir_melted = graph_melt(m.eir)
     pref_rating = compute_speaker_pref_rating(cea2034=cea2034_melted, pir=eir_melted, rounded=True)

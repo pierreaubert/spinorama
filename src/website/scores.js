@@ -203,7 +203,7 @@ function contextFragment(context, index) {
     const multi = measurements.length > 1;
     const sep = multi ? '<br/>' : '';
 
-    const noData = multi ? '-' : '';
+    const noData = '***';
 
     const div3 = document.createElement('div');
     div3.setAttribute('class', class1);

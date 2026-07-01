@@ -491,6 +491,9 @@ speakers_info_h: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/ccb-8-bookshelf/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

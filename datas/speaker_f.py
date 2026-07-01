@@ -720,6 +720,9 @@ speakers_info_f: SpeakerDatabase = {
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/focal-sopra-nb01/focal-sopra-nb01-conclusion",
                 "quality": "low",
                 "review_published": "20210609",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
