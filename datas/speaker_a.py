@@ -1476,6 +1476,29 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Ascend Acoustics CBM-170 SE2": {
+        "brand": "Ascend Acoustics",
+        "model": "CBM-170 SE2",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "468",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20260707",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 91.0,
+                    "size": {"height": 305, "width": 229, "depth": 241},
+                    "weight": 6.6,
+                },
+            }
+        },
+    },
     "Ascend Acoustics CMT-340 Center": {
         "brand": "Ascend Acoustics",
         "model": "CMT-340 Center",

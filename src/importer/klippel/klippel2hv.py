@@ -18,12 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import glob
+import argparse
 import re
 import shutil
 import sys
 
 
-def process(speakername, filename):
+def process(speakername, filename, swap_hv=False):
     numbers = re.compile(r"\d+")
     parsed = numbers.findall(filename)
     phi, theta = parsed[-2:]
@@ -36,6 +37,8 @@ def process(speakername, filename):
     else:
         print("phi is unknown {}".format(phi))
         return
+    if swap_hv:
+        orient = "_V" if orient == "_H" else "_H"
 
     itheta = int(theta)
     if itheta == 360:
@@ -65,8 +68,16 @@ def process(speakername, filename):
 
 
 if __name__ == "__main__":
-    speakername = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("speakername")
+    parser.add_argument(
+        "--swap-hv",
+        action="store_true",
+        help="swap horizontal and vertical measurement output labels",
+    )
+    args = parser.parse_args()
+    speakername = args.speakername
     files = glob.glob("*.txt")
     for filename in files:
-        process(speakername, filename)
+        process(speakername, filename, args.swap_hv)
     sys.exit(0)
