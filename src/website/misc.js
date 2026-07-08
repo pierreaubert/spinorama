@@ -428,6 +428,7 @@ export function getReviews(value) {
 
         // add an icon if we have one
         const icons = [
+            ['Ascend Acoustics', '<img width="16" height="16" src="/pictures/icon-ascendacoustics-32x32.webp"/>'],
             ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp"/>'],
             ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp"/>'],
             ['Danley', '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp"/>'],
