@@ -1492,9 +1492,9 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20260707",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 91.0,
+                    "sensitivity": 87.0,
                     "size": {"height": 305, "width": 229, "depth": 241},
-                    "weight": 6.6,
+                    "weight": 6.8,
                 },
             }
         },
