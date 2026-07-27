@@ -1198,6 +1198,31 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "Radiant Acoustics Clarity 6.6": {
+        "brand": "Radiant Acoustics",
+        "model": "Clarity 6.6",
+        "type": "passive",
+        "price": "10000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "",
+                },
+                "review_published": "20260727",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {"height": 1025, "width": 222, "depth": 355},
+                    "weight": 40.0,
+                },
+            },
+        },
+    },
     "Rauna Freja": {
         "brand": "Rauna",
         "model": "Freja",
