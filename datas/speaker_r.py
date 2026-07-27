@@ -1211,7 +1211,9 @@ speakers_info_r: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "reviews": {
-                    "asr": "",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/radiant-acoustics-clarity-66-speaker-review.72529/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/radiant-acoustics-clarity-66.70179/",
+                    "fwd": "https://fwd.nl/audio/review-radiant-acoustics-clarity-66-grote-stap-voor-deense-uitdager/", 
                 },
                 "review_published": "20260727",
                 "specifications": {
