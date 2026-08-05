@@ -1496,6 +1496,15 @@ speakers_info_a: SpeakerDatabase = {
                     "size": {"height": 305, "width": 229, "depth": 241},
                     "weight": 6.8,
                 },
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "review_published": "20260805",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-cbm-170se2-speaker-review.72683/",
+                }
             }
         },
     },
