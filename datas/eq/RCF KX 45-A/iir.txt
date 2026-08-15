@@ -1,0 +1,14 @@
+EQ for RCF KX 45-A computed from Vendors-RCF data
+Preference Score 2.59 with EQ 3.27
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-15-19:28:19
+
+Preamp: -1.9 dB
+
+Filter  1: ON PK Fc    74 Hz Gain -4.35 dB Q 2.01
+Filter  2: ON PK Fc   178 Hz Gain -1.88 dB Q 1.57
+Filter  3: ON PK Fc   332 Hz Gain -1.91 dB Q 2.90
+Filter  4: ON PK Fc   522 Hz Gain -2.67 dB Q 2.99
+Filter  5: ON PK Fc   600 Hz Gain +2.96 dB Q 2.12
+Filter  6: ON PK Fc  1288 Hz Gain +1.80 dB Q 3.00
+Filter  7: ON PK Fc  8694 Hz Gain -1.96 dB Q 1.11

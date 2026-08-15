@@ -1,0 +1,14 @@
+EQ for Yamaha DXR15mkIII computed from Vendors-Yamaha data
+Preference Score 2.27 with EQ 4.66
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-15-19:45:39
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc    88 Hz Gain -9.00 dB Q 1.43
+Filter  2: ON PK Fc   279 Hz Gain +2.93 dB Q 2.21
+Filter  3: ON PK Fc   356 Hz Gain -2.84 dB Q 2.93
+Filter  4: ON PK Fc   579 Hz Gain -2.77 dB Q 2.99
+Filter  5: ON PK Fc   666 Hz Gain +2.14 dB Q 0.96
+Filter  6: ON PK Fc  1642 Hz Gain +2.46 dB Q 2.98
+Filter  7: ON PK Fc 11085 Hz Gain -4.27 dB Q 0.51
