@@ -153,6 +153,12 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
 
     cdef double ss_xy = np.sum((x - x_mean) * (y - y_mean))
     cdef double slope = ss_xy / ss_xx
+    # Normalize to the reference -1 dB/decade slope, as in VituixCAD.
+    y = y + x * (-1.0 - slope)
+    y_mean = np.mean(y)
+    ss_yy = np.sum((y - y_mean) ** 2)
+    ss_xy = np.sum((x - x_mean) * (y - y_mean))
+    slope = ss_xy / ss_xx
     cdef double intercept = y_mean - slope * x_mean
     cdef y_pred = intercept + slope * x
 

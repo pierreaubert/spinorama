@@ -144,10 +144,22 @@ fn r_squared(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
         // A perfectly flat response is perfectly smooth.
         return 1.0;
     }
+    // Normalize to the reference -1 dB/decade slope, as in VituixCAD.
+    let normalization = -1.0 - sxy / sxx;
+    let normalized_y = y + &(x * normalization);
+    let my = normalized_y.mean().unwrap_or(0.0);
+    let mut sxy = 0.0;
+    let mut syy = 0.0;
+    for (xi, yi) in x.iter().zip(normalized_y.iter()) {
+        let dx = *xi - mx;
+        let dy = *yi - my;
+        sxy += dx * dy;
+        syy += dy * dy;
+    }
     let slope = sxy / sxx;
     let intercept = my - slope * mx;
     let mut ss_res = 0.0;
-    for (xi, yi) in x.iter().zip(y.iter()) {
+    for (xi, yi) in x.iter().zip(normalized_y.iter()) {
         let y_pred = intercept + slope * xi;
         let dy = *yi - y_pred;
         ss_res += dy * dy;
