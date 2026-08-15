@@ -83,6 +83,8 @@ website:
         - section: "Bibliography"
           href: 07_biblio.qmd
 
+execute:
+  enabled: false
 
 bibliography: audio.bib
 

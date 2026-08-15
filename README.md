@@ -23,8 +23,8 @@ This library provides an easy way to view, compare or analyse speakers data. Thi
 | Python | 3.12 | |
 | Node.js / npm | LTS | |
 | git | any | |
-| Rust / cargo | latest | Optional, for the Rust scoring extension |
-| maturin | latest | Optional, `pip install maturin` |
+| Rust / cargo | stable | Optional, for the Rust scoring extension |
+| maturin | stable | Optional, `pip install maturin` |
 
 ### Linux / macOS
 
