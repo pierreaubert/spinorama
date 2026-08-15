@@ -2059,7 +2059,8 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascilab_c6b/",
                     "yt": "https://youtu.be/2I4WBxOsDDE",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c6b-speaker-review.72776/",
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
                 "review_published": "20250707",
@@ -2087,6 +2088,15 @@ speakers_info_a: SpeakerDatabase = {
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
                 "review_published": "20240531",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c6b-speaker-review.72776/",
+                },
+                "review_published": "20260810",
             },
         },
     },

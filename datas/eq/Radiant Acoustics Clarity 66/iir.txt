@@ -1,0 +1,14 @@
+EQ for Radiant Acoustics Clarity 6.6 computed from ASR data
+Preference Score 6.00 with EQ 7.08
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-14-14:17:40
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc    51 Hz Gain +2.52 dB Q 0.53
+Filter  2: ON PK Fc   579 Hz Gain -2.45 dB Q 2.98
+Filter  3: ON PK Fc   666 Hz Gain +2.08 dB Q 2.90
+Filter  4: ON PK Fc  1381 Hz Gain +0.76 dB Q 2.45
+Filter  5: ON PK Fc  3912 Hz Gain -0.99 dB Q 1.40
+Filter  6: ON PK Fc  8397 Hz Gain -2.35 dB Q 1.49
+Filter  7: ON PK Fc 13186 Hz Gain -3.78 dB Q 1.49

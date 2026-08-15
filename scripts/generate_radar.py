@@ -149,8 +149,11 @@ def print_radar(meta_data, scale, speaker_data):
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
-        _m = Measurements.from_legacy_dict(
-            speaker_data[measurement["origin"]][def_measurement]
+        dfs = speaker_data[measurement["origin"]][def_measurement]
+        _m = (
+            dfs
+            if isinstance(dfs, Measurements)
+            else Measurements.from_legacy_dict(dfs)
         )
         if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
             _, _, pref_rating_eq = scores_apply_filter(_m, iir)

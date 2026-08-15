@@ -1198,30 +1198,35 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
-    "Radiant Acoustics Clarity 6.6": {
+    "Radiant Acoustics Clarity 66": {
         "brand": "Radiant Acoustics",
-        "model": "Clarity 6.6",
+        "model": "Clarity 66",
         "type": "passive",
         "price": "10000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20260814",
         "measurements": {
-            "asr": {
+            "asr-v2-20260814": {
                 "origin": "ASR",
                 "format": "klippel",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/radiant-acoustics-clarity-66-speaker-review.72529/",
                     "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/radiant-acoustics-clarity-66.70179/",
-                    "fwd": "https://fwd.nl/audio/review-radiant-acoustics-clarity-66-grote-stap-voor-deense-uitdager/", 
+                    "fwd": "https://fwd.nl/audio/review-radiant-acoustics-clarity-66-grote-stap-voor-deense-uitdager/",
                 },
-                "review_published": "20260727",
+                "review_published": "20260814",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
                     "size": {"height": 1025, "width": 222, "depth": 355},
                     "weight": 40.0,
                 },
+            },
+            "asr-v1-20260726": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20260726",
             },
         },
     },
