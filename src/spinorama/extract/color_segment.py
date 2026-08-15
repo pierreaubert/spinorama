@@ -87,7 +87,8 @@ def _detect_grid_mask(plot_img: npt.NDArray) -> npt.NDArray:
 
     if lines is not None:
         for line in lines:
-            x1, y1, x2, y2 = line[0]
+            # OpenCV returns either (N, 1, 4) or (N, 4), depending on version.
+            x1, y1, x2, y2 = np.asarray(line).reshape(-1)
             dx = abs(x2 - x1)
             dy = abs(y2 - y1)
 

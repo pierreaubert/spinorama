@@ -1011,7 +1011,11 @@ export function isWithinPage(position, pagination) {
 }
 
 export function rank1(fuse, brands, models, word) {
-    const results = fuse.search(word.trim());
+    const normalized = word.trim().toLowerCase();
+    // Known brand/model tokens should also match suffixed variants, e.g.
+    // searching for "R3" must include both "R3" and "R3 Meta".
+    const query = brands.has(normalized) || models.has(normalized) ? `^${normalized}` : normalized;
+    const results = fuse.search(query);
     return results;
 }
 
