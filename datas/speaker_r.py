@@ -734,6 +734,161 @@ speakers_info_r: SpeakerDatabase = {
             }
         },
     },
+    "RCF KX 08-A": {
+        "brand": "RCF",
+        "model": "KX 08-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
+                "quality": "medium",
+                "review_published": "20260815",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 70},
+                    "SPL": {"peak": 128},
+                    "size": {"height": 555, "width": 345, "depth": 315},
+                    "weight": 12.5,
+                },
+            }
+        },
+    },
+    "RCF KX 10-A": {
+        "brand": "RCF",
+        "model": "KX 10-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x50",
+        "measurements": {
+            "vendor-pattern-100x50": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
+                "quality": "medium",
+                "review_published": "20260815",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 50},
+                    "SPL": {"peak": 130},
+                    "size": {"height": 510, "width": 300, "depth": 300},
+                    "weight": 15.5,
+                },
+            }
+        },
+    },
+    "RCF KX 32-A": {
+        "brand": "RCF",
+        "model": "KX 32-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
+                "quality": "medium",
+                "review_published": "20260815",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 70},
+                    "SPL": {"peak": 134},
+                    "size": {"height": 620, "width": 360, "depth": 409},
+                    "weight": 23.6,
+                },
+            }
+        },
+    },
+    "RCF KX 45-A": {
+        "brand": "RCF",
+        "model": "KX 45-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
+                "quality": "medium",
+                "review_published": "20260815",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 70},
+                    "SPL": {"peak": 137},
+                    "size": {"height": 705, "width": 419, "depth": 430},
+                    "weight": 28.4,
+                },
+            }
+        },
+    },
+    "RCF KXW 4-A": {
+        "brand": "RCF",
+        "model": "KXW 4-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x50",
+        "measurements": {
+            "vendor-pattern-100x50": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
+                "quality": "medium",
+                "review_published": "20260815",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 50},
+                    "SPL": {"peak": 134},
+                    "size": {"height": 825, "width": 310, "depth": 369},
+                    "weight": 30.4,
+                },
+            }
+        },
+    },
     "RCF NX 910-A": {
         "brand": "RCF",
         "model": "NX 910-A",

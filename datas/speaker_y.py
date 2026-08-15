@@ -143,6 +143,21 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 502,
+                        "width": 310,
+                        "depth": 310,
+                    },
+                    "weight": 14.5,
+                },
             },
         },
     },
@@ -161,6 +176,21 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 600,
+                        "width": 366,
+                        "depth": 350,
+                    },
+                    "weight": 17.4,
+                },
             },
         },
     },
@@ -179,6 +209,21 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 699,
+                        "width": 447,
+                        "depth": 380,
+                    },
+                    "weight": 21.0,
+                },
             },
         },
     },
