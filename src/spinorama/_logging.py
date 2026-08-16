@@ -29,6 +29,15 @@ logger = logging.getLogger("spinorama")
 
 DEFAULT_LOG_PATH = "build/debug_spin.log"
 _LOG_FORMAT = "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
+_HANDLER_ATTR = "_spinorama_handler"
+
+
+def close_logger() -> None:
+    """Remove and close handlers installed by :func:`setup_logger`."""
+    for handler in list(logger.handlers):
+        if getattr(handler, _HANDLER_ATTR, False):
+            logger.removeHandler(handler)
+            handler.close()
 
 
 def setup_logger(level: int = logging.WARNING, path: str = DEFAULT_LOG_PATH) -> None:
@@ -36,11 +45,15 @@ def setup_logger(level: int = logging.WARNING, path: str = DEFAULT_LOG_PATH) -> 
 
     Safe to call from any process (incl. ray workers).
     """
+    close_logger()
+
     formatter = logging.Formatter(_LOG_FORMAT)
     file_handler = logging.FileHandler(path)
     file_handler.setFormatter(formatter)
+    setattr(file_handler, _HANDLER_ATTR, True)
     logger.addHandler(file_handler)
     stream_handler = logging.StreamHandler(sys.stdout)
     stream_handler.setFormatter(formatter)
+    setattr(stream_handler, _HANDLER_ATTR, True)
     logger.addHandler(stream_handler)
     logger.setLevel(level)

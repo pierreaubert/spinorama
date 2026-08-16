@@ -32,6 +32,7 @@ from spinorama.constant_paths import (
 )
 from spinorama.misc import sort_angles
 from spinorama.compute_scores import octave
+from spinorama.compute.smoothness import compute_smoothness_regression
 
 # pd.set_option('display.max_rows', None)
 
@@ -453,24 +454,7 @@ def compute_slope_smoothness(
     last_freq = slopes_freq[-1]
     slope_octave = math.log2(last_freq / first_freq)
     # compute regression to get the slope and the smoothness
-    x = np.log10(slopes_freq)
-    y = np.array(slopes_spl)
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    ss_xx = np.sum((x - x_mean) ** 2)
-    ss_yy = np.sum((y - y_mean) ** 2)
-    if ss_xx == 0 or ss_yy == 0:
-        # Degenerate case: perfectly flat or single point
-        slope = 0.0
-        intercept = float(y_mean)
-        sm_val = 1.0
-    else:
-        ss_xy = np.sum((x - x_mean) * (y - y_mean))
-        slope = ss_xy / ss_xx
-        intercept = y_mean - slope * x_mean
-        y_pred = intercept + slope * x
-        ss_res = np.sum((y - y_pred) ** 2)
-        sm_val = max(0.0, min(1.0, 1.0 - ss_res / ss_yy))
+    slope, intercept, sm_val = compute_smoothness_regression(slopes_freq, slopes_spl)
     slope_dboct = slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
     first_spl = intercept + slope * math.log10(first_freq)
     last_spl = intercept + slope * math.log10(last_freq)

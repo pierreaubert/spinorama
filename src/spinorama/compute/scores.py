@@ -25,6 +25,7 @@ from numpy import floating
 from scipy.stats import linregress
 
 from spinorama import logger
+from spinorama.compute.smoothness import compute_smoothness_regression
 
 
 def round_down(x: float | np.floating, decimals: int) -> float:
@@ -194,35 +195,8 @@ def sm(dfu: pd.DataFrame) -> float:
     smoother frequency response curves.
     """
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
-    x = np.log10(data.Freq).to_numpy()
-    y = data.dB.to_numpy()
-
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-
-    ss_xx = np.sum((x - x_mean) ** 2)
-    ss_yy = np.sum((y - y_mean) ** 2)
-
-    if ss_xx == 0 or ss_yy == 0:
-        # Degenerate case: all frequencies identical or all dB values identical.
-        # A perfectly flat response is perfectly smooth.
-        return 1.0
-
-    ss_xy = np.sum((x - x_mean) * (y - y_mean))
-    slope = ss_xy / ss_xx
-
-    # Normalize to the reference -1 dB/decade slope, as in VituixCAD.
-    y = y + x * (-1.0 - slope)
-    y_mean = np.mean(y)
-    ss_yy = np.sum((y - y_mean) ** 2)
-    ss_xy = np.sum((x - x_mean) * (y - y_mean))
-    slope = ss_xy / ss_xx
-    intercept = y_mean - slope * x_mean
-    y_pred = intercept + slope * x
-
-    ss_res = np.sum((y - y_pred) ** 2)
-    r2 = 1.0 - ss_res / ss_yy
-    return float(max(0.0, min(1.0, r2)))
+    _, _, smoothness = compute_smoothness_regression(data.Freq, data.dB)
+    return smoothness
 
 
 """

@@ -27,6 +27,8 @@ import pandas as pd
 from spinorama.misc import graph_melt, measurements_complete_freq, measurements_complete_spl
 
 from spinorama.compute_misc import unify_freq
+from spinorama.compute.misc import compute_slope_smoothness
+from spinorama.compute.scores import sm
 
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
 
@@ -79,6 +81,19 @@ class SpinoramaUnifyFreqTests(unittest.TestCase):
         #
         self.assertEqual(self.df.shape, (ushape[0] * 4, 3))
         self.assertSetEqual(set(self.df.Measurements), self._measurements_set2)
+
+
+class SpinoramaSmoothnessTests(unittest.TestCase):
+    def test_slope_smoothness_uses_normalized_sm(self):
+        freq = np.geomspace(100.0, 12000.0, 200)
+        db = 85.0 + 0.02 * np.sin(np.linspace(0.0, 12.0 * np.pi, freq.size))
+        test_df = pd.DataFrame({"Freq": freq, "dB": db})
+
+        _, _, slope, graph_sm = compute_slope_smoothness(test_df, "dB", False)
+
+        self.assertLess(abs(slope), 0.01)
+        self.assertGreater(graph_sm, 0.99)
+        self.assertAlmostEqual(graph_sm, sm(test_df), places=12)
 
 
 class SpinoramaMeasurementsQualitySPLTest(unittest.TestCase):
