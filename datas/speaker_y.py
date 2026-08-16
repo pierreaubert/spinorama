@@ -143,6 +143,14 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 10.0,
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 16000,
+                },
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
@@ -176,6 +184,14 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 10.0,
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 16000,
+                },
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
@@ -209,6 +225,14 @@ speakers_info_y: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20260810",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 10.0,
+                    "min_valid_freq": 200,
+                    "max_valid_freq": 16000,
+                },
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
