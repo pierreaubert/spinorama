@@ -93,7 +93,8 @@ class SpinoramaFilterScoresTests(unittest.TestCase):
         self.assertIsNotNone(score)
         if score is None:
             return
-        self.assertAlmostEqual(score["pref_score"], 6.3657834989030615, 5)
+        # Smoothness uses the VituixCAD -1 dB/decade slope normalization.
+        self.assertAlmostEqual(score["pref_score"], 5.7751321145979135, 5)
 
 
 class SpinoramaFilterNoScoresTests(unittest.TestCase):

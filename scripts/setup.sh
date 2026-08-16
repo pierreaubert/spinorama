@@ -1,4 +1,9 @@
 #!/bin/bash
+# Resolve paths from this script's location so it can be invoked from anywhere.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+cd "${ROOT_DIR}"
+
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
@@ -39,7 +44,7 @@ elif test "$OS" = "Darwin"; then
     export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
-export PYTHONPATH=./src:./src/website
+export PYTHONPATH="${ROOT_DIR}/src:${ROOT_DIR}/src/website"
 
 # python section
 python${PYVERSION} -m venv .venv
@@ -73,7 +78,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .ve
 mkdir -p build dist
 
 # compile cython
-cd src/spinorama/compute_scores_cython && \
+cd "${ROOT_DIR}/src/spinorama/compute_scores_cython" && \
     PYTHONPATH=../../.. python$PYVERSION setup.py build_ext --inplace && \
     rm -f compute_scores_cython.so && \
     SO_FILE=$(ls compute_scores_cython.cpython-*.so 2>/dev/null | head -1) && \
@@ -81,7 +86,5 @@ cd src/spinorama/compute_scores_cython && \
     cd ../../..
 
 # compile rust
-cd src/spinorama/compute_scores_rust && \
-    maturin build --release && \
-    cd ../../../
-
+cd "${ROOT_DIR}" && \
+    maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/compute_scores_rust/Cargo.toml"
