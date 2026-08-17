@@ -21,11 +21,22 @@
 const flagCounters = false;
 
 import { getMetadataHead, getMetadataTail } from './download.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews, getSensitivity, getSPL } from './misc.js';
+import {
+    getPrice,
+    getID,
+    getPicture,
+    getLoading,
+    getDecoding,
+    getScore,
+    getReviews,
+    getSensitivity,
+    getSPL,
+    removeVendors,
+    sanitizeFilename,
+    validShape,
+} from './misc.js';
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
-
-const validShape = Object.freeze(new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']));
 
 function getMeasurementCount(metadata) {
     let count = 0;
@@ -56,6 +67,25 @@ function getDollar(price) {
     return '$$$';
 }
 
+function getDefaultUrl(value) {
+    const def = value.default_measurement;
+    if (def && value.measurements[def]) {
+        const origin = value.measurements[def].origin;
+        return encodeURI(
+            'speakers/' +
+                sanitizeFilename(value.brand) +
+                ' ' +
+                sanitizeFilename(value.model) +
+                '/' +
+                removeVendors(origin) +
+                '/index_' +
+                def +
+                '.html'
+        );
+    }
+    return null;
+}
+
 function getContext(key, index, value) {
     // console.log(getReviews(value));
     const price = getPrice(value.price, value.amount);
@@ -69,6 +99,7 @@ function getContext(key, index, value) {
         shape: value.shape,
         sensitivity: getSensitivity(value),
         splinfo: getSPL(value),
+        defaultUrl: getDefaultUrl(value),
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -132,7 +163,7 @@ function footerHtml(id, reviews) {
         <div class="card-footer-item">
            <div class="dropdown is-hoverable">
              <div class="dropdown-trigger">
-               <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${id}">
+               <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${id}">
                  <span>Measurements</span>
                    <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
                </button>
@@ -162,7 +193,7 @@ function scoreHtml(shape, score) {
         return `
                <span class="icon-text">
                  <span class="icon">
-                   <svg width="20px" height="20px" alt="rating">
+                   <svg width="20px" height="20px" aria-label="rating">
                      <use href="${iconScore}"/>
                    </svg>
                  </span>
@@ -176,7 +207,7 @@ function scoreHtml(shape, score) {
         return `
                <span class="icon-text">
                  <span class="icon">
-                   <svg width="20px" height="20px" alt="rating">
+                   <svg width="20px" height="20px" aria-label="rating">
                      <use href="${iconScore}"/>
                    </svg>
                  </span>
@@ -193,8 +224,8 @@ function sensitivityHtml(stype, sensitivity) {
     if (stype === 'active') {
         return 'Active';
     }
-    if (sensitivity !== '0') {
-        return `Sensitivity: <b>${sensitivity}</b>&nbsp;dB</span>`;
+    if (sensitivity !== '0' && sensitivity !== 0) {
+        return `Sensitivity: <b>${Math.round(sensitivity)}</b>&nbsp;dB</span>`;
     }
     return 'Sensitivity: <b>?</b>&nbsp;dB</span>';
 }
@@ -221,53 +252,72 @@ function contextHtml(context) {
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html_score = scoreHtml(context.shape, score);
-    const html = `
-       <div class="card card-min has-background-white-bis">
-           <div class="card-image"
+    const defaultUrl = context.defaultUrl;
+    const imageHtml = defaultUrl
+        ? `<a href="${defaultUrl}">
              <figure class="image is-2by3">
                <picture>
-                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510">
                  <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
                </picture>
              </figure>
+           </a>`
+        : `<figure class="image is-2by3">
+               <picture>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510">
+                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
+               </picture>
+             </figure>`;
+    const html = `
+       <div class="card card-min has-background-white-bis">
+           <div class="card-image">
+             ${imageHtml}
            </div>
            <div class="card-content">
-             <div class="content">
-               <span><b>${brand}</b></span>
-               <br/>
-               <span><b>${model}</b></span>
+             <div class="content card-identity">
+               <span class="card-brand">${brand}</span>
+               <span class="card-model">${model}</span>
              </div>
-             <div class="content">
-               <span class="icon-text">
-                 <span class="icon">${dollar}</span>
-                 <span>Price: <b>${price}</b></span>
-               </span>
-               <br/>
-               ${html_score}
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
-                 <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="flatness"><use href="${iconFlatness}"/></svg></span>
-                 <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="sensitivity"><use href="#icon-circle"/></svg></span>
-                 <span>${sensitivity}</span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success">
-                   <svg width="20px" height="20px" alt="spl">
-                    <use href="#icon-circle-dot"/>
-                   </svg>
+             <div class="content card-metrics">
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon">${dollar}</span>
+                   <span>Price: <b>${price}</b></span>
                  </span>
-                 <span>${spl}</span>
-               </span>
+               </div>
+               <div class="card-metric-row card-metric-score">
+                 ${html_score}
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-danger"><svg width="20px" height="20px" aria-label="rating"><use href="${iconLFX}"/></svg></span>
+                   <span>Bass extension: <b>${score.lfx}</b>&nbsp;Hz</span>
+                 </span>
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="flatness"><use href="${iconFlatness}"/></svg></span>
+                   <span>Flatness: <b>&plusmn;${score.flatness}</b>&nbsp;dB</span>
+                 </span>
+               </div>
+             </div>
+             <div class="content card-secondary">
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success"><svg width="20px" height="20px" aria-label="sensitivity"><use href="#icon-circle"/></svg></span>
+                   <span>${sensitivity}</span>
+                 </span>
+               </div>
+               <div class="card-metric-row">
+                 <span class="icon-text">
+                   <span class="icon has-text-success">
+                     <svg width="20px" height="20px" aria-label="spl">
+                      <use href="#icon-circle-dot"/>
+                     </svg>
+                   </span>
+                   <span>${spl}</span>
+                 </span>
+               </div>
              </div>
            </div>
            <footer class="card-footer">
@@ -304,19 +354,25 @@ function display(data, speakerHtml, parentDiv) {
     return maxResults;
 }
 
+function clearContainer(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
+
 getMetadataHead()
     .then((metadataHead) => {
         const url = new URL(window.location);
-        if (url.pathname === '' || url.pathname === 'index.html') {
+        const hasParams = url.search !== '';
+        if (hasParams) {
+            clearContainer(speakerContainer);
             display(metadataHead, printSpeaker, speakerContainer);
         }
         return metadataHead;
     })
     .then((metadataHead) => getMetadataTail(metadataHead))
     .then((metadata) => {
-        // now that we have all the data
         setupEventListener(metadata, printSpeaker, speakerContainer);
-        // moved after the main display of speakers to minimise reflow
         if (flagCounters) {
             const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
             const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
@@ -327,9 +383,8 @@ getMetadataHead()
             brandCount.innerHTML = getBrandCount(metadata);
             reviewCount.innerHTML = getReviewCount();
         }
-        // display if not done above
+        clearContainer(speakerContainer);
         const maxResults = display(metadata, printSpeaker, speakerContainer);
-        // is it needed?
         pagination(maxResults);
     })
     .catch((error) => {

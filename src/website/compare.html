@@ -5,7 +5,7 @@
     <%include file="head.html"/>
     <%include file="head_vega.html"/>
   </head>
-  <body>
+  <body class="no-columns">
     <%include file="nav_simple.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
     <div id="cea2034plots" data-num="0">
@@ -53,11 +53,12 @@
 	  </nav>
 	</div>
       </div>
-      <div class="grid is-col-min-32" id="plotZone">
-        <div class="cell" id="plotError"></div>
-        <div class="cell" id="plot0"></div>
-        <div class="cell" id="plot1"></div>
-        <div class="cell" id="plot2"></div>
+      <%include file="graph_shortcuts.html"/>
+      <div class="graph-grid graph-grid--single" id="plotZone">
+        <div class="graph-cell" id="plotError"></div>
+        <div class="graph-cell" id="plot0"></div>
+        <div class="graph-cell" id="plot1"></div>
+        <div class="graph-cell" id="plot2"></div>
       </div>
     </div>
     <script type="module" src="/js/compare-${versions['CACHE']}${min}.js"></script>

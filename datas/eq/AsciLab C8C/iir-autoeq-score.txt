@@ -1,0 +1,15 @@
+AutoEQ Parametric Equalizer Settings
+Speaker: AsciLab C8C
+Loss Type: SpeakerScore
+Filters: 7
+Generated: 2026-03-09 18:48:24
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    20 Hz Gain +1.28 dB Q 2.83
+Filter  2: ON PK Fc    29 Hz Gain +2.67 dB Q 1.16
+Filter  3: ON PK Fc   117 Hz Gain -2.02 dB Q 1.18
+Filter  4: ON PK Fc   137 Hz Gain +1.20 dB Q 1.05
+Filter  5: ON PK Fc  1136 Hz Gain +1.62 dB Q 1.11
+Filter  6: ON PK Fc  1335 Hz Gain -1.02 dB Q 1.24
+Filter  7: ON PK Fc  4979 Hz Gain -1.22 dB Q 2.47

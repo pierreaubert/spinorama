@@ -1,0 +1,86 @@
+<Preset>
+  <Room EQ L>
+    <Params>
+	<val e="REQ Delay" v="0.00,"/>
+        <val e="REQ Band1 Freq" v="  31.18,"/>
+        <val e="REQ Band1 Q" v="4.85,"/>
+        <val e="REQ Band1 Gain" v="-0.85,"/>
+        <val e="REQ Band2 Freq" v=" 102.04,"/>
+        <val e="REQ Band2 Q" v="1.34,"/>
+        <val e="REQ Band2 Gain" v="-2.20,"/>
+        <val e="REQ Band3 Freq" v=" 167.36,"/>
+        <val e="REQ Band3 Q" v="3.39,"/>
+        <val e="REQ Band3 Gain" v="-0.28,"/>
+        <val e="REQ Band4 Freq" v=" 428.15,"/>
+        <val e="REQ Band4 Q" v="3.17,"/>
+        <val e="REQ Band4 Gain" v="-1.24,"/>
+        <val e="REQ Band5 Freq" v=" 636.93,"/>
+        <val e="REQ Band5 Q" v="4.80,"/>
+        <val e="REQ Band5 Gain" v="-2.00,"/>
+        <val e="REQ Band6 Freq" v="1793.39,"/>
+        <val e="REQ Band6 Q" v="5.57,"/>
+        <val e="REQ Band6 Gain" v="0.14,"/>
+        <val e="REQ Band7 Freq" v="5092.98,"/>
+        <val e="REQ Band7 Q" v="5.05,"/>
+        <val e="REQ Band7 Gain" v="-2.61,"/>
+        <val e="REQ Band8 Freq" v="1000.00,"/>
+        <val e="REQ Band8 Q" v="1.00,"/>
+        <val e="REQ Band8 Gain" v="0.00,"/>
+        <val e="REQ Band9 Freq" v="1000.00,"/>
+        <val e="REQ Band9 Q" v="1.00,"/>
+        <val e="REQ Band9 Gain" v="0.00,"/>
+        <val e="REQ Band1 Type" v="0.00,"/>
+        <val e="REQ Band2 Type" v="0.00,"/>
+        <val e="REQ Band3 Type" v="0.00,"/>
+        <val e="REQ Band4 Type" v="0.00,"/>
+        <val e="REQ Band5 Type" v="0.00,"/>
+        <val e="REQ Band6 Type" v="0.00,"/>
+        <val e="REQ Band7 Type" v="0.00,"/>
+        <val e="REQ Band8 Type" v="0.00,"/>
+        <val e="REQ Band9 Type" v="0.00,"/>
+	<val e="REQ Chan Gain" v="0,"/>
+    </Params>
+  </Room EQ L>
+  <Room EQ R>
+    <Params>
+	<val e="REQ Delay" v="0.00,"/>
+        <val e="REQ Band1 Freq" v="  31.18,"/>
+        <val e="REQ Band1 Q" v="4.85,"/>
+        <val e="REQ Band1 Gain" v="-0.85,"/>
+        <val e="REQ Band2 Freq" v=" 102.04,"/>
+        <val e="REQ Band2 Q" v="1.34,"/>
+        <val e="REQ Band2 Gain" v="-2.20,"/>
+        <val e="REQ Band3 Freq" v=" 167.36,"/>
+        <val e="REQ Band3 Q" v="3.39,"/>
+        <val e="REQ Band3 Gain" v="-0.28,"/>
+        <val e="REQ Band4 Freq" v=" 428.15,"/>
+        <val e="REQ Band4 Q" v="3.17,"/>
+        <val e="REQ Band4 Gain" v="-1.24,"/>
+        <val e="REQ Band5 Freq" v=" 636.93,"/>
+        <val e="REQ Band5 Q" v="4.80,"/>
+        <val e="REQ Band5 Gain" v="-2.00,"/>
+        <val e="REQ Band6 Freq" v="1793.39,"/>
+        <val e="REQ Band6 Q" v="5.57,"/>
+        <val e="REQ Band6 Gain" v="0.14,"/>
+        <val e="REQ Band7 Freq" v="5092.98,"/>
+        <val e="REQ Band7 Q" v="5.05,"/>
+        <val e="REQ Band7 Gain" v="-2.61,"/>
+        <val e="REQ Band8 Freq" v="1000.00,"/>
+        <val e="REQ Band8 Q" v="1.00,"/>
+        <val e="REQ Band8 Gain" v="0.00,"/>
+        <val e="REQ Band9 Freq" v="1000.00,"/>
+        <val e="REQ Band9 Q" v="1.00,"/>
+        <val e="REQ Band9 Gain" v="0.00,"/>
+        <val e="REQ Band1 Type" v="0.00,"/>
+        <val e="REQ Band2 Type" v="0.00,"/>
+        <val e="REQ Band3 Type" v="0.00,"/>
+        <val e="REQ Band4 Type" v="0.00,"/>
+        <val e="REQ Band5 Type" v="0.00,"/>
+        <val e="REQ Band6 Type" v="0.00,"/>
+        <val e="REQ Band7 Type" v="0.00,"/>
+        <val e="REQ Band8 Type" v="0.00,"/>
+        <val e="REQ Band9 Type" v="0.00,"/>
+	<val e="REQ Chan Gain" v="0,"/>
+    </Params>
+  </Room EQ R>
+</Preset>

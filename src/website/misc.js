@@ -16,7 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-// @flow
+// Shapes for which the CEA2034 preference score is meaningful and shown on the
+// speaker card. Pro/PA/cinema-fixture shapes (cbt, inwall, outdoor, surround,
+// toursound, etc.) have CEA2034 data but their pref_score is not displayed,
+// so the sort treats them as score-less to keep display and ordering aligned.
+export const validShape = Object.freeze(
+    new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema'])
+);
+
+const invalidChars = '|:<>"\\/\\?*';
+export function sanitizeFilename(name) {
+    for (const char of invalidChars) {
+        name = name.replace(char, '_');
+    }
+    return name;
+}
 
 // hide an element
 export const hide = (elem) => {
@@ -100,7 +114,7 @@ export function getPeq(peq) {
 }
 
 export function getPicture(brand, model, suffix) {
-    return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix);
+    return encodeURI('pictures/' + sanitizeFilename(brand) + ' ' + sanitizeFilename(model) + '.' + suffix);
 }
 
 export function removeVendors(str) {
@@ -141,13 +155,14 @@ export function getSensitivity(value, def) {
     if (def === undefined) {
         def = value.default_measurement;
     }
-    if (
-        value.type === 'passive' &&
-        value.measurements[def] &&
-        value.measurements[def].specifications &&
-        value.measurements[def].specifications.sensitivity
-    ) {
-        return value.measurements[def].specifications.sensitivity;
+    if (value.type === 'passive' && value.measurements[def]) {
+        const msr = value.measurements[def];
+        if (msr.specifications && msr.specifications.sensitivity) {
+            return msr.specifications.sensitivity;
+        }
+        if (msr.computed_sensitivity) {
+            return msr.computed_sensitivity.sensitivity_1m || msr.computed_sensitivity.computed || 0.0;
+        }
     }
     return 0.0;
 }
@@ -195,7 +210,16 @@ export function getReviews(value) {
         let origin = measurement.origin;
         let originLong = measurement.origin;
         let originShort = measurement.origin;
-        const url = 'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html';
+        const url =
+            'speakers/' +
+            sanitizeFilename(value.brand) +
+            ' ' +
+            sanitizeFilename(value.model) +
+            '/' +
+            removeVendors(origin) +
+            '/index_' +
+            version +
+            '.html';
         if (origin === 'Misc') {
             origin = version.replace('misc-', '');
             originShort = version.replace('misc-', '');
@@ -413,16 +437,17 @@ export function getReviews(value) {
 
         // add an icon if we have one
         const icons = [
-            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd.png"/>'],
-            ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr.jpg"/>'],
-            ['Danley', '<img width="16" height="16" src="/pictures/icon-danley.png"/>'],
-            ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac.png"/>'],
-            ["JBL", '<img width="16" height="16" src="/pictures/icon-jbl.png"/>'],
-            ['KEF', '<img width="16" height="16" src="/pictures/icon-kef.png"/>'],
-            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec.png"/>'],
-            ['Neumann', '<img width="16" height="16" src="/pictures/icon-newmann.png"/>'],
-            ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten.png"/>'],
-            ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio.png"/>'],
+            ['Ascend Acoustics', '<img width="16" height="16" src="/pictures/icon-ascendacoustics-32x32.webp"/>'],
+            ['Audio First Design', '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp"/>'],
+            ['Audio Science Review', '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp"/>'],
+            ['Danley', '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp"/>'],
+            ["Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp"/>'],
+            ['JBL', '<img width="16" height="16" src="/pictures/icon-jbl-32x32.webp"/>'],
+            ['KEF', '<img width="16" height="16" src="/pictures/icon-kef-32x32.webp"/>'],
+            ['Genelec', '<img width="16" height="16" src="/pictures/icon-genelec-32x32.webp"/>'],
+            ['Neumann', '<img width="16" height="16" src="/pictures/icon-neumann-32x32.webp"/>'],
+            ['Perlisten', '<img width="16" height="16" src="/pictures/icon-perlisten-32x32.webp"/>'],
+            ['Sigberg', '<img width="16" height="16" src="/pictures/icon-sigbergaudio-32x32.webp"/>'],
         ];
 
         icons.map((icon) => {
@@ -456,45 +481,52 @@ export function getScore(value, def) {
     if (def) {
         def = value.default_measurement;
     }
-    let score = 0.0;
-    let lfx = 0.0;
+    const measurement = value?.measurements[def];
+    let score = '***';
+    let lfx = '***';
     let flatness = 0.0;
-    let smoothness = 0.0;
-    let scoreScaled = 0.0;
-    let lfxScaled = 0.0;
+    let smoothness = '***';
+    let scoreScaled = '***';
+    let lfxScaled = '***';
     let flatnessScaled = 0.0;
-    let smoothnessScaled = 0.0;
-    if (value?.measurements[def].pref_rating) {
-        const measurement = value.measurements[def];
-        const pref = measurement.pref_rating;
-        score = pref.pref_score;
-        if (pref.lfx_hz) {
-            lfx = pref.lfx_hz;
-        }
-        smoothness = pref.sm_pred_in_room;
-        const prefScaled = measurement.scaled_pref_rating;
-        scoreScaled = prefScaled.scaled_pref_score;
-        if (prefScaled.scaled_lfx_hz) {
-            lfxScaled = prefScaled.scaled_lfx_hz;
-        }
-        smoothnessScaled = prefScaled.scaled_sm_pred_in_room;
+    let smoothnessScaled = '***';
 
+    if (measurement) {
         const estimates = measurement.estimates;
         if (estimates?.ref_band) {
             flatness = estimates.ref_band;
         }
-        flatnessScaled = prefScaled.scaled_flatness;
+
+        const prefScaled = measurement.scaled_pref_rating;
+        if (prefScaled?.scaled_flatness !== undefined) {
+            flatnessScaled = prefScaled.scaled_flatness;
+        }
+
+        const pref = measurement.pref_rating;
+        if (pref) {
+            score = pref.pref_score;
+            if (pref.lfx_hz !== undefined && pref.lfx_hz !== null) {
+                lfx = pref.lfx_hz;
+            }
+            smoothness = pref.sm_pred_in_room;
+            scoreScaled = prefScaled?.scaled_pref_score ?? '***';
+            if (prefScaled?.scaled_lfx_hz !== undefined && prefScaled?.scaled_lfx_hz !== null) {
+                lfxScaled = prefScaled.scaled_lfx_hz;
+            }
+            smoothnessScaled = prefScaled?.scaled_sm_pred_in_room ?? '***';
+        }
     }
+
     let specifications = {};
-    if (value?.measurements[def].specifications) {
-        specifications = value.measurements[def].specifications;
+    if (measurement?.specifications) {
+        specifications = measurement.specifications;
     }
     return {
-        score: parseFloat(score).toFixed(1),
-        lfx: lfx.toFixed(0),
+        score: score === '***' ? score : parseFloat(score).toFixed(1),
+        lfx: lfx === '***' ? lfx : lfx.toFixed(0),
         flatness: flatness.toFixed(1),
-        smoothness: smoothness.toFixed(1),
-        scoreScaled: scoreScaled.toFixed(1),
+        smoothness: smoothness === '***' ? smoothness : smoothness.toFixed(1),
+        scoreScaled: scoreScaled === '***' ? scoreScaled : scoreScaled.toFixed(1),
         lfxScaled: lfxScaled,
         flatnessScaled: flatnessScaled,
         smoothnessScaled: smoothnessScaled,

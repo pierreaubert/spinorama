@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Literal, cast
 
 from PySide6.QtCore import Qt, QSettings  # type: ignore[reportMissingImports]
-from PySide6.QtGui import QColor, QPalette  # type: ignore[reportMissingImports]
-from PySide6.QtWidgets import QApplication  # type: ignore[reportMissingImports]
+from PySide6.QtGui import QAction, QActionGroup, QColor, QPalette  # type: ignore[reportMissingImports]
+from PySide6.QtWidgets import QApplication, QMainWindow  # type: ignore[reportMissingImports]
 
 
 def _set_dark_palette(app: QApplication) -> None:
@@ -150,3 +150,45 @@ def apply_app_style(app: QApplication, theme: Theme = "auto") -> None:
 
     # Stylesheet
     app.setStyleSheet(_QSS)
+
+
+def _switch_theme(theme: Theme) -> None:
+    """Persist the theme choice and re-apply it to the running QApplication."""
+    write_theme_to_settings(theme)
+    app = cast("QApplication | None", QApplication.instance())
+    if app is not None:
+        apply_app_style(app, theme)
+
+
+def install_theme_menu(window: QMainWindow) -> None:
+    """Add a ``View → Theme`` submenu with Auto/Dark/Light radio actions.
+
+    The currently saved theme is pre-checked. Selecting an item persists the
+    choice and re-applies the palette/stylesheet immediately.
+    """
+    view_menu = window.menuBar().addMenu("View")
+    theme_menu = view_menu.addMenu("Theme")
+
+    group = QActionGroup(window)
+    group.setExclusive(True)
+
+    def add(text: str, value: Theme) -> QAction:
+        act = QAction(text, window)
+        act.setCheckable(True)
+        # Capture ``value`` as a default arg so the lambda binds the right one.
+        act.triggered.connect(lambda _checked=False, v=value: _switch_theme(v))  # type: ignore[arg-type]
+        group.addAction(act)
+        theme_menu.addAction(act)
+        return act
+
+    act_auto = add("Auto", "auto")
+    act_dark = add("Dark", "dark")
+    act_light = add("Light (default)", "light")
+
+    current = read_theme_from_settings()
+    if current == "dark":
+        act_dark.setChecked(True)
+    elif current == "light":
+        act_light.setChecked(True)
+    else:
+        act_auto.setChecked(True)

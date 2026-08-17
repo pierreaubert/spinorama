@@ -24,7 +24,7 @@ def target_letter(brand: str) -> str:
 
 
 def target_module_and_attr(letter: str) -> Tuple[str, str]:
-    mod = f"datas.metadata_{letter}"
+    mod = f"datas.speaker_{letter}"
     attr = f"speakers_info_{letter}"
     return mod, attr
 
@@ -106,7 +106,8 @@ def validate_or_raise(key: str, data: Dict[str, Any]) -> None:
     res = validate_speaker_data(key, data)
     if not res.valid:
         msgs = "\n".join(res.messages)
-        raise ValueError(f"Validation failed for {key}:\n{msgs}")
+        msg = f"Validation failed for {key}:\n{msgs}"
+        raise ValueError(msg)
 
 
 def apply_merge(export_dict: Dict[str, Any]) -> Tuple[str, str]:

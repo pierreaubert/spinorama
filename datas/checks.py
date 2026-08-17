@@ -167,12 +167,16 @@ def validate_measurements(name: str, speaker: Dict[str, Any], result: Validation
         validate_measurement(name, measurement_key, measurement_data, result)
 
 
-def validate_impedance(name: str, measurement_key: str, impedance: Any, result: ValidationResult) -> None:
+def validate_impedance(
+    name: str, measurement_key: str, impedance: Any, result: ValidationResult
+) -> None:
     """Validate impedance value."""
     if not isinstance(impedance, (int, float)):
-        result.add_error(f"Impedance must be a number for measurement '{measurement_key}' in {name}")
+        result.add_error(
+            f"Impedance must be a number for measurement '{measurement_key}' in {name}"
+        )
         return
-    
+
     if impedance < IMPEDANCE_MIN or impedance > IMPEDANCE_MAX:
         result.add_warning(
             f"Unlikely impedance value {impedance}Ω for measurement '{measurement_key}' in {name}. "
@@ -180,12 +184,16 @@ def validate_impedance(name: str, measurement_key: str, impedance: Any, result: 
         )
 
 
-def validate_sensitivity(name: str, measurement_key: str, sensitivity: Any, result: ValidationResult) -> None:
+def validate_sensitivity(
+    name: str, measurement_key: str, sensitivity: Any, result: ValidationResult
+) -> None:
     """Validate sensitivity value."""
     if not isinstance(sensitivity, (int, float)):
-        result.add_error(f"Sensitivity must be a number for measurement '{measurement_key}' in {name}")
+        result.add_error(
+            f"Sensitivity must be a number for measurement '{measurement_key}' in {name}"
+        )
         return
-    
+
     if sensitivity < SENSITIVITY_MIN or sensitivity > SENSITIVITY_MAX:
         result.add_warning(
             f"Unlikely sensitivity value {sensitivity}dB for measurement '{measurement_key}' in {name}. "
@@ -215,7 +223,7 @@ def validate_measurement(
         result.add_error(
             f"Invalid quality '{measurement['quality']}' for measurement '{measurement_key}' in {name}. Valid qualities: {', '.join(VALID_QUALITIES)}"
         )
-    
+
     # Validate specifications if present
     if "specifications" in measurement:
         specifications = measurement["specifications"]
@@ -223,11 +231,11 @@ def validate_measurement(
             # Validate impedance
             if "impedance" in specifications:
                 validate_impedance(name, measurement_key, specifications["impedance"], result)
-            
+
             # Validate sensitivity
             if "sensitivity" in specifications:
                 validate_sensitivity(name, measurement_key, specifications["sensitivity"], result)
-    
+
     # Validate measurement-level sensitivity (alternative location)
     if "sensitivity" in measurement:
         validate_sensitivity(name, measurement_key, measurement["sensitivity"], result)

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from spinorama.ltype import Vector, OptimResult
+from spinorama.measurements import Measurements
 from spinorama.filter_peq import Peq
 from spinorama import logger
 from autoeq.auto_geq import optim_grapheq
@@ -26,7 +27,7 @@ from autoeq.auto_global import GlobalOptimizer
 
 def optim_multi_steps(
     speaker_name: str,
-    df_speaker: dict,
+    m: Measurements,
     freq: Vector,
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
@@ -39,7 +40,7 @@ def optim_multi_steps(
     if optim_config["use_grapheq"] is True:
         grapheq_status, (grapheq_results, grapheq_peq) = optim_grapheq(
             speaker_name,
-            df_speaker,
+            m,
             freq,
             auto_target,
             auto_target_interp,
@@ -53,7 +54,7 @@ def optim_multi_steps(
     if optim_config["optimisation"] == "greedy":
         greedy_status, (greedy_results, greedy_peq) = optim_greedy(
             speaker_name,
-            df_speaker,
+            m,
             freq,
             auto_target,
             auto_target_interp,
@@ -71,10 +72,7 @@ def optim_multi_steps(
             "msteps config {%s}",
             ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
         )
-        go = GlobalOptimizer(
-            df_speaker,
-            optim_config,
-        )
+        go = GlobalOptimizer(m, optim_config)
         global_status, (global_results, global_peq) = go.run()
 
         if global_status is False:

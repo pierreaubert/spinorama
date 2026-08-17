@@ -21,7 +21,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from spinorama.compute_scores import octave, aad
+from spinorama.compute_scores import octave, aad, sm
 
 
 pd.set_option("display.max_rows", 202)
@@ -48,6 +48,16 @@ class PrefRatingTests(unittest.TestCase):
         test_df = pd.DataFrame({"Freq": freq, "dB": db})
         # expect 0 deviation from flat line
         self.assertEqual(aad(test_df, 20), 0.0)
+
+    def test_sm_is_not_penalized_by_a_near_zero_slope(self):
+        freq = np.geomspace(100.0, 16000.0, 200)
+        # A nearly flat, very smooth response currently produces an SM near zero
+        # because its fitted slope is near zero.  SM should measure the residual
+        # ripple after applying the VituixCAD slope normalization.
+        db = 85.0 + 0.02 * np.sin(np.linspace(0.0, 12.0 * np.pi, freq.size))
+        test_df = pd.DataFrame({"Freq": freq, "dB": db})
+
+        self.assertGreater(sm(test_df), 0.99)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,2611 @@
+# -*- coding: utf-8 -*-
+from . import SpeakerDatabase, gll_data_acquisition_std
+
+speakers_info_m: SpeakerDatabase = {
+    "M-Audio BX3 D3": {
+        "brand": "M-Audio",
+        "model": "BX3 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "90",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx3-monitor-review.42602/"
+                },
+                "review_published": "20230304",
+            }
+        },
+    },
+    "M-Audio BX4 D3": {
+        "brand": "M-Audio",
+        "model": "BX4 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "120",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx4-d3-active-monitor-measurements-teardown-subjective-impressions.31423/"
+                },
+                "review_published": "20220210",
+            }
+        },
+    },
+    "M-Audio BX5 D3": {
+        "brand": "M-Audio",
+        "model": "BX5 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "300",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx5-d3-active-monitor-measurements-teardown-subjective-impressions.29425/"
+                },
+                "review_published": "20211229",
+            }
+        },
+    },
+    "M-Audio BX8 D3": {
+        "brand": "M-Audio",
+        "model": "BX8 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "129",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx8-d3-monitor-review.43832/"
+                },
+                "review_published": "20230414",
+            }
+        },
+    },
+    "MAG Theatron MC12-C": {
+        "brand": "MAG Theatron",
+        "model": "MC12-C",
+        "type": "passive",
+        "price": "2300",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-m12-c-speaker-review.64229/#post-2354858"
+                },
+                "review_published": "20250719",
+                "specifications": {
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "dispersion": {"horizontal": 90, "vertical": 50},
+                    "SPL": {"peak": 121},
+                    "size": {"height": 840, "width": 565, "depth": 250},
+                    "weight": 32.2,
+                },
+            }
+        },
+    },
+    "MAG Theatron S6": {
+        "brand": "MAG Theatron",
+        "model": "S6",
+        "type": "passive",
+        "price": "950",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mag-theatron-s6-surround-speaker-review.64391/"
+                },
+                "review_published": "20250728",
+                "specifications": {
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "dispersion": {"horizontal": 75, "vertical": 20},
+                    "SPL": {"peak": 115},
+                    "size": {"height": 400, "width": 280, "depth": 100},
+                    "weight": 6.0,
+                },
+            }
+        },
+    },
+    "MTG Designs AlTi DIY": {
+        "brand": "MTG Designs",
+        "model": "AlTi DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review": "http://www.hificircuit.com/community/threads/the-alti-a-diy-2-way-bookshelf-speaker-design.773/",
+                "review_published": "20211205",
+            }
+        },
+    },
+    "MTG Designs VBS-10.2 DIY": {
+        "brand": "MTG Designs",
+        "model": "VBS-10.2 DIY",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review": "https://www.mtg-designs.com/diy-speaker-plans/vbs-10-2",
+                "review_published": "20211205",
+            }
+        },
+    },
+    "MTG Designs VBS-6.2 DIY": {
+        "brand": "MTG Designs",
+        "model": "VBS-6.2 DIY",
+        "type": "passive",
+        "price": "200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review": "https://www.mtg-designs.com/diy-speaker-plans/vbs-6-2",
+                "review_published": "20211205",
+            }
+        },
+    },
+    "Mackie CR3-X": {
+        "brand": "Mackie",
+        "model": "CR3-X",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "100",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mackie_cr3x/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr3-x-powered-monitor-review-100-pair.23389/",
+                },
+                "review_published": "20210514",
+            }
+        },
+    },
+    "Mackie CR4": {
+        "brand": "Mackie",
+        "model": "CR4",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "100",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr4-quasi-anechoic-measurements.54767/"
+                },
+                "review_published": "20240624",
+            }
+        },
+    },
+    "Mackie HR824": {
+        "brand": "Mackie",
+        "model": "HR824",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "650",
+        "amount": "each",
+        "default_measurement": "harman",
+        "measurements": {
+            "harman": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/page-2#post-553606"
+                },
+                "review_published": "20201029",
+            }
+        },
+    },
+    "Mackie MR524": {
+        "brand": "Mackie",
+        "model": "MR524",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "200",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rew_text_dump",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-mr524-studio-monitor-measurements-subjective-impressions.28890/"
+                },
+                "review_published": "20211210",
+            }
+        },
+    },
+    "Magico A3": {
+        "brand": "Magico",
+        "model": "A3",
+        "type": "passive",
+        "price": "12300",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Magico",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+            }
+        },
+    },
+    "Magico A5": {
+        "brand": "Magico",
+        "model": "A5",
+        "type": "passive",
+        "price": "24800",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Magico",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review_published": "20210601",
+                "reviews": {
+                    "ssu": "https://www.soundstageultra.com/index.php/equipment-menu/1042-magico-a5-loudspeakers",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/magico-a5-spinorama-cea2034.23866/",
+                },
+            }
+        },
+    },
+    "Magico S5 2024": {
+        "brand": "Magico",
+        "model": "S5 2024",
+        "type": "passive",
+        "price": "74500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Magico",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review_published": "20240913",
+                "reviews": {
+                    "tas": "https://www.theabsolutesound.com/articles/best-speakers-magico-s5-2024-first-listen-and-factory-tour/"
+                },
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {"height": 1220, "width": 485, "depth": 490},
+                    "weight": 118,
+                },
+                "notes": "data is from a Klippel NFS smoothed at 1/9th octave",
+            }
+        },
+    },
+    "Magnepan LRS": {
+        "brand": "Magnepan",
+        "model": "LRS",
+        "type": "passive",
+        "shape": "panel",
+        "price": "650",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/magnepan-lrs-speaker-review.16068/",
+                "review_published": "20200918",
+            },
+            "misc-audioxpress": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://audioxpress.com/news/audioxpress-september-2020-speaker-focus-edition-is-now-available",
+                "quality": "low",
+            },
+        },
+    },
+    "Magnepan LRS+": {
+        "brand": "Magnepan",
+        "model": "LRS+",
+        "type": "passive",
+        "shape": "panel",
+        "price": "995",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"yt": "https://youtu.be/PQemV-W48b8"},
+                "review_published": "20250319",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {"height": 1219, "width": 330, "depth": 25},
+                },
+            }
+        },
+    },
+    "Manger Sidekick": {
+        "brand": "Manger",
+        "model": "Sidekick",
+        "type": "passive",
+        "shape": "surround",
+        "price": "",
+        "default_measurement": "princeton",
+        "measurements": {
+            "princeton": {
+                "origin": "Princeton",
+                "format": "princeton",
+                "symmetry": "coaxial",
+                "review": "https://www.princeton.edu/3D3A/Directivity.html",
+                "review_published": "20151001",
+            }
+        },
+    },
+    "March Audio Sointuva": {
+        "brand": "March Audio",
+        "model": "Sointuva",
+        "type": "passive",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac-v2-20220305",
+        "measurements": {
+            "eac-v2-20220305": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                    "yt": "https://www.youtube.com/watch?v=bTkaxd2H7-o",
+                },
+                "review_published": "20220305",
+                "notes": "picture is from Erins web "
+                "site. This is a same "
+                "version as v1 with a "
+                "different crossover.",
+            },
+            "eac-v1-20220106": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                "review_published": "20220106",
+                "notes": "picture from Erins web "
+                "site. There are multiple "
+                "versions of these "
+                "speaker. The measured one "
+                "is with SB Acoustics "
+                "Satori TW29BNWG-4 "
+                "Beryllium Dome Tweeter "
+                "and a wave guide",
+            },
+        },
+    },
+    "March Audio Sointuva AWG": {
+        "brand": "March Audio",
+        "model": "Sointuva AWG",
+        "type": "passive",
+        "price": "4100",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_sointuva_awg/",
+                    "yt": "https://www.youtube.com/watch?v=CBIjLicpAck",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/march-audio-sointuva.26085/",
+                    "whf": "https://www.whathifi.com/reviews/march-audio-sointuva-wg",
+                },
+                "review_published": "20231125",
+                "notes": "sensitivity is currently incorrect and will be fixed soon",
+                "specifications": {
+                    "sensitivity": 82.5,
+                    "impedance": 3.4,
+                    "size": {"height": 450, "width": 240, "depth": 220},
+                    "weight": 6.6,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-March Audio",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/march-audio-sointuva.26085/",
+                    "yt": "https://www.youtube.com/watch?v=CBIjLicpAck",
+                    "whf": "https://www.whathifi.com/reviews/march-audio-sointuva-wg",
+                },
+                "review_published": "20231125",
+                "notes": "sensitivity is currently incorrect and will be fixed soon",
+                "specifications": {
+                    "sensitivity": 82.5,
+                    "impedance": 3.4,
+                    "size": {"height": 450, "width": 240, "depth": 220},
+                    "weight": 6.6,
+                },
+            },
+        },
+    },
+    "Martin Audio CDD10": {
+        "brand": "Martin Audio",
+        "model": "CDD10",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Audio CDD12": {
+        "brand": "Martin Audio",
+        "model": "CDD12",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Audio CDD15": {
+        "brand": "Martin Audio",
+        "model": "CDD15",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x60",
+        "measurements": {
+            "vendor-pattern-80x60": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Audio CDD8": {
+        "brand": "Martin Audio",
+        "model": "CDD8",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Audio Flexpoint FP12": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP12",
+        "type": "passive",
+        "price": "2160",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {"continuous": 122, "peak": 128},
+                    "size": {"height": 521, "width": 390, "depth": 346},
+                    "weight": 17.5,
+                },
+            }
+        },
+    },
+    "Martin Audio Flexpoint FP15": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP15",
+        "type": "passive",
+        "price": "3000",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 50},
+                    "sensitivity": 99,
+                    "impedance": 8,
+                    "SPL": {"continuous": 126, "peak": 132},
+                    "size": {"height": 601, "width": 460, "depth": 420},
+                    "weight": 27.4,
+                },
+            }
+        },
+    },
+    "Martin Audio Flexpoint FP4": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP4",
+        "type": "passive",
+        "price": "550",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 110},
+                    "sensitivity": 84,
+                    "impedance": 16,
+                    "SPL": {"continuous": 102, "peak": 108},
+                    "size": {"height": 130, "width": 130, "depth": 126},
+                    "weight": 1.9,
+                },
+            }
+        },
+    },
+    "Martin Audio Flexpoint FP6": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP6",
+        "type": "passive",
+        "price": "860",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 80},
+                    "sensitivity": 91,
+                    "impedance": 16,
+                    "SPL": {"continuous": 113, "peak": 119},
+                    "size": {"height": 321, "width": 220, "depth": 197},
+                    "weight": 5.5,
+                },
+            }
+        },
+    },
+    "Martin Audio Flexpoint FP8": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP8",
+        "type": "passive",
+        "price": "1300",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 80},
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {"continuous": 118, "peak": 124},
+                    "size": {"height": 376, "width": 280, "depth": 265},
+                    "weight": 9.3,
+                },
+            }
+        },
+    },
+    "Martin Audio XP12": {
+        "brand": "Martin Audio",
+        "model": "XP12",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x50",
+        "measurements": {
+            "vendor-pattern-80x50": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Audio XP15": {
+        "brand": "Martin Audio",
+        "model": "XP15",
+        "type": "active",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-80x50",
+        "measurements": {
+            "vendor-pattern-80x50": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20221111",
+            }
+        },
+    },
+    "Martin Logan 5XW": {
+        "brand": "Martin Logan",
+        "model": "5XW",
+        "type": "passive",
+        "price": "3000",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_5xw-/",
+                "review_published": "20220514",
+            }
+        },
+    },
+    "MartinLogan Motion 35XTi": {
+        "brand": "MartinLogan",
+        "model": "Motion 35XTi",
+        "type": "passive",
+        "price": "750",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/martinlogan-motion-35xti/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            }
+        },
+    },
+    "MartinLogan Motion 4i": {
+        "brand": "MartinLogan",
+        "model": "Motion 4i",
+        "type": "passive",
+        "price": "360",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/martinlogan-motion-4i-review-bookshelf-speaker.18805/",
+                "review_published": "20201226",
+            }
+        },
+    },
+    "MartinLogan Motion B10": {
+        "brand": "MartinLogan",
+        "model": "Motion B10",
+        "type": "passive",
+        "price": "360",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_b10/",
+                    "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 5,
+                    "size": {"height": 318, "width": 178, "depth": 248},
+                    "weight": 6.6,
+                },
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_b10/",
+                    "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
+                },
+                "review_published": "20230730",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 5,
+                    "size": {"height": 318, "width": 178, "depth": 248},
+                    "weight": 6.6,
+                },
+            },
+        },
+    },
+    "MartinLogan Motion XT B100": {
+        "brand": "MartinLogan",
+        "model": "Motion XT B100",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_xt_b100/",
+                    "yt": "https://youtu.be/XXTBJbb3naU",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 93,
+                    "impedance": 4,
+                    "size": {"height": 368, "width": 203, "depth": 318},
+                    "weight": 9.3,
+                },
+            }
+        },
+    },
+    "MartinLogan Prodigy": {
+        "brand": "MartinLogan",
+        "model": "Prodigy",
+        "type": "passive",
+        "price": "5500",
+        "amount": "each",
+        "shape": "panel",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
+            }
+        },
+    },
+    "MartinLogan Vista": {
+        "brand": "MartinLogan",
+        "model": "Vista",
+        "type": "passive",
+        "price": "2100",
+        "amount": "each",
+        "shape": "panel",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
+            }
+        },
+    },
+    "Mcintosh XR50": {
+        "brand": "Mcintosh",
+        "model": "XR50",
+        "type": "passive",
+        "price": "4000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/mcintosh_xr50/",
+                "review_published": "20220408",
+            }
+        },
+    },
+    "Mesanovic CDM65": {
+        "brand": "Mesanovic",
+        "model": "CDM65",
+        "type": "active",
+        "price": "5300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mesanovic-cdm65-studio-monitor-review.59353/",
+                    "asrold": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                },
+                "specifications": {
+                    "SPL": {"peak": 103},
+                    "size": {"height": 381, "width": 203, "depth": 355},
+                    "weight": 16,
+                },
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230312",
+            },
+            "asr": {"origin": "ASR", "format": "klippel", "review_published": "20241219"},
+        },
+    },
+    "Mesanovic RTM10": {
+        "brand": "Mesanovic",
+        "model": "RTM10",
+        "type": "active",
+        "price": "7500",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {"vendor": {"origin": "Vendors-Mesanovic", "format": "rew_text_dump"}},
+    },
+    "Meyer Sound Acheron 100": {
+        "brand": "Meyer Sound",
+        "model": "Acheron 100",
+        "type": "active",
+        "price": "",
+        "shape": "cinema",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 2.5,
+                    "min_valid_freq": 35,
+                    "max_valid_freq": 18000,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided "
+                "by Meyer: configuration is "
+                "measured at 10m, resolution is "
+                "2.5 degrees, signal is aes "
+                "broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer "
+                "Sound EASE files are calibrated "
+                "differently than other "
+                "loudspeaker manufacturers to "
+                "show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read "
+                "90dB in EASE, Linear Peak SPL "
+                "will be 102.5dB with peaks a "
+                "few dB above that. Each product "
+                "will achieve a few more dB when "
+                "using standard playback "
+                "material (music or speech "
+                "rather than pink noise) than "
+                "what is shown. Since EASE does "
+                "not predict below 100Hz, we do "
+                "not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for "
+                "accurate low-frequency "
+                "predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in "
+                "MAPP XT.",
+            }
+        },
+    },
+    "Meyer Sound Acheron 80": {
+        "brand": "Meyer Sound",
+        "model": "Acheron 80",
+        "type": "active",
+        "price": "",
+        "shape": "cinema",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided "
+                "by Meyer: configuration is "
+                "measured at 10m, resolution is "
+                "2.5 degrees, signal is aes "
+                "broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer "
+                "Sound EASE files are calibrated "
+                "differently than other "
+                "loudspeaker manufacturers to "
+                "show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read "
+                "90dB in EASE, Linear Peak SPL "
+                "will be 102.5dB with peaks a few "
+                "dB above that. Each product will "
+                "achieve a few more dB when using "
+                "standard playback material "
+                "(music or speech rather than "
+                "pink noise) than what is shown. "
+                "Since EASE does not predict "
+                "below 100Hz, we do not have EASE "
+                "files for subwoofer or LFC "
+                "products. We recommend using "
+                "MAPP 3D for accurate "
+                "low-frequency predictions. For "
+                "more information, see Headroom "
+                "Predictions Using B-Noise in "
+                "MAPP XT.",
+            }
+        },
+    },
+    "Meyer Sound Acheron LF": {
+        "skip": True,
+        "brand": "Meyer Sound",
+        "model": "Acheron LF",
+        "type": "active",
+        "price": "",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided "
+                "by Meyer: configuration is "
+                "measured at 10m, resolution is "
+                "2.5 degrees, signal is aes "
+                "broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer "
+                "Sound EASE files are calibrated "
+                "differently than other "
+                "loudspeaker manufacturers to "
+                "show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read "
+                "90dB in EASE, Linear Peak SPL "
+                "will be 102.5dB with peaks a few "
+                "dB above that. Each product will "
+                "achieve a few more dB when using "
+                "standard playback material "
+                "(music or speech rather than "
+                "pink noise) than what is shown. "
+                "Since EASE does not predict "
+                "below 100Hz, we do not have EASE "
+                "files for subwoofer or LFC "
+                "products. We recommend using "
+                "MAPP 3D for accurate "
+                "low-frequency predictions. For "
+                "more information, see Headroom "
+                "Predictions Using B-Noise in "
+                "MAPP XT.",
+            }
+        },
+    },
+    "Meyer Sound Amie": {
+        "brand": "Meyer Sound",
+        "model": "Amie",
+        "type": "active",
+        "price": "4100",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20231001",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/meyer-sound-amie-monitor-review.48281/",
+                    "pp": "https://www.production-partner.de/allgemein/test-meyer-sound-amie/",
+                },
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 50},
+                    "SPL": {"m_noise": 120.5, "pink_noise": 117.5, "b_noise": 120},
+                    "size": {"height": 389, "width": 229, "depth": 336},
+                    "weight": 11.3,
+                },
+            }
+        },
+    },
+    "Meyer Sound Leopard": {
+        "brand": "Meyer Sound",
+        "model": "Leopard",
+        "type": "active",
+        "price": "",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220919",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided by "
+                "Meyer: configuration is measured at "
+                "10m, resolution is 2.5 degrees, "
+                "signal is aes broadband 20Hz-20kHz, "
+                "air attenuation is disabled. Meyer "
+                "Sound EASE files are calibrated "
+                "differently than other loudspeaker "
+                "manufacturers to show AVG SPL and "
+                "will be comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB SPL "
+                "above the AVG SPL shown in EASE. "
+                "Therefore, if you read 90dB in "
+                "EASE, Linear Peak SPL will be "
+                "102.5dB with peaks a few dB above "
+                "that. Each product will achieve a "
+                "few more dB when using standard "
+                "playback material (music or speech "
+                "rather than pink noise) than what "
+                "is shown. Since EASE does not "
+                "predict below 100Hz, we do not have "
+                "EASE files for subwoofer or LFC "
+                "products. We recommend using MAPP "
+                "3D for accurate low-frequency "
+                "predictions. For more information, "
+                "see Headroom Predictions Using "
+                "B-Noise in MAPP XT.",
+                "parameters": {"mean_min": 90, "mean_max": 1000},
+            }
+        },
+    },
+    "Meyer Sound Lina": {
+        "brand": "Meyer Sound",
+        "model": "Lina",
+        "type": "active",
+        "price": "5300",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/test-compact-line-array-meyer-sound-lina/"
+                },
+                "review_published": "20220919",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high quality "
+                "above 50Hz-100Hz. Data comes from a "
+                "GLL file provided by Meyer: "
+                "configuration is measured at 10m, "
+                "resolution is 2.5 degrees, signal is "
+                "aes broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer Sound "
+                "EASE files are calibrated differently "
+                "than other loudspeaker manufacturers "
+                "to show AVG SPL and will be comparable "
+                "to MAPP AVG SPL. Linear Peak SPL will "
+                "be 12.5dB SPL above the AVG SPL shown "
+                "in EASE. Therefore, if you read 90dB "
+                "in EASE, Linear Peak SPL will be "
+                "102.5dB with peaks a few dB above "
+                "that. Each product will achieve a few "
+                "more dB when using standard playback "
+                "material (music or speech rather than "
+                "pink noise) than what is shown. Since "
+                "EASE does not predict below 100Hz, we "
+                "do not have EASE files for subwoofer "
+                "or LFC products. We recommend using "
+                "MAPP 3D for accurate low-frequency "
+                "predictions. For more information, see "
+                "Headroom Predictions Using B-Noise in "
+                "MAPP XT.",
+                "parameters": {"mean_min": 90, "mean_max": 1000},
+            }
+        },
+    },
+    "Meyer Sound MM-4XP": {
+        "brand": "Meyer Sound",
+        "model": "MM-4XP",
+        "type": "active",
+        "price": "1180",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/meyer-mm-4xp-micro-speaker-review.61033/"
+                },
+                "review_published": "20250223",
+                "specifications": {
+                    "dispersion": {"horizontal": 40, "vertical": 40},
+                    "SPL": {"peak": 111, "m_noise": 111.5, "pink_noise": 109, "b_noise": 111},
+                    "size": {"height": 102.5, "width": 102.5, "depth": 145.4},
+                    "weight": 1.9,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,
+                    "notes": "",
+                    "min_valid_freq": 120,
+                    "max_valid_freq": 18000,
+                },
+                "review_published": "20250223",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data comes "
+                "from a GLL file provided by Meyer: "
+                "configuration is measured at 10m, "
+                "resolution is 2.5 degrees, signal is "
+                "aes broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer Sound "
+                "EASE files are calibrated "
+                "differently than other loudspeaker "
+                "manufacturers to show AVG SPL and "
+                "will be comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB SPL "
+                "above the AVG SPL shown in EASE. "
+                "Therefore, if you read 90dB in EASE, "
+                "Linear Peak SPL will be 102.5dB with "
+                "peaks a few dB above that. Each "
+                "product will achieve a few more dB "
+                "when using standard playback "
+                "material (music or speech rather "
+                "than pink noise) than what is shown. "
+                "Since EASE does not predict below "
+                "100Hz, we do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for accurate "
+                "low-frequency predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+                "parameters": {"mean_min": 200, "mean_max": 1000},
+            },
+        },
+    },
+    "Meyer Sound UPQ-D1": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D1",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 50},
+                    "SPL": {"peak": 135, "m_noise": 135, "pink_noise": 132, "b_noise": 135},
+                    "size": {"height": 715, "width": 483, "depth": 462},
+                    "weight": 43,
+                },
+                "review_published": "20250223",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data comes "
+                "from a GLL file provided by Meyer: "
+                "configuration is measured at 10m, "
+                "resolution is 2.5 degrees, signal is "
+                "aes broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer Sound "
+                "EASE files are calibrated "
+                "differently than other loudspeaker "
+                "manufacturers to show AVG SPL and "
+                "will be comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB SPL "
+                "above the AVG SPL shown in EASE. "
+                "Therefore, if you read 90dB in EASE, "
+                "Linear Peak SPL will be 102.5dB with "
+                "peaks a few dB above that. Each "
+                "product will achieve a few more dB "
+                "when using standard playback "
+                "material (music or speech rather "
+                "than pink noise) than what is shown. "
+                "Since EASE does not predict below "
+                "100Hz, we do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for accurate "
+                "low-frequency predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound UPQ-D2": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D2",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {"horizontal": 50, "vertical": 50},
+                    "SPL": {"peak": 138, "m_noise": 138, "pink_noise": 134, "b_noise": 137},
+                    "size": {"height": 715, "width": 483, "depth": 462},
+                    "weight": 43,
+                },
+                "review_published": "20250301",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data comes "
+                "from a GLL file provided by Meyer: "
+                "configuration is measured at 10m, "
+                "resolution is 2.5 degrees, signal is "
+                "aes broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer Sound "
+                "EASE files are calibrated "
+                "differently than other loudspeaker "
+                "manufacturers to show AVG SPL and "
+                "will be comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB SPL "
+                "above the AVG SPL shown in EASE. "
+                "Therefore, if you read 90dB in EASE, "
+                "Linear Peak SPL will be 102.5dB with "
+                "peaks a few dB above that. Each "
+                "product will achieve a few more dB "
+                "when using standard playback "
+                "material (music or speech rather "
+                "than pink noise) than what is shown. "
+                "Since EASE does not predict below "
+                "100Hz, we do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for accurate "
+                "low-frequency predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound UPQ-D3": {
+        "brand": "Meyer Sound",
+        "model": "UPQ-D3",
+        "type": "active",
+        "price": "10910",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10.0,
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": False,
+                    "resolution": 10.0,
+                    "min_valid_freq": 50,
+                    "max_valid_freq": 17000,
+                },
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 80},
+                    "SPL": {"peak": 135, "m_noise": 135, "pink_noise": 132, "b_noise": 134},
+                    "size": {"height": 715, "width": 483, "depth": 462},
+                    "weight": 43,
+                },
+                "review_published": "20250301",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data comes "
+                "from a GLL file provided by Meyer: "
+                "configuration is measured at 10m, "
+                "resolution is 2.5 degrees, signal is "
+                "aes broadband 20Hz-20kHz, air "
+                "attenuation is disabled. Meyer Sound "
+                "EASE files are calibrated "
+                "differently than other loudspeaker "
+                "manufacturers to show AVG SPL and "
+                "will be comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB SPL "
+                "above the AVG SPL shown in EASE. "
+                "Therefore, if you read 90dB in EASE, "
+                "Linear Peak SPL will be 102.5dB with "
+                "peaks a few dB above that. Each "
+                "product will achieve a few more dB "
+                "when using standard playback "
+                "material (music or speech rather "
+                "than pink noise) than what is shown. "
+                "Since EASE does not predict below "
+                "100Hz, we do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for accurate "
+                "low-frequency predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound Ultra X20": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X20",
+        "type": "active",
+        "price": "4300",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided by "
+                "Meyer: configuration is measured "
+                "at 10m, resolution is 2.5 "
+                "degrees, signal is aes broadband "
+                "20Hz-20kHz, air attenuation is "
+                "disabled. Meyer Sound EASE files "
+                "are calibrated differently than "
+                "other loudspeaker manufacturers "
+                "to show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read 90dB "
+                "in EASE, Linear Peak SPL will be "
+                "102.5dB with peaks a few dB above "
+                "that. Each product will achieve a "
+                "few more dB when using standard "
+                "playback material (music or "
+                "speech rather than pink noise) "
+                "than what is shown. Since EASE "
+                "does not predict below 100Hz, we "
+                "do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for "
+                "accurate low-frequency "
+                "predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound Ultra X22": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X22",
+        "type": "active",
+        "price": "4300",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided by "
+                "Meyer: configuration is measured "
+                "at 10m, resolution is 2.5 "
+                "degrees, signal is aes broadband "
+                "20Hz-20kHz, air attenuation is "
+                "disabled. Meyer Sound EASE files "
+                "are calibrated differently than "
+                "other loudspeaker manufacturers "
+                "to show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read 90dB "
+                "in EASE, Linear Peak SPL will be "
+                "102.5dB with peaks a few dB above "
+                "that. Each product will achieve a "
+                "few more dB when using standard "
+                "playback material (music or "
+                "speech rather than pink noise) "
+                "than what is shown. Since EASE "
+                "does not predict below 100Hz, we "
+                "do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for "
+                "accurate low-frequency "
+                "predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound Ultra X23": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X23",
+        "type": "active",
+        "price": "4300",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "Data provided by Meyer is high "
+                "quality above 50Hz-100Hz. Data "
+                "comes from a GLL file provided by "
+                "Meyer: configuration is measured "
+                "at 10m, resolution is 2.5 "
+                "degrees, signal is aes broadband "
+                "20Hz-20kHz, air attenuation is "
+                "disabled. Meyer Sound EASE files "
+                "are calibrated differently than "
+                "other loudspeaker manufacturers "
+                "to show AVG SPL and will be "
+                "comparable to MAPP AVG SPL. "
+                "Linear Peak SPL will be 12.5dB "
+                "SPL above the AVG SPL shown in "
+                "EASE. Therefore, if you read 90dB "
+                "in EASE, Linear Peak SPL will be "
+                "102.5dB with peaks a few dB above "
+                "that. Each product will achieve a "
+                "few more dB when using standard "
+                "playback material (music or "
+                "speech rather than pink noise) "
+                "than what is shown. Since EASE "
+                "does not predict below 100Hz, we "
+                "do not have EASE files for "
+                "subwoofer or LFC products. We "
+                "recommend using MAPP 3D for "
+                "accurate low-frequency "
+                "predictions. For more "
+                "information, see Headroom "
+                "Predictions Using B-Noise in MAPP "
+                "XT.",
+            }
+        },
+    },
+    "Meyer Sound Ultra X40": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X40",
+        "type": "active",
+        "price": "5950",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-v2-20230107",
+        "measurements": {
+            "vendor-v2-20230107": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "review_published": "20230107",
+                "quality": "medium",
+                "notes": "Data provided by "
+                "Meyer is high quality "
+                "above 50Hz-100Hz. "
+                "Data comes from a GLL "
+                "file provided by "
+                "Meyer: configuration "
+                "is measured at 10m, "
+                "resolution is 2.5 "
+                "degrees, signal is "
+                "aes broadband "
+                "20Hz-20kHz, air "
+                "attenuation is "
+                "disabled. Meyer Sound "
+                "EASE files are "
+                "calibrated "
+                "differently than "
+                "other loudspeaker "
+                "manufacturers to show "
+                "AVG SPL and will be "
+                "comparable to MAPP "
+                "AVG SPL. Linear Peak "
+                "SPL will be 12.5dB "
+                "SPL above the AVG SPL "
+                "shown in EASE. "
+                "Therefore, if you "
+                "read 90dB in EASE, "
+                "Linear Peak SPL will "
+                "be 102.5dB with peaks "
+                "a few dB above that. "
+                "Each product will "
+                "achieve a few more dB "
+                "when using standard "
+                "playback material "
+                "(music or speech "
+                "rather than pink "
+                "noise) than what is "
+                "shown. Since EASE "
+                "does not predict "
+                "below 100Hz, we do "
+                "not have EASE files "
+                "for subwoofer or LFC "
+                "products. We "
+                "recommend using MAPP "
+                "3D for accurate "
+                "low-frequency "
+                "predictions. For more "
+                "information, see "
+                "Headroom Predictions "
+                "Using B-Noise in MAPP "
+                "XT.",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 50},
+                    "SPL": {"peak": 138, "m_noise": 132.5, "pink_noise": 130, "b_noise": 131},
+                    "size": {"height": 567, "width": 318, "depth": 391},
+                    "weight": 23.6,
+                },
+            },
+            "vendor-v1-20220915": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "spl_hv_txt",
+                "review_published": "20220915",
+                "quality": "medium",
+                "notes": "measured at 2m with air absorbsion on, resolution is 10 degrees",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 50},
+                    "SPL": {"peak": 138, "m_noise": 132.5, "pink_noise": 130, "b_noise": 131},
+                    "size": {"height": 567, "width": 318, "depth": 391},
+                    "weight": 23.6,
+                },
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air_absorbtion": True,
+                    "resolution": 10,
+                },
+            },
+        },
+    },
+    "Micca MB42X Mark III": {
+        "brand": "Micca",
+        "model": "MB42X Mark III",
+        "type": "passive",
+        "price": "80",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42xiii/",
+                "review_published": "20200813",
+            }
+        },
+    },
+    "Micca MB42X-C": {
+        "brand": "Micca",
+        "model": "MB42X-C",
+        "type": "passive",
+        "price": "100",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac-vertical",
+        "measurements": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42x_center/",
+                "review_published": "20220111",
+            },
+            "eac-horizontal": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42x_center/",
+                "review_published": "20220111",
+            },
+        },
+    },
+    "Micca MB42X-G2": {
+        "brand": "Micca",
+        "model": "MB42X-G2",
+        "type": "passive",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/micca-mb42x-g2-budget-speaker-review.60712/",
+                "review_published": "20250211",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {"height": 240, "width": 147, "depth": 165},
+                    "weight": 5.1,
+                },
+            }
+        },
+    },
+    "Micca RB42": {
+        "brand": "Micca",
+        "model": "RB42",
+        "type": "passive",
+        "price": "150",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/"
+                },
+                "review_published": "20200204",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/micca_rb42/",
+                    "yt": "https://youtu.be/aU_3cidukOE",
+                },
+                "review_published": "20240916",
+            },
+        },
+    },
+    "Midiplus MI3 II": {
+        "brand": "Midiplus",
+        "model": "MI3 II",
+        "type": "active",
+        "price": "139",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-anonymous",
+        "measurements": {
+            "misc-anonymous": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review_published": "20250328",
+                "specifications": {
+                    "SPL": {"peak": 98},
+                    "size": {"height": 152, "width": 119, "depth": 165},
+                    "weight": 1.77,
+                },
+            }
+        },
+    },
+    "Midiplus MI5 II": {
+        "brand": "Midiplus",
+        "model": "MI5 II",
+        "type": "active",
+        "price": "169",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-anonymous",
+        "measurements": {
+            "misc-anonymous": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review_published": "20250328",
+                "specifications": {
+                    "SPL": {"peak": 103},
+                    "size": {"height": 239, "width": 171, "depth": 256},
+                    "weight": 4.14,
+                },
+            }
+        },
+    },
+    "Miller & Kreisel IW150": {
+        "brand": "Miller & Kreisel",
+        "model": "IW150",
+        "type": "passive",
+        "price": "2000",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
+                "review_published": "20220514",
+            }
+        },
+    },
+    "Miller & Kreisel S150": {
+        "brand": "Miller & Kreisel",
+        "model": "S150",
+        "type": "passive",
+        "price": "10000",
+        "shape": "cinema",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
+                "review_published": "20220126",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {"height": 318, "width": 266, "depth": 308},
+                    "weight": 11.5,
+                },
+            }
+        },
+    },
+    "Miller & Kreisel S150 THX": {
+        "brand": "Miller & Kreisel",
+        "model": "S150 THX",
+        "type": "passive",
+        "price": "1500",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-k-s-150thx-speaker-review.45586/",
+                    "srp": "https://www.stereophile.com/content/mk-s-150-thx-surround-loudspeaker-system-sght-review-sidebar-2-measurements",
+                },
+                "review_published": "20230615",
+                "notes": "this is an older version of the S150 around mid 1990s",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {"height": 318, "width": 266, "depth": 308},
+                    "weight": 11.5,
+                },
+            }
+        },
+    },
+    "Mission LX-3 MKII": {
+        "brand": "Mission",
+        "model": "LX-3 MKII",
+        "type": "passive",
+        "price": "250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mission-lx-3-mkii-speaker-review.44772/"
+                },
+                "review_published": "20230519",
+            }
+        },
+    },
+    "MoFi SourcePoint 10": {
+        "brand": "MoFi",
+        "model": "SourcePoint 10",
+        "type": "passive",
+        "price": "3700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-0-degree",
+        "measurements": {
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_10/",
+                    "yt": "https://youtu.be/DcYVu0TQtDs",
+                },
+                "review_published": "20230602",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6.4,
+                    "size": {"height": 572, "width": 368, "depth": 422},
+                    "weight": 21,
+                },
+            },
+            "eac-v1-10-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_10/",
+                    "yt": "https://youtu.be/DcYVu0TQtDs",
+                },
+                "review_published": "20230602",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6.4,
+                    "size": {"height": 572, "width": 368, "depth": 422},
+                    "weight": 21,
+                },
+            },
+        },
+    },
+    "MoFi SourcePoint 10 Master Edition": {
+        "brand": "MoFi",
+        "model": "SourcePoint 10 Master Edition",
+        "type": "passive",
+        "price": "1900",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"yt": "https://youtu.be/0-2OWJ0RmX8?si=4rqrqPU26nzoc3Xl"},
+                "review_published": "20250915",
+                "specifications": {
+                    "sensitivity": 91.0,
+                    "impedance": 6.2,
+                    "size": {"height": 572.0, "width": 368.0, "depth": 406.0},
+                    "weight": 21.0,
+                },
+            }
+        },
+    },
+    "MoFi SourcePoint 8": {
+        "brand": "MoFi",
+        "model": "SourcePoint 8",
+        "type": "passive",
+        "price": "2750",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-0-degree",
+        "measurements": {
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
+                    "yt": "https://youtu.be/h90tqdGsgP4?si=NRIE9kFnU3T-z5Qx",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6.4,
+                    "size": {"height": 456, "width": 290, "depth": 335},
+                    "weight": 12.7,
+                },
+            },
+            "eac-v1-15-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
+                    "yt": "https://youtu.be/h90tqdGsgP4?si=NRIE9kFnU3T-z5Qx",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6.4,
+                    "size": {"height": 456, "width": 290, "depth": 335},
+                    "weight": 12.7,
+                },
+            },
+        },
+    },
+    "MoFi SourcePoint 888": {
+        "brand": "MoFi",
+        "model": "SourcePoint 888",
+        "type": "passive",
+        "price": "2750",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_888/",
+                    "yt": "https://youtu.be/9bv5Mt5X__k",
+                },
+                "review_published": "20240727",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4.5,
+                    "size": {"height": 1070, "width": 320, "depth": 410},
+                    "weight": 43,
+                },
+            }
+        },
+    },
+    "MoFi SourcePoint V10 Master Edition": {
+        "brand": "MoFi",
+        "model": "SourcePoint V10 Master Edition",
+        "type": "passive",
+        "price": "8000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"yt": "https://youtu.be/0-2OWJ0RmX8?si=4rqrqPU26nzoc3Xl"},
+                "review_published": "20250915",
+                "specifications": {
+                    "sensitivity": 91.0,
+                    "impedance": 4.5,
+                    "size": {"height": 1240.0, "width": 393.0, "depth": 505.0},
+                    "weight": 72.6,
+                },
+            }
+        },
+    },
+    "Monacor Sound-4BT": {
+        "brand": "Monacor",
+        "model": "Sound-4BT",
+        "type": "active",
+        "price": "310",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "hs://www.audiosciencereview.com/forum/index.php?threads/monacor-sound-4bt-spinorama-measurements-cta-2034.55731/"
+                },
+                "review_published": "20240715",
+                "specifications": {
+                    "sensitivity": 85,
+                    "size": {"height": 215, "width": 140, "depth": 170},
+                    "weight": 2.6,
+                },
+            }
+        },
+    },
+    "Monitor Audio Apex A10": {
+        "brand": "Monitor Audio",
+        "model": "Apex A10",
+        "type": "passive",
+        "price": "1500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-apex-a10-speaker-review.60230/"
+                },
+                "review_published": "20250122",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "SPL": {"peak": 110},
+                    "size": {"height": 280, "width": 150, "depth": 180},
+                    "weight": 3.95,
+                },
+            }
+        },
+    },
+    "Monitor Audio Silver 100 6g": {
+        "brand": "Monitor Audio",
+        "model": "Silver 100 6g",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-silver-100-review-speaker.29190/#post-1018993"
+                },
+                "review_published": "20211220",
+            }
+        },
+    },
+    "Monitor Audio Silver 50 7g": {
+        "brand": "Monitor Audio",
+        "model": "Silver 50 7g",
+        "type": "passive",
+        "price": "980",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monitoraudio_silver_50_7g/"
+                },
+                "review_published": "20221116",
+            }
+        },
+    },
+    "Monitor Audio Silver RX1": {
+        "brand": "Monitor Audio",
+        "model": "Silver RX1",
+        "type": "passive",
+        "price": "675",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-rx1-spinorama-measurements-cta-2034.57130/#post-2090018",
+                    "sav": "https://www.soundandvision.com/content/monitor-audio-silver-rx8-speaker-system-ht-labs-measures",
+                    "whf": "https://www.whathifi.com/monitor-audio/silver-rx1/review",
+                },
+                "review_published": "20240923",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "SPL": {"peak": 111.8},
+                    "size": {"height": 312, "width": 185, "depth": 240},
+                    "weight": 6.8,
+                },
+            }
+        },
+    },
+    "Monoprice DT-3": {
+        "brand": "Monoprice",
+        "model": "DT-3",
+        "type": "active",
+        "price": "70",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_dt3/",
+                "review_published": "20210801",
+            }
+        },
+    },
+    "Monoprice MM-3": {
+        "brand": "Monoprice",
+        "model": "MM-3",
+        "type": "active",
+        "price": "160",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_mm3/",
+                "review_published": "20210801",
+                "notes": "port is stuffed for this set of measurements",
+            }
+        },
+    },
+    "Monoprice MP-65RT": {
+        "brand": "Monoprice",
+        "model": "MP-65RT",
+        "type": "passive",
+        "price": "25",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mp-65rt/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            }
+        },
+    },
+    "Monoprice MP-T65RT": {
+        "brand": "Monoprice",
+        "model": "MP-T65RT",
+        "type": "passive",
+        "price": "70",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/tower-speaker-reviews/mp-t65rt/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            }
+        },
+    },
+    "Monoprice Monolith Air Motion Cinema 5": {
+        "brand": "Monoprice",
+        "model": "Monolith Air Motion Cinema 5",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            }
+        },
+    },
+    "Monoprice Monolith Encore B6": {
+        "brand": "Monoprice",
+        "model": "Monolith Encore B6",
+        "type": "passive",
+        "price": "360",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac-v2-20220507",
+        "measurements": {
+            "eac-v2-20220507": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
+                "review_published": "20220507",
+            },
+            "eac-v1-20211206": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
+                "review_published": "20211206",
+            },
+        },
+    },
+    "Monoprice Monolith Encore C6": {
+        "brand": "Monoprice",
+        "model": "Monolith Encore C6",
+        "type": "passive",
+        "price": "250",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac-vertical",
+        "measurements": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
+                "review_published": "20220507",
+            },
+            "eac-horizontal": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
+                "review_published": "20220507",
+            },
+        },
+    },
+    "Monoprice Monolith Encore T6": {
+        "brand": "Monoprice",
+        "model": "Monolith Encore T6",
+        "type": "passive",
+        "price": "800",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_t6/",
+                "review_published": "20220507",
+            }
+        },
+    },
+    "Monoprice Monolith K-BAS": {
+        "brand": "Monoprice",
+        "model": "Monolith K-BAS",
+        "type": "passive",
+        "price": "250",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monolith-k-bs-1/measurements",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            }
+        },
+    },
+    "Monoprice Monolith THX Compact Satellite": {
+        "brand": "Monoprice",
+        "model": "Monolith THX Compact Satellite",
+        "type": "passive",
+        "price": "125",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_comp_thx_sat/",
+                    "yt": "https://youtu.be/4Hjk7iOkM_4",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 81,
+                    "impedance": 4,
+                    "size": {"height": 153, "width": 160, "depth": 150},
+                    "weight": 1.9,
+                },
+            }
+        },
+    },
+    "Monoprice Monolith THX-365C": {
+        "brand": "Monoprice",
+        "model": "Monolith THX-365C",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_thx_center/",
+                    "yt": "https://www.youtube.com/watch?v=JxPI7jJ62ek",
+                },
+                "review_published": "20220317",
+            },
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            },
+        },
+    },
+    "Monoprice Monolith THX-365IW": {
+        "brand": "Monoprice",
+        "model": "Monolith THX-365IW",
+        "type": "passive",
+        "price": "400",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr-v2-20210717",
+        "measurements": {
+            "asr-v2-20210717": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/in-wall-speaker-measurements-monoprice-thx-365iw.25023/",
+                "review_published": "20210717",
+            },
+            "asr-v1-20210625": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/monoprice-thx-365iw-review-in-wall-speaker.24500/",
+                "review_published": "20210625",
+            },
+        },
+    },
+    "Monoprice Monolith THX-365T": {
+        "brand": "Monoprice",
+        "model": "Monolith THX-365T",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_thx_365T/",
+                    "yt": "https://youtu.be/LrsE8wQQhtg",
+                },
+                "review_published": "20220408",
+            },
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+            },
+        },
+    },
+    "Moondrop M4P": {
+        "brand": "Moondrop",
+        "model": "M4P",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/moondrop_mrp/",
+                    "yt": "https://youtu.be/W6-7H0sGKKA",
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {"height": 380, "width": 155, "depth": 185},
+                    "weight": 6.2,
+                },
+            }
+        },
+    },
+    "Morel AVYRA 633": {
+        "brand": "Morel",
+        "model": "AVYRA 633",
+        "type": "passive",
+        "price": "2000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/morel_avyra_633/",
+                    "yt": "https://youtu.be/jALCwzEzHNM?si=v3gCLZjYc0OkqZt1",
+                },
+                "review_published": "20240727",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "size": {"height": 982, "width": 326, "depth": 310},
+                    "weight": 22.0,
+                },
+            }
+        },
+    },
+}

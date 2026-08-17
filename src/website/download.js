@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { urlSite, metadataFilenameHead, metadataFilenameChunks, eqdataFilename } from './meta.js';
-import { getID } from './misc.js';
+import { getID, sanitizeFilename } from './misc.js';
 
 function processOrigin(origin) {
     if (origin.includes('Vendors-')) {
@@ -73,7 +73,7 @@ function constructSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
     const url =
         urlSite +
         'speakers/' +
-        speaker +
+        sanitizeFilename(speaker) +
         '/' +
         getOrigin(metaSpeakers, speaker, origin) +
         '/' +

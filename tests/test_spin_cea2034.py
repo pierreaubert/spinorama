@@ -34,6 +34,7 @@ from spinorama.compute_cea2034 import (
     estimated_inroom_hv,
 )
 from autoeq.auto_loss import score_loss
+from spinorama.measurements import Measurements
 
 
 pd.set_option("display.max_rows", 202)
@@ -308,10 +309,7 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
                 0
             ][0][0].T[index]
         # get data from Cython code
-        self.df_spin = {
-            "SPL Horizontal_unmelted": self.splH,
-            "SPL Vertical_unmelted": self.splV,
-        }
+        self.m_spin = Measurements(h_spl=self.splH, v_spl=self.splV)
 
     def test_validate_cea2034(self):
         for measurement in [
@@ -350,15 +348,16 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
 
     def test_validate_cython(self):
         empty_eq = ()
-        _ = score_loss(self.df_spin, empty_eq)
-        self.assertIn("pre_computed", self.df_spin.keys())
+        _ = score_loss(self.m_spin, empty_eq)
+        cache = self.m_spin._score_cache
+        self.assertIsNotNone(cache)
         cython = {
-            "Freq": self.df_spin["pre_computed"]["freq"],
-            "On Axis": self.df_spin["pre_computed"]["on"],
-            "Listening Window": self.df_spin["pre_computed"]["spin"][0],
-            "Early Reflections": self.df_spin["pre_computed"]["spin"][1],
-            "Sound Power": self.df_spin["pre_computed"]["spin"][14],
-            "Estimated In-Room Response": self.df_spin["pre_computed"]["spin"][15],
+            "Freq": cache["freq"],
+            "On Axis": cache["on"],
+            "Listening Window": cache["spin"][0],
+            "Early Reflections": cache["spin"][1],
+            "Sound Power": cache["spin"][14],
+            "Estimated In-Room Response": cache["spin"][15],
         }
         #
         for measurement in [

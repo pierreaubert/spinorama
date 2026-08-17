@@ -20,10 +20,22 @@
 
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
-import { getUrlParameter } from './misc.js';
+import { layoutAnnotations } from './annotation-layout.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
-const flagsEnableConfig = true;
+function detectTheme() {
+    try {
+        const attr = document.documentElement.getAttribute('data-theme');
+        if (attr === 'dark') return 'dark';
+        if (attr === 'light') return 'light';
+        if (window.matchMedia) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+    } catch {
+        /* test environment */
+    }
+    return 'light';
+}
 
 export function displayGraph(measurementName, jsonName, divName, graphSpec, withConfig, ratio) {
     if (typeof divName !== 'string' && !(divName instanceof HTMLElement)) {
@@ -31,84 +43,206 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         return Promise.reject(new Error('Invalid divName parameter'));
     }
 
-    const config = loadConfigFromStorage(measurementName);
+    function getConfig() {
+        const config = loadConfigFromStorage(measurementName);
+        config.theme = detectTheme();
+        return config;
+    }
 
-    async function run() {
-        const w = window.innerWidth / ratio;
-        const h = window.innerHeight / ratio;
+    function getColumnRatio() {
+        try {
+            var cols = parseInt(document.documentElement.getAttribute('data-graph-cols') || '1');
+            if (cols > 1) return cols;
+    } catch {}
+        return 1;
+    }
+
+    // Cache base options (before applyConfig) to avoid recomputing on config changes
+    let cachedBaseOptions = null;
+
+    // Measure the actual container width for the target element. Falls back to
+    // window.innerWidth / effectiveRatio when the target isn't in the DOM yet.
+    function getContainerWidth() {
+        const target = typeof divName === 'string' ? document.getElementById(divName) : divName;
+        if (target) {
+            // Walk up to the first ancestor with non-zero width, since the target
+            // itself may be `display: none` or zero-width before first plot.
+            let el = target;
+            while (el && el.offsetWidth === 0 && el.parentElement) el = el.parentElement;
+            if (el && el.offsetWidth > 0) return el.offsetWidth;
+        }
+        return window.innerWidth / (ratio * getColumnRatio());
+    }
+
+    function computeBaseOptions() {
+        const w = getContainerWidth();
+        const effectiveRatio = ratio * getColumnRatio();
+        const h = window.innerHeight / effectiveRatio;
 
         let title = measurementName;
         if (graphSpec.layout && graphSpec.layout.title && graphSpec.layout.title.text) {
             title = graphSpec.layout.title.text;
         }
-        let graphOptions = setPlotForMeasurement(measurementName, [title], [graphSpec], w, h, 1);
+        const graphOptions = setPlotForMeasurement(measurementName, [title], [graphSpec], w, h, 1);
+        if (!graphOptions?.length) return null;
 
-        if (graphOptions?.length >= 1) {
-            let options = graphOptions[0];
+        let options = graphOptions[0];
+        if (jsonName.indexOf('3D') !== -1 && options.layout) {
+            options.layout.shapes = null;
+        }
+        return options;
+    }
 
-            if (jsonName.indexOf('3D') !== -1) {
-                if (options.layout) {
-                    options.layout.shapes = null;
+    // Shallow-clone base options: share heavy data arrays, clone mutable metadata
+    function shallowCloneOptions(base) {
+        const layout = Object.assign({}, base.layout);
+        // Clone nested layout objects that applyConfig mutates
+        if (layout.xaxis) layout.xaxis = Object.assign({}, layout.xaxis);
+        if (layout.yaxis) layout.yaxis = Object.assign({}, layout.yaxis);
+        if (layout.yaxis2) layout.yaxis2 = Object.assign({}, layout.yaxis2);
+        if (layout.zaxis) layout.zaxis = Object.assign({}, layout.zaxis);
+        if (layout.legend) layout.legend = Object.assign({}, layout.legend);
+        if (layout.font) layout.font = Object.assign({}, layout.font);
+        if (layout.margin) layout.margin = Object.assign({}, layout.margin);
+        // Clone axis title fonts (applyConfig mutates font.size)
+        for (const ax of ['xaxis', 'yaxis', 'yaxis2', 'zaxis']) {
+            if (layout[ax]?.title?.font) {
+                layout[ax].title = Object.assign({}, layout[ax].title);
+                layout[ax].title.font = Object.assign({}, layout[ax].title.font);
+            }
+            if (layout[ax]?.tickfont) layout[ax].tickfont = Object.assign({}, layout[ax].tickfont);
+        }
+        if (layout.legend?.font) layout.legend.font = Object.assign({}, layout.legend.font);
+        if (layout.title?.font) {
+            layout.title = Object.assign({}, layout.title);
+            layout.title.font = Object.assign({}, layout.title.font);
+        }
+        // Shallow-clone annotations array (applyConfig sets .visible on each)
+        const annotations = layout.annotations ? layout.annotations.map((a) => Object.assign({}, a)) : undefined;
+        if (annotations) layout.annotations = annotations;
+        // Clone shapes array (applyConfig pushes border shape)
+        if (layout.shapes) layout.shapes = layout.shapes.slice();
+
+        // Shallow-clone each trace: share x/y/z data arrays, clone mutable props
+        const data = base.data.map((t) => {
+            const clone = Object.assign({}, t);
+            if (clone.marker) clone.marker = Object.assign({}, clone.marker);
+            if (clone.line) clone.line = Object.assign({}, clone.line);
+            if (clone.colorbar) clone.colorbar = Object.assign({}, clone.colorbar);
+            if (clone.hoverlabel?.font) {
+                clone.hoverlabel = Object.assign({}, clone.hoverlabel);
+                clone.hoverlabel.font = Object.assign({}, clone.hoverlabel.font);
+            }
+            if (clone.legendgrouptitle) clone.legendgrouptitle = Object.assign({}, clone.legendgrouptitle);
+            return clone;
+        });
+
+        return { data, layout, config: base.config ? Object.assign({}, base.config) : {}, _graphType: base._graphType };
+    }
+
+    // Compact mode config (computed once, applied on each render)
+    let compactConfig = null;
+    if (!withConfig && ratio > 1) {
+        const d = window.innerWidth / 550;
+        compactConfig = {
+            titleSize: 10 + d,
+            axisTitleSize: 9 + d,
+            tickSize: 8 + d,
+        };
+    }
+
+    function applyConfigAndCompact(baseOptions, config) {
+        const options = shallowCloneOptions(baseOptions);
+        applyConfig(options, config);
+
+        if (!withConfig) {
+            if (!options.config) options.config = {};
+            options.config.displayModeBar = false;
+            options.config.staticPlot = true;
+            options.config.editable = false;
+            options.config.scrollZoom = false;
+            options.config.doubleClick = false;
+            options.config.showTips = false;
+
+            if (ratio > 1 && options.layout) {
+                options.layout.showlegend = false;
+            }
+            if (compactConfig && options.layout) {
+                if (options.layout.title?.font) options.layout.title.font.size = compactConfig.titleSize;
+                if (options.layout.xaxis?.title?.font) options.layout.xaxis.title.font.size = compactConfig.axisTitleSize;
+                if (options.layout.xaxis?.tickfont) options.layout.xaxis.tickfont.size = compactConfig.tickSize;
+                if (options.layout.yaxis?.title?.font) options.layout.yaxis.title.font.size = compactConfig.axisTitleSize;
+                if (options.layout.yaxis?.tickfont) options.layout.yaxis.tickfont.size = compactConfig.tickSize;
+            }
+        }
+        if (!options.config) options.config = {};
+        // We handle resize manually via window.addEventListener('resize'), so disable
+        // Plotly's own responsive scaling — it conflicts with our layout recomputation
+        // (e.g. scales vertical legends outside the visible area).
+        options.config.responsive = false;
+        layoutAnnotations(options);
+        return options;
+    }
+
+    async function run() {
+        const config = getConfig();
+        cachedBaseOptions = computeBaseOptions();
+        if (!cachedBaseOptions) return;
+
+        const options = applyConfigAndCompact(cachedBaseOptions, config);
+
+        // Initialize the global config panel (once, on first interactive graph)
+        if (withConfig) {
+            initGlobalConfigPanel(config);
+        }
+
+        const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
+        if (!targetElement) {
+            console.error(`Error: Target element not found for plotting`);
+            return;
+        }
+        await Plotly.newPlot(targetElement, options);
+
+        // Fast path: re-apply config without recomputing base options.
+        // Debounced to batch rapid changes (e.g. multiple checkboxes).
+        let configTimer = null;
+        window.addEventListener('spinorama-config-change', () => {
+            if (!cachedBaseOptions) return;
+            if (configTimer) clearTimeout(configTimer);
+            configTimer = setTimeout(() => {
+                const newConfig = getConfig();
+                const newOptions = applyConfigAndCompact(cachedBaseOptions, newConfig);
+                Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
+            }, 16); // ~1 frame
+        });
+
+        // Set up resize handler — recompute base options since dimensions change
+        let resizeTimer = null;
+        const doResize = () => {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                cachedBaseOptions = computeBaseOptions();
+                if (!cachedBaseOptions) return;
+                const newConfig = getConfig();
+                const newOptions = applyConfigAndCompact(cachedBaseOptions, newConfig);
+                Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
+            }, 150);
+        };
+        window.addEventListener('resize', doResize);
+
+        // Observe the target element so we re-render when a hidden tab becomes
+        // visible (offsetWidth transitions from 0 → container width) or when the
+        // user switches columns (cell width changes).
+        if (typeof ResizeObserver !== 'undefined') {
+            let lastKnownWidth = targetElement.offsetWidth || 0;
+            const ro = new ResizeObserver((entries) => {
+                const w = entries[0].contentRect.width;
+                if (w > 0 && Math.abs(w - lastKnownWidth) > 4) {
+                    lastKnownWidth = w;
+                    doResize();
                 }
-            }
-
-            if (flagsEnableConfig && withConfig) {
-                options = applyConfig(options, config);
-
-                createConfigMenu(divName, config, (updatedConfig) => {
-                    saveConfigToStorage(updatedConfig);
-                    const updatedOptions = applyConfig(JSON.parse(JSON.stringify(options)), updatedConfig);
-                    const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
-                    if (!targetElement) {
-                        console.error(`Error: Target element not found for updating plot`);
-                        return;
-                    }
-                    Plotly.react(divName, updatedOptions.data, updatedOptions.layout, updatedOptions.config);
-                });
-            }
-
-            // Configure Plotly for compact non-interactive mode if needed
-            if (!withConfig) {
-                if (!options.config) {
-                    options.config = {};
-                }
-                // Disable toolbar and interaction
-                options.config.displayModeBar = false;
-                options.config.staticPlot = true;
-                options.config.editable = false;
-                options.config.scrollZoom = false;
-                options.config.doubleClick = false;
-                options.config.showTips = false;
-                options.config.responsive = true;
-
-                // reduce the size of title if ratio > 1
-                if (ratio > 1 && options.layout) {
-                    const w = window.innerWidth;
-                    const d = w / 550;
-                    if (options.layout.title && options.layout.title.font) {
-                        options.layout.title.font.size = 10 + d;
-                    }
-                    if (options.layout.xaxis && options.layout.xaxis.title && options.layout.xaxis.title.font) {
-                        options.layout.xaxis.title.font.size = 9 + d;
-                    }
-                    if (options.layout.xaxis && options.layout.xaxis.tickfont) {
-                        options.layout.xaxis.tickfont.size = 8 + d;
-                    }
-                    if (options.layout.yaxis && options.layout.yaxis.title && options.layout.yaxis.title.font) {
-                        options.layout.yaxis.title.font.size = 9 + d;
-                    }
-                    if (options.layout.yaxis && options.layout.yaxis.tickfont) {
-                        options.layout.yaxis.tickfont.size = 8 + d;
-                    }
-                }
-            }
-
-            const targetElement = typeof divName === 'string' ? document.getElementById(divName) : divName;
-            if (!targetElement) {
-                console.error(`Error: Target element not found for plotting`);
-                return;
-            }
-            await Plotly.newPlot(targetElement, options);
+            });
+            ro.observe(targetElement);
         }
     }
 

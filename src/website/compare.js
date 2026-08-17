@@ -24,9 +24,17 @@ import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, applyConfig } from './plot-config.js';
+import { layoutAnnotations } from './annotation-layout.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
-const flagGraphConfig = false;
+const flagGraphConfig = true;
+
+function detectTheme() {
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark') return 'dark';
+    if (attr === 'light') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -88,8 +96,8 @@ getMetadata()
         const formContainer = plotContainers.querySelector('#plotForm');
         const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
 
         const [metaSpeakers, speakers] = getAllSpeakers(metadata);
         const initSpeakers = buildInitSpeakers(speakers, nbSpeakers);
@@ -99,6 +107,28 @@ getMetadata()
 
         // Load plot configuration from storage
         let config = loadConfigFromStorage('Graph');
+        config.theme = detectTheme();
+
+        // In compare mode, annotations, trendlines and zones are off by default
+        if (!config.annotations) config.annotations = {};
+        if (!config.trendlines) config.trendlines = {};
+        if (!config.zones) config.zones = {};
+        config.annotations.showA = false;
+        config.annotations.showB = false;
+        config.trendlines.showA = false;
+        config.trendlines.showB = false;
+        config.zones.showA = false;
+        config.zones.showB = false;
+
+        // Initialize the global config panel
+        initGlobalConfigPanel(config);
+
+        // Re-render when global config changes
+        window.addEventListener('spinorama-config-change', () => {
+            config = loadConfigFromStorage('Graph');
+            config.theme = detectTheme();
+            updateSpeakers();
+        });
 
         const speakersSelector = [];
         const originsSelector = [];
@@ -112,7 +142,22 @@ getMetadata()
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
-                    // console.log('plot: resolved ' + graphs.length + ' graphs')
+                    // Tag annotations with speaker index and merge them
+                    const allAnnotations = [];
+                    for (let i = 0; i < graphs.length; i++) {
+                        if (graphs[i] && graphs[i].layout && graphs[i].layout.annotations) {
+                            for (const ann of graphs[i].layout.annotations) {
+                                ann._speakerIndex = i;
+                            }
+                            allAnnotations.push(...graphs[i].layout.annotations);
+                        }
+                    }
+                    // Attach merged annotations to all graphs so they survive the merge
+                    for (let i = 0; i < graphs.length; i++) {
+                        if (graphs[i] && graphs[i].layout) {
+                            graphs[i].layout.annotations = allAnnotations;
+                        }
+                    }
                     if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
                         graphsConfigs = setCEA2034(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
@@ -158,6 +203,7 @@ getMetadata()
                     const configuredGraphs = graphsConfigs.map((graphConfig) => {
                         if (graphConfig && flagGraphConfig) {
                             graphConfig = applyConfig(graphConfig, config);
+                            layoutAnnotations(graphConfig);
                         }
 
                         // Configure for compact non-interactive mode if needed
@@ -381,21 +427,20 @@ getMetadata()
         }
 
         // add listeners
+        let resizeTimer = null;
         function windowChanges(_event) {
             if (!graphsConfigs) {
                 return;
             }
-            console.log('DEBUG: resize ' + window.innerWidth + 'px ' + window.innerHeight + 'px');
-            if (graphsConfigs.length === 1) {
-                Plotly.Plots.resize('plot0');
-            } else if (graphsConfigs.length === 2) {
-                Plotly.Plots.resize('plot0');
-                Plotly.Plots.resize('plot1');
-            } else if (graphsConfigs.length === 3) {
-                Plotly.Plots.resize('plot0');
-                Plotly.Plots.resize('plot1');
-                Plotly.Plots.resize('plot2');
+            // Debounce: wait for resize to settle before recomputing
+            if (resizeTimer) {
+                clearTimeout(resizeTimer);
             }
+            resizeTimer = setTimeout(() => {
+                windowWidth = window.innerWidth;
+                windowHeight = window.innerHeight;
+                updateSpeakers();
+            }, 150);
         }
 
         window.addEventListener('resize', (event) => {

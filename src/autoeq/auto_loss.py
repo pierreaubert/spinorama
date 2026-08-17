@@ -23,7 +23,8 @@ import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
-from spinorama.ltype import Vector, DataSpeaker
+from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.compute_cea2034 import sp_weigths, estimated_inroom_hv
 from spinorama.compute_scores import octave
 from spinorama.filter_peq import Peq, peq_spl
@@ -32,11 +33,7 @@ from spinorama.filter_peq import peq_apply_measurements
 from spinorama.misc import graph_melt
 from autoeq.auto_misc import have_full_measurements
 
-# cython import
-try:
-    from compute_scores_rust import c_cea2034, c_score_peq_approx
-except ImportError:
-    from spinorama.compute_scores_cython.compute_scores_cython import c_cea2034, c_score_peq_approx
+from spinorama._native import c_cea2034, c_score_peq_approx
 
 
 # ------------------------------------------------------------------------------
@@ -319,18 +316,19 @@ def compute_scores_prep_full(
     freq = spl_h["Freq"].to_numpy()
     spl_h = spl_h.drop("Freq", axis=1)
     spl_v = spl_v.drop("Freq", axis=1)
-    
+
     # Filter out angles that are not multiples of 10 (e.g., 5°, 15°, -5°, -15°)
     def is_multiple_of_10(angle_str: str) -> bool:
         """Check if angle string represents a multiple of 10 degrees"""
         import re
+
         if angle_str == "On Axis":
             return True
-        match = re.match(r'^(-?\d+)°$', angle_str)
+        match = re.match(r"^(-?\d+)°$", angle_str)
         if match:
             return int(match.group(1)) % 10 == 0
         return True  # Keep non-numeric columns
-    
+
     # Filter columns in both DataFrames
     spl_h = spl_h[[col for col in spl_h.columns if is_multiple_of_10(col)]]
     spl_v = spl_v[[col for col in spl_v.columns if is_multiple_of_10(col)]]
@@ -430,18 +428,17 @@ def alternate_loss(freq: Vector, local_target: list[Vector], peq: Peq, iteration
     return l2_loss(freq, [local_target[1]], peq)
 
 
-def flat_pir(freq: Vector, df_spin: DataSpeaker, peq: Peq) -> float:
-    """Flatten the PIR"""
-    pir_filtered = df_spin.get("Estimated In-Room Response_unmelted", None)
-    if pir_filtered is None:
-        spl_h = df_spin["SPL Horizontal_unmelted"]
-        spl_v = df_spin["SPL Vertical_unmelted"]
-        # apply EQ to all horizontal and vertical measurements
-        spl_h_filtered = peq_apply_measurements(spl_h, peq)
-        spl_v_filtered = peq_apply_measurements(spl_v, peq)
-        # compute pir
+def flat_pir(freq: Vector, m: Measurements, peq: Peq) -> float:
+    """Flatness of the EQ'd PIR via the linear-regression r²."""
+    pir = m.eir
+    if pir is None:
+        if m.h_spl is None or m.v_spl is None:
+            raise ValueError("flat_pir requires EIR or H/V SPL sweeps")
+        spl_h_filtered = peq_apply_measurements(m.h_spl, peq)
+        spl_v_filtered = peq_apply_measurements(m.v_spl, peq)
         pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     else:
+        pir_filtered = pir.copy()
         if len(peq) > 0:
             pir_filtered["Estimated In-Room Response"].add(peq_spl(pir_filtered.Freq.values, peq))
         pir_filtered = graph_melt(pir_filtered)
@@ -451,45 +448,29 @@ def flat_pir(freq: Vector, df_spin: DataSpeaker, peq: Peq) -> float:
     return r_value**2
 
 
-def score_loss_slow(df_spin: DataSpeaker, peq: Peq) -> float:
-    """Compute the preference score for speaker
-    peq: evaluated peq
-    return minus score (we want to maximise the score)
-    """
-    _, _, score = scores_apply_filter(df_spin, peq)
+def score_loss_slow(m: Measurements, peq: Peq) -> float:
+    """Negated preference score via the slow path (full CEA2034 recompute)."""
+    _, _, score = scores_apply_filter(m, peq)
     if len(peq) > 0:
         logger.debug("score %.2f peq %s", score.get("pref_score", -1000), peq[0][1])
     return -score["pref_score"]
 
 
-def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
-    """Compute the preference score for speaker
-    local_target: unsued
-    peq: evaluated peq
-    return minus score (we want to maximise the score)
-    """
-    pre_computed = df_spin.get("pre_computed", None)
+def score_loss(m: Measurements, peq: Peq) -> float:
+    """Negated preference score via the fast path (memoised score inputs)."""
+    pre_computed = m._score_cache
     if pre_computed is None:
-        if have_full_measurements(df_spin):
-            spl_h = df_spin["SPL Horizontal_unmelted"]
-            spl_v = df_spin["SPL Vertical_unmelted"]
-            pre_computed = compute_scores_prep_full(spl_h, spl_v)
-            df_spin["pre_computed"] = pre_computed
-        elif "CEA2034_unmelted" in df_spin and "Estimated In-Room Response_unmelted" in df_spin:
-            pre_computed = compute_scores_prep_cea2034(
-                df_spin["CEA2034_unmelted"], df_spin["Estimated In-Room Response_unmelted"]
-            )
-            df_spin["pre_computed"] = pre_computed
+        if have_full_measurements(m):
+            pre_computed = compute_scores_prep_full(m.h_spl, m.v_spl)
+            m._score_cache = pre_computed
+        elif m.cea2034 is not None and m.eir is not None:
+            pre_computed = compute_scores_prep_cea2034(m.cea2034, m.eir)
+            m._score_cache = pre_computed
 
     if pre_computed is None:
-        return score_loss_slow(df_spin, peq)
+        return score_loss_slow(m, peq)
 
     computed_peq_spl = np.asarray(peq_spl(pre_computed["freq"], peq))
-
-    # print('debug: freq {}'.format(pre_computed["freq"].shape()))
-    # print('debug: spin {}'.format(pre_computed["spin"].shape()))
-    # print('debug:   on {}'.format(pre_computed["on"].shape()))
-    # print('debug:  peq {}'.format(computed_peq_spl.shape()))
 
     score = c_score_peq_approx(
         freq=np.asarray(pre_computed["freq"]),
@@ -505,7 +486,7 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
 
 
 def loss(
-    df_speaker: DataSpeaker,
+    m: Measurements,
     freq: Vector,
     local_target: list[Vector],
     peq: Peq,
@@ -522,18 +503,15 @@ def loss(
     if which_loss == "alternate_loss":
         return alternate_loss(freq, local_target, peq, iterations)
     if which_loss == "flat_pir":
-        return flat_pir(freq, df_speaker, peq)
+        return flat_pir(freq, m, peq)
     if which_loss == "score_loss":
-        score = score_loss(df_speaker, peq)
+        score = score_loss(m, peq)
         flatness = leastsquare_loss(freq, local_target, peq, iterations)
         # add flatness as a penalty or score optim goes crazy (pir parameter)
         flatness_weight = optim_config.get("flatness_weight", 0.05)
         return score + flatness * flatness_weight
     if which_loss == "combine_loss":
         weigths = optim_config["loss_weigths"]
-        return (
-            score_loss(df_speaker, peq)
-            + flat_loss(freq, local_target, peq, iterations, weigths) / 20
-        )
+        return score_loss(m, peq) + flat_loss(freq, local_target, peq, iterations, weigths) / 20
     logger.error("loss function is unknown %s", which_loss)
     return -1

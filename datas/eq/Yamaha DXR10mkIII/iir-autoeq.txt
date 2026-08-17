@@ -1,0 +1,14 @@
+EQ for Yamaha DXR10mkIII computed from Vendors-Yamaha data
+Preference Score 1.71 with EQ 4.99
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-15-19:39:38
+
+Preamp: -1.7 dB
+
+Filter  1: ON PK Fc    95 Hz Gain -8.99 dB Q 2.03
+Filter  2: ON PK Fc   144 Hz Gain -1.89 dB Q 1.15
+Filter  3: ON PK Fc   260 Hz Gain +3.00 dB Q 2.94
+Filter  4: ON PK Fc   369 Hz Gain -1.87 dB Q 2.99
+Filter  5: ON PK Fc   792 Hz Gain +2.52 dB Q 2.98
+Filter  6: ON PK Fc   942 Hz Gain -2.29 dB Q 2.99
+Filter  7: ON PK Fc  1954 Hz Gain +1.74 dB Q 1.39

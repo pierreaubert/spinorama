@@ -56,17 +56,74 @@ window.onload = () => {
         });
     }
 
-    const filters = document.querySelector('#filters-dropdown');
-    if (filters) {
-        const trigger = filters.querySelector('#filters-dropdown-trigger');
-        const menu = filters.querySelector('#filters-dropdown-menu');
-        if (!trigger || !menu) {
-            console.log('error dropdown trigger+menu not found!');
-        }
-        trigger.addEventListener('click', () => {
-            filters.classList.toggle('is-active');
+    // Filter dropdown toggle is handled by theme.js
+
+    // Intercept pushState so we can detect URL changes made by search.js
+    const origPushState = history.pushState.bind(history);
+    history.pushState = function () {
+        origPushState.apply(this, arguments);
+        window.dispatchEvent(new Event('pushstate'));
+    };
+
+    // Active filter badge: count active filters from URL params (source of truth)
+    const filterParams = [
+        'reviewer',
+        'shape',
+        'power',
+        'brand',
+        'quality',
+        'priceMin',
+        'priceMax',
+        'weightMin',
+        'weightMax',
+        'heightMin',
+        'heightMax',
+        'widthMin',
+        'widthMax',
+        'depthMin',
+        'depthMax',
+        'f3Min',
+        'f3Max',
+        'f6Min',
+        'f6Max',
+        'sensitivityMin',
+        'sensitivityMax',
+        'impedanceMin',
+        'impedanceMax',
+        'lfxMin',
+        'lfxMax',
+        'splMin',
+        'splMax',
+        'bandwidthMin',
+        'bandwidthMax',
+    ];
+
+    function updateFilterBadge() {
+        const triggerBtn = document.querySelector('#filters-dropdown-trigger .button');
+        if (!triggerBtn) return;
+
+        const existing = triggerBtn.querySelector('.filter-count');
+        if (existing) existing.remove();
+
+        const url = new URL(window.location);
+        let count = 0;
+        filterParams.forEach(function (param) {
+            if (url.searchParams.has(param) && url.searchParams.get(param) !== '') count++;
         });
+
+        if (count > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'filter-count';
+            badge.textContent = count;
+            triggerBtn.appendChild(badge);
+        }
     }
+
+    // Update badge whenever URL changes
+    window.addEventListener('popstate', updateFilterBadge);
+    window.addEventListener('pushstate', updateFilterBadge);
+    // Initial badge from current URL
+    updateFilterBadge();
 
     const navtabs = document.querySelector('#navtab');
     if (navtabs) {

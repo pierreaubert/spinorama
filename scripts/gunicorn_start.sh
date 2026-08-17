@@ -1,19 +1,19 @@
 #!/bin/bash
 
 NAME=spinorama-api
-DIR=/var/www/html/spinorama-api
+DIR=/home/spin/run/spin-api
 USER=spin
 GROUP=spin
 WORKERS=10
 WORKER_CLASS=uvicorn.workers.UvicornWorker
 VENV=$DIR/.venv/bin/activate
-BIND=unix:$DIR/run/gunicorn.sock
+BIND=unix:/home/spin/run/gunicorn.sock
 LOG_LEVEL=info
 
 cd $DIR
 source $VENV
 
-export PYTHONPATH=/var/www/html/spinorama-api
+export PYTHONPATH=$DIR
 
 exec gunicorn main:app \
   --name $NAME \
@@ -23,4 +23,4 @@ exec gunicorn main:app \
   --group=$GROUP \
   --bind=$BIND \
   --log-level=$LOG_LEVEL \
-  --log-file=$DIR/logs/access.log
+  --log-file=/home/spin/log/api.log

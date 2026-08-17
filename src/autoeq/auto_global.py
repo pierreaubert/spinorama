@@ -18,7 +18,6 @@
 
 import bisect
 import math
-from typing import List
 
 import numpy as np
 import scipy.optimize as opt
@@ -28,7 +27,8 @@ from scipy.ndimage import gaussian_filter1d
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
-from spinorama.ltype import Vector, DataSpeaker
+from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl, peq_print
 from autoeq.auto_misc import get3db
@@ -52,24 +52,24 @@ def next_power_of_2(n):
 
 def _resample(x1: list[float], x2: list[float], y1: list[float]) -> list[float]:
     """Resample y1 from x1 coordinates to x2 coordinates using log-scale spline interpolation.
-    
+
     Args:
         x1: Original frequency values (must be positive)
         x2: Target frequency values (must be positive)
         y1: Original y values corresponding to x1
-        
+
     Returns:
         Interpolated y values at x2 frequencies
-        
+
     Raises:
         ValueError: If any frequency values are <= 0
     """
     x1_arr = np.asarray(x1)
     x2_arr = np.asarray(x2)
-    
+
     if np.any(x1_arr <= 0) or np.any(x2_arr <= 0):
         raise ValueError("Frequencies must be positive for log-scale interpolation")
-    
+
     spline = InterpolatedUnivariateSpline(np.log10(x1_arr), y1, k=3)
     return spline(np.log10(x2_arr))
 
@@ -79,10 +79,12 @@ class GlobalOptimizer(object):
 
     def __init__(
         self,
-        df_speaker: DataSpeaker,
+        m: Measurements,
         optim_config: dict,
     ):
-        self.df_speaker = df_speaker
+        if m.cea2034 is None:
+            raise ValueError("GlobalOptimizer requires a Measurements with CEA2034")
+        self.m = m
         self.config = optim_config
         logger.debug(
             "GlobalOptimizer config {%s}",
@@ -92,7 +94,7 @@ class GlobalOptimizer(object):
         # get min/max
         self.freq_min = optim_config["target_min_freq"]
         if self.freq_min is None:
-            status, self.freq_min = get3db(df_speaker, 3.0)
+            status, self.freq_min = get3db(m, 3.0)
             if not status:
                 self.freq_min = 80
         self.freq_max = optim_config.get("target_max_freq", 16000)
@@ -119,15 +121,13 @@ class GlobalOptimizer(object):
         self.freq_midrange_index = self._freq2index(MIDRANGE_MAX_FREQ / 2)
         self.freq_max_index = self._freq2index(self.freq_max)
 
-        # get lw/on/pir & freq
-        self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
-        self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
+        cea = m.cea2034
+        self.lw = cea["Listening Window"].to_numpy()
+        self.on = cea["On Axis"].to_numpy()
         self.pir = None
-        if "Estimated In-Room Response_unmelted" in df_speaker:
-            self.pir = df_speaker["Estimated In-Room Response_unmelted"][
-                "Estimated In-Room Response"
-            ].to_numpy()
-        self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
+        if m.eir is not None:
+            self.pir = m.eir["Estimated In-Room Response"].to_numpy()
+        self.freq = cea["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
         lw_slope = self.config.get("slope_listening_window", -0.5)
@@ -211,7 +211,7 @@ class GlobalOptimizer(object):
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_on = np.add(self.target_on, peq_freq)
         # split flatness of ON on various ranges
         flatness_on_bass_mid = np.linalg.norm(
@@ -221,13 +221,15 @@ class GlobalOptimizer(object):
         # configurable weights for flatness penalty (higher = more flexibility, less flat)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_on_bass_mid) / bass_mid_weight + float(flatness_on_mid_high) / mid_high_weight
+        return score, score + float(flatness_on_bass_mid) / bass_mid_weight + float(
+            flatness_on_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_score_lw(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_lw = np.add(self.target_lw, peq_freq)
         flatness_lw_bass_mid = np.linalg.norm(
             flat_lw[self.freq_min_index : self.freq_midrange_index], ord=2
@@ -235,13 +237,15 @@ class GlobalOptimizer(object):
         flatness_lw_mid_high = np.linalg.norm(flat_lw[self.freq_midrange_index :], ord=2)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_lw_bass_mid) / bass_mid_weight + float(flatness_lw_mid_high) / mid_high_weight
+        return score, score + float(flatness_lw_bass_mid) / bass_mid_weight + float(
+            flatness_lw_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_score_pir(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
-        score = score_loss(self.df_speaker, peq)
+        score = score_loss(self.m, peq)
         flat_pir = np.add(self.target_pir, peq_freq)
         flatness_pir_bass_mid = np.linalg.norm(
             flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2
@@ -249,7 +253,9 @@ class GlobalOptimizer(object):
         flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_pir_bass_mid) / bass_mid_weight + float(flatness_pir_mid_high) / mid_high_weight
+        return score, score + float(flatness_pir_bass_mid) / bass_mid_weight + float(
+            flatness_pir_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
@@ -386,15 +392,16 @@ class GlobalOptimizer(object):
             q_max_above_threshold_1 = self.config.get("q_max_above_threshold_1", 2.0)
             q_freq_threshold_2 = self.config.get("q_freq_threshold_2", 3500)
             q_max_above_threshold_2 = self.config.get("q_max_above_threshold_2", 1.5)
-            
+
             l = len(x) // 4
             for i in range(l):
                 _, f, q, _, _ = self._x2params(x, i)
                 if q > self.max_q or q < self.min_q:
                     return 1
                 f_hz = self._index2freq(f)
-                if (f_hz > q_freq_threshold_1 and q > q_max_above_threshold_1) or \
-                   (f_hz > q_freq_threshold_2 and q > q_max_above_threshold_2):
+                if (f_hz > q_freq_threshold_1 and q > q_max_above_threshold_1) or (
+                    f_hz > q_freq_threshold_2 and q > q_max_above_threshold_2
+                ):
                     return 1
             return -1
 
@@ -482,7 +489,7 @@ class GlobalOptimizer(object):
         auto_peq = self._x2peq(xk)
         peq_print(auto_peq)
 
-    def _create_smart_initial_guess(self, n: int) -> List[np.ndarray]:
+    def _create_smart_initial_guess(self, n: int) -> list[np.ndarray]:
         """Create smart initial guesses based on frequency response analysis"""
         initial_guesses = []
 
@@ -631,6 +638,6 @@ class GlobalOptimizer(object):
         )
 
         auto_peq = self._x2peq(res.x)
-        auto_score = score_loss(self.df_speaker, auto_peq)
+        auto_score = score_loss(self.m, auto_peq)
 
         return True, ((0, res.fun, auto_score), auto_peq)

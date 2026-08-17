@@ -60,6 +60,9 @@ lint.ignore = [
 lint.fixable = ["N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
 lint.unfixable = []
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["S101"]
+
 [tool.sonar]
 projectKey = "spinorama"
 sources = "src"
@@ -68,3 +71,14 @@ sources = "src"
 markers = [
     "qt: marks tests that use Qt",
 ]
+
+[tool.pyrefly]
+project-includes = [
+    ".",
+    "datas",
+    "src",
+    "tests",
+]
+python-platform = "linux"
+python-version = "3.12.0"
+infer-with-first-use = false

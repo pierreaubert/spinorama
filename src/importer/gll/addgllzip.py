@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 import sys
 
-from datas.metadata import speakers_info as metadata
+from datas.speaker import speakers_info as metadata
 
 skeys = {}
 brands = {}

@@ -140,9 +140,35 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
     """Compute SM see details in compute_scores.py"""
     cdef f_min = np.searchsorted(freq, 100, side="right")
     cdef f_max = np.searchsorted(freq, 16000, side="left")
-    cdef log_freq = np.log10(freq[f_min:f_max])
-    _, _, r_value, _, _ = linregress(log_freq, spl[f_min:f_max])
-    return r_value*r_value
+    cdef x = np.log10(freq[f_min:f_max])
+    cdef y = np.asarray(spl[f_min:f_max])
+
+    cdef double x_mean = np.mean(x)
+    cdef double y_mean = np.mean(y)
+    cdef double ss_xx = np.sum((x - x_mean) ** 2)
+    cdef double ss_yy = np.sum((y - y_mean) ** 2)
+
+    if ss_xx == 0.0 or ss_yy == 0.0:
+        return 1.0
+
+    cdef double ss_xy = np.sum((x - x_mean) * (y - y_mean))
+    cdef double slope = ss_xy / ss_xx
+    # Normalize to the reference -1 dB/decade slope, as in VituixCAD.
+    y = y + x * (-1.0 - slope)
+    y_mean = np.mean(y)
+    ss_yy = np.sum((y - y_mean) ** 2)
+    ss_xy = np.sum((x - x_mean) * (y - y_mean))
+    slope = ss_xy / ss_xx
+    cdef double intercept = y_mean - slope * x_mean
+    cdef y_pred = intercept + slope * x
+
+    cdef double ss_res = np.sum((y - y_pred) ** 2)
+    cdef double r2 = 1.0 - ss_res / ss_yy
+    if r2 < 0.0:
+        return 0.0
+    if r2 > 1.0:
+        return 1.0
+    return r2
 
 cpdef c_score(
     const double[:] freq,

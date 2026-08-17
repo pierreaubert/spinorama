@@ -17,16 +17,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 echo "Update starts"
-export PYTHONPATH=src:src/website:src/spinorama:.
+export PYTHONPATH=src:src/website:src/spinorama:scripts:.
 
-DIST=/var/www/html/spinorama-api
-TARGET=spin@vps-c2ea73ea.vps.ovh.net:$DIST
+DISTDIR=/var/www/html/spinorama-api
+RUNDIR=/home/spin/run/spin-api
 
-rsync -arv ./scripts/gunicorn_start.sh requirements-api.txt $TARGET
-rsync -arv ./datas/*.py $TARGET/datas
-rsync -arv ./dist/json/metadata.json* $TARGET/assets
-rsync ./src/api/__init__.py ./src/api/main.py $TARGET
-rsync ./conf/etc/supervisor/conf.d/spinorama-app.conf $TARGET/etc
+DIST_TARGET=spin@vps-c2ea73ea.vps.ovh.net:$DISTDIR
+RUN_TARGET=spin@vps-c2ea73ea.vps.ovh.net:$RUNDIR
+
+rsync -arv ./scripts/gunicorn_start.sh requirements-api.txt $RUN_TARGET
+rsync -arv ./datas/*.py $RUN_TARGET/datas
+rsync -arv ./dist/json/metadata.json* ./dist/json/headphone.json* $DIST_TARGET/assets
+rsync -arv ./datas/headphones/ $DIST_TARGET/assets/headphones
+rsync ./src/api/__init__.py ./src/api/main.py $RUN_TARGET
+rsync ./conf/etc/supervisor/conf.d/spinorama-app.conf $RUN_TARGET/etc
 
 echo "1. as spin user"
 echo "cd $DIST && python3 -m venv .venv && source .venv/bin/activate && pip install -U -r requirements-api.txt"

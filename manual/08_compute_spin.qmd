@@ -1,0 +1,104 @@
+---
+title: "Computing a spinorama from your own measurements"
+date: 2026-04-23
+abstract: >
+  How to use the compute_spin.py script to generate spinorama graphs and preference scores from your own measurement data.
+---
+
+# Compute spinorama from your measurements
+
+The `scripts/compute_spin.py` script lets you compute spinorama graphs and preference scores from speaker measurement data without adding the speaker to the full database.
+
+## Quick start
+
+``` {.shell}
+python scripts/compute_spin.py /path/to/your/speaker/data
+```
+
+The script will:
+
+1. Auto-detect the measurement format
+2. Load and process the data
+3. Compute the preference score (tonality)
+4. Generate all available graphs (CEA2034, contours, radar, etc.) as PNG files
+5. Save the scores to a JSON file
+
+## Supported formats
+
+| Format | Expected files | Description |
+|--------|---------------|-------------|
+| `klippel` | `SPL Horizontal.txt` + `SPL Vertical.txt` | Klippel NFS format |
+| `princeton` | `*_H_IR.mat` + `*_V_IR.mat` | Princeton 3D3A impulse responses |
+| `spl_hv_txt` | `*_H.txt` + `*_V.txt` | Generic text format with angle files |
+| `gll_hv_txt` | `*.zip` with meridian/parallel txt files | GLL extracted data |
+| `rew_text_dump` | `On Axis.txt`, `LW.txt`, `ER.txt`, `SP.txt` | REW text export |
+| `webplotdigitizer` | `*.json` or `*.tar` | WebPlotDigitizer project |
+
+## Options
+
+``` {.shell}
+python scripts/compute_spin.py /path/to/data [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `--format FORMAT` | Force a specific format instead of auto-detection |
+| `--output-dir DIR` | Output directory for graphs (default: same as input) |
+| `--speaker-name NAME` | Speaker name (default: derived from directory name) |
+| `--width N` | Graph width in pixels (default: 800) |
+| `--height N` | Graph height in pixels (default: 600) |
+| `--symmetry MODE` | Horizontal angle handling: `auto`, `mirror`, `shift`, `none` (default: auto) |
+| `--force` | Overwrite existing files |
+| `--verbose` | Enable verbose/debug output |
+
+## Examples
+
+Auto-detect format and generate all graphs:
+``` {.shell}
+python scripts/compute_spin.py ./my_speaker_data/
+```
+
+Specify Klippel format and a custom output directory:
+``` {.shell}
+python scripts/compute_spin.py ./my_speaker_data/ --format klippel --output-dir ./graphs
+```
+
+Generate graphs with custom dimensions:
+``` {.shell}
+python scripts/compute_spin.py ./my_speaker_data/ --width 1200 --height 900 --force
+```
+
+## Output
+
+The script generates the following files in the output directory:
+
+- `{speaker}_CEA2034.png` -- the spinorama
+- `{speaker}_CEA2034_Normalized.png` -- normalized spinorama
+- `{speaker}_On_Axis.png` -- on axis frequency response
+- `{speaker}_Group_Delay.png` -- group delay
+- `{speaker}_Estimated_In-Room_Response.png` -- predicted in-room response
+- `{speaker}_SPL_Horizontal_Contour.png` -- horizontal contour plot
+- `{speaker}_SPL_Vertical_Contour.png` -- vertical contour plot
+- `{speaker}_SPL_Horizontal_Radar.png` -- horizontal radar plot
+- `{speaker}_SPL_Vertical_Radar.png` -- vertical radar plot
+- `{speaker}_scores.json` -- preference scores in JSON format
+- and more (normalized variants, 3D contours, SPL plots, reflection plots)
+
+The preference score output looks like:
+
+```
+============================================================
+PREFERENCE SCORE
+============================================================
+
+  Overall Score: 6.2/10
+  With Subwoofer: 7.8/10
+
+  Components:
+    - NBD On Axis:          0.42
+    - NBD PIR:              0.58
+    - Smoothness PIR:       0.83
+    - Low Freq Ext:        46 Hz
+    - Low Freq Qual:        1.2
+============================================================
+```

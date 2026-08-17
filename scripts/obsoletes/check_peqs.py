@@ -41,6 +41,7 @@ from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_DIST_METADATA_JSON, CPATH_DATAS_EQ
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_spl
+from spinorama.misc import sanitize_filename
 
 
 VERSION = 0.1
@@ -76,7 +77,9 @@ def check_eqs(data, force):
     model = data["model"]
     #
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
-    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
+    eqs = glob.glob(
+        "{}/{} {}/*.txt".format(CPATH_DATAS_EQ, sanitize_filename(brand), sanitize_filename(model))
+    )
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
 
@@ -98,7 +101,7 @@ def createscript(speakers):
     lines.append('  rm -rf "docs/speakers/$SPEAKER"/*/*_eq')
     lines.append('  rm -f "datas/eq/$SPEAKER/iir-autoeq.txt"')
     lines.append(
-        '  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Flat'
+        '  ./scripts/generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Flat'
     )
     lines.append(
         '  mv "./datas/eq/$SPEAKER/iir-autoeq.txt" "./datas/eq/$SPEAKER/iir-autoeq-lw.txt"'
@@ -106,14 +109,14 @@ def createscript(speakers):
     lines.append('  rm -f "datas/eq/$SPEAKER/iir-autoeq.txt"')
     lines.append('  rm -f "docs/speakers/$SPEAKER"/*/filters_*')
     lines.append(
-        '  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Score'
+        '  ./scripts/generate_peqs.py --verbose --force --optimisation=global --max-iter=5000 --speaker="$SPEAKER" --max-peq=7 --max-Q=3 --max-dB=3 --fitness=Score'
     )
     lines.append(
         '  mv "./datas/eq/$SPEAKER/iir-autoeq.txt" "./datas/eq/$SPEAKER/iir-autoeq-score.txt"'
     )
     lines.append('  rm -f "./datas/eq/$SPEAKER/iir.txt"')
     lines.append('  ln -s "./iir-autoeq-score.txt" "./datas/eq/$SPEAKER/iir.txt"')
-    lines.append('  ./generate_graphs.py --speaker="$SPEAKER" --update-cache')
+    lines.append('  ./scripts/generate_graphs.py --speaker="$SPEAKER" --update-cache')
     lines.append("done")
 
     lines = ["{}\n".format(l) for l in lines]

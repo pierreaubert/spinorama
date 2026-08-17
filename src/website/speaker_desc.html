@@ -15,7 +15,7 @@
   speaker_price  = meta[speaker].get('price')
   speaker_amount = meta[speaker].get('amount')
   speaker_type   = meta[speaker].get('type')
-  speaker_path = '/speakers/{} {}/'.format(speaker_brand, speaker_model)
+  speaker_path = '/speakers/{} {}/'.format(util.sanitize_filename(speaker_brand), util.sanitize_filename(speaker_model))
 %>
 
 <%def name="speaker_header(measurement)">
@@ -101,31 +101,49 @@ Warning: this measurement was already process with an equalizer.
 
 <%def name="speaker_sensitivity(measurement)">
 <%
-  sensitivity_data     = measurement.get('sensitivity', {})
-  sensitivity          = sensitivity_data.get('computed', None)
-  sensitivity_1m       = sensitivity_data.get('sensitivity_1m', None)
-  sensitivity_distance = sensitivity_data.get('distance', None)
+  from spinorama.constant_paths import SENSITIVITY_MIN_FREQ, SENSITIVITY_MAX_FREQ
+  freq_range = '{0}Hz-{1}kHz'.format(SENSITIVITY_MIN_FREQ, SENSITIVITY_MAX_FREQ // 1000)
+  sensitivity_data     = measurement.get('computed_sensitivity', {})
+  if not sensitivity_data:
+      legacy = measurement.get('sensitivity')
+      if isinstance(legacy, dict):
+          sensitivity_data = legacy
+  sensitivity          = sensitivity_data.get('computed', None) if sensitivity_data else None
+  sensitivity_1m       = sensitivity_data.get('sensitivity_1m', None) if sensitivity_data else None
+  sensitivity_distance = sensitivity_data.get('distance', None) if sensitivity_data else None
+  spec_sensitivity     = None
+  specs = measurement.get('specifications', {})
+  if specs:
+      spec_sensitivity = specs.get('sensitivity')
 %>
-% if sensitivity is not None:
+% if sensitivity is not None or spec_sensitivity is not None:
 <li>
-% if sensitivity_1m is not None:
-  % if sensitivity_distance is not None and sensitivity_distance != 1.0:
   Sensitivity:
   <ul>
+% if spec_sensitivity is not None:
     <li>
-      Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V estimated at <b>1m</b>).
+      Company: <b>${spec_sensitivity}</b>&nbsp;dB
     </li>
-    <li>
-      Sensitivity: ${'{:.1f}dB'.format(sensitivity)} computed at the measurement distance (${sensitivity_distance}m) over the same frequency range.
-    </li>
-  </ul>
-  % else:
-  Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>).
-  % endif
-</li>
-% else:
-Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>).
 % endif
+% if sensitivity_1m is not None:
+  % if sensitivity_distance is not None and sensitivity_distance != 1.0:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V estimated at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+    <li>
+      Measured: ${'{:.1f}'.format(sensitivity)}&nbsp;dB computed at the measurement distance (<span class="unit-value" data-unit="m" data-value="${sensitivity_distance}">${sensitivity_distance}</span><span class="unit-label" data-unit="m">m</span>) over the same frequency range.
+    </li>
+  % else:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+  % endif
+% elif sensitivity is not None:
+    <li>
+      Measured: <b>${'{0:.1f}'.format(sensitivity)}</b>&nbsp;dB (avg. ${freq_range} for 2.83V measured at <b><span class="unit-value" data-unit="m" data-value="1">1</span><span class="unit-label" data-unit="m">m</span></b>).
+    </li>
+% endif
+  </ul>
 </li>
 % endif
 </%def>
@@ -159,6 +177,8 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
 
 <%def name="speaker_directivity(measurement)">
 <%
+  from spinorama.constant_paths import DIRECTIVITY_MIN_FREQ, DIRECTIVITY_MAX_FREQ
+  dir_range = '{0}kHz and {1}kHz'.format(DIRECTIVITY_MIN_FREQ // 1000, DIRECTIVITY_MAX_FREQ // 1000)
   estimates = measurement.get('estimates', None)
 %>
 % if estimates is not None and (estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?'):
@@ -168,14 +188,14 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
     <li>
       Horizontal directivity
       is (<b>${estimates.get('dir_horizontal_m')}&deg;, ${estimates.get('dir_horizontal_p')}&deg;</b>)
-      between 1kHz and 10kHz. Angle computed for +/-6dB.
+      between ${dir_range}. Angle computed for +/-6dB.
     </li>
 %   endif
 %   if estimates.get('dir_vertical', '?') !=  '?':
     <li>
       Vertical directivity
       is (<b>${estimates.get('dir_vertical_m')}&deg;, ${estimates.get('dir_vertical_p')}&deg;</b>)
-      between 1kHz and 10kHz. Angle computed for +/-6dB.
+      between ${dir_range}. Angle computed for +/-6dB.
     </li>
 %   endif
   </ul>
@@ -220,6 +240,8 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
     </li>
   </ul>
 </li>
+% else:
+<li>Tonality (Preference) Score is <b>***</b> (measurement is truncated at low frequencies).</li>
 % endif
 </%def>
 
@@ -242,6 +264,8 @@ Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83
     </li>
   </ul>
 </li>
+% else:
+<li>Tonality (Preference) Score with EQ is <b>***</b> (measurement is truncated at low frequencies).</li>
 % endif
 </%def>
 
@@ -321,15 +345,11 @@ Links to other reviews: <a href="${review}">${key} review</a>
     weight = specifications.get('weight')
 %>
 % if specifications is not None:
-<li>
-  <b>Vendor specifications</b>:
   <ul>
 %     if dispersion is not None:
     <li>Dispersion: ${horizontal}&deg; horizontal and ${vertical}&deg; vertical.</li>
 %     endif
-%     if sensitivity is not None:
-    <li>Sensitivity ${sensitivity} dB</li>
-%     endif
+## sensitivity is now displayed in speaker_sensitivity
 %     if impedance is not None:
     <li>Impedance ${impedance} Ohm</li>
 %     endif
@@ -346,17 +366,16 @@ Links to other reviews: <a href="${review}">${key} review</a>
 %     if size is not None:
 <li>Size
   <ul>
-    <li>Width ${width}mm</li>
-    <li>Height ${height}mm</li>
-    <li>Depth ${depth}mm</li>
+    <li>Width <span class="unit-value" data-unit="mm" data-value="${width}">${width}</span><span class="unit-label" data-unit="mm">mm</span></li>
+    <li>Height <span class="unit-value" data-unit="mm" data-value="${height}">${height}</span><span class="unit-label" data-unit="mm">mm</span></li>
+    <li>Depth <span class="unit-value" data-unit="mm" data-value="${depth}">${depth}</span><span class="unit-label" data-unit="mm">mm</span></li>
   </ul>
 </li>
 %     endif
 %     if weight is not None:
-<li>Weight ${weight}kg</li>
+<li>Weight <span class="unit-value" data-unit="kg" data-value="${weight}">${weight}</span><span class="unit-label" data-unit="kg">kg</span></li>
 %     endif
 </ul>
-</li>
 % endif
 </%def>
 
@@ -374,39 +393,321 @@ Links to other reviews: <a href="${review}">${key} review</a>
 </article>
 % endif
 
-<article class="message is-info">
-  <h4>What we know about the measurement:</h4>
-  <div class="message-header">
-    <p>
-      ${speaker_header(meta[speaker])}
-    </p>
-  </div>
-  <div class="message-body">
-    <div class="content">
-      % if current:
-      <ul>
-        ${speaker_quality(current)}
-        ${speaker_origin(current)}
-        ${speaker_format(current)}
-        ${speaker_extras(current)}
-        ${speaker_sensitivity(current)}
-        ${speaker_estimates(current)}
-        ${speaker_directivity(current)}
-        ${speaker_pref_rating_head(current)}
-        ${speaker_pref_rating(current)}
-        ${speaker_pref_rating_eq(current)}
-        ${speaker_pref_rating_tail(current)}
-        ${speaker_reviews(current)}
-        ${speaker_notes(current)}
-        ${speaker_specifications(current)}
-      </ul>
-      % endif
+<%
+  _webp = util.get_picture_url(speaker_brand, speaker_model, "webp")
+  _jpg  = util.get_picture_url(speaker_brand, speaker_model, "jpg")
+  _current_specs = current.get('specifications', {}) or {} if current else {}
+  _current_size  = _current_specs.get('size', {}) or {}
+  _h_mm = _current_size.get('height')
+  _w_mm = _current_size.get('width')
+  _d_mm = _current_size.get('depth')
+%>
+
+<div class="desc-block desc-block-full">
+  <h4 class="title is-5 mb-3">${speaker_header(meta[speaker])}</h4>
+  % if current:
+  <div class="desc-block-cols">
+    <div class="desc-block-text">
+      <div class="content">
+        <ul>
+          ${speaker_quality(current)}
+          ${speaker_origin(current)}
+          ${speaker_format(current)}
+          ${speaker_extras(current)}
+          ${speaker_sensitivity(current)}
+          ${speaker_estimates(current)}
+          ${speaker_directivity(current)}
+          ${speaker_pref_rating_head(current)}
+          ${speaker_pref_rating(current)}
+          ${speaker_pref_rating_eq(current)}
+          ${speaker_pref_rating_tail(current)}
+          ${speaker_reviews(current)}
+          ${speaker_notes(current)}
+        </ul>
+      </div>
+    </div>
+    <div class="desc-block-img">
+      <picture>
+        <source srcset="/${_webp}" type="image/webp">
+        <img src="/${_jpg}" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async">
+      </picture>
+      <script type="module">
+        // Decode Plotly bdata (base64 typed arrays) or plain arrays
+        function decodePlotlyArray(obj) {
+          if (Array.isArray(obj)) return obj;
+          if (!obj || !obj.bdata) return null;
+          var bin = atob(obj.bdata);
+          var len = bin.length;
+          var bytes = new Uint8Array(len);
+          for (var i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+          var dtype = obj.dtype || 'f8';
+          if (dtype === 'f8') return Array.from(new Float64Array(bytes.buffer));
+          if (dtype === 'f4') return Array.from(new Float32Array(bytes.buffer));
+          if (dtype === 'i2') return Array.from(new Int16Array(bytes.buffer));
+          if (dtype === 'i4') return Array.from(new Int32Array(bytes.buffer));
+          if (dtype === 'u1') return Array.from(new Uint8Array(bytes.buffer));
+          return Array.from(new Float64Array(bytes.buffer));
+        }
+
+        function decodePlotlyZ(obj, numAngles, numFreqs) {
+          var flat = decodePlotlyArray(obj);
+          if (!flat) return null;
+          if (obj.shape) {
+            numAngles = obj.shape.split ? parseInt(obj.shape.split(',')[0]) : obj.shape[0];
+            numFreqs = obj.shape.split ? parseInt(obj.shape.split(',')[1]) : obj.shape[1];
+          }
+          var z = [];
+          for (var a = 0; a < numAngles; a++) {
+            z.push(flat.slice(a * numFreqs, (a + 1) * numFreqs));
+          }
+          return z;
+        }
+
+        function extractMinus6dB(spec) {
+          if (!spec || !spec.data || !spec.data[0]) return null;
+          var d = spec.data[0];
+          var freqs = decodePlotlyArray(d.x);
+          var angles = decodePlotlyArray(d.y);
+          var z = Array.isArray(d.z) ? d.z : decodePlotlyZ(d.z, angles ? angles.length : 0, freqs ? freqs.length : 0);
+          if (!freqs || !angles || !z) return null;
+
+          var posLine = [], negLine = [];
+          for (var fi = 0; fi < freqs.length; fi++) {
+            var posAngle = null, negAngle = null;
+            // Positive angles: find first angle where SPL < -6
+            for (var ai = 0; ai < angles.length; ai++) {
+              if (angles[ai] > 0 && z[ai][fi] < -6) {
+                if (ai > 0 && z[ai - 1][fi] >= -6) {
+                  var ratio = (-6 - z[ai - 1][fi]) / (z[ai][fi] - z[ai - 1][fi]);
+                  posAngle = angles[ai - 1] + ratio * (angles[ai] - angles[ai - 1]);
+                } else {
+                  posAngle = angles[ai];
+                }
+                break;
+              }
+            }
+            // Negative angles: find first angle where SPL < -6 going negative
+            for (var ai = angles.length - 1; ai >= 0; ai--) {
+              if (angles[ai] < 0 && z[ai][fi] < -6) {
+                if (ai < angles.length - 1 && z[ai + 1][fi] >= -6) {
+                  var ratio = (-6 - z[ai + 1][fi]) / (z[ai][fi] - z[ai + 1][fi]);
+                  negAngle = angles[ai + 1] + ratio * (angles[ai] - angles[ai + 1]);
+                } else {
+                  negAngle = angles[ai];
+                }
+                break;
+              }
+            }
+            if (posAngle !== null) posLine.push({ freq: freqs[fi], angle: posAngle });
+            if (negAngle !== null) negLine.push({ freq: freqs[fi], angle: negAngle });
+          }
+          return { pos: posLine, neg: negLine };
+        }
+
+        function plotDirectivity(divId, spec, title) {
+          var lines = extractMinus6dB(spec);
+          if (!lines) return;
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          var bg = isDark ? '#131318' : '#faf8ff';
+          var fg = isDark ? '#e3e1e9' : '#1b1b21';
+          var grid = isDark ? '#34343b' : '#c6c5d0';
+          var c1 = isDark ? '#b9c3ff' : '#4758a9';
+          var c2 = isDark ? '#e2bad9' : '#745470';
+
+          var traces = [
+            { x: lines.pos.map(function(p) { return p.freq; }),
+              y: lines.pos.map(function(p) { return p.angle; }),
+              mode: 'lines', name: '+', line: { color: c1, width: 2 }, showlegend: false },
+            { x: lines.neg.map(function(p) { return p.freq; }),
+              y: lines.neg.map(function(p) { return p.angle; }),
+              mode: 'lines', name: '-', line: { color: c2, width: 2, dash: 'dot' }, showlegend: false }
+          ];
+          var container = document.getElementById(divId);
+          var plotConfig = { displayModeBar: false, staticPlot: true, responsive: true };
+
+          function doPlot() {
+            var cw = container ? container.offsetWidth : 400;
+            if (cw < 100) cw = 400;
+            var layout = {
+              title: { text: title, font: { size: 10, color: fg } },
+              paper_bgcolor: bg, plot_bgcolor: bg,
+              autosize: false,
+              width: cw,
+              height: Math.max(180, cw * 0.5),
+              xaxis: { type: 'log',
+                       tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
+                       range: [Math.log10(100), Math.log10(20000)] },
+              yaxis: { title: { text: 'deg', font: { size: 9, color: fg } },
+                       tickfont: { size: 8, color: fg }, gridcolor: grid, linecolor: grid,
+                       range: [-180, 180], dtick: 90, zeroline: true, zerolinecolor: grid },
+              margin: { l: 32, r: 8, t: 22, b: 22 }
+            };
+            if (window.Plotly) {
+              window.Plotly.newPlot(divId, traces, layout, plotConfig);
+            }
+          }
+
+          // Container may be hidden (inactive tab) — defer until visible
+          if (container && container.offsetWidth > 0) {
+            doPlot();
+          } else {
+            var obs = new ResizeObserver(function(entries) {
+              if (entries[0].contentRect.width > 0) {
+                obs.disconnect();
+                doPlot();
+              }
+            });
+            if (container) obs.observe(container);
+          }
+        }
+
+        var hUrl = './${g_key}/SPL%20Horizontal%20Contour%20Normalized.json';
+        var vUrl = './${g_key}/SPL%20Vertical%20Contour%20Normalized.json';
+        fetch(hUrl).then(function(r) {
+          if (!r.ok) return null;
+          return r.json();
+        }).then(function(spec) {
+          if (spec) plotDirectivity('directivity-h', spec, 'Horizontal Directivity (-6dB)');
+        }).catch(function(e) { console.warn('H directivity load failed:', e); });
+        fetch(vUrl).then(function(r) {
+          if (!r.ok) return null;
+          return r.json();
+        }).then(function(spec) {
+          if (spec) plotDirectivity('directivity-v', spec, 'Vertical Directivity (-6dB)');
+        }).catch(function(e) { console.warn('V directivity load failed:', e); });
+      </script>
     </div>
   </div>
-</article>
+  % endif
+</div>
+
+% if current and _current_specs:
+<div class="desc-block">
+  <h4 class="title is-6 mb-3">Vendor specifications</h4>
+  <div class="desc-block-cols">
+    <div class="desc-block-text">
+      <div class="content">
+        ${speaker_specifications(current)}
+      </div>
+    </div>
+% if _h_mm is not None and _w_mm is not None and _d_mm is not None:
+    <div class="desc-block-img" id="size-diagram"
+         data-height="${_h_mm}" data-width="${_w_mm}" data-depth="${_d_mm}">
+    </div>
+    <script>
+    (function() {
+      var el = document.getElementById('size-diagram');
+      if (!el) return;
+      var Hmm = parseFloat(el.dataset.height);
+      var Wmm = parseFloat(el.dataset.width);
+      var Dmm = parseFloat(el.dataset.depth);
+      if (isNaN(Hmm) || isNaN(Wmm) || isNaN(Dmm)) return;
+
+      function draw() {
+        var sys = localStorage.getItem('spinorama-units') || 'metric';
+        var imperial = (sys === 'imperial');
+        var hLabel, wLabel, dLabel, unitLabel, personLabel;
+        if (imperial) {
+          hLabel = (Hmm * 0.03937008).toFixed(1);
+          wLabel = (Wmm * 0.03937008).toFixed(1);
+          dLabel = (Dmm * 0.03937008).toFixed(1);
+          unitLabel = 'in';
+          personLabel = "5'7\"";
+        } else {
+          hLabel = Hmm;
+          wLabel = Wmm;
+          dLabel = Dmm;
+          unitLabel = 'mm';
+          personLabel = '1.7m';
+        }
+
+        // Person reference: 1700mm tall (geometry always in mm)
+        var personH = 1700;
+        var svgH = 280;
+        var maxDim = Math.max(Hmm, personH);
+        var scale = (svgH - 60) / maxDim;
+
+        var iso = 0.35;
+        var dx = Dmm * scale * iso;
+        var dy = Dmm * scale * iso * 0.5;
+
+        var labelPad = Math.max(20, hLabel.toString().length * 6 + 14);
+        var bx = labelPad;
+        var bw = Wmm * scale;
+        var bh = Hmm * scale;
+        var by = svgH - 30 - bh;
+
+        var ph = personH * scale;
+        var px = bx + bw + dx + 30;
+        var pcx = px + 12;
+        var armW = ph * 0.12;
+        var svgW = Math.max(200, pcx + armW + 30);
+
+        var cs = getComputedStyle(document.documentElement);
+        var fg = cs.getPropertyValue('--md3-on-surface').trim() || '#1b1b21';
+        var fg2 = cs.getPropertyValue('--md3-on-surface-variant').trim() || '#45464f';
+        var fill = cs.getPropertyValue('--md3-surface-container-high').trim() || '#e9e7ef';
+        var fillSide = cs.getPropertyValue('--md3-surface-container-highest').trim() || '#e3e1e9';
+
+        var s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + svgW + ' ' + svgH + '">';
+        // Front face
+        s += '<rect x="' + bx + '" y="' + by + '" width="' + bw + '" height="' + bh + '" fill="' + fill + '" stroke="' + fg2 + '" stroke-width="1"/>';
+        // Top face
+        s += '<polygon points="' + bx + ',' + by + ' ' + (bx+dx) + ',' + (by-dy) + ' ' + (bx+bw+dx) + ',' + (by-dy) + ' ' + (bx+bw) + ',' + by + '" fill="' + fillSide + '" stroke="' + fg2 + '" stroke-width="1"/>';
+        // Right face
+        s += '<polygon points="' + (bx+bw) + ',' + by + ' ' + (bx+bw+dx) + ',' + (by-dy) + ' ' + (bx+bw+dx) + ',' + (by+bh-dy) + ' ' + (bx+bw) + ',' + (by+bh) + '" fill="' + fillSide + '" stroke="' + fg2 + '" stroke-width="1"/>';
+
+        var fs = 9;
+        // Height
+        s += '<line x1="' + (bx-8) + '" y1="' + by + '" x2="' + (bx-8) + '" y2="' + (by+bh) + '" stroke="' + fg2 + '" stroke-width="0.5"/>';
+        s += '<text x="' + (bx-10) + '" y="' + (by+bh/2) + '" text-anchor="end" font-size="' + fs + '" fill="' + fg + '" dominant-baseline="middle">' + hLabel + '</text>';
+        // Width
+        var wy = by + bh + 12;
+        s += '<line x1="' + bx + '" y1="' + wy + '" x2="' + (bx+bw) + '" y2="' + wy + '" stroke="' + fg2 + '" stroke-width="0.5"/>';
+        s += '<text x="' + (bx+bw/2) + '" y="' + (wy+12) + '" text-anchor="middle" font-size="' + fs + '" fill="' + fg + '">' + wLabel + '</text>';
+        // Depth
+        var dlx1 = bx+bw+2, dly1 = by+2, dlx2 = bx+bw+dx+2, dly2 = by-dy+2;
+        s += '<line x1="' + dlx1 + '" y1="' + dly1 + '" x2="' + dlx2 + '" y2="' + dly2 + '" stroke="' + fg2 + '" stroke-width="0.5"/>';
+        s += '<text x="' + ((dlx1+dlx2)/2+6) + '" y="' + ((dly1+dly2)/2-3) + '" font-size="' + fs + '" fill="' + fg + '">' + dLabel + '</text>';
+        // Unit
+        s += '<text x="' + (bx+bw/2) + '" y="' + (svgH-4) + '" text-anchor="middle" font-size="' + (fs-1) + '" fill="' + fg2 + '">' + unitLabel + '</text>';
+
+        // Person
+        var pbot = svgH - 30;
+        var headR = Math.max(ph * 0.04, 3);
+        s += '<circle cx="' + pcx + '" cy="' + (pbot-ph+headR+1) + '" r="' + headR + '" fill="' + fg2 + '"/>';
+        var neck = pbot-ph+headR*2+2, shoulder = neck+ph*0.05, hip = neck+ph*0.42;
+        var legW = ph*0.06;
+        s += '<line x1="' + pcx + '" y1="' + neck + '" x2="' + pcx + '" y2="' + hip + '" stroke="' + fg2 + '" stroke-width="2" stroke-linecap="round"/>';
+        s += '<line x1="' + (pcx-armW) + '" y1="' + (shoulder+ph*0.15) + '" x2="' + pcx + '" y2="' + shoulder + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
+        s += '<line x1="' + (pcx+armW) + '" y1="' + (shoulder+ph*0.15) + '" x2="' + pcx + '" y2="' + shoulder + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
+        s += '<line x1="' + (pcx-legW) + '" y1="' + pbot + '" x2="' + pcx + '" y2="' + hip + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
+        s += '<line x1="' + (pcx+legW) + '" y1="' + pbot + '" x2="' + pcx + '" y2="' + hip + '" stroke="' + fg2 + '" stroke-width="1.5" stroke-linecap="round"/>';
+        s += '<text x="' + pcx + '" y="' + (pbot+14) + '" text-anchor="middle" font-size="' + (fs-1) + '" fill="' + fg2 + '">' + personLabel + '</text>';
+
+        s += '</svg>';
+        el.innerHTML = s;
+      }
+
+      draw();
+      // Redraw when unit system changes
+      document.querySelectorAll('.unit-btn').forEach(function(btn) {
+        btn.addEventListener('click', draw);
+      });
+    })();
+    </script>
+% endif
+  </div>
+</div>
+<div class="desc-block">
+  <h4 class="title is-6 mb-3">Directivity (-6dB)</h4>
+  <div id="directivity-h" class="directivity-plot"></div>
+  <div id="directivity-v" class="directivity-plot"></div>
+</div>
+% endif
 
 <%def name="eqs_info_eq(name)">
-<h6 class="title is-6">
+<p class="eq-info">
 % if name == 'AutomaticEQ (IIR)':
 This EQ optimise the Harman score and is a good start for far field listening like in your living room.
 % elif name == 'AutomaticEQ LW (IIR)':
@@ -422,7 +723,7 @@ This EQ is designed by ASR member maiky76. This EQ optimise for a flat listening
 % elif name == 'maiky76@ASR (IIR)':
 This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and is a good start for far field listening like in your living room.
 % endif
-</h6>
+</p>
 </%def>
 
 
@@ -467,16 +768,12 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 </table>
 </%def>
 
-<%def name="eqs_print_graph(graph, doc, width, height)">
+<%def name="eqs_print_graph(graph, doc, width, height, ratio=2)">
 <%
   origin = default_origin.replace('+', '%20').replace(' ', '%20').replace('&', '%26')
+  is_hist = 'hist' in graph
 %>
-<div class="box">
-  <figure class="image">
-<!--
-    <img class="has-ratio" src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" width="${width}" height="${height}">
-  </figure>
--->
+<div class="eq-graph" style="max-width:400px">
   <div id="${origin}-${graph}"></div>
   <script type="module">
    import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
@@ -488,10 +785,39 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
        spec.layout.title = {
 	 text: '${doc}'
        }
-       displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, 2);
+       // Shorten EQ trace names: "Peak 1" → "PK1: 369Hz"
+       var typeMap = { 'Peak': 'PK', 'Lowshelf': 'LS', 'Highshelf': 'HS', 'Lowpass': 'LP', 'Highpass': 'HP', 'Notch': 'NO', 'Bandpath': 'BP' };
+       if (spec.data) {
+         for (var t of spec.data) {
+           if (t.name) {
+             var parts = t.name.match(/^(\w+)\s+(\d+)$/);
+             if (parts && typeMap[parts[1]]) {
+               var shortType = typeMap[parts[1]] + parts[2];
+               // Find peak frequency from trace data
+               var peakFreq = '';
+               if (t.y && t.x) {
+                 var maxIdx = 0, maxVal = 0;
+                 for (var k = 0; k < t.y.length; k++) {
+                   if (Math.abs(t.y[k]) > maxVal) { maxVal = Math.abs(t.y[k]); maxIdx = k; }
+                 }
+                 if (t.x[maxIdx] !== undefined) peakFreq = ': ' + Math.round(t.x[maxIdx]) + 'Hz';
+               }
+               t.name = shortType + peakFreq;
+             }
+           }
+         }
+       }
+% if is_hist:
+       if (!spec.layout.yaxis) spec.layout.yaxis = {};
+       spec.layout.yaxis.showticklabels = true;
+       spec.layout.yaxis.title = { text: 'Count' };
+       if (!spec.layout.xaxis) spec.layout.xaxis = {};
+       spec.layout.xaxis.title = { text: 'Deviation (dB)' };
+       spec.layout._ratioOverride = 3;
+% endif
+       displayGraph("On Axis", graph_json, "${origin}-${graph}", spec, false, ${ratio});
      });
   </script>
-  <h6 class="title is-6">${doc}</h6>
 </div>
 </%def>
 
@@ -551,37 +877,31 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 </%def>
 
 <%def name="eqs_spider(eq)">
-<!--
-<picture class="image">
-  <source srcset="../spider.webp" type="image/webp">
-  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600">
-</picture>
--->
-<div id="spider"></div>
-<script type="module">
- import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
- const spec = fetch("../spider.json")
-   .then( (response) => response.json() )
-   .then( (spec) => {
-       spec.layout.title = {
-	 text: 'Improvements made by EQ'
-       }
-     displayGraph("On Axis", "../spider.json", "spider", spec, false, 2);
-   });
-</script>
+<div class="eq-graph">
+  <div id="spider"></div>
+  <script type="module">
+   import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
+   const spec = fetch("../spider.json")
+     .then( (response) => response.json() )
+     .then( (spec) => {
+         spec.layout.title = {
+           text: 'Improvements made by EQ'
+         }
+         spec.layout.showlegend = true;
+       displayGraph("On Axis", "../spider.json", "spider", spec, false, 2);
+     });
+  </script>
+</div>
 </%def>
 
 <%def name="eqs_print_eqs(current_eqs)">
 % for i, (name, eq) in enumerate(current_eqs.items()):
-<article class="message is-primary">
-  <div class="message-header">
-    ${speaker_brand} ${speaker_model}
-  </div>
-  <div class="message-body">
+<div class="desc-block">
+  <div class="eq-card">
     ${eqs_print_eq(eq)}
     ${eqs_info_eq(eq['display_name'])}
   </div>
-</article>
+</div>
 % endfor
 </%def>
 
@@ -589,42 +909,21 @@ This EQ is designed by ASR member maiky76. This EQ optimise the Harman score and
 
 ${eqs_print_eqs(current_eqs)}
 
-<article class="message is-info">
-  <div class="message-header">
-    Improvement made by adding the above EQ
-  </div>
-  <div class="message-body">
-    <div class="content">
-      <h5 class="is-5">EQ</h5>
-      ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 600, 400)}
-      </h5>
-      <h5 class="is-5">Target v.s. EQ</h5>
-      ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 600, 400)}
-      </h5>
-      <h5 class="is-5">Histogram of errors</h5>
-      ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 600, 200)}
-      ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 600, 200)}
-      ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 600, 200)}
-    </div>
-    <div class="content">
-      ${eqs_spider(eq)}
-    </div>
-  </div>
-</article>
+<div class="desc-block desc-block-full eq-graphs-row">
+  ${eqs_print_graph('filters_auto_eq', 'AutoEQ', 300, 200)}
+  ${eqs_print_graph('filters_eq_full', 'Target v.s. EQ', 300, 200)}
+  ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 300, 100, 3)}
+  ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 300, 100, 3)}
+  ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 300, 100, 3)}
+% if has_spider:
+  ${eqs_spider(eq)}
+% endif
+</div>
 % endif
 
 % if current_eqs is not None and  len(current_eqs) > 1:
-<article class="message is-info">
-  <div class="message-header">
-    ${speaker_brand} ${speaker_model}: comparison between EQs
-  </div>
-  <div class="message-body">
-    <div class="content">
-      <div class="content">
-	${eqs_print_graphs(eq)}
-	<h6 class="is-6">Comparison betweens various EQs</h6>
-      </div>
-  </div>
-</article>
+<div class="desc-block desc-block-full">
+  ${eqs_print_graphs(eq)}
+</div>
 % endif
 

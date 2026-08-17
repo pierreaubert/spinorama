@@ -1,18 +1,14 @@
 <div class="dropdown-item">
   <div class="field">
-    <div class="control has-icons-left">
-      <div class="select">
-        <select id="selectQuality">
-          <option value="">Measurements Quality</option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-	  <option value="unknown">Unknown</option>
-        </select>
-      </div>
-      <div class="icon is-left">
-	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
-      </div>
+    <label class="label">
+      <svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      Measurements Quality
+    </label>
+    <div class="control">
+      <label class="checkbox"><input type="checkbox" value="high" class="qualityCheckbox"> High</label>
+      <label class="checkbox"><input type="checkbox" value="medium" class="qualityCheckbox"> Medium</label>
+      <label class="checkbox"><input type="checkbox" value="low" class="qualityCheckbox"> Low</label>
+      <label class="checkbox"><input type="checkbox" value="unknown" class="qualityCheckbox"> Unknown</label>
     </div>
   </div>
 </div>
@@ -193,6 +189,146 @@
       <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputDepthMax">
       <div class="icon is-left">
 	<svg width="24px" height="24px"><use href="#icon-ruler"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">F3 -3dB (Hz):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputF3Min">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputF3Max">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">F6 -6dB (Hz):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputF6Min">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputF6Max">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">Sensitivity (dB):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputSensitivityMin">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-volume-up"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputSensitivityMax">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-volume-up"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">Impedance (ohm):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputImpedanceMin">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-plug"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputImpedanceMax">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-plug"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">LFE extension (Hz):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputLfxMin">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputLfxMax">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">SPL peak (dB):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputSplMin">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-volume-up"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputSplMax">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-volume-up"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dropdown-item">
+  <div class="label">Bandwidth (octaves):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputBandwidthMin">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
+      </div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputBandwidthMax">
+      <div class="icon is-left">
+	<svg width="24px" height="24px"><use href="#icon-chart-line"/></svg>
       </div>
     </div>
   </div>

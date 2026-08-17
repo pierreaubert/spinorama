@@ -19,13 +19,12 @@
 /*eslint no-undef: "error"*/
 
 import Fuse from 'fuse.js';
-import { show } from './misc.js';
+import { show, validShape } from './misc.js';
 import { pagination } from './pagination.js';
 
 const parametersMapping = [
     // filters
     { selectorName: '#selectReviewer', urlParameter: 'reviewer', eventType: 'change' },
-    { selectorName: '#selectQuality', urlParameter: 'quality', eventType: 'change' },
     { selectorName: '#selectShape', urlParameter: 'shape', eventType: 'change' },
     { selectorName: '#selectPower', urlParameter: 'power', eventType: 'change' },
     { selectorName: '#selectBrand', urlParameter: 'brand', eventType: 'change' },
@@ -39,6 +38,20 @@ const parametersMapping = [
     { selectorName: '#inputWidthMax', urlParameter: 'widthMax', eventType: 'change' },
     { selectorName: '#inputDepthMin', urlParameter: 'depthMin', eventType: 'change' },
     { selectorName: '#inputDepthMax', urlParameter: 'depthMax', eventType: 'change' },
+    { selectorName: '#inputF3Min', urlParameter: 'f3Min', eventType: 'change' },
+    { selectorName: '#inputF3Max', urlParameter: 'f3Max', eventType: 'change' },
+    { selectorName: '#inputF6Min', urlParameter: 'f6Min', eventType: 'change' },
+    { selectorName: '#inputF6Max', urlParameter: 'f6Max', eventType: 'change' },
+    { selectorName: '#inputSensitivityMin', urlParameter: 'sensitivityMin', eventType: 'change' },
+    { selectorName: '#inputSensitivityMax', urlParameter: 'sensitivityMax', eventType: 'change' },
+    { selectorName: '#inputImpedanceMin', urlParameter: 'impedanceMin', eventType: 'change' },
+    { selectorName: '#inputImpedanceMax', urlParameter: 'impedanceMax', eventType: 'change' },
+    { selectorName: '#inputLfxMin', urlParameter: 'lfxMin', eventType: 'change' },
+    { selectorName: '#inputLfxMax', urlParameter: 'lfxMax', eventType: 'change' },
+    { selectorName: '#inputSplMin', urlParameter: 'splMin', eventType: 'change' },
+    { selectorName: '#inputSplMax', urlParameter: 'splMax', eventType: 'change' },
+    { selectorName: '#inputBandwidthMin', urlParameter: 'bandwidthMin', eventType: 'change' },
+    { selectorName: '#inputBandwidthMax', urlParameter: 'bandwidthMax', eventType: 'change' },
     // search
     { selectorName: '#searchInput', urlParameter: 'search', eventType: 'keyup' },
     // sort
@@ -139,7 +152,7 @@ function filtersParameters2Sort(url) {
     const filters = {
         brand: '',
         power: '',
-        quality: '',
+        quality: [],
         priceMin: '',
         priceMax: '',
         weightMin: '',
@@ -152,8 +165,25 @@ function filtersParameters2Sort(url) {
         heightMax: '',
         reviewer: '',
         shape: '',
+        f3Min: '',
+        f3Max: '',
+        f6Min: '',
+        f6Max: '',
+        sensitivityMin: '',
+        sensitivityMax: '',
+        impedanceMin: '',
+        impedanceMax: '',
+        lfxMin: '',
+        lfxMax: '',
+        splMin: '',
+        splMax: '',
+        bandwidthMin: '',
+        bandwidthMax: '',
     };
     for (const filterName of Object.keys(filters)) {
+        if (filterName === 'quality') {
+            continue;
+        }
         if (url.searchParams.has(filterName)) {
             filters[filterName] = url.searchParams.get(filterName);
             const selectorName = urlToSelectorName.get(filterName);
@@ -164,6 +194,14 @@ function filtersParameters2Sort(url) {
                 console.error('Filter selector ' + filterName + ' is unknown!');
             }
         }
+    }
+    if (url.searchParams.has('quality')) {
+        const qualityParam = url.searchParams.get('quality');
+        filters.quality = qualityParam.split(',').filter((v) => v !== '');
+        const checkboxes = document.querySelectorAll('.qualityCheckbox');
+        checkboxes.forEach((cb) => {
+            cb.checked = filters.quality.includes(cb.value);
+        });
     }
     return filters;
 }
@@ -284,130 +322,132 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1;
     }
 
-    function getScore(key) {
+    // All getScore* helpers must tolerate speakers with:
+    //   - no default_measurement
+    //   - no measurements object
+    //   - missing pref_rating / pref_rating_eq
+    //   - missing specific score fields
+    //   - shape not in validShape (e.g. inwall, outdoor, cbt — these have
+    //     CEA2034 data but the card UI displays *** instead of the score, so
+    //     we sort them to the end too, matching what the user sees on the card)
+    // A missing/invalid score returns -10 so those speakers sort to the end
+    // when used as the key for a descending sort.
+    function hasDisplayedScore(key) {
         const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        let score = -10;
-        if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
-            score = spk.measurements[def].pref_rating.pref_score;
+        if (!spk) return false;
+        // Headphones always display their score
+        if (spk.kind === 'headphone') return true;
+        return validShape.has(spk.shape);
+    }
+
+    function getScore(key) {
+        if (!hasDisplayedScore(key)) return -10;
+        const spk = metadata.get(key);
+        // Headphones store scores at the top level
+        if (spk && spk.kind === 'headphone' && typeof spk.score === 'number') {
+            return spk.score;
         }
-        return score;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating ? msr.pref_rating.pref_score : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreWsub(key) {
+        if (!hasDisplayedScore(key)) return -10;
         const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
-            return spk.measurements[def].pref_rating.pref_score_wsub;
-        }
-        return -10.0;
+        // Headphones don't have a wsub score
+        if (spk && spk.kind === 'headphone') return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating ? msr.pref_rating.pref_score_wsub : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreEq(key) {
+        if (!hasDisplayedScore(key)) return -10;
         const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating_eq) {
-            return spk.measurements[def].pref_rating_eq.pref_score;
+        // Headphones store EQ scores at the top level
+        if (spk && spk.kind === 'headphone' && typeof spk.score_eq === 'number') {
+            return spk.score_eq;
         }
-        return -10.0;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score : undefined;
+        return typeof score === 'number' ? score : -10;
     }
 
     function getScoreEqWsub(key) {
+        if (!hasDisplayedScore(key)) return -10;
         const spk = metadata.get(key);
+        // Headphones don't have a wsub score
+        if (spk && spk.kind === 'headphone') return -10;
+        const msr = defMsr(key);
+        const score = msr && msr.pref_rating_eq ? msr.pref_rating_eq.pref_score_wsub : undefined;
+        return typeof score === 'number' ? score : -10;
+    }
+
+    // Helper: return the default measurement object for a speaker, or null if
+    // the speaker has no default_measurement or no matching measurements entry.
+    function defMsr(key) {
+        const spk = metadata.get(key);
+        if (!spk) return null;
         const def = spk.default_measurement;
+        if (!def || !spk.measurements) return null;
         const msr = spk.measurements[def];
-        if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating_eq) {
-            return spk.measurements[def].pref_rating_eq.pref_score_wsub;
-        }
-        return -10.0;
+        return msr || null;
     }
 
     function getF3(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_3dB;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_3dB : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getF6(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_6dB;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_6dB : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getFlatness(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('estimates' in msr && 'ref_band' in msr.estimates) {
-            return -spk.measurements[def].estimates.ref_band;
-        }
-        return -1000;
+        const msr = defMsr(key);
+        const v = msr && msr.estimates ? msr.estimates.ref_band : undefined;
+        return typeof v === 'number' ? -v : -1000;
     }
 
     function getSensitivity(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('sensitivity' in msr && 'sensitivity_1m' in msr.sensitivity) {
-            return spk.measurements[def].sensitivity.sensitivity_1m;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const cs = msr?.computed_sensitivity ?? msr?.sensitivity;
+        const v = cs?.sensitivity_1m;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getWeight(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'weight' in msr.specifications) {
-            return spk.measurements[def].specifications.weight;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications ? msr.specifications.weight : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeWidth(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.width;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.width : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeDepth(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.depth;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.depth : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getSizeHeight(key) {
-        const spk = metadata.get(key);
-        const def = spk.default_measurement;
-        const msr = spk.measurements[def];
-        if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
-            return spk.measurements[def].specifications.size.height;
-        }
-        return 0.0;
+        const msr = defMsr(key);
+        const v = msr && msr.specifications && msr.specifications.size ? msr.specifications.size.height : undefined;
+        return typeof v === 'number' ? v : 0.0;
     }
 
     function getBrand(key) {
         const spk = metadata.get(key);
-        return spk.brand + ' ' + spk.model;
+        if (!spk) return '';
+        return (spk.brand || '') + ' ' + (spk.model || '');
     }
 
     function getFullTextSearch(key, fts) {
@@ -546,17 +586,17 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
     }
-    if (shouldShow && filter.quality !== undefined && filter.quality !== '') {
-        let found = true;
+    if (shouldShow && Array.isArray(filter.quality) && filter.quality.length > 0) {
+        let found = false;
+        const qualitySet = new Set(filter.quality.map((q) => q.toLowerCase()));
         for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
-            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
-            if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
-                found = false;
+            if (qualitySet.has(quality)) {
+                found = true;
                 break;
             }
         }
-        if (found) {
+        if (!found) {
             shouldShow = false;
         }
     }
@@ -734,6 +774,199 @@ export function isFiltered(item, filter) {
         // console.debug('debug: post width ' + shouldShow);
     }
 
+    if (
+        shouldShow &&
+        ((filter.f3Min !== undefined && filter.f3Min !== '') || (filter.f3Max !== undefined && filter.f3Max !== ''))
+    ) {
+        var f3Min = parseFloat(filter.f3Min);
+        if (isNaN(f3Min)) {
+            f3Min = -1;
+        }
+        var f3Max = parseFloat(filter.f3Max);
+        if (isNaN(f3Max)) {
+            f3Max = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
+            let f3 = parseFloat(msr.estimates.ref_3dB);
+            if (isNaN(f3)) {
+                shouldShow = false;
+            } else {
+                if (f3 > f3Max || f3 < f3Min) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.f6Min !== undefined && filter.f6Min !== '') || (filter.f6Max !== undefined && filter.f6Max !== ''))
+    ) {
+        var f6Min = parseFloat(filter.f6Min);
+        if (isNaN(f6Min)) {
+            f6Min = -1;
+        }
+        var f6Max = parseFloat(filter.f6Max);
+        if (isNaN(f6Max)) {
+            f6Max = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
+            let f6 = parseFloat(msr.estimates.ref_6dB);
+            if (isNaN(f6)) {
+                shouldShow = false;
+            } else {
+                if (f6 > f6Max || f6 < f6Min) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.sensitivityMin !== undefined && filter.sensitivityMin !== '') ||
+            (filter.sensitivityMax !== undefined && filter.sensitivityMax !== ''))
+    ) {
+        var sensitivityMin = parseFloat(filter.sensitivityMin);
+        if (isNaN(sensitivityMin)) {
+            sensitivityMin = -1;
+        }
+        var sensitivityMax = parseFloat(filter.sensitivityMax);
+        if (isNaN(sensitivityMax)) {
+            sensitivityMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        const cs = msr.computed_sensitivity ?? msr.sensitivity;
+        if (cs && ('sensitivity_1m' in cs || 'computed' in cs)) {
+            let sensitivity = parseFloat(cs.sensitivity_1m ?? cs.computed);
+            if (isNaN(sensitivity)) {
+                shouldShow = false;
+            } else {
+                if (sensitivity > sensitivityMax || sensitivity < sensitivityMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.impedanceMin !== undefined && filter.impedanceMin !== '') ||
+            (filter.impedanceMax !== undefined && filter.impedanceMax !== ''))
+    ) {
+        var impedanceMin = parseInt(filter.impedanceMin);
+        if (isNaN(impedanceMin)) {
+            impedanceMin = -1;
+        }
+        var impedanceMax = parseInt(filter.impedanceMax);
+        if (isNaN(impedanceMax)) {
+            impedanceMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'impedance' in msr.specifications) {
+            let impedance = parseInt(msr.specifications.impedance);
+            if (isNaN(impedance)) {
+                shouldShow = false;
+            } else {
+                if (impedance > impedanceMax || impedance < impedanceMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.lfxMin !== undefined && filter.lfxMin !== '') || (filter.lfxMax !== undefined && filter.lfxMax !== ''))
+    ) {
+        var lfxMin = parseInt(filter.lfxMin);
+        if (isNaN(lfxMin)) {
+            lfxMin = -1;
+        }
+        var lfxMax = parseInt(filter.lfxMax);
+        if (isNaN(lfxMax)) {
+            lfxMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('pref_rating' in msr && 'lfx_hz' in msr.pref_rating) {
+            let lfx = parseInt(msr.pref_rating.lfx_hz);
+            if (isNaN(lfx)) {
+                shouldShow = false;
+            } else {
+                if (lfx > lfxMax || lfx < lfxMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.splMin !== undefined && filter.splMin !== '') || (filter.splMax !== undefined && filter.splMax !== ''))
+    ) {
+        var splMin = parseInt(filter.splMin);
+        if (isNaN(splMin)) {
+            splMin = -1;
+        }
+        var splMax = parseInt(filter.splMax);
+        if (isNaN(splMax)) {
+            splMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'SPL' in msr.specifications && 'peak' in msr.specifications.SPL) {
+            let spl = parseInt(msr.specifications.SPL.peak);
+            if (isNaN(spl)) {
+                shouldShow = false;
+            } else {
+                if (spl > splMax || spl < splMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
+    if (
+        shouldShow &&
+        ((filter.bandwidthMin !== undefined && filter.bandwidthMin !== '') ||
+            (filter.bandwidthMax !== undefined && filter.bandwidthMax !== ''))
+    ) {
+        var bandwidthMin = parseFloat(filter.bandwidthMin);
+        if (isNaN(bandwidthMin)) {
+            bandwidthMin = -1;
+        }
+        var bandwidthMax = parseFloat(filter.bandwidthMax);
+        if (isNaN(bandwidthMax)) {
+            bandwidthMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('estimates' in msr && 'ref_band' in msr.estimates) {
+            let bandwidth = parseFloat(msr.estimates.ref_band);
+            if (isNaN(bandwidth)) {
+                shouldShow = false;
+            } else {
+                if (bandwidth > bandwidthMax || bandwidth < bandwidthMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            shouldShow = false;
+        }
+    }
+
     return shouldShow;
 }
 
@@ -741,32 +974,29 @@ export function isSearch(key, results, minScore, keywords) {
     // console.debug('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
-        // console.log('shouldShow is true');
         return shouldShow;
     }
 
     if (!results.has(key)) {
-        // console.debug('shouldShow is false (no key '+key+')');
         return false;
     }
 
     const result = results.get(key);
     const score = result.score;
 
+    // `results` is a Map (size, not length). When there is an exact match
+    // somewhere (minScore ≈ 0), drop entries with a clearly worse score so we
+    // don't show unrelated speakers matched via partial type/shape fields.
     if (minScore < Math.pow(10, -6)) {
-        // we have an exact match, only shouldShow other exact matches
-        if (score >= 0.01 && results.length > 5) {
-            // console.debug('filtered out (minscore)' + score);
+        // we have an exact match → only show other exact/near-exact matches
+        if (score >= 0.01 && results.size > 5) {
             shouldShow = false;
         }
     } else {
         // only partial match
         if (score > minScore * 100) {
-            // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
-        } /* else {
-            console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
-        } */
+        }
     }
     return shouldShow;
 }
@@ -781,7 +1011,11 @@ export function isWithinPage(position, pagination) {
 }
 
 export function rank1(fuse, brands, models, word) {
-    const results = fuse.search(word.trim());
+    const normalized = word.trim().toLowerCase();
+    // Known brand/model tokens should also match suffixed variants, e.g.
+    // searching for "R3" must include both "R3" and "R3 Meta".
+    const query = brands.has(normalized) || models.has(normalized) ? `^${normalized}` : normalized;
+    const results = fuse.search(query);
     return results;
 }
 
@@ -869,6 +1103,17 @@ export function rankN(fuse, brands, models, words) {
     return fuse.search(words.join(' '));
 }
 
+function rankLoose(fuse, words) {
+    // Each word must match somewhere in brand or model (as a substring).
+    // This handles cases like "KEF Q Meta" matching "KEF Q150 Meta".
+    const query = {
+        $and: words.map((w) => ({
+            $or: [{ 'speaker.brand': "'" + w }, { 'speaker.model': "'" + w }],
+        })),
+    };
+    return fuse.search(query);
+}
+
 export function rank(fuse, brands, models, keywords) {
     let results = null;
     let minScore = 100;
@@ -881,6 +1126,11 @@ export function rank(fuse, brands, models, keywords) {
             results = rank2(fuse, brands, models, words);
         } else {
             results = rankN(fuse, brands, models, words);
+        }
+        // If strict search found nothing, try a looser search where each
+        // word independently matches brand or model.
+        if (results.length === 0 && words.length > 1) {
+            results = rankLoose(fuse, words);
         }
         if (results.length > 0) {
             for (const spk in results) {
@@ -925,19 +1175,15 @@ export function search(data, params) {
     const [minScore, resultsFullText] = rank(fuse_exact, brands, models, keywords);
 
     const resultsFiltered = [];
-    let currentDisplay = 0;
     let maxDisplay = 0;
-    const targetDisplay = pagination.count;
     sortMetadata2(data, sorter, resultsFullText).forEach((key) => {
         const speaker = data.get(key);
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
-        const withinPage = isWithinPage(maxDisplay, pagination);
-        // console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
-        if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
-            resultsFiltered.push(key);
-            maxDisplay += 1;
-        } else if (testFiltered && testKeywords) {
+        if (testFiltered && testKeywords) {
+            if (isWithinPage(maxDisplay, pagination)) {
+                resultsFiltered.push(key);
+            }
             maxDisplay += 1;
         }
     });
@@ -1013,5 +1259,30 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         } else {
             console.error('Element ' + selectorName + ' not found');
         }
+    });
+
+    const qualityCheckboxes = document.querySelectorAll('.qualityCheckbox');
+    qualityCheckboxes.forEach((cb) => {
+        cb.addEventListener('change', () => {
+            const url = new URL(window.location);
+            const selected = [...document.querySelectorAll('.qualityCheckbox:checked')].map((c) => c.value);
+            if (selected.length > 0) {
+                url.searchParams.set('quality', selected.join(','));
+            } else {
+                url.searchParams.delete('quality');
+            }
+            url.searchParams.set('page', 1);
+            window.history.pushState({}, '', url);
+            const params = urlParameters2Sort(url);
+            const [maxResults, fragment] = process(metadata, params, speaker2html);
+            while (mainDiv.firstChild) {
+                mainDiv.removeChild(mainDiv.firstChild);
+            }
+            if (fragment) {
+                mainDiv.appendChild(fragment);
+                pagination(maxResults);
+            }
+            show(mainDiv);
+        });
     });
 }

@@ -108,7 +108,10 @@ describe('test full text search and filtering', () => {
                 <select id="sortBy"><option value="date"></option><option value="score"></option></select>
                 <input type="checkbox" id="sortReverse" />
                 <select id="selectReviewer"><option value=""></option><option value="erinsaudiocorner"></option></select>
-                <select id="selectQuality"><option value=""></option><option value="good"></option></select>
+                <label class="checkbox"><input type="checkbox" value="high" class="qualityCheckbox"> High</label>
+                <label class="checkbox"><input type="checkbox" value="medium" class="qualityCheckbox"> Medium</label>
+                <label class="checkbox"><input type="checkbox" value="low" class="qualityCheckbox"> Low</label>
+                <label class="checkbox"><input type="checkbox" value="unknown" class="qualityCheckbox"> Unknown</label>
                 <select id="selectShape"><option value="">All</option><option value="bookshelf">Bookshelf</option></select>
                 <select id="selectPower"><option value="">All</option><option value="passive">Passive</option></select>
                 <select id="selectBrand"><option value="">All</option><option value="KEF">KEF</option></select>
@@ -159,6 +162,167 @@ describe('test full text search and filtering', () => {
         expect(results.includes('Genelec-8361A')).toBeTruthy();
         expect(results.includes('Genelec-8341A')).toBeTruthy();
         expect(results.includes('Genelec-8351B')).toBeTruthy();
+    });
+
+    // Shapes for which the pref_score is shown on the speaker card.
+    // Must match misc.js validShape — speakers with other shapes (inwall,
+    // outdoor, surround, cbt, toursound, …) display *** instead of a score
+    // and are sorted as score-less.
+    const VALID_SHAPES = new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']);
+
+    // Helper: extract pref_score for a speaker key (returns -10 if no displayed score)
+    function getScore(key) {
+        const spk = metadata.get(key);
+        if (!spk) return -10;
+        if (!VALID_SHAPES.has(spk.shape)) return -10;
+        const def = spk.default_measurement;
+        if (!def) return -10;
+        const msr = spk.measurements?.[def];
+        if (!msr?.pref_rating?.pref_score) return -10;
+        return msr.pref_rating.pref_score;
+    }
+
+    it('search+sort: ?search=jbl&sort=score returns only JBL speakers sorted by score desc', () => {
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=20');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+
+        // Must return some results
+        expect(results.length).toBeGreaterThan(0);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+
+        // Every returned speaker must be a JBL (search filter honored)
+        for (const key of results) {
+            const spk = metadata.get(key);
+            expect(spk).toBeDefined();
+            expect(spk.brand.toLowerCase()).toBe('jbl');
+        }
+
+        // Results must be sorted by score in descending order (sort param honored)
+        for (let i = 1; i < results.length; i++) {
+            const prev = getScore(results[i - 1]);
+            const cur = getScore(results[i]);
+            expect(prev).toBeGreaterThanOrEqual(cur);
+        }
+
+        // The top result should be the highest-scoring JBL in the metadata.
+        // JBL-Control-HST-V2 has score 7.36 in the test fixture.
+        expect(results[0]).toBe('JBL-Control-HST-V2');
+    });
+
+    it('search+sort: ?search=jbl&sort=score places no-score speakers LAST', () => {
+        // Request enough results to include all 91 JBLs
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=200');
+        const params = urlParameters2Sort(url);
+        const [, results] = actualSearch(metadata, params);
+
+        // There should be at least one no-score speaker in the fixture (JBL-LSR308)
+        const noScore = results.filter((k) => getScore(k) <= -5);
+        expect(noScore.length).toBeGreaterThan(0);
+
+        // All scored speakers must appear BEFORE any no-score speaker.
+        const lastScoredIdx = results.findLastIndex((k) => getScore(k) > -5);
+        const firstNoScoreIdx = results.findIndex((k) => getScore(k) <= -5);
+        expect(lastScoredIdx).toBeLessThan(firstNoScoreIdx);
+    });
+
+    it('search+sort: ?search=jbl&sort=score does not put inwall/cbt/outdoor speakers first', () => {
+        // Regression: JBL-Control-24CT (shape: inwall) has pref_score=7.07 in
+        // both the test fixture and the live data, but its score is hidden on
+        // the card (***), so it must NOT be the top result. The top result
+        // should be the highest-scoring JBL whose shape is in validShape.
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=20');
+        const params = urlParameters2Sort(url);
+        const [, results] = actualSearch(metadata, params);
+
+        // Top result must be a "valid shape" JBL
+        const top = metadata.get(results[0]);
+        expect(top).toBeDefined();
+        expect(VALID_SHAPES.has(top.shape)).toBe(true);
+
+        // The known offender from live data must not be #1
+        const idx24CT = results.indexOf('JBL-Control-24CT');
+        expect(idx24CT).not.toBe(0);
+
+        // And no inwall/outdoor/surround/cbt/toursound JBL should appear before
+        // any "valid shape" JBL (they're all sentinel-scored).
+        const lastValidIdx = results.findLastIndex((k) => {
+            const s = metadata.get(k);
+            return s && VALID_SHAPES.has(s.shape);
+        });
+        const firstInvalidIdx = results.findIndex((k) => {
+            const s = metadata.get(k);
+            return s && !VALID_SHAPES.has(s.shape);
+        });
+        if (firstInvalidIdx !== -1 && lastValidIdx !== -1) {
+            expect(lastValidIdx).toBeLessThan(firstInvalidIdx);
+        }
+    });
+
+    it('search+sort: robust against speakers with missing default_measurement', () => {
+        // Create a hybrid metadata with one JBL missing default_measurement entirely
+        const hybrid = new Map(metadata);
+        hybrid.set('JBL-Fake-NoDefault', {
+            brand: 'JBL',
+            model: 'Fake NoDefault',
+            type: 'passive',
+            shape: 'bookshelves',
+            // intentionally missing default_measurement
+            measurements: {},
+        });
+        hybrid.set('JBL-Fake-NoRating', {
+            brand: 'JBL',
+            model: 'Fake NoRating',
+            type: 'passive',
+            shape: 'bookshelves',
+            default_measurement: 'asr',
+            measurements: {
+                asr: {
+                    // measurement object with no pref_rating
+                    origin: 'ASR',
+                },
+            },
+        });
+
+        const url = new URL(TEST_URL + '?search=jbl&sort=score&page=1&count=200');
+        const params = urlParameters2Sort(url);
+
+        // This must not throw — getScore should tolerate missing fields
+        let results;
+        expect(() => {
+            [, results] = actualSearch(hybrid, params);
+        }).not.toThrow();
+
+        // Both fake no-score speakers should be included, at the end
+        expect(results).toContain('JBL-Fake-NoDefault');
+        expect(results).toContain('JBL-Fake-NoRating');
+        // The highest-scoring JBL must still be first
+        expect(results[0]).toBe('JBL-Control-HST-V2');
+    });
+
+    it('search+sort: ?search=jbl&sort=price returns only JBL speakers sorted by price desc', () => {
+        const url = new URL(TEST_URL + '?search=jbl&sort=price&page=1&count=30');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+
+        expect(results.length).toBeGreaterThan(0);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+
+        for (const key of results) {
+            const spk = metadata.get(key);
+            expect(spk.brand.toLowerCase()).toBe('jbl');
+        }
+
+        // Prices should be monotonically non-increasing
+        function priceOf(key) {
+            const spk = metadata.get(key);
+            const p = parseFloat(spk?.price);
+            if (isNaN(p)) return -1;
+            return spk.amount === 'pair' ? p / 2 : p;
+        }
+        for (let i = 1; i < results.length; i++) {
+            expect(priceOf(results[i - 1])).toBeGreaterThanOrEqual(priceOf(results[i]));
+        }
     });
 
     it('search by brand revel', () => {
@@ -277,6 +441,356 @@ describe('test full text search and filtering', () => {
         expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
     });
 
+    it('filter by f3 min', () => {
+        const url = new URL(TEST_URL + '?f3Min=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(725);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
+    });
+
+    it('filter by f3 max', () => {
+        const url = new URL(TEST_URL + '?f3Max=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(167);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeFalsy();
+    });
+
+    it('filter by f3 min and max', () => {
+        const url = new URL(TEST_URL + '?f3Min=40&f3Max=80&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(555);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f3 = msr.estimates.ref_3dB;
+            expect(f3).toBeGreaterThanOrEqual(40);
+            expect(f3).toBeLessThanOrEqual(80);
+        });
+    });
+
+    it('filter by f6 min', () => {
+        const url = new URL(TEST_URL + '?f6Min=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(761);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
+    });
+
+    it('filter by f6 max', () => {
+        const url = new URL(TEST_URL + '?f6Max=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(135);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeFalsy();
+    });
+
+    it('filter by f6 min and max', () => {
+        const url = new URL(TEST_URL + '?f6Min=30&f6Max=60&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(481);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f6 = msr.estimates.ref_6dB;
+            expect(f6).toBeGreaterThanOrEqual(30);
+            expect(f6).toBeLessThanOrEqual(60);
+        });
+    });
+
+    it('filter by f3 and f6 combined', () => {
+        const url = new URL(TEST_URL + '?f3Min=40&f3Max=70&f6Min=30&f6Max=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(243);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const f3 = msr.estimates.ref_3dB;
+            const f6 = msr.estimates.ref_6dB;
+            expect(f3).toBeGreaterThanOrEqual(40);
+            expect(f3).toBeLessThanOrEqual(70);
+            expect(f6).toBeGreaterThanOrEqual(30);
+            expect(f6).toBeLessThanOrEqual(50);
+        });
+    });
+
+    it('filter by sensitivity min', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=85&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(469);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(85);
+        });
+    });
+
+    it('filter by sensitivity max', () => {
+        const url = new URL(TEST_URL + '?sensitivityMax=85&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(162);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeLessThanOrEqual(85);
+        });
+    });
+
+    it('filter by sensitivity min and max', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=80&sensitivityMax=90&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(389);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(80);
+            expect(sensitivity).toBeLessThanOrEqual(90);
+        });
+    });
+
+    it('filter by sensitivity excludes speakers without sensitivity data', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=0&sensitivityMax=200&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        // only speakers with computed sensitivity should be included (631 passive)
+        // active speakers (no sensitivity) are excluded
+        expect(results.length).toBe(631);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            expect(cs).toBeDefined();
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeDefined();
+        });
+    });
+
+    it('filter by sensitivity high min returns no results', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=200&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(0);
+    });
+
+    it('filter by sensitivity low max returns few results', () => {
+        const url = new URL(TEST_URL + '?sensitivityMax=70&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(1);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeLessThanOrEqual(70);
+        });
+    });
+
+    it('filter by sensitivity above 90dB', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=90&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBe(218);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(90);
+        });
+    });
+
+    it('filter by sensitivity combined with passive type', () => {
+        const url = new URL(TEST_URL + '?sensitivityMin=85&power=passive&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            expect(result.type).toBe('passive');
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr.computed_sensitivity ?? msr.sensitivity;
+            const sensitivity = cs.sensitivity_1m ?? cs.computed;
+            expect(sensitivity).toBeGreaterThanOrEqual(85);
+        });
+    });
+
+    it('sort by sensitivity returns speakers in descending sensitivity order', () => {
+        const url = new URL(TEST_URL + '?sort=sensitivity&count=1000');
+        const params = urlParameters2Sort(url);
+        const [_maxResults, results] = actualSearch(metadata, params);
+        expect(results.length).toBeGreaterThan(0);
+        // verify descending order for speakers that have sensitivity
+        let prevSensitivity = Infinity;
+        for (const key of results) {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const cs = msr?.computed_sensitivity ?? msr?.sensitivity;
+            const v = cs?.sensitivity_1m;
+            if (typeof v === 'number') {
+                expect(v).toBeLessThanOrEqual(prevSensitivity);
+                prevSensitivity = v;
+            }
+        }
+    });
+
+    it('filter by impedance min', () => {
+        const url = new URL(TEST_URL + '?impedanceMin=8&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(64);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by impedance max', () => {
+        const url = new URL(TEST_URL + '?impedanceMax=8&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(132);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx min', () => {
+        const url = new URL(TEST_URL + '?lfxMin=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(757);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx max', () => {
+        const url = new URL(TEST_URL + '?lfxMax=40&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(163);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by lfx min and max', () => {
+        const url = new URL(TEST_URL + '?lfxMin=30&lfxMax=50&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(313);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const lfx = msr.pref_rating.lfx_hz;
+            expect(lfx).toBeGreaterThanOrEqual(30);
+            expect(lfx).toBeLessThanOrEqual(50);
+        });
+    });
+
+    it('filter by spl min', () => {
+        const url = new URL(TEST_URL + '?splMin=110&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(132);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by spl max', () => {
+        const url = new URL(TEST_URL + '?splMax=110&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(19);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth min', () => {
+        const url = new URL(TEST_URL + '?bandwidthMin=3&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(475);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth max', () => {
+        const url = new URL(TEST_URL + '?bandwidthMax=3&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(468);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+    });
+
+    it('filter by bandwidth min and max', () => {
+        const url = new URL(TEST_URL + '?bandwidthMin=2&bandwidthMax=4&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(522);
+        expect(maxResults).toBeGreaterThanOrEqual(results.length);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            const msr = result.measurements[result.default_measurement];
+            const bandwidth = msr.estimates.ref_band;
+            expect(bandwidth).toBeGreaterThanOrEqual(2);
+            expect(bandwidth).toBeLessThanOrEqual(4);
+        });
+    });
+
     it('search by price alone with Min and Max', () => {
         const priceMin = 100;
         const priceMax = 300;
@@ -376,6 +890,52 @@ describe('test full text search and filtering', () => {
         expect(maxResults).toBeDefined();
         expect(results[0]).toBe('KEF-Blade-1-Meta');
         expect(results[1]).toBe('JBL-Synthesis-SCL-1');
+    });
+
+    it('filter by single quality high', () => {
+        const url = new URL(TEST_URL + '?quality=high&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(maxResults).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const speaker = metadata.get(key);
+            const qualities = Object.values(speaker.measurements).map((m) => m.quality.toLowerCase());
+            expect(qualities.some((q) => q === 'high')).toBeTruthy();
+        });
+    });
+
+    it('filter by multiple qualities high,medium', () => {
+        const url = new URL(TEST_URL + '?quality=high,medium&count=1000');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = actualSearch(metadata, params);
+        expect(results).toBeDefined();
+        expect(maxResults).toBeGreaterThan(0);
+        results.forEach((key) => {
+            const speaker = metadata.get(key);
+            const qualities = Object.values(speaker.measurements).map((m) => m.quality.toLowerCase());
+            expect(qualities.some((q) => q === 'high' || q === 'medium')).toBeTruthy();
+        });
+    });
+
+    it('filter by multiple qualities returns more results than single quality', () => {
+        const urlSingle = new URL(TEST_URL + '?quality=high&count=1000');
+        const paramsSingle = urlParameters2Sort(urlSingle);
+        const [maxSingle] = actualSearch(metadata, paramsSingle);
+
+        const urlMulti = new URL(TEST_URL + '?quality=high,medium&count=1000');
+        const paramsMulti = urlParameters2Sort(urlMulti);
+        const [maxMulti] = actualSearch(metadata, paramsMulti);
+
+        expect(maxMulti).toBeGreaterThanOrEqual(maxSingle);
+    });
+
+    it('empty quality filter returns all speakers', () => {
+        const urlNoFilter = new URL(TEST_URL + '?count=1000');
+        const paramsNoFilter = urlParameters2Sort(urlNoFilter);
+        const [maxNoFilter] = actualSearch(metadata, paramsNoFilter);
+
+        expect(maxNoFilter).toBeGreaterThan(0);
     });
 
     it('search no constraint page 1 & 2', () => {
@@ -655,9 +1215,12 @@ describe('non regression for bug discussions/343', () => {
         const [maxResults1, results1] = actualSearch(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
-        expect(maxResults1).toBe(31);
-        expect(results1[0]).toBe('KEF-R3');
-        expect(results1[1]).toBe('KEF-R3-Meta');
+        // Only the two exact-match KEF R3 variants should be returned
+        // (previously the test asserted 31, but that was the broken behavior
+        // where partial matches leaked through due to a Map.length/.size bug).
+        expect(maxResults1).toBe(2);
+        expect(results1).toContain('KEF-R3');
+        expect(results1).toContain('KEF-R3-Meta');
     });
 
     it('search for 4C Meta and check that the results are sane', () => {

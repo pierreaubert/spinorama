@@ -21,18 +21,24 @@
 import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
-import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, createConfigMenu, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
+
+function detectTheme() {
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark') return 'dark';
+    if (attr === 'light') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
     const speakers = [];
     metadata.forEach(function (value) {
         const speaker = value.brand + ' ' + value.model;
+        metaSpeakers[speaker] = value;
         if (value.nearest && value.nearest.length > 0) {
             speakers.push(speaker);
-            metaSpeakers[speaker] = value;
         }
     });
     return [metaSpeakers, speakers.sort()];
@@ -56,13 +62,18 @@ getMetadata()
         const [metaSpeakers, speakers] = getNearSpeakers(metadata);
 
         // Load plot configuration from storage
-        let config = loadConfigFromStorage();
-        let currentGraphOptions = [];
+        let config = loadConfigFromStorage('Graph');
+        config.theme = detectTheme();
 
-        // Create configuration menu - add it to the form container (only if not compact with ploty=1)
-        const plotyFlag = getUrlParameter('ploty');
-        const graphSmall = 550; // Same as plot.js
-        const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
+        // Initialize the global config panel
+        initGlobalConfigPanel(config);
+
+        // Re-render when global config changes
+        window.addEventListener('spinorama-config-change', () => {
+            config = loadConfigFromStorage('Graph');
+            config.theme = detectTheme();
+            updatePlots();
+        });
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -70,7 +81,6 @@ getMetadata()
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
                     // Reset current graph options for this new plot
-                    currentGraphOptions = [];
                     const speakersName0 = speakersName[0];
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
@@ -116,7 +126,17 @@ getMetadata()
                         }
 
                         if (graphOptions?.length === 1) {
-                            Plotly.newPlot('plot' + i, graphOptions[0]);
+                            const configured = applyConfig(graphOptions[0], config);
+                            Plotly.newPlot('plot' + i, configured);
+                        }
+                    }
+                    // Clear any leftover plots from a previous render
+                    const numUsed = graphs.length - 1;
+                    for (let j = numUsed; j < 10; j++) {
+                        const el = document.getElementById('plot' + j);
+                        if (el) {
+                            Plotly.purge(el);
+                            el.innerHTML = '';
                         }
                     }
                     return null;
@@ -146,9 +166,14 @@ getMetadata()
             if (metaSpeakers[names[0]].nearest !== null) {
                 const similars = metaSpeakers[names[0]].nearest;
                 for (let i = 0; i < similars.length; i++) {
-                    // console.log('adding '+similars[i][1])
-                    names.push(similars[i][1]);
-                    graphs.push(getSpeakerData(metaSpeakers, graphName, similars[i][1], null, null));
+                    const neighborName = similars[i][1];
+                    if (!metaSpeakers[neighborName]) {
+                        console.log('Skipping unknown neighbor: ' + neighborName);
+                        continue;
+                    }
+                    // console.log('adding '+neighborName)
+                    names.push(neighborName);
+                    graphs.push(getSpeakerData(metaSpeakers, graphName, neighborName, null, null));
                 }
             }
             urlParams.set('measurement', graphName);

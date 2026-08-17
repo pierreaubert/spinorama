@@ -36,7 +36,7 @@ fi
 ./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
-command=$(${THEPYTHON} ./generate_graphs.py --update-cache)
+command=$(${THEPYTHON} ./scripts/generate_graphs.py --update-cache)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate graph!"
@@ -49,7 +49,7 @@ fi
 rm -f dist/json/*
 
 # recompute metadata for all speakers
-command=$(${THEPYTHON} ./generate_meta.py)
+command=$(${THEPYTHON} ./scripts/generate_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate meta!"
@@ -61,8 +61,39 @@ fi
 # generate all jpg if some are missing
 ./scripts/update_pictures.sh
 
+# fetch missing headphone pictures
+#command=$(${THEPYTHON} ./scripts/headphone_fetch_pictures.py 2>&1)
+#status=$?
+#if [ $status -ne 0 ]; then
+#    echo "WARN: headphone picture fetch had failures (non-fatal)"
+#else
+#    echo "OK after headphone picture fetch!"
+#fi
+
+# generate headphone graphs
+command=$(${THEPYTHON} ./scripts/generate_graphs.py --headphones)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "WARN: headphone graph generation had failures (non-fatal)"
+else
+    echo "OK after headphone graph generation!"
+fi
+
+# compute headphone EQs (requires autoeq binary)
+if command -v autoeq &> /dev/null; then
+    command=$(./scripts/headphone_eqs_compute.sh)
+    status=$?
+    if [ $status -ne 0 ]; then
+        echo "WARN: headphone EQ computation had failures (non-fatal)"
+    else
+        echo "OK after headphone EQ computation!"
+    fi
+else
+    echo "SKIP headphone EQ computation (autoeq binary not in PATH)"
+fi
+
 # generate eq filters
-command=$(${THEPYTHON} ./generate_peqs.py --generate-images-only)
+command=$(${THEPYTHON} ./scripts/generate_peqs.py --generate-images-only)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate eq filters!"
@@ -72,7 +103,7 @@ else
 fi
 
 # generate radar
-command=$(${THEPYTHON} ./generate_radar.py)
+command=$(${THEPYTHON} ./scripts/generate_radar.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate radar!"
@@ -82,7 +113,7 @@ else
 fi
 
 # generate eq_compare
-command=$(${THEPYTHON} ./generate_eq_compare.py)
+command=$(${THEPYTHON} ./scripts/generate_eq_compare.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate EQ compare!"
@@ -92,7 +123,7 @@ else
 fi
 
 # generate status
-command=$(${THEPYTHON} ./generate_stats.py)
+command=$(${THEPYTHON} ./scripts/generate_stats.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics!"
@@ -103,7 +134,7 @@ fi
 
 # generate status
 today="$(date "+%Y-%m-%d")"
-command=$(${THEPYTHON} ./generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
+command=$(${THEPYTHON} ./scripts/generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics in csv!"
@@ -145,7 +176,7 @@ else
     echo "OK after update reviewers"
 fi
 
-command=$(${THEPYTHON} ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
+command=$(${THEPYTHON} ./scripts/generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate HTML!"
@@ -168,15 +199,6 @@ fi
 #else
 #    echo "Quarto is not available, skipping HTML manual!"
 #fi
-
-# command=$(workbox generateSW workbox-config.js)
-# status=$?
-# if [ $status -ne 0 ]; then
-#     echo "KO after generateSWL!"
-#     exit 1;
-# else
-#     echo "OK after generateSW!"
-# fi
 
 command=$(./scripts/check_html.sh)
 if [ $status -ne 0 ]; then

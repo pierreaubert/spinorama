@@ -59,6 +59,7 @@ vi.mock('./plot-config.js', () => ({
     }),
     saveConfigToStorage: vi.fn(),
     createConfigMenu: vi.fn(),
+    initGlobalConfigPanel: vi.fn(),
     applyConfig: vi.fn().mockImplementation((options, _config) => options),
 }));
 
@@ -213,6 +214,107 @@ describe('Graph Display', () => {
         await expect(displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1)).resolves.not.toThrow();
     });
 
+    test('displayGraph hides legend for static preview graphs (ratio > 1)', async () => {
+        const graphSpec = {
+            layout: {
+                title: { text: 'SPL Horizontal for Speaker measured by ASR' },
+            },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('SPL Horizontal', 'test.json', 'test-graph', graphSpec, false, 2);
+
+        expect(Plotly.newPlot).toHaveBeenCalled();
+        const callArgs = Plotly.newPlot.mock.calls[0];
+        const options = callArgs[1];
+        expect(options.layout.showlegend).toBe(false);
+        expect(options.config.staticPlot).toBe(true);
+    });
+
+    test('displayGraph keeps legend for full-size interactive graphs (ratio = 1)', async () => {
+        const graphSpec = {
+            layout: {
+                title: { text: 'SPL Horizontal for Speaker measured by ASR' },
+                legend: { x: 1, y: 0.5 },
+            },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('SPL Horizontal', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        expect(Plotly.newPlot).toHaveBeenCalled();
+        const callArgs = Plotly.newPlot.mock.calls[0];
+        const options = callArgs[1];
+        // Legend should NOT be hidden for ratio=1 interactive graphs
+        expect(options.layout.showlegend).not.toBe(false);
+    });
+
+    test('displayGraph registers resize listener for interactive graphs (withConfig=true)', async () => {
+        const addEventSpy = vi.spyOn(window, 'addEventListener');
+
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        const resizeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'resize');
+        expect(resizeCalls.length).toBeGreaterThanOrEqual(1);
+
+        addEventSpy.mockRestore();
+    });
+
+    test('displayGraph registers resize and config-change listeners even for static previews', async () => {
+        const addEventSpy = vi.spyOn(window, 'addEventListener');
+
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+
+        const resizeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'resize');
+        expect(resizeCalls.length).toBeGreaterThanOrEqual(1);
+
+        const configChangeCalls = addEventSpy.mock.calls.filter((c) => c[0] === 'spinorama-config-change');
+        expect(configChangeCalls.length).toBeGreaterThanOrEqual(1);
+
+        addEventSpy.mockRestore();
+    });
+
+    test('displayGraph recomputes layout on resize with new dimensions', async () => {
+        const graphSpec = {
+            layout: { title: { text: 'Test Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+
+        // Initial call: 1024x768
+        expect(setPlotForMeasurement).toHaveBeenCalledWith('On Axis', ['Test Graph'], [graphSpec], 1024, 768, 1);
+
+        // Simulate resize to portrait
+        window.innerWidth = 600;
+        window.innerHeight = 1000;
+
+        // Trigger the resize handler
+        window.dispatchEvent(new window.Event('resize'));
+
+        // Wait for debounce (150ms)
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Should have been called again with new dimensions
+        const calls = setPlotForMeasurement.mock.calls;
+        const lastCall = calls[calls.length - 1];
+        expect(lastCall[3]).toBe(600);
+        expect(lastCall[4]).toBe(1000);
+
+        // Plotly.react should have been called for the re-render
+        expect(Plotly.react).toHaveBeenCalled();
+    });
+
     test('displayGraph handles target element correctly', async () => {
         // Create a sample graph spec with different data
         const graphSpec = {
@@ -230,5 +332,51 @@ describe('Graph Display', () => {
 
         // Check if Plotly.newPlot was called
         expect(Plotly.newPlot).toHaveBeenCalled();
+    });
+
+    test('applyConfig is called for all graphs including withConfig=false', async () => {
+        const { applyConfig } = await import('./plot-config.js');
+        applyConfig.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Static Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        expect(applyConfig).toHaveBeenCalled();
+    });
+
+    test('spinorama-config-change event triggers Plotly.react for withConfig=false graphs', async () => {
+        Plotly.react.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Static Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        Plotly.react.mockClear();
+
+        window.dispatchEvent(new window.CustomEvent('spinorama-config-change'));
+        // Allow microtask to process
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        expect(Plotly.react).toHaveBeenCalled();
+    });
+
+    test('initGlobalConfigPanel is called only for withConfig=true', async () => {
+        const { initGlobalConfigPanel } = await import('./plot-config.js');
+        initGlobalConfigPanel.mockClear();
+
+        const graphSpec = {
+            layout: { title: { text: 'Test' } },
+            data: [{ x: [1], y: [1], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, false, 2);
+        expect(initGlobalConfigPanel).not.toHaveBeenCalled();
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+        expect(initGlobalConfigPanel).toHaveBeenCalled();
     });
 });

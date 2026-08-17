@@ -9,23 +9,40 @@ get the correct Rust-accelerated functions regardless of installation mode.
 
 from __future__ import annotations
 
-# Prefer a local extension built into this package directory (e.g.,
-# `spinorama/compute_scores_rust/compute_scores_rust.*.so`). If not present,
-# fall back to the site-packages provided module name `compute_scores_rust`.
+import importlib
+import sys
+
+# When PYTHONPATH includes src/spinorama, a plain ``import compute_scores_rust``
+# resolves to *this* shim instead of the installed wheel. To break the cycle we
+# temporarily hide the conflicting path entries, import the real extension, then
+# restore the path and re-export everything.
+
+_ext = None
+
 try:
     from . import compute_scores_rust as _ext  # type: ignore[attr-defined]
 except Exception:
-    # Fallback: proxy everything from the installed extension module.
-    from compute_scores_rust import *  # noqa: F401,F403
+    pass
 
-    try:  # Build a stable __all__ for introspection and linting
-        import compute_scores_rust as _ext2  # type: ignore
+if _ext is None:
+    _this_pkg = __file__.rsplit("/__init__.py", 1)[0]
+    _blocked = [p for p in sys.path if p == _this_pkg or p.endswith("/spinorama")]
+    _saved = sys.path[:]
+    try:
+        for _b in _blocked:
+            if _b in sys.path:
+                sys.path.remove(_b)
+        if "compute_scores_rust" in sys.modules:
+            del sys.modules["compute_scores_rust"]
+        _ext = importlib.import_module("compute_scores_rust")
+    except Exception:
+        _ext = None
+    finally:
+        sys.path[:] = _saved
 
-        __all__ = [n for n in dir(_ext2) if not n.startswith("_")]
-    except Exception:  # pragma: no cover - extremely unlikely
-        __all__ = []
-else:
-    # Re-export public names from the local extension as top-level symbols.
+if _ext is not None:
     _names = [n for n in dir(_ext) if not n.startswith("_")]
     globals().update({n: getattr(_ext, n) for n in _names})
     __all__ = _names
+else:
+    __all__ = []

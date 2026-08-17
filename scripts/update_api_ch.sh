@@ -17,13 +17,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 echo "Update starts"
-export PYTHONPATH=src:src/website:src/spinorama:.
+export PYTHONPATH=src:src/website:src/spinorama:scripts:.
 
 DIST=/var/www/html/spinorama-api
 
 cp ./scripts/gunicorn_start.sh $DIST
 cp requirements-api.txt $DIST
-cp datas/metadata.py $DIST/datas
+cp datas/speaker.py $DIST/datas
 cp dist/assets/metadata.json $DIST/datas
 for source in "__init__.py" "main.py" "ai-plugin.json"; do
     cp ./src/api/$source $DIST;

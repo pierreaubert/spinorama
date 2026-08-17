@@ -1,0 +1,14 @@
+EQ for Ascend Acoustics CBM-170 SE2 computed from Vendors-Ascend Acoustics data
+Preference Score 6.37 with EQ 6.86
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-07-07-20:17:30
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    69 Hz Gain +2.97 dB Q 0.41
+Filter  2: ON PK Fc    83 Hz Gain +1.75 dB Q 0.40
+Filter  3: ON PK Fc   109 Hz Gain -4.43 dB Q 0.92
+Filter  4: ON PK Fc   879 Hz Gain -1.41 dB Q 1.38
+Filter  5: ON PK Fc  1161 Hz Gain +0.77 dB Q 1.13
+Filter  6: ON PK Fc  6361 Hz Gain -0.91 dB Q 1.49
+Filter  7: ON PK Fc  7834 Hz Gain +1.01 dB Q 1.49

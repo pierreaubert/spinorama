@@ -1,6 +1,6 @@
 ---
 title: "Spinorama manual"
-date: 2025-05-07
+date: 2026-04-23
 abstract: >
   How to use the library step by step!
 ---
@@ -55,7 +55,7 @@ sys.path.append(os.path.expanduser("../src"))
 sys.path.append(os.path.expanduser(".."))
 
 from generate_common import cache_load_seq, get_custom_logger
-import datas.metadata as metadata
+import datas.speaker as metadata
 ```
 
 Set logging level:
@@ -129,7 +129,7 @@ pir = estimated_inroom_hv(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelt
 
 #### Compute the PIR (Predicted In-Room Response)
 ```{python}
-from spinorama.load import graph_melt, graph_unmelt
+from spinorama.misc import graph_melt, graph_unmelt
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv
 from spinorama.compute_scores import speaker_pref_rating
 spin = compute_cea2034(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])

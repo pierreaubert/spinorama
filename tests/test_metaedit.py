@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 
 
 def _pick_sample_speaker():
-    from datas.metadata import speakers_info
+    from datas.speaker import speakers_info
 
     for key, val in speakers_info.items():
         if not isinstance(val, dict):
@@ -181,8 +181,8 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
             cast(Dict[str, Any], sp.get("size")) if isinstance(sp.get("size"), dict) else {}
         )
         spl = cast(Dict[str, Any], sp.get("SPL")) if isinstance(sp.get("SPL"), dict) else None
-        spl_peak = sp.get("spl_peak", None)
-        spl_long = sp.get("spl_long_term", None)
+        spl_peak = sp.get("spl_peak")
+        spl_long = sp.get("spl_long_term")
         if spl is not None:
             if spl_peak is None:
                 spl_peak = spl.get("peak")
@@ -648,7 +648,7 @@ def test_measurement_order_and_prune() -> None:
 def test_plan_pr_requires_develop_and_uptodate() -> None:
     from metaedit.gitops import plan_pr_actions
 
-    files = ["datas/metadata_a.py", "datas/pictures/Genelec 8341A.png"]
+    files = ["datas/speaker_a.py", "datas/pictures/Genelec 8341A.png"]
     # Not on develop
     with pytest.raises(ValueError):
         plan_pr_actions(
@@ -674,7 +674,7 @@ def test_plan_pr_requires_develop_and_uptodate() -> None:
 def test_plan_pr_commands_with_and_without_gh() -> None:
     from metaedit.gitops import plan_pr_actions
 
-    files = ["datas/metadata_g.py", "datas/pictures/Genelec 8341A.png"]
+    files = ["datas/speaker_g.py", "datas/pictures/Genelec 8341A.png"]
     cmds = plan_pr_actions(
         current_branch="develop",
         up_to_date=True,
@@ -731,9 +731,9 @@ def test_strip_app_only_fields(tmp_path: Path) -> None:
 def test_apply_merge_writes_sorted_and_valid(tmp_path: Path, monkeypatch: "MonkeyPatch") -> None:
     from metaedit import merger
 
-    # Prepare a dummy module to stand in for datas.metadata_t
+    # Prepare a dummy module to stand in for datas.speaker_t
     letter = "t"
-    mod_name = f"datas.metadata_{letter}"
+    mod_name = f"datas.speaker_{letter}"
     attr_name = f"speakers_info_{letter}"
 
     # Initial existing DB with one entry
@@ -781,9 +781,9 @@ def test_apply_merge_writes_sorted_and_valid(tmp_path: Path, monkeypatch: "Monke
 def test_apply_merge_runs_ruff_format(tmp_path: Path, monkeypatch: "MonkeyPatch") -> None:
     from metaedit import merger
 
-    # Prepare a dummy module to stand in for datas.metadata_t
+    # Prepare a dummy module to stand in for datas.speaker_t
     letter = "t"
-    mod_name = f"datas.metadata_{letter}"
+    mod_name = f"datas.speaker_{letter}"
     attr_name = f"speakers_info_{letter}"
 
     # Initial existing DB with one entry

@@ -29,6 +29,9 @@ CPATH_DATAS_ICONS = f"{CPATH_DATAS}/icons"
 CPATH_DATAS_PICTURES = f"{CPATH_DATAS}/pictures"
 CPATH_DATAS_SPEAKERS = f"{CPATH_DATAS}/measurements"
 CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
+CPATH_DATAS_HEADPHONES = f"{CPATH_DATAS}/headphones"
+CPATH_DATAS_HEADPHONE_EQ = f"{CPATH_DATAS}/headphone_eq"
+CPATH_DATAS_HEADPHONE_TARGETS = f"{CPATH_DATAS}/headphone_targets"
 
 # where the temporay files go
 CPATH_BUILD = f"{CPATH}/build"
@@ -46,6 +49,12 @@ CPATH_DIST_METADATA_JSON = f"{CPATH_DIST_JSON}/metadata.json"
 CPATH_DIST_EQDATA_JSON = f"{CPATH_DIST_JSON}/eqdata.json"
 CPATH_DIST_SPEAKERS = f"{CPATH_DIST}/speakers"
 CPATH_DIST_PICTURES = f"{CPATH_DIST}/pictures"
+CPATH_DIST_HEADPHONE_JSON = f"{CPATH_DIST_JSON}/headphone.json"
+
+# headphone generated output
+CPATH_DIST_HEADPHONES = f"{CPATH_DIST}/headphones"
+CPATH_DIST_HEADPHONE_METADATA_JSON = f"{CPATH_DIST_JSON}/headphone_metadata.json"
+CPATH_DIST_HEADPHONE_EQDATA_JSON = f"{CPATH_DIST_JSON}/headphone_eqdata.json"
 
 # mean is computed over a range
 MEAN_MIN = 300
@@ -64,9 +73,35 @@ DIRECTIVITY_MAX_FREQ = 10000
 SLOPE_MIN_FREQ = 100
 SLOPE_MAX_FREQ = 12000
 
-# sensitivity defintion (no agreement here)
-SENSITIVITY_MIN_FREQ = 100
-SENSITIVITY_MAX_FREQ = 1000
+# Sensitivity definition: no agreement here but from IEC 60268-5 (the main standard):
+#
+# The IEC standard defines sensitivity as the sound pressure level (SPL) produced
+# at 1 meter on-axis when driven with 2.83 Vrms of pink noise (or a  specified
+# bandwidth), measured in an anechoic environment. The result is expressed as dB SPL / 2.83V / 1m.
+# - 2.83 Vrms delivers exactly 1 watt into 8 ohms (P = V²/R). This is why you often
+#   see sensitivity quoted as "dB/W/m."
+# - For speakers with a different nominal impedance (e.g., 4 ohms), 2.83V delivers 2W,
+# which inflates the number compared to a true 1W measurement. Some manufacturers exploit this.
+#
+# Key conventions and variants:
+#
+# +------------------------------------------------------------------------------------------------+
+# │       Convention        │                             Description                              |
+# +------------------------------------------------------------------------------------------------+
+# │ 2.83V / 1m              │ Most common today. Voltage-referenced, impedance-independent.        |
+# +------------------------------------------------------------------------------------------------+
+# | 1W / 1m                 │ Power-referenced. Adjusts voltage to deliver exactly 1W regardless   |
+# |                         | of impedance. More honest for cross-impedance comparisons.           |
+# +------------------------------------------------------------------------------------------------+
+# │ Half-space vs           │ Half-space (2π) adds ~3dB vs free-field (4π) due to the baffle/ground|
+# | Full space              | reflection. Spec sheets don't always clarify which.                  │
+# +------------------------------------------------------------------------------------------------+
+# │ Frequency range         │ Typically averaged over 300Hz – 3 kHz (or sometimes 1 kHz only). The |
+# |                         | chosen band matters a lot for the resulting number.                  |
+# +------------------------------------------------------------------------------------------------+
+
+SENSITIVITY_MIN_FREQ = 300
+SENSITIVITY_MAX_FREQ = 3000
 
 # default frequency range for plots
 DEFAULT_FREQ_RANGE = (20.0, 20000.0)
@@ -79,12 +114,6 @@ C_LW = "Listening Window"
 C_PIR = "Estimated In-Room Response"
 C_SP = "Sound Power"
 C_ER = "Early Reflections"
-
-U_ON = f"{C_ON}_unmelted"
-U_LW = f"{C_LW}_unmelted"
-U_PIR = f"{C_PIR}_unmelted"
-U_SP = f"{C_SP}_unmelted"
-U_ER = f"{C_ER}_unmelted"
 
 # flags
 flags_ADD_HASH = False  # noqa: N816

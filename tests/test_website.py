@@ -6,8 +6,11 @@ import threading
 import http.server
 import socketserver
 import os
-import time
 import socket
+import sys
+import time
+import urllib.request
+import urllib.error
 
 known_measurements = [
     "CEA2034",
@@ -49,57 +52,73 @@ COMPARE = "/compare.html"
 SIMILAR = "/similar.html"
 SCORES = "/scores.html"
 
-
-def find_free_port():
-    """Find a free port to use for the test server"""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("", 0))
-        s.listen(1)
-        port = s.getsockname()[1]
-    return port
+# The built JS in dist/ hardcodes urlSite to http://localhost:8080,
+# so the test server must use the same port for metadata fetches to work.
+DEV_PORT = 8080
 
 
+@unittest.skipIf(
+    sys.platform == "darwin",
+    "chromedriver-based selenium tests are disabled on macOS",
+)
 class SpinoramaWebsiteTests(unittest.TestCase):
     server = None
     server_thread = None
     DEV = None
 
     @classmethod
+    def _port_is_serving(cls):
+        """Check if port 8080 is already serving HTTP content."""
+        try:
+            urllib.request.urlopen(f"http://localhost:{DEV_PORT}/", timeout=2)
+            return True
+        except (urllib.error.URLError, OSError):
+            return False
+
+    @classmethod
     def setUpClass(cls):
-        """Start HTTP server before all tests"""
-        # Get the project root directory
+        """Start HTTP server before all tests, or reuse existing one on port 8080."""
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         dist_dir = os.path.join(project_root, "dist")
 
         if not os.path.exists(dist_dir):
-            raise RuntimeError(f"dist directory not found at {dist_dir}")
+            msg = f"dist directory not found at {dist_dir}"
+            raise RuntimeError(msg)
 
-        # Find a free port
-        port = find_free_port()
-        cls.DEV = f"http://localhost:{port}"
+        cls.DEV = f"http://localhost:{DEV_PORT}"
+
+        # If port 8080 is already serving (e.g. dev server), reuse it
+        if cls._port_is_serving():
+            cls.server = None
+            cls.server_thread = None
+            return
 
         # Change to dist directory for serving
         os.chdir(dist_dir)
 
-        # Create server with address reuse enabled
         Handler = http.server.SimpleHTTPRequestHandler
 
         class ReuseAddrTCPServer(socketserver.TCPServer):
             allow_reuse_address = True
 
-        cls.server = ReuseAddrTCPServer(("localhost", port), Handler)
+        try:
+            cls.server = ReuseAddrTCPServer(("localhost", DEV_PORT), Handler)
+        except OSError as e:
+            msg = (
+                f"Port {DEV_PORT} is in use but not serving HTTP. "
+                f"Stop the process or run the dev server: {e}"
+            )
+            raise unittest.SkipTest(msg)
 
-        # Start server in a background thread
         cls.server_thread = threading.Thread(target=cls.server.serve_forever)
         cls.server_thread.daemon = True
         cls.server_thread.start()
 
-        # Give server time to start
         time.sleep(0.5)
 
     @classmethod
     def tearDownClass(cls):
-        """Stop HTTP server after all tests"""
+        """Stop HTTP server after all tests (only if we started it)."""
         if cls.server:
             cls.server.shutdown()
             cls.server.server_close()
@@ -190,7 +209,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertIsNotNone(brand_box)
 
     def test_filters_price(self):
-        self.driver.get("{}?{}".format(self.DEV, "count=10000&inputPriceMin=120&inputPriceMax=200"))
+        self.driver.get("{}?{}".format(self.DEV, "count=10000&priceMin=120&priceMax=200"))
 
         # Wait for the Thomann speaker to appear
         a306 = WebDriverWait(self.driver, 10).until(

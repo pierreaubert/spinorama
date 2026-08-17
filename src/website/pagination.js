@@ -55,13 +55,26 @@ export function pagination(numberSpeakers) {
     //         numberSpeakers
     // );
 
+    // Show speaker count
+    const countHtml = '<p class="has-text-centered has-text-grey mb-2">' + numberSpeakers + ' speakers</p>';
+
     // if less than one page
     if (numberSpeakers <= perPage) {
-        hide(navigationContainer);
+        while (navigationContainer.firstChild) {
+            navigationContainer.removeChild(navigationContainer.firstChild);
+        }
+        if (numberSpeakers > 0) {
+            const divCount = document.createElement('div');
+            divCount.innerHTML = countHtml;
+            navigationContainer.appendChild(divCount);
+            show(navigationContainer);
+        } else {
+            hide(navigationContainer);
+        }
         return;
     }
 
-    let html = navHeader;
+    let html = countHtml + navHeader;
     if (currentPage <= 3) {
         let prev_disabled = '';
         if (currentPage === 1) {

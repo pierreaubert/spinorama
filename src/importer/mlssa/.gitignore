@@ -1,0 +1,10 @@
+*.DAT
+*.TST
+*.txt
+*.tzz
+*.heic
+*.xlsx
+*.zip
+/test_data_in
+/test_data_out
+/spinorama_out

@@ -10,7 +10,7 @@ import json
 
 from PySide6 import QtWidgets  # type: ignore[reportMissingImports]
 from PySide6.QtCore import Qt, QSize, QCoreApplication  # type: ignore[reportMissingImports]
-from PySide6.QtGui import QPixmap, QIcon, QAction, QActionGroup, QFont, QTextOption  # type: ignore[reportMissingImports]
+from PySide6.QtGui import QPixmap, QIcon, QFont, QTextOption  # type: ignore[reportMissingImports]
 from PySide6.QtWidgets import (  # type: ignore[reportMissingImports]
     QApplication,
     QButtonGroup,
@@ -46,9 +46,8 @@ from metaedit.models import SpeakerMetadata, Measurement, export_speaker_metadat
 from metaedit.merger import apply_merge
 from metaedit.style import (
     apply_app_style,
+    install_theme_menu,
     read_theme_from_settings,
-    write_theme_to_settings,
-    Theme,
 )
 from metaedit.gitops import create_metadata_pr, preflight_repo
 
@@ -144,6 +143,36 @@ class SelectSpeakerPage(QWidget):
         self.next_btn.setObjectName("btn_next_select")
         nav.addWidget(self.next_btn)
         layout.addLayout(nav)
+
+        # Cached for client-side filtering; populated via ``set_speakers``.
+        self._all_speakers: list[str] = []
+
+    def set_speakers(self, speakers: list[str]) -> None:
+        """Replace the speaker combobox contents and remember the full list."""
+        self._all_speakers = list(speakers)
+        self.speakers_cb.clear()
+        self.speakers_cb.addItems([""] + self._all_speakers)
+
+    def set_brands(self, brands: list[str]) -> None:
+        self.brands_cb.clear()
+        self.brands_cb.addItems([""] + list(brands))
+
+    def filter_speakers(self, search_text: str) -> None:
+        """Filter the speaker combobox by substring match (case-insensitive)."""
+        self.speakers_cb.clear()
+        if not search_text.strip():
+            self.speakers_cb.addItems([""] + self._all_speakers)
+            return
+
+        needle = search_text.lower()
+        matches = [s for s in self._all_speakers if needle in s.lower()]
+        self.speakers_cb.addItems([""] + matches)
+
+        # Auto-select if there's exactly one exact-text match.
+        if len(matches) == 1 and matches[0].lower() == needle:
+            index = self.speakers_cb.findText(matches[0])
+            if index >= 0:
+                self.speakers_cb.setCurrentIndex(index)
 
 
 class EditMetadataPage(QWidget):
@@ -278,237 +307,25 @@ class EditMetadataPage(QWidget):
         btns.addWidget(self.next_btn)
         outer.addLayout(btns)
 
-
-class ReviewExportPage(QWidget):
-    def __init__(self, parent: Optional[QWidget] = None) -> None:
-        super().__init__(parent)
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)
-        title = QLabel("Step 3: Review & Export")
-        title.setObjectName("pageTitle")
-        layout.addWidget(title)
-        self.summary = QTextEdit()
-        self.summary.setReadOnly(True)
-        layout.addWidget(self.summary)
-        btns = QHBoxLayout()
-        self.back_btn = QPushButton("Back")
-        self.back_btn.setObjectName("btn_back_review")
-        self.diff_btn = QPushButton("Show Diff")
-        self.diff_btn.setObjectName("btn_diff_review")
-        self.diff_btn.setVisible(False)
-        self.export_btn = QPushButton("Copy JSON to Clipboard")
-        self.apply_btn = QPushButton("Apply to repository")
-        self.start_over_btn = QPushButton("Start Over")
-        self.exit_btn = QPushButton("Exit")
-        self.exit_btn.setObjectName("btn_exit_review")
-        btns.addWidget(self.back_btn)
-        btns.addStretch(1)
-        btns.addWidget(self.diff_btn)
-        btns.addWidget(self.export_btn)
-        btns.addWidget(self.apply_btn)
-        btns.addWidget(self.start_over_btn)
-        btns.addWidget(self.exit_btn)
-        layout.addLayout(btns)
-
-
-class MetadataMainWindow(QMainWindow):
-    def __init__(self) -> None:
-        super().__init__()
-        self.setWindowTitle("Spinorama Metadata Manager (Qt)")
-        self.resize(1000, 700)
-        # Set a window icon if available
-        try:
-            icon_path = os.path.join(ICONS_DIR, "3d3a.png")
-            if os.path.exists(icon_path):
-                self.setWindowIcon(QIcon(icon_path))
-        except Exception:
-            pass
-
-        self.stack = QStackedWidget()
-        self.page_select = SelectSpeakerPage()
-        self.page_edit = EditMetadataPage()
-        self.page_review = ReviewExportPage()
-        self.stack.addWidget(self.page_select)
-        self.stack.addWidget(self.page_edit)
-        self.stack.addWidget(self.page_review)
-        self.setCentralWidget(self.stack)
-
-        # Menus (theme toggle)
-        self._init_menu()
-
-        # Wire navigation
-        self.page_select.next_btn.clicked.connect(self._to_edit)  # type: ignore[arg-type]
-        self.page_edit.back_btn.clicked.connect(self._to_select)  # type: ignore[arg-type]
-        self.page_edit.next_btn.clicked.connect(self._to_review)  # type: ignore[arg-type]
-        self.page_review.back_btn.clicked.connect(self._back_to_edit)  # type: ignore[arg-type]
-        self.page_review.export_btn.clicked.connect(self._copy_export)  # type: ignore[arg-type]
-        self.page_review.diff_btn.clicked.connect(self._show_diff)  # type: ignore[arg-type]
-        self.page_review.apply_btn.clicked.connect(self._apply_merge)  # type: ignore[arg-type]
-        self.page_review.exit_btn.clicked.connect(self.close)  # type: ignore[arg-type]
-        # Wire search functionality
-        self.page_select.speakers_search.textChanged.connect(self._filter_speakers)  # type: ignore[arg-type]
-        self.page_edit.add_meas_btn.clicked.connect(self._add_measurement_panel)  # type: ignore[arg-type]
-        self.page_review.start_over_btn.clicked.connect(self._start_over)  # type: ignore[arg-type]
-        # Picture choose handler
-        self.page_edit.choose_picture_btn.clicked.connect(self._choose_picture)  # type: ignore[arg-type]
-
-        # Load initial data
-        self._raw_loaded = None
-        self._baseline_export: dict[str, Any] | None = None
-        # Custom picture path if user picked one this session
+        # Model + per-session state. The controller calls ``set_current`` when
+        # entering this step; the page reads back from ``current`` (e.g. to
+        # decide which picture to show, or to store one chosen via the dialog).
+        self.current: Optional[SpeakerMetadata] = None
         self._custom_picture_path: str | None = None
-        self._load_initial()
 
-        # Initialize type/shape options and rules
-        self._init_type_shape_options()
-        self.page_edit.form_type_cb.currentTextChanged.connect(
-            lambda _: self._apply_type_rules_to_panels()
-        )  # type: ignore[arg-type]
-
-    # Data state
-    speakers: list[str] = []
-    brands: list[str] = []
-    current: Optional[SpeakerMetadata] = None
-
-    def _filter_speakers(self, search_text: str) -> None:
-        """Filter the speakers combobox based on search text."""
-        # Clear current items
-        self.page_select.speakers_cb.clear()
-
-        # If search text is empty, show all speakers
-        if not search_text.strip():
-            self.page_select.speakers_cb.addItems([""] + self.speakers)
-            return
-
-        # Filter speakers based on search text (case insensitive)
-        search_text = search_text.lower()
-        filtered_speakers = [speaker for speaker in self.speakers if search_text in speaker.lower()]
-
-        # Add filtered speakers to combobox
-        self.page_select.speakers_cb.addItems([""] + filtered_speakers)
-
-        # If there's only one match and it's an exact match, select it
-        if len(filtered_speakers) == 1 and filtered_speakers[0].lower() == search_text:
-            index = self.page_select.speakers_cb.findText(filtered_speakers[0])
-            if index >= 0:
-                self.page_select.speakers_cb.setCurrentIndex(index)
-
-    def _load_initial(self) -> None:
-        # Simple blocking load to keep it minimal; could be threaded.
-        self.speakers = api.get_speakers()
-        self.brands = api.get_brands()
-        self.page_select.speakers_cb.clear()
-        self.page_select.speakers_cb.addItems([""] + self.speakers)
-        self.page_select.brands_cb.clear()
-        self.page_select.brands_cb.addItems([""] + self.brands)
-
-    def _init_menu(self) -> None:
-        mb = self.menuBar()
-        view_menu = mb.addMenu("View")
-        theme_menu = view_menu.addMenu("Theme")
-
-        group = QActionGroup(self)
-        group.setExclusive(True)
-
-        def add_theme_action(text: str, value: Theme) -> QAction:
-            act = QAction(text, self)
-            act.setCheckable(True)
-            act.triggered.connect(lambda _checked=False, v=value: self._set_theme(v))  # type: ignore[arg-type]
-            group.addAction(act)
-            theme_menu.addAction(act)
-            return act
-
-        act_auto = add_theme_action("Auto", "auto")
-        act_dark = add_theme_action("Dark", "dark")
-        act_light = add_theme_action("Light (default)", "light")
-
-        current = read_theme_from_settings()
-        if current == "dark":
-            act_dark.setChecked(True)
-        elif current == "light":
-            act_light.setChecked(True)
-        else:
-            act_auto.setChecked(True)
-
-    def _set_theme(self, theme: Theme) -> None:
-        # Persist and apply immediately
-        write_theme_to_settings(theme)
-        app = cast(QApplication, QApplication.instance())
-        if app is not None:
-            apply_app_style(app, theme)
-
-    # Navigation slots
-    def _to_select(self) -> None:
-        self.stack.setCurrentWidget(self.page_select)
-
-    def _back_to_edit(self) -> None:
-        # From Step 3 back to Step 2 without reloading/asking selection again
-        # Preserve the current context and edits already present in the form
-        self.stack.setCurrentWidget(self.page_edit)
-
-    def _to_edit(self) -> None:
-        # Decide existing vs new
-        # Reset any custom picture path when entering edit for a fresh context
+    def set_current(self, model: Optional[SpeakerMetadata]) -> None:
+        """Bind a speaker metadata model to the page (called on entry)."""
+        self.current = model
         self._custom_picture_path = None
-        if self.page_select.rb_existing.isChecked():
-            name = self.page_select.speakers_cb.currentText().strip()
-            if not name:
-                QMessageBox.warning(self, "Missing selection", "Please select a speaker.")
-                return
-            data = api.get_speaker_metadata(name)
-            if not data:
-                QMessageBox.critical(self, "Load failed", f"Failed to load metadata for '{name}'.")
-                return
-            data = SpeakerMetadata.convert_legacy_reviews(data)
-            # Keep a copy of the raw dict to allow richer prefill (e.g., Specifications.SPL)
-            self._raw_loaded = data
-            self.current = SpeakerMetadata(**data)
-            # Establish baseline (pruned) for diff in review
-            try:
-                self._baseline_export = export_speaker_metadata(SpeakerMetadata(**data))
-            except Exception:
-                self._baseline_export = None
-        else:
-            brand = (
-                self.page_select.brands_cb.currentText().strip()
-                or self.page_select.new_brand.text().strip()
-            )
-            model = self.page_select.new_speaker_model.text().strip()
-            if not brand or not model:
-                QMessageBox.warning(self, "Missing fields", "Please provide both brand and model.")
-                return
-            self.current = SpeakerMetadata(brand=brand, model=model)
-            self._baseline_export = None
 
-        self._populate_form()
-        self.stack.setCurrentWidget(self.page_edit)
+    # ------------------------------------------------------------------
+    # Page-internal widget helpers (used by the controller and by the
+    # form-collection routines on the main window).
+    # ------------------------------------------------------------------
 
-    def _to_review(self) -> None:
-        # Collect form data to current model
-        if not self._collect_form():
-            return
-        # Summarize and go to review
-        import json
-
-        if not self.current:
-            return
-        # Build pruned export JSON so empty fields/blocks are omitted
-        export_dict = export_speaker_metadata(self.current)
-        self.page_review.summary.setPlainText(json.dumps(export_dict, indent=2, sort_keys=True))
-        # Toggle diff button: show only for existing speakers when there are changes
-        show_diff = False
-        if isinstance(self._baseline_export, dict):
-            try:
-                show_diff = self._baseline_export != export_dict
-            except Exception:
-                show_diff = True
-        self.page_review.diff_btn.setVisible(show_diff)
-        self.stack.setCurrentWidget(self.page_review)
-
-    def _init_type_shape_options(self) -> None:
-        # Restrict type strictly to two choices: passive or active
+    def init_type_shape_options(self) -> None:
+        """Populate the Type/Shape combos with the allowed values."""
         types = ["passive", "active"]
-        # Keep shapes list as before (no empty entry)
         try:
             from datas import SpeakerShape  # type: ignore
 
@@ -530,19 +347,17 @@ class MetadataMainWindow(QMainWindow):
                 "toursound",
                 "cinema",
             ]
-        p = self.page_edit
-        p.form_type_cb.clear()
-        p.form_type_cb.addItems(types)
-        p.form_shape_cb.clear()
+        self.form_type_cb.clear()
+        self.form_type_cb.addItems(types)
+        self.form_shape_cb.clear()
         # No open choice for shape -> no empty entry
-        p.form_shape_cb.addItems(shapes)
+        self.form_shape_cb.addItems(shapes)
 
-    def _apply_type_rules_to_panels(self) -> None:
-        # When type == active, gray out sensitivity and impedance in all measurement panels
-        p = self.page_edit
-        is_active = p.form_type_cb.currentText().strip().lower() == "active"
-        for i in range(p.measurements_tabs.count()):
-            panel = p.measurements_tabs.widget(i)
+    def apply_type_rules_to_panels(self) -> None:
+        """Disable per-measurement sensitivity/impedance when type is ``active``."""
+        is_active = self.form_type_cb.currentText().strip().lower() == "active"
+        for i in range(self.measurements_tabs.count()):
+            panel = self.measurements_tabs.widget(i)
             sp_sens: QLineEdit | None = panel.findChild(QLineEdit, "sp_sens")  # type: ignore[assignment]
             sp_imp: QLineEdit | None = panel.findChild(QLineEdit, "sp_imp")  # type: ignore[assignment]
             if sp_sens is not None:
@@ -550,363 +365,38 @@ class MetadataMainWindow(QMainWindow):
             if sp_imp is not None:
                 sp_imp.setDisabled(is_active)
 
-    def _format_changed_set_quality(self, fmt: str, quality_cb: QComboBox) -> None:
-        # When format == klippel, quality is set to high
+    def format_changed_set_quality(self, fmt: str, quality_cb: QComboBox) -> None:
+        """Klippel measurements are always ``high`` quality — auto-set it."""
         if fmt.strip().lower() == "klippel":
             idx = quality_cb.findText("high")
             if idx >= 0:
                 quality_cb.setCurrentIndex(idx)
 
-    def _collect_current_measurement_keys(self) -> list[str]:
-        p = self.page_edit
+    def collect_current_measurement_keys(self) -> list[str]:
+        """Return the non-empty key strings from every measurement-panel tab."""
         keys: list[str] = []
-        for i in range(p.measurements_tabs.count()):
-            panel = p.measurements_tabs.widget(i)
+        for i in range(self.measurements_tabs.count()):
+            panel = self.measurements_tabs.widget(i)
             le: QLineEdit | None = panel.findChild(QLineEdit, "meas_key")  # type: ignore[assignment]
             key = le.text().strip() if le else ""
             if key:
                 keys.append(key)
         return keys
 
-    def _sync_default_measurements(self) -> None:
-        # Update default measurement combo with current keys, preserving selection when possible
-        p = self.page_edit
-        keys = self._collect_current_measurement_keys()
-        current = p.default_meas_cb.currentText()
-        p.default_meas_cb.blockSignals(True)
-        p.default_meas_cb.clear()
-        p.default_meas_cb.addItems([""] + keys)
+    def sync_default_measurements(self) -> None:
+        """Refresh the ``default measurement`` combo from current panel keys."""
+        keys = self.collect_current_measurement_keys()
+        current = self.default_meas_cb.currentText()
+        self.default_meas_cb.blockSignals(True)
+        self.default_meas_cb.clear()
+        self.default_meas_cb.addItems([""] + keys)
         if current in keys:
-            idx = p.default_meas_cb.findText(current)
+            idx = self.default_meas_cb.findText(current)
             if idx >= 0:
-                p.default_meas_cb.setCurrentIndex(idx)
-        p.default_meas_cb.blockSignals(False)
+                self.default_meas_cb.setCurrentIndex(idx)
+        self.default_meas_cb.blockSignals(False)
 
-    def _copy_export(self) -> None:
-        # Copy pruned JSON to clipboard
-        import json
-
-        if not self.current:
-            return
-        data = export_speaker_metadata(self.current)
-        QApplication.clipboard().setText(json.dumps(data, indent=2, sort_keys=True))
-        QMessageBox.information(self, "Copied", "Metadata JSON copied to clipboard.")
-
-    def _apply_merge(self) -> None:
-        # Apply current export into datas/metadata_*.py via merger
-        try:
-            if not self.current:
-                QMessageBox.warning(self, "No data", "No current speaker to apply.")
-                return
-            # Preflight: ensure repo is on 'develop' and up-to-date before writing any file
-            ok_repo, msg_repo = preflight_repo(required_branch="develop")
-            if not ok_repo:
-                QMessageBox.warning(
-                    self,
-                    "Repository not ready",
-                    f"Cannot apply changes because repository is not ready:\n{msg_repo}",
-                )
-                return
-            # Ensure form is collected so Step 2 changes are included if user navigated back
-            self._collect_form()
-            export_dict = export_speaker_metadata(self.current)
-            file_path, key = apply_merge(export_dict)
-            # Reload in-memory DB and refresh step 1 lists
-            try:
-                api.reload_metadata()  # type: ignore[attr-defined]
-                self._load_initial()
-            except Exception:
-                pass
-            # Attempt to create a PR with metadata and picture
-            changed: list[str] = [file_path]
-            try:
-                pic_path = cast(str, getattr(self.current, "picture", "") or "")
-                if pic_path and os.path.isfile(pic_path):
-                    changed.append(pic_path)
-            except Exception:
-                pass
-
-            ok, msg = create_metadata_pr(changed, key)
-            if ok:
-                QMessageBox.information(
-                    self,
-                    "Applied & Git actions",
-                    f"Merged entry for '{key}'.\n{msg}",
-                )
-            else:
-                QMessageBox.warning(
-                    self,
-                    "Applied but PR not created",
-                    f"Merged entry for '{key}' into:\n{file_path}\n\nGit/PR step failed: {msg}",
-                )
-        except Exception as e:
-            QMessageBox.critical(self, "Apply failed", f"Failed to apply: {e}")
-
-    def _show_diff(self) -> None:
-        # Show unified diff between baseline (loaded) and current export
-        if not self.current or not isinstance(self._baseline_export, dict):
-            return
-        import json
-        import difflib
-
-        current = export_speaker_metadata(self.current)
-        baseline_text = json.dumps(self._baseline_export, indent=2, sort_keys=True)
-        current_text = json.dumps(current, indent=2, sort_keys=True)
-        diff_lines = difflib.unified_diff(
-            baseline_text.splitlines(),
-            current_text.splitlines(),
-            fromfile="original",
-            tofile="current",
-            lineterm="",
-        )
-        diff_text = "\n".join(diff_lines) or "No changes."
-
-        dlg = QDialog(self)
-        dlg.setWindowTitle("Metadata Diff")
-        vbox = QVBoxLayout(dlg)
-        te = QTextEdit()
-        te.setReadOnly(True)
-        te.setPlainText(diff_text)
-        vbox.addWidget(te)
-        btn_close = QPushButton("Close")
-        btn_close.clicked.connect(dlg.accept)  # type: ignore[arg-type]
-        vbox.addWidget(btn_close)
-        dlg.resize(800, 600)
-        dlg.exec()
-
-    # Form helpers
-    def _populate_form(self) -> None:
-        assert self.current is not None
-        c = self.current
-        p = self.page_edit
-        p.form_brand.setText(c.brand)
-        p.form_model.setText(c.model)
-        # Set type/shape combos
-        if c.type:
-            idx = p.form_type_cb.findText(c.type)
-            p.form_type_cb.setCurrentIndex(idx if idx >= 0 else 0)
-        else:
-            p.form_type_cb.setCurrentIndex(0)
-        if c.shape:
-            idxs = p.form_shape_cb.findText(c.shape)
-            p.form_shape_cb.setCurrentIndex(idxs if idxs >= 0 else 0)
-        else:
-            p.form_shape_cb.setCurrentIndex(0)
-        p.form_price.setText(c.price or "")
-        # Set amount combobox selection
-        if c.amount:
-            idxa = p.form_amount.findText(c.amount)
-            p.form_amount.setCurrentIndex(idxa if idxa >= 0 else 0)
-        else:
-            p.form_amount.setCurrentIndex(0)
-
-        # Clear existing measurement tabs
-        while p.measurements_tabs.count():
-            p.measurements_tabs.removeTab(0)
-
-        raw_meas_map = None
-        if isinstance(getattr(self, "_raw_loaded", None), dict):
-            raw_meas_map = self._raw_loaded.get("measurements")  # type: ignore[assignment]
-        if c.measurements:
-            for key, meas in c.measurements.items():
-                raw_meas = raw_meas_map.get(key) if isinstance(raw_meas_map, dict) else None
-                self._add_measurement_panel(key, raw_meas or meas)
-        else:
-            self._add_measurement_panel()
-
-        # Populate default measurement options
-        p.default_meas_cb.clear()
-        keys = list(c.measurements.keys())
-        p.default_meas_cb.addItems([""] + keys)
-        if c.default_measurement:
-            idx = p.default_meas_cb.findText(c.default_measurement)
-            if idx >= 0:
-                p.default_meas_cb.setCurrentIndex(idx)
-        # Apply rules after population
-        self._apply_type_rules_to_panels()
-        self._sync_default_measurements()
-        # Update picture when brand/model text changes
-        p.form_brand.textChanged.connect(lambda *_: self._update_speaker_picture())  # type: ignore[arg-type]
-        p.form_model.textChanged.connect(lambda *_: self._update_speaker_picture())  # type: ignore[arg-type]
-        self._update_speaker_picture()
-
-    def _collect_form(self) -> bool:
-        if not self.current:
-            return False
-        p = self.page_edit
-        c = self.current
-        c.brand = p.form_brand.text().strip()
-        c.model = p.form_model.text().strip()
-        c.type = p.form_type_cb.currentText().strip() or None
-        c.shape = p.form_shape_cb.currentText().strip() or None
-        c.price = p.form_price.text().strip() or None
-        c.amount = p.form_amount.currentText().strip() or None
-
-        # Collect measurements from panels (now from tabs)
-        new_meas: dict[str, Measurement] = {}
-        for i in range(p.measurements_tabs.count()):
-            panel = p.measurements_tabs.widget(i)
-            key_le: QLineEdit = panel.findChild(QLineEdit, "meas_key")  # type: ignore[assignment]
-            origin_le: QLineEdit = panel.findChild(QLineEdit, "meas_origin")  # type: ignore[assignment]
-            format_cb: QComboBox = panel.findChild(QComboBox, "meas_format")  # type: ignore[assignment]
-            quality_cb: QComboBox = panel.findChild(QComboBox, "meas_quality")  # type: ignore[assignment]
-            symmetry_cb: QComboBox = panel.findChild(QComboBox, "meas_symmetry")  # type: ignore[assignment]
-            # Review published date
-            review_date: QDateEdit = panel.findChild(QDateEdit, "meas_review_date")  # type: ignore[assignment]
-            # Data Acquisition fields
-            # Via may be QComboBox (editable) or QLineEdit depending on version
-            da_via_le: QLineEdit | None = panel.findChild(QLineEdit, "da_via")  # type: ignore[assignment]
-            da_via_cb: QComboBox | None = panel.findChild(QComboBox, "da_via")  # type: ignore[assignment]
-            da_distance: QLineEdit = panel.findChild(QLineEdit, "da_distance")  # type: ignore[assignment]
-            da_signal: QLineEdit = panel.findChild(QLineEdit, "da_signal")  # type: ignore[assignment]
-            da_resolution: QLineEdit = panel.findChild(QLineEdit, "da_resolution")  # type: ignore[assignment]
-            da_min: QLineEdit = panel.findChild(QLineEdit, "da_min")  # type: ignore[assignment]
-            da_max: QLineEdit = panel.findChild(QLineEdit, "da_max")  # type: ignore[assignment]
-            da_air: QCheckBox = panel.findChild(QCheckBox, "da_air")  # type: ignore[assignment]
-            da_notes: QTextEdit = panel.findChild(QTextEdit, "da_notes")  # type: ignore[assignment]
-            # Extras
-            ex_equed: QCheckBox = panel.findChild(QCheckBox, "ex_equed")  # type: ignore[assignment]
-            ex_penalty: QLineEdit = panel.findChild(QLineEdit, "ex_penalty")  # type: ignore[assignment]
-            # Specifications
-            sp_sens: QLineEdit = panel.findChild(QLineEdit, "sp_sens")  # type: ignore[assignment]
-            sp_imp: QLineEdit = panel.findChild(QLineEdit, "sp_imp")  # type: ignore[assignment]
-            sp_weight: QLineEdit = panel.findChild(QLineEdit, "sp_weight")  # type: ignore[assignment]
-            sp_disp_h: QLineEdit = panel.findChild(QLineEdit, "sp_disp_h")  # type: ignore[assignment]
-            sp_disp_v: QLineEdit = panel.findChild(QLineEdit, "sp_disp_v")  # type: ignore[assignment]
-            sp_h: QLineEdit = panel.findChild(QLineEdit, "sp_h")  # type: ignore[assignment]
-            sp_w: QLineEdit = panel.findChild(QLineEdit, "sp_w")  # type: ignore[assignment]
-            sp_d: QLineEdit = panel.findChild(QLineEdit, "sp_d")  # type: ignore[assignment]
-            sp_spl_peak: QLineEdit = panel.findChild(QLineEdit, "sp_spl_peak")  # type: ignore[assignment]
-            sp_spl_long: QLineEdit = panel.findChild(QLineEdit, "sp_spl_long")  # type: ignore[assignment]
-            sp_spl_max: QLineEdit = panel.findChild(QLineEdit, "sp_spl_max")  # type: ignore[assignment]
-            sp_spl_mn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_m_noise")  # type: ignore[assignment]
-            sp_spl_bn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_b_noise")  # type: ignore[assignment]
-            sp_spl_pn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_pink_noise")  # type: ignore[assignment]
-            # Reviews
-            reviews: dict[str, str] = {}
-            for row in panel.findChildren(QWidget, "review_row"):
-                k: QLineEdit = row.findChild(QLineEdit, "review_key")  # type: ignore[assignment]
-                u: QLineEdit = row.findChild(QLineEdit, "review_url")  # type: ignore[assignment]
-                key = k.text().strip() if k else ""
-                val = u.text().strip() if u else ""
-                if key and val:
-                    reviews[key] = val
-
-            key = key_le.text().strip() if key_le else ""
-            if not key:
-                QMessageBox.warning(
-                    self, "Missing measurement key", "Each measurement requires a key."
-                )
-                return False
-
-            # helper to parse float
-            def pf(x: QLineEdit | None) -> float | None:
-                if x is None:
-                    return None
-                s = x.text().strip()
-                if not s:
-                    return None
-                try:
-                    return float(s)
-                except Exception:
-                    return None
-
-            review_published = None
-            if (
-                review_date is not None
-                and bool(review_date.property("has_value"))
-                and review_date.date().isValid()
-            ):
-                y = review_date.date().year()
-                m = review_date.date().month()
-                d = review_date.date().day()
-                review_published = f"{y:04d}{m:02d}{d:02d}"
-
-            # Helper to get text from via widget
-            def gtxt() -> str | None:
-                if da_via_cb is not None:
-                    return da_via_cb.currentText().strip() or None
-                if da_via_le is not None:
-                    return da_via_le.text().strip() or None
-                return None
-
-            # Build DA and extras first so we can drop blocks that are fully empty
-            _da_block = {
-                "via": gtxt(),
-                "distance": pf(da_distance),
-                "signal": da_signal.text().strip() if da_signal else None,
-                "resolution": pf(da_resolution),
-                "min_valid_freq": pf(da_min),
-                "max_valid_freq": pf(da_max),
-                "air_absorbtion": bool(da_air.isChecked()) if da_air else None,
-                "notes": da_notes.toPlainText().strip() if da_notes else None,
-            }
-
-            # Consider block empty when all values are None or False
-            def _block_empty(d: dict[str, object | None]) -> bool:
-                for _vk, _vv in d.items():
-                    if _vv is None:
-                        continue
-                    if isinstance(_vv, bool) and _vv is False:
-                        continue
-                    if isinstance(_vv, str) and _vv.strip() == "":
-                        continue
-                    return False
-                return True
-
-            da_block = None if _block_empty(_da_block) else _da_block
-
-            _ex_block = {
-                "is_equed": bool(ex_equed.isChecked()) if ex_equed else None,
-                "score_penalty": pf(ex_penalty),
-            }
-            ex_block = None if _block_empty(_ex_block) else _ex_block
-
-            m_dict = {
-                "origin": origin_le.text().strip() if origin_le else None,
-                "format": format_cb.currentText() if format_cb else None,
-                "quality": quality_cb.currentText() if quality_cb else None,
-                "symmetry": symmetry_cb.currentText() if symmetry_cb else None,
-                "reviews": reviews,
-                "review_published": review_published,
-                "data_acquisition": da_block,
-                "extras": ex_block,
-                "specifications": {
-                    "sensitivity": pf(sp_sens),
-                    "impedance": pf(sp_imp),
-                    "weight": pf(sp_weight),
-                    "size": {
-                        "height": pf(sp_h),
-                        "width": pf(sp_w),
-                        "depth": pf(sp_d),
-                    },
-                    # Keep flat fields for backward compatibility
-                    "spl_peak": pf(sp_spl_peak),
-                    "spl_long_term": pf(sp_spl_long),
-                    # Expanded
-                    "dispersion": {
-                        "horizontal": pf(sp_disp_h),
-                        "vertical": pf(sp_disp_v),
-                    },
-                    # Use alias 'SPL' expected by datas.Specifications
-                    "SPL": {
-                        "peak": pf(sp_spl_peak),
-                        "continuous": pf(sp_spl_long),
-                        "max": pf(sp_spl_max),
-                        "m_noise": pf(sp_spl_mn),
-                        "b_noise": pf(sp_spl_bn),
-                        "pink_noise": pf(sp_spl_pn),
-                    },
-                },
-            }
-            new_meas[key] = Measurement.model_validate(m_dict)
-
-        c.measurements = new_meas
-        # Default measurement
-        c.default_measurement = p.default_meas_cb.currentText().strip() or None
-        return True
-
-    def _add_measurement_panel(self, key: str | None = None, meas: object | None = None) -> None:
+    def add_measurement_panel(self, key: str | None = None, meas: object | None = None) -> None:
         # Build a small panel for measurement editing (to be placed in a tab)
         panel = QWidget()
         lay = QVBoxLayout(panel)
@@ -976,7 +466,7 @@ class MetadataMainWindow(QMainWindow):
                 cb_quality.setCurrentIndex(idx_high)
         # Auto: when format == klippel, set quality to high
         cb_format.currentTextChanged.connect(
-            lambda txt: self._format_changed_set_quality(txt, cb_quality)
+            lambda txt: self.format_changed_set_quality(txt, cb_quality)
         )  # type: ignore[arg-type]
         row2.addWidget(QLabel("Quality:"))
         row2.addWidget(cb_quality)
@@ -1420,19 +910,19 @@ class MetadataMainWindow(QMainWindow):
         # Remove panel
         def _remove_panel() -> None:
             # Remove the tab containing this panel
-            tabs = self.page_edit.measurements_tabs
+            tabs = self.measurements_tabs
             for i in range(tabs.count()):
                 if tabs.widget(i) is panel:
                     tabs.removeTab(i)
                     break
-            self._sync_default_measurements()
+            self.sync_default_measurements()
 
         btn_remove.clicked.connect(_remove_panel)  # type: ignore[arg-type]
 
         # Keep default measurement options and tab title in sync with key
         def _key_changed() -> None:
-            self._sync_default_measurements()
-            tabs = self.page_edit.measurements_tabs
+            self.sync_default_measurements()
+            tabs = self.measurements_tabs
             for i in range(tabs.count()):
                 if tabs.widget(i) is panel:
                     tabs.setTabText(i, le_key.text().strip() or "(unnamed)")
@@ -1441,125 +931,601 @@ class MetadataMainWindow(QMainWindow):
         le_key.textChanged.connect(_key_changed)  # type: ignore[arg-type]
 
         # Add as a new tab
-        self.page_edit.measurements_tabs.addTab(panel, (key or "").strip() or "(unnamed)")
+        self.measurements_tabs.addTab(panel, (key or "").strip() or "(unnamed)")
         # After adding a panel, re-apply rules and sync default selector
-        self._apply_type_rules_to_panels()
-        self._sync_default_measurements()
+        self.apply_type_rules_to_panels()
+        self.sync_default_measurements()
 
-    def _update_speaker_picture(self) -> None:
-        # Show custom picture if set; otherwise try datas/icons or datas/pictures using Brand Model
+    def update_picture(self) -> None:
+        """Refresh ``picture_label`` from the model's picture or a brand+model lookup."""
         if not self.current:
             return
         brand = (self.current.brand or "").strip()
         model = (self.current.model or "").strip()
-        # If model has a picture path set, prefer it
-        if getattr(self.current, "picture", None):
-            pic_path = cast(str, self.current.picture)
-            if os.path.isfile(pic_path):
-                pix = QPixmap(pic_path)
-                if not pix.isNull():
-                    scaled = pix.scaled(
-                        self.page_edit.picture_label.size(),
-                        Qt.AspectRatioMode.KeepAspectRatio,
-                        Qt.TransformationMode.SmoothTransformation,
-                    )
-                    self.page_edit.picture_label.setPixmap(scaled)
-                    self.page_edit.picture_label.setText("")
-                    return
-        # Prefer custom picture if set and exists
-        if self._custom_picture_path and os.path.isfile(self._custom_picture_path):
-            pix = QPixmap(self._custom_picture_path)
-            if not pix.isNull():
-                scaled = pix.scaled(
-                    self.page_edit.picture_label.size(),
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-                self.page_edit.picture_label.setPixmap(scaled)
-                self.page_edit.picture_label.setText("")
-                return
-        if not brand or not model:
-            self.page_edit.picture_label.setText("No image")
-            # Use an empty QPixmap instead of None to avoid TypeError
-            self.page_edit.picture_label.setPixmap(QPixmap())
-            return
-        base_names = [f"{brand} {model}", f"{brand}_{model}"]
-        search_dirs = [ICONS_DIR, PICTURES_DIR]
-        exts = [".png", ".jpg", ".jpeg", ".webp"]
-        found = None
-        for d in search_dirs:
-            for bn in base_names:
-                for ext in exts:
-                    cand = os.path.join(d, bn + ext)
-                    if os.path.exists(cand):
-                        found = cand
-                        break
-                if found:
-                    break
-            if found:
-                break
-        if found:
-            pix = QPixmap(found)
-            if not pix.isNull():
-                scaled = pix.scaled(
-                    self.page_edit.picture_label.size(),
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-                self.page_edit.picture_label.setPixmap(scaled)
-                self.page_edit.picture_label.setText("")
-                return
-        self.page_edit.picture_label.setText("No image")
-        # Use an empty QPixmap instead of None to avoid TypeError
-        self.page_edit.picture_label.setPixmap(QPixmap())
 
-    def _choose_picture(self) -> None:
-        # Allow user to select an image and copy it into datas/icons as "Brand Model.ext"
+        def _try_set(path: str) -> bool:
+            if not path or not os.path.isfile(path):
+                return False
+            pix = QPixmap(path)
+            if pix.isNull():
+                return False
+            scaled = pix.scaled(
+                self.picture_label.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+            self.picture_label.setPixmap(scaled)
+            self.picture_label.setText("")
+            return True
+
+        # Prefer model.picture, then the in-session custom path, then a
+        # convention-based lookup in datas/icons + datas/pictures.
+        explicit = getattr(self.current, "picture", None)
+        if isinstance(explicit, str) and _try_set(explicit):
+            return
+        if self._custom_picture_path and _try_set(self._custom_picture_path):
+            return
+        if brand and model:
+            base_names = [f"{brand} {model}", f"{brand}_{model}"]
+            for d in (ICONS_DIR, PICTURES_DIR):
+                for bn in base_names:
+                    for ext in (".png", ".jpg", ".jpeg", ".webp"):
+                        if _try_set(os.path.join(d, bn + ext)):
+                            return
+
+        self.picture_label.setText("No image")
+        # Empty QPixmap (not None) avoids TypeError downstream.
+        self.picture_label.setPixmap(QPixmap())
+
+    def choose_picture(self) -> None:
+        """Open a file dialog; copy the chosen image into ``PICTURES_DIR``."""
         if not self.current:
             return
-        brand = (self.page_edit.form_brand.text() or "").strip()
-        model = (self.page_edit.form_model.text() or "").strip()
+        brand = (self.form_brand.text() or "").strip()
+        model = (self.form_model.text() or "").strip()
         if not brand or not model:
             QMessageBox.warning(
-                self, "Missing fields", "Please fill Brand and Model before choosing a picture."
+                self,
+                "Missing fields",
+                "Please fill Brand and Model before choosing a picture.",
             )
             return
         from PySide6.QtWidgets import QFileDialog  # type: ignore[reportMissingImports]
-        import os
-        import shutil
 
-        # Pick an image file
         fname, _ = QFileDialog.getOpenFileName(
             self, "Choose Picture", "", "Images (*.png *.jpg *.jpeg *.webp)"
         )
         if not fname:
             return
-        # Destination directory and filename
-        dest_dir = PICTURES_DIR
-        os.makedirs(dest_dir, exist_ok=True)
 
-        # Sanitize name
+        os.makedirs(PICTURES_DIR, exist_ok=True)
+
         def sanitize(x: str) -> str:
             return " ".join(x.split())
 
         base = f"{sanitize(brand)} {sanitize(model)}"
         _, ext = os.path.splitext(fname)
         ext = (ext or ".png").lower()
-        dest_path = os.path.join(dest_dir, base + ext)
+        dest_path = os.path.join(PICTURES_DIR, base + ext)
         try:
             shutil.copy2(fname, dest_path)
-            self._custom_picture_path = dest_path
-            if self.current:
-                self.current.picture = dest_path
-            self._update_speaker_picture()
         except Exception as e:
             QMessageBox.critical(self, "Copy failed", f"Failed to copy image: {e}")
+            return
+
+        self._custom_picture_path = dest_path
+        self.current.picture = dest_path
+        self.update_picture()
+
+    def populate_form(self, raw_loaded: dict[str, Any] | None = None) -> None:
+        if self.current is None:
+            message = "Cannot populate form without a current speaker"
+            raise RuntimeError(message)
+        c = self.current
+        p = self
+        p.form_brand.setText(c.brand)
+        p.form_model.setText(c.model)
+        # Set type/shape combos
+        if c.type:
+            idx = p.form_type_cb.findText(c.type)
+            p.form_type_cb.setCurrentIndex(idx if idx >= 0 else 0)
+        else:
+            p.form_type_cb.setCurrentIndex(0)
+        if c.shape:
+            idxs = p.form_shape_cb.findText(c.shape)
+            p.form_shape_cb.setCurrentIndex(idxs if idxs >= 0 else 0)
+        else:
+            p.form_shape_cb.setCurrentIndex(0)
+        p.form_price.setText(c.price or "")
+        # Set amount combobox selection
+        if c.amount:
+            idxa = p.form_amount.findText(c.amount)
+            p.form_amount.setCurrentIndex(idxa if idxa >= 0 else 0)
+        else:
+            p.form_amount.setCurrentIndex(0)
+
+        # Clear existing measurement tabs
+        while p.measurements_tabs.count():
+            p.measurements_tabs.removeTab(0)
+
+        raw_meas_map = None
+        if isinstance(raw_loaded, dict):
+            raw_meas_map = raw_loaded.get("measurements")  # type: ignore[assignment]
+        if c.measurements:
+            for key, meas in c.measurements.items():
+                raw_meas = raw_meas_map.get(key) if isinstance(raw_meas_map, dict) else None
+                self.add_measurement_panel(key, raw_meas or meas)
+        else:
+            self.add_measurement_panel()
+
+        # Populate default measurement options
+        p.default_meas_cb.clear()
+        keys = list(c.measurements.keys())
+        p.default_meas_cb.addItems([""] + keys)
+        if c.default_measurement:
+            idx = p.default_meas_cb.findText(c.default_measurement)
+            if idx >= 0:
+                p.default_meas_cb.setCurrentIndex(idx)
+        # Apply rules after population
+        self.apply_type_rules_to_panels()
+        self.sync_default_measurements()
+        # Update picture when brand/model text changes
+        p.form_brand.textChanged.connect(lambda *_: p.update_picture())  # type: ignore[arg-type]
+        p.form_model.textChanged.connect(lambda *_: p.update_picture())  # type: ignore[arg-type]
+        p.update_picture()
+
+    def collect_form(self) -> bool:
+        if not self.current:
+            return False
+        p = self
+        c = self.current
+        c.brand = p.form_brand.text().strip()
+        c.model = p.form_model.text().strip()
+        c.type = p.form_type_cb.currentText().strip() or None
+        c.shape = p.form_shape_cb.currentText().strip() or None
+        c.price = p.form_price.text().strip() or None
+        c.amount = p.form_amount.currentText().strip() or None
+
+        # Collect measurements from panels (now from tabs)
+        new_meas: dict[str, Measurement] = {}
+        for i in range(p.measurements_tabs.count()):
+            panel = p.measurements_tabs.widget(i)
+            key_le: QLineEdit = panel.findChild(QLineEdit, "meas_key")  # type: ignore[assignment]
+            origin_le: QLineEdit = panel.findChild(QLineEdit, "meas_origin")  # type: ignore[assignment]
+            format_cb: QComboBox = panel.findChild(QComboBox, "meas_format")  # type: ignore[assignment]
+            quality_cb: QComboBox = panel.findChild(QComboBox, "meas_quality")  # type: ignore[assignment]
+            symmetry_cb: QComboBox = panel.findChild(QComboBox, "meas_symmetry")  # type: ignore[assignment]
+            # Review published date
+            review_date: QDateEdit = panel.findChild(QDateEdit, "meas_review_date")  # type: ignore[assignment]
+            # Data Acquisition fields
+            # Via may be QComboBox (editable) or QLineEdit depending on version
+            da_via_le: QLineEdit | None = panel.findChild(QLineEdit, "da_via")  # type: ignore[assignment]
+            da_via_cb: QComboBox | None = panel.findChild(QComboBox, "da_via")  # type: ignore[assignment]
+            da_distance: QLineEdit = panel.findChild(QLineEdit, "da_distance")  # type: ignore[assignment]
+            da_signal: QLineEdit = panel.findChild(QLineEdit, "da_signal")  # type: ignore[assignment]
+            da_resolution: QLineEdit = panel.findChild(QLineEdit, "da_resolution")  # type: ignore[assignment]
+            da_min: QLineEdit = panel.findChild(QLineEdit, "da_min")  # type: ignore[assignment]
+            da_max: QLineEdit = panel.findChild(QLineEdit, "da_max")  # type: ignore[assignment]
+            da_air: QCheckBox = panel.findChild(QCheckBox, "da_air")  # type: ignore[assignment]
+            da_notes: QTextEdit = panel.findChild(QTextEdit, "da_notes")  # type: ignore[assignment]
+            # Extras
+            ex_equed: QCheckBox = panel.findChild(QCheckBox, "ex_equed")  # type: ignore[assignment]
+            ex_penalty: QLineEdit = panel.findChild(QLineEdit, "ex_penalty")  # type: ignore[assignment]
+            # Specifications
+            sp_sens: QLineEdit = panel.findChild(QLineEdit, "sp_sens")  # type: ignore[assignment]
+            sp_imp: QLineEdit = panel.findChild(QLineEdit, "sp_imp")  # type: ignore[assignment]
+            sp_weight: QLineEdit = panel.findChild(QLineEdit, "sp_weight")  # type: ignore[assignment]
+            sp_disp_h: QLineEdit = panel.findChild(QLineEdit, "sp_disp_h")  # type: ignore[assignment]
+            sp_disp_v: QLineEdit = panel.findChild(QLineEdit, "sp_disp_v")  # type: ignore[assignment]
+            sp_h: QLineEdit = panel.findChild(QLineEdit, "sp_h")  # type: ignore[assignment]
+            sp_w: QLineEdit = panel.findChild(QLineEdit, "sp_w")  # type: ignore[assignment]
+            sp_d: QLineEdit = panel.findChild(QLineEdit, "sp_d")  # type: ignore[assignment]
+            sp_spl_peak: QLineEdit = panel.findChild(QLineEdit, "sp_spl_peak")  # type: ignore[assignment]
+            sp_spl_long: QLineEdit = panel.findChild(QLineEdit, "sp_spl_long")  # type: ignore[assignment]
+            sp_spl_max: QLineEdit = panel.findChild(QLineEdit, "sp_spl_max")  # type: ignore[assignment]
+            sp_spl_mn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_m_noise")  # type: ignore[assignment]
+            sp_spl_bn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_b_noise")  # type: ignore[assignment]
+            sp_spl_pn: QLineEdit = panel.findChild(QLineEdit, "sp_spl_pink_noise")  # type: ignore[assignment]
+            # Reviews
+            reviews: dict[str, str] = {}
+            for row in panel.findChildren(QWidget, "review_row"):
+                k: QLineEdit = row.findChild(QLineEdit, "review_key")  # type: ignore[assignment]
+                u: QLineEdit = row.findChild(QLineEdit, "review_url")  # type: ignore[assignment]
+                key = k.text().strip() if k else ""
+                val = u.text().strip() if u else ""
+                if key and val:
+                    reviews[key] = val
+
+            key = key_le.text().strip() if key_le else ""
+            if not key:
+                QMessageBox.warning(
+                    self, "Missing measurement key", "Each measurement requires a key."
+                )
+                return False
+
+            # helper to parse float
+            def pf(x: QLineEdit | None) -> float | None:
+                if x is None:
+                    return None
+                s = x.text().strip()
+                if not s:
+                    return None
+                try:
+                    return float(s)
+                except Exception:
+                    return None
+
+            review_published = None
+            if (
+                review_date is not None
+                and bool(review_date.property("has_value"))
+                and review_date.date().isValid()
+            ):
+                y = review_date.date().year()
+                m = review_date.date().month()
+                d = review_date.date().day()
+                review_published = f"{y:04d}{m:02d}{d:02d}"
+
+            # Helper to get text from via widget
+            def gtxt() -> str | None:
+                if da_via_cb is not None:
+                    return da_via_cb.currentText().strip() or None
+                if da_via_le is not None:
+                    return da_via_le.text().strip() or None
+                return None
+
+            # Build DA and extras first so we can drop blocks that are fully empty
+            _da_block = {
+                "via": gtxt(),
+                "distance": pf(da_distance),
+                "signal": da_signal.text().strip() if da_signal else None,
+                "resolution": pf(da_resolution),
+                "min_valid_freq": pf(da_min),
+                "max_valid_freq": pf(da_max),
+                "air_absorbtion": bool(da_air.isChecked()) if da_air else None,
+                "notes": da_notes.toPlainText().strip() if da_notes else None,
+            }
+
+            # Consider block empty when all values are None or False
+            def _block_empty(d: dict[str, object | None]) -> bool:
+                for _vk, _vv in d.items():
+                    if _vv is None:
+                        continue
+                    if isinstance(_vv, bool) and _vv is False:
+                        continue
+                    if isinstance(_vv, str) and _vv.strip() == "":
+                        continue
+                    return False
+                return True
+
+            da_block = None if _block_empty(_da_block) else _da_block
+
+            _ex_block = {
+                "is_equed": bool(ex_equed.isChecked()) if ex_equed else None,
+                "score_penalty": pf(ex_penalty),
+            }
+            ex_block = None if _block_empty(_ex_block) else _ex_block
+
+            m_dict = {
+                "origin": origin_le.text().strip() if origin_le else None,
+                "format": format_cb.currentText() if format_cb else None,
+                "quality": quality_cb.currentText() if quality_cb else None,
+                "symmetry": symmetry_cb.currentText() if symmetry_cb else None,
+                "reviews": reviews,
+                "review_published": review_published,
+                "data_acquisition": da_block,
+                "extras": ex_block,
+                "specifications": {
+                    "sensitivity": pf(sp_sens),
+                    "impedance": pf(sp_imp),
+                    "weight": pf(sp_weight),
+                    "size": {
+                        "height": pf(sp_h),
+                        "width": pf(sp_w),
+                        "depth": pf(sp_d),
+                    },
+                    # Keep flat fields for backward compatibility
+                    "spl_peak": pf(sp_spl_peak),
+                    "spl_long_term": pf(sp_spl_long),
+                    # Expanded
+                    "dispersion": {
+                        "horizontal": pf(sp_disp_h),
+                        "vertical": pf(sp_disp_v),
+                    },
+                    # Use alias 'SPL' expected by datas.Specifications
+                    "SPL": {
+                        "peak": pf(sp_spl_peak),
+                        "continuous": pf(sp_spl_long),
+                        "max": pf(sp_spl_max),
+                        "m_noise": pf(sp_spl_mn),
+                        "b_noise": pf(sp_spl_bn),
+                        "pink_noise": pf(sp_spl_pn),
+                    },
+                },
+            }
+            new_meas[key] = Measurement.model_validate(m_dict)
+
+        c.measurements = new_meas
+        # Default measurement
+        c.default_measurement = p.default_meas_cb.currentText().strip() or None
+        return True
+
+
+class ReviewExportPage(QWidget):
+    def __init__(self, parent: Optional[QWidget] = None) -> None:
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        title = QLabel("Step 3: Review & Export")
+        title.setObjectName("pageTitle")
+        layout.addWidget(title)
+        self.summary = QTextEdit()
+        self.summary.setReadOnly(True)
+        layout.addWidget(self.summary)
+        btns = QHBoxLayout()
+        self.back_btn = QPushButton("Back")
+        self.back_btn.setObjectName("btn_back_review")
+        self.diff_btn = QPushButton("Show Diff")
+        self.diff_btn.setObjectName("btn_diff_review")
+        self.diff_btn.setVisible(False)
+        self.export_btn = QPushButton("Copy JSON to Clipboard")
+        self.apply_btn = QPushButton("Apply to repository")
+        self.start_over_btn = QPushButton("Start Over")
+        self.exit_btn = QPushButton("Exit")
+        self.exit_btn.setObjectName("btn_exit_review")
+        btns.addWidget(self.back_btn)
+        btns.addStretch(1)
+        btns.addWidget(self.diff_btn)
+        btns.addWidget(self.export_btn)
+        btns.addWidget(self.apply_btn)
+        btns.addWidget(self.start_over_btn)
+        btns.addWidget(self.exit_btn)
+        layout.addLayout(btns)
+
+
+class MetadataMainWindow(QMainWindow):
+    def __init__(self) -> None:
+        super().__init__()
+        self.setWindowTitle("Spinorama Metadata Manager (Qt)")
+        self.resize(1000, 700)
+        # Set a window icon if available
+        try:
+            icon_path = os.path.join(ICONS_DIR, "3d3a.png")
+            if os.path.exists(icon_path):
+                self.setWindowIcon(QIcon(icon_path))
+        except Exception:
+            pass
+
+        self.stack = QStackedWidget()
+        self.page_select = SelectSpeakerPage()
+        self.page_edit = EditMetadataPage()
+        self.page_review = ReviewExportPage()
+        self.stack.addWidget(self.page_select)
+        self.stack.addWidget(self.page_edit)
+        self.stack.addWidget(self.page_review)
+        self.setCentralWidget(self.stack)
+
+        # Menus (theme toggle)
+        install_theme_menu(self)
+
+        # Wire navigation
+        self.page_select.next_btn.clicked.connect(self._to_edit)  # type: ignore[arg-type]
+        self.page_edit.back_btn.clicked.connect(self._to_select)  # type: ignore[arg-type]
+        self.page_edit.next_btn.clicked.connect(self._to_review)  # type: ignore[arg-type]
+        self.page_review.back_btn.clicked.connect(self._back_to_edit)  # type: ignore[arg-type]
+        self.page_review.export_btn.clicked.connect(self._copy_export)  # type: ignore[arg-type]
+        self.page_review.diff_btn.clicked.connect(self._show_diff)  # type: ignore[arg-type]
+        self.page_review.apply_btn.clicked.connect(self._apply_merge)  # type: ignore[arg-type]
+        self.page_review.exit_btn.clicked.connect(self.close)  # type: ignore[arg-type]
+        # Wire search functionality (delegated to the page)
+        self.page_select.speakers_search.textChanged.connect(self.page_select.filter_speakers)  # type: ignore[arg-type]
+        self.page_edit.add_meas_btn.clicked.connect(self._add_measurement_panel)  # type: ignore[arg-type]
+        self.page_review.start_over_btn.clicked.connect(self._start_over)  # type: ignore[arg-type]
+        # Picture choose handler
+        self.page_edit.choose_picture_btn.clicked.connect(self.page_edit.choose_picture)  # type: ignore[arg-type]
+
+        # Load initial data. The page now owns its own picture/session state.
+        self._raw_loaded = None
+        self._baseline_export: dict[str, Any] | None = None
+        self._load_initial()
+
+        # Initialize type/shape options and rules
+        self.page_edit.init_type_shape_options()
+        self.page_edit.form_type_cb.currentTextChanged.connect(
+            lambda _: self.page_edit.apply_type_rules_to_panels()
+        )  # type: ignore[arg-type]
+
+    # Data state
+    speakers: list[str] = []
+    brands: list[str] = []
+    current: Optional[SpeakerMetadata] = None
+
+    def _load_initial(self) -> None:
+        # Simple blocking load to keep it minimal; could be threaded.
+        self.speakers = api.get_speakers()
+        self.brands = api.get_brands()
+        self.page_select.set_speakers(self.speakers)
+        self.page_select.set_brands(self.brands)
+
+    # Navigation slots
+    def _to_select(self) -> None:
+        self.stack.setCurrentWidget(self.page_select)
+
+    def _back_to_edit(self) -> None:
+        # From Step 3 back to Step 2 without reloading/asking selection again
+        # Preserve the current context and edits already present in the form
+        self.stack.setCurrentWidget(self.page_edit)
+
+    def _to_edit(self) -> None:
+        # Decide existing vs new
+        if self.page_select.rb_existing.isChecked():
+            name = self.page_select.speakers_cb.currentText().strip()
+            if not name:
+                QMessageBox.warning(self, "Missing selection", "Please select a speaker.")
+                return
+            data = api.get_speaker_metadata(name)
+            if not data:
+                QMessageBox.critical(self, "Load failed", f"Failed to load metadata for '{name}'.")
+                return
+            data = SpeakerMetadata.convert_legacy_reviews(data)
+            # Keep a copy of the raw dict to allow richer prefill (e.g., Specifications.SPL)
+            self._raw_loaded = data
+            self.current = SpeakerMetadata(**data)
+            # Establish baseline (pruned) for diff in review
+            try:
+                self._baseline_export = export_speaker_metadata(SpeakerMetadata(**data))
+            except Exception:
+                self._baseline_export = None
+        else:
+            brand = (
+                self.page_select.brands_cb.currentText().strip()
+                or self.page_select.new_brand.text().strip()
+            )
+            model = self.page_select.new_speaker_model.text().strip()
+            if not brand or not model:
+                QMessageBox.warning(self, "Missing fields", "Please provide both brand and model.")
+                return
+            self.current = SpeakerMetadata(brand=brand, model=model)
+            self._baseline_export = None
+
+        # Bind the model to the page (also resets any in-session custom picture).
+        self.page_edit.set_current(self.current)
+        self._populate_form()
+        self.stack.setCurrentWidget(self.page_edit)
+
+    def _to_review(self) -> None:
+        # Collect form data to current model
+        if not self._collect_form():
+            return
+        # Summarize and go to review
+        import json
+
+        if not self.current:
+            return
+        # Build pruned export JSON so empty fields/blocks are omitted
+        export_dict = export_speaker_metadata(self.current)
+        self.page_review.summary.setPlainText(json.dumps(export_dict, indent=2, sort_keys=True))
+        # Toggle diff button: show only for existing speakers when there are changes
+        show_diff = False
+        if isinstance(self._baseline_export, dict):
+            try:
+                show_diff = self._baseline_export != export_dict
+            except Exception:
+                show_diff = True
+        self.page_review.diff_btn.setVisible(show_diff)
+        self.stack.setCurrentWidget(self.page_review)
+
+    def _copy_export(self) -> None:
+        # Copy pruned JSON to clipboard
+        import json
+
+        if not self.current:
+            return
+        data = export_speaker_metadata(self.current)
+        QApplication.clipboard().setText(json.dumps(data, indent=2, sort_keys=True))
+        QMessageBox.information(self, "Copied", "Metadata JSON copied to clipboard.")
+
+    def _apply_merge(self) -> None:
+        # Apply current export into datas/metadata_*.py via merger
+        try:
+            if not self.current:
+                QMessageBox.warning(self, "No data", "No current speaker to apply.")
+                return
+            # Preflight: ensure repo is on 'develop' and up-to-date before writing any file
+            ok_repo, msg_repo = preflight_repo(required_branch="develop")
+            if not ok_repo:
+                QMessageBox.warning(
+                    self,
+                    "Repository not ready",
+                    f"Cannot apply changes because repository is not ready:\n{msg_repo}",
+                )
+                return
+            # Ensure form is collected so Step 2 changes are included if user navigated back
+            self._collect_form()
+            export_dict = export_speaker_metadata(self.current)
+            file_path, key = apply_merge(export_dict)
+            # Reload in-memory DB and refresh step 1 lists
+            try:
+                api.reload_metadata()  # type: ignore[attr-defined]
+                self._load_initial()
+            except Exception:
+                pass
+            # Attempt to create a PR with metadata and picture
+            changed: list[str] = [file_path]
+            try:
+                pic_path = cast(str, getattr(self.current, "picture", "") or "")
+                if pic_path and os.path.isfile(pic_path):
+                    changed.append(pic_path)
+            except Exception:
+                pass
+
+            ok, msg = create_metadata_pr(changed, key)
+            if ok:
+                QMessageBox.information(
+                    self,
+                    "Applied & Git actions",
+                    f"Merged entry for '{key}'.\n{msg}",
+                )
+            else:
+                QMessageBox.warning(
+                    self,
+                    "Applied but PR not created",
+                    f"Merged entry for '{key}' into:\n{file_path}\n\nGit/PR step failed: {msg}",
+                )
+        except Exception as e:
+            QMessageBox.critical(self, "Apply failed", f"Failed to apply: {e}")
+
+    def _show_diff(self) -> None:
+        # Show unified diff between baseline (loaded) and current export
+        if not self.current or not isinstance(self._baseline_export, dict):
+            return
+        import json
+        import difflib
+
+        current = export_speaker_metadata(self.current)
+        baseline_text = json.dumps(self._baseline_export, indent=2, sort_keys=True)
+        current_text = json.dumps(current, indent=2, sort_keys=True)
+        diff_lines = difflib.unified_diff(
+            baseline_text.splitlines(),
+            current_text.splitlines(),
+            fromfile="original",
+            tofile="current",
+            lineterm="",
+        )
+        diff_text = "\n".join(diff_lines) or "No changes."
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Metadata Diff")
+        vbox = QVBoxLayout(dlg)
+        te = QTextEdit()
+        te.setReadOnly(True)
+        te.setPlainText(diff_text)
+        vbox.addWidget(te)
+        btn_close = QPushButton("Close")
+        btn_close.clicked.connect(dlg.accept)  # type: ignore[arg-type]
+        vbox.addWidget(btn_close)
+        dlg.resize(800, 600)
+        dlg.exec()
+
+    # Form helpers
+    def _populate_form(self) -> None:
+        """Forwarder: page owns the form widgets and (de)serialisation."""
+        self.page_edit.populate_form(self._raw_loaded)
+
+    def _collect_form(self) -> bool:
+        """Forwarder: page owns the form widgets and (de)serialisation."""
+        return self.page_edit.collect_form()
+
+    def _add_measurement_panel(self, key: str | None = None, meas: object | None = None) -> None:
+        """Forwarder kept for tests that drive panel creation through the window."""
+        self.page_edit.add_measurement_panel(key, meas)
 
     def _start_over(self) -> None:
         # Reset state and go back to select page
         self.current = None
         self._raw_loaded = None
-        self._custom_picture_path = None
+        # Reset page-owned per-session state.
+        self.page_edit.set_current(None)
         # Clear edit page fields
         p = self.page_edit
         p.form_brand.clear()

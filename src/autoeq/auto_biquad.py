@@ -19,7 +19,8 @@
 import scipy.optimize as opt
 
 from spinorama import logger
-from spinorama.ltype import DataSpeaker, Vector
+from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.filter_iir import Biquad
 from autoeq.auto_loss import loss
 
@@ -31,7 +32,7 @@ def display(xk, convergence):
 
 
 def find_best_biquad(
-    df_speaker: DataSpeaker,
+    m: Measurements,
     freq: Vector,
     auto_target: list[Vector],
     freq_range: list[float],
@@ -46,7 +47,7 @@ def find_best_biquad(
 
     def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
-        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
+        return loss(m, freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (biquad_range[0], biquad_range[-1]),
@@ -135,7 +136,7 @@ def find_best_biquad(
 
 
 def find_best_peak(
-    df_speaker: DataSpeaker,
+    m: Measurements,
     freq: Vector,
     auto_target: list[Vector],
     freq_range: list[float],
@@ -151,7 +152,7 @@ def find_best_peak(
 
     def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
-        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
+        return loss(m, freq, auto_target, peq, count, optim_config)
 
     if freq_range[0] < 20.0:
         freq_range[0] = 20.0

@@ -25,6 +25,25 @@
 
 // const flags_Contour_Delta = false;
 
+// Measure title text width using canvas measureText and decide if it needs line-breaking.
+// Returns true when the plain text (HTML tags stripped) fits within maxWidth
+// at the given fontSize using Plotly's default font ("Open Sans", sans-serif).
+// Falls back to a rough character-based estimate when canvas is unavailable (e.g. tests).
+let _measureCtx = null;
+function titleFitsOnOneLine(text, fontSize, maxWidth) {
+    const plain = text.replace(/<br\s*\/?>/gi, ' ');
+    try {
+        if (!_measureCtx) {
+            _measureCtx = document.createElement('canvas').getContext('2d');
+        }
+        _measureCtx.font = fontSize + 'px "Open Sans", sans-serif';
+        return _measureCtx.measureText(plain).width <= maxWidth;
+    } catch {
+        // canvas unavailable (test environment) — rough fallback
+        return plain.length * fontSize * 0.55 <= maxWidth;
+    }
+}
+
 export const knownMeasurements = [
     'CEA2034',
     'CEA2034 Normalized',
@@ -108,9 +127,12 @@ export const labelLong = Object.entries(labelShort).reduce((obj, [k, v]) => {
 }, {});
 
 const graphSmall = 550;
-const graphLarge = 1024;
 
-const graphRatio = 4.0 / 3.0;
+const graphRatio = 1.8;
+// Contour plots (frequency × angle): wider than tall since frequency spans ~3 decades
+// on a log axis while angle spans 360°. Value matches the visual appearance of the
+// old computeDims-based sizing (~1.5-1.6 at typical viewport sizes).
+const contourRatio = 1.6;
 const squareRatio = 1.0;
 
 const graphMarginLeft = 30;
@@ -123,14 +145,68 @@ const graphMarginRightSmall = 5;
 const graphMarginTopSmall = 30;
 const graphMarginBottomSmall = 40;
 
-const graphExtraPadding = 40;
-
-const graphLegendWidth = 164;
-
 const fontSizeH3 = 12;
 const fontSizeH4 = 11;
 const fontSizeH5 = 10;
 const fontSizeH6 = 9;
+
+export function estimateLegendSize(traceNames, fontSize, orientation, entryWidth, availableWidth) {
+    const count = traceNames.length;
+    const lineHeight = fontSize * 1.6;
+    if (orientation === 'v') {
+        return {
+            width: entryWidth,
+            height: count * lineHeight,
+            columns: 1,
+            rows: count,
+        };
+    }
+    const columns = Math.max(1, Math.floor(availableWidth / entryWidth));
+    const rows = Math.ceil(count / columns);
+    return {
+        width: availableWidth,
+        height: rows * lineHeight,
+        columns,
+        rows,
+    };
+}
+
+export function shouldUseShortLabels(traceNames, graphWidth, graphHeight, isCompact, isVertical, targetRatio, userLabelConfig) {
+    if (userLabelConfig === 'long') return false;
+    if (userLabelConfig === 'short') return true;
+    if (isCompact) return true;
+
+    // Estimate legend with long labels and check ratio deviation
+    const fontSize = 10;
+    const charWidth = fontSize * 0.6;
+    const maxLen = Math.max(...traceNames.map((n) => n.length));
+    const entryWidth = maxLen * charWidth + 30;
+
+    // Compare ratio with long labels vs short labels
+    // If long labels make the ratio significantly worse, use short labels
+    const shortCharWidth = fontSize * 0.6;
+    const shortMaxLen = Math.max(...traceNames.map((n) => (labelShort[n] || n).length));
+    const shortEntryWidth = shortMaxLen * shortCharWidth + 30;
+
+    if (isVertical) {
+        // Horizontal legend below graph: takes height from plot area
+        const longLegend = estimateLegendSize(traceNames, fontSize, 'h', entryWidth, graphWidth);
+        const shortLegend = estimateLegendSize(traceNames, fontSize, 'h', shortEntryWidth, graphWidth);
+        const longRatio = graphWidth / Math.max(1, graphHeight - longLegend.height);
+        const shortRatio = graphWidth / Math.max(1, graphHeight - shortLegend.height);
+        const longDev = Math.abs(longRatio - targetRatio) / targetRatio;
+        const shortDev = Math.abs(shortRatio - targetRatio) / targetRatio;
+        return longDev > 0.15 && longDev > shortDev + 0.05;
+    }
+    // Horizontal display with vertical legend on right: takes width from plot area
+    const longLegend = estimateLegendSize(traceNames, fontSize, 'v', entryWidth, graphWidth);
+    const shortLegend = estimateLegendSize(traceNames, fontSize, 'v', shortEntryWidth, graphWidth);
+    const longRatio = Math.max(1, graphWidth - longLegend.width) / graphHeight;
+    const shortRatio = Math.max(1, graphWidth - shortLegend.width) / graphHeight;
+    const longDev = Math.abs(longRatio - targetRatio) / targetRatio;
+    const shortDev = Math.abs(shortRatio - targetRatio) / targetRatio;
+    return longDev > 0.15 && longDev > shortDev + 0.05;
+}
 
 export function isDisplayVertical() {
     const windowWidth = window.innerWidth;
@@ -144,66 +220,176 @@ export function isDisplayCompact() {
     return windowWidth < graphSmall || windowHeight < graphSmall;
 }
 
-export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs, ratio) {
-    let width = windowWidth;
-    let height = windowHeight;
+// Compute graph layout with guaranteed plot-area aspect ratio.
+// The plot area (data region inside axes) always satisfies plotAreaH = plotAreaW / ratio.
+// Legend and margins are additive — they never reduce the plot area dimensions.
+//
+// Algorithm (3 passes):
+//   1. Pick base margins (before legend).
+//   2. Decide legend strategy — vertical (right) or horizontal (bottom) — and how much
+//      space it needs. Scale font down to 8px if needed to reduce legend height.
+//   3. Add legend space to the appropriate margin, compute plotW from the reduced width,
+//      enforce plotH = plotW / ratio, return total width/height and legend config.
+export function computeLayout(
+    containerWidth,
+    isVertical,
+    isCompact,
+    graphProps,
+    traceCount,
+    maxLabelLen,
+    hasYaxis2,
+    ratio,
+    fontDelta
+) {
+    const minFont = 8;
+    const baseFont = isCompact ? fontSizeH5 : fontSizeH5 + fontDelta;
+    const isPolar = graphProps.isRadar || graphProps.isGlobe;
+
+    // --- Pass 1: Base margins (before legend allocation) ---
+    let margin;
     if (isCompact) {
-        if (isVertical) {
-            // portraint
-            width = windowWidth;
-            height = Math.min(windowHeight, windowWidth / ratio + graphMarginTop + graphMarginBottom);
-        } else {
-            // landscape
-            height = windowHeight - graphMarginTop - graphMarginBottom;
-            const extra = graphLegendWidth + graphMarginLeft + graphMarginRight;
-            width = Math.min(windowWidth - extra, height * ratio + extra);
-        }
+        margin = { l: graphMarginLeftSmall, r: graphMarginRightSmall, t: graphMarginTopSmall, b: graphMarginBottomSmall };
     } else {
-        if (isVertical) {
-            width = windowWidth - graphMarginLeft - graphMarginRight;
-            const graphWidth = Math.min(graphLarge, width - 2 * graphExtraPadding);
-            height = graphWidth / ratio + graphMarginTop + graphMarginBottom;
-        } else {
-            height = windowHeight - graphMarginTop - graphMarginBottom;
-            const extra = graphLegendWidth + graphMarginLeft + graphMarginRight;
-            if (windowWidth - extra < height * ratio) {
-                width = windowWidth;
-                height = (width - extra) / ratio;
-            } else {
-                width = height * ratio + extra;
-            }
+        // Right margin: add 25px if no yaxis2 (to leave room for the right tick labels when mirrored).
+        // Polar plots don't have a yaxis2 tick margin concept, so skip the offset.
+        const offsetR = isPolar || hasYaxis2 ? 0 : 25;
+        margin = {
+            l: graphMarginLeft,
+            r: graphMarginRight + offsetR,
+            t: graphMarginTop,
+            b: graphMarginBottom,
+        };
+        if (graphProps.isSurface && !isVertical) margin.r += 60;
+        if (graphProps.isGlobe) margin.t += 50;
+        // Reserve bottom margin for horizontal colorbar on portrait/vertical
+        // surface plots (the colorbar sits just under the x-axis title).
+        if (graphProps.isSurface && isVertical) margin.b += 55;
+    }
+
+    // --- Pass 2: Decide legend strategy and compute its footprint ---
+    // Surface/radar/globe hide the legend entirely (they use colorbars or have
+    // no trace-based legend to show).
+    let legend;
+    if (graphProps.isSurface || isPolar) {
+        legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0, hidden: true };
+    } else if (traceCount === 0) {
+        legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0 };
+    } else if (isCompact && traceCount > 10) {
+        // Compact mode with many traces (e.g. SPL Horizontal with 36 angles):
+        // a horizontal legend would push the plot off-screen even with row-cap,
+        // and Plotly's auto-grown bottom margin (from xaxis automargin) makes
+        // any cap unreliable. Hide the legend entirely on mobile in this case
+        // — the user can hover to identify traces, or rotate / expand to see
+        // them via the wider landscape layout.
+        legend = { orientation: 'h', font: baseFont, height: 0, width: 0, entryWidth: 0, hidden: true };
+    } else if (isCompact || isVertical) {
+        // Compact or portrait with a manageable trace count: horizontal legend below the plot.
+        // Cap visible legend at 5 rows so the plot doesn't get squeezed.
+        const MAX_LEGEND_ROWS = 5;
+        const plotAreaW_avail = containerWidth - margin.l - margin.r;
+        let font = baseFont;
+        let legendH = 0;
+        let entryW = 60;
+        while (font >= minFont) {
+            entryW = Math.max(60, maxLabelLen * font * 0.6 + 50);
+            const cols = Math.max(1, Math.floor(plotAreaW_avail / entryW));
+            const rows = Math.ceil(traceCount / cols);
+            const visibleRows = Math.min(rows, MAX_LEGEND_ROWS);
+            legendH = visibleRows * font * 1.8 + 10;
+            const plotAreaH = plotAreaW_avail / ratio;
+            if (legendH <= plotAreaH * 0.6 || font <= minFont) break;
+            font -= 1;
         }
-        if (nbGraphs > 1) {
-            if (!isVertical) {
-                width = windowWidth / nbGraphs;
-                height = Math.min(height, width / ratio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
+        legend = { orientation: 'h', font, height: legendH, width: 0, entryWidth: entryW };
+    } else {
+        // Landscape: try vertical (right) legend first. Fall back to horizontal if it won't fit
+        // or if there are too many traces for a vertical legend.
+        // Width per entry: icon marker (~24px) + label text (maxLabelLen * 0.6 * fontSize)
+        //                  + left/right padding (~16px). Capped at 280px so very long
+        //                  labels don't starve the plot area; labels longer than that
+        //                  will be truncated by Plotly (rare — SPL-style names fit).
+        const legendW = Math.min(Math.max(80, maxLabelLen * baseFont * 0.62 + 40), 280);
+        const plotAreaW_rightLegend = containerWidth - margin.l - margin.r - legendW;
+        const plotAreaH_rightLegend = plotAreaW_rightLegend / ratio;
+        const legendH_needed = traceCount * baseFont * 1.6 + 10;
+
+        const canFitVertical =
+            traceCount > 0 &&
+            traceCount <= 10 &&
+            plotAreaW_rightLegend >= 300 &&
+            legendH_needed <= plotAreaH_rightLegend * 0.95;
+
+        if (canFitVertical) {
+            legend = { orientation: 'v', font: baseFont, height: legendH_needed, width: legendW, entryWidth: legendW };
+        } else {
+            // Horizontal (bottom) legend with font scaling.
+            const plotAreaW_avail = containerWidth - margin.l - margin.r;
+            let font = baseFont;
+            let legendH = 0;
+            let entryW = 60;
+            while (font >= minFont) {
+                entryW = Math.max(60, maxLabelLen * font * 0.6 + 50);
+                const cols = Math.max(1, Math.floor(plotAreaW_avail / entryW));
+                const rows = Math.ceil(traceCount / cols);
+                legendH = rows * font * 1.8 + 10;
+                const plotAreaH = plotAreaW_avail / ratio;
+                if (legendH <= plotAreaH * 0.5 || font <= minFont) break;
+                font -= 1;
             }
+            legend = { orientation: 'h', font, height: legendH, width: 0, entryWidth: entryW };
         }
     }
-    /*
-    console.info(
-        'vertical=' +
-            isVertical +
-            ' compact=' +
-            isCompact +
-            ' window(' +
-            windowWidth +
-            ', ' +
-            windowHeight +
-            ') graph(' +
-            width +
-            ', ' +
-            height +
-            ')' +
-            ' ratio=(expected: ' +
-            ratio.toFixed(2) +
-            ',computed: ' +
-            (width / height).toFixed(2) +
-            ') #=' +
-            nbGraphs
-    );
-*/
-    return [width, height];
+
+    // --- Pass 3: Allocate legend/title space into margins, then compute dimensions ---
+    // Small padding between plot elements (in pixels).
+    const legendPad = 8;
+
+    // Reserve space for the x-axis title, which Plotly draws inside margin.b.
+    // Polar plots (radar/globe) don't have an x-axis title, so skip this.
+    if (!isPolar) {
+        // In compact-vertical mode the title is a long descriptive string (~55 chars at fontSizeH6)
+        // that may wrap to 2 lines at narrow widths. In other modes it's a short 1-line title.
+        const xTitleFont = fontSizeH6 + fontDelta;
+        const xTitleLineH = xTitleFont * 1.4;
+        const xTitleH = isCompact && isVertical ? xTitleLineH * 2 + 6 : xTitleLineH + 6;
+        margin.b += xTitleH;
+    }
+
+    if (!legend.hidden && legend.height > 0) {
+        if (legend.orientation === 'v') {
+            margin.r += legend.width + legendPad;
+        } else {
+            margin.b += legend.height + legendPad;
+        }
+    }
+
+    let plotAreaW = Math.max(1, containerWidth - margin.l - margin.r);
+    let plotAreaH;
+    let totalH;
+
+    if (graphProps.isSurface) {
+        // Contour plots: enforce PLOT AREA ratio so the data region itself is
+        // ~1.6:1 regardless of title wrap, colorbar, or axis-title margin.
+        // (Previously the non-compact branch enforced TOTAL layout ratio, which
+        //  let automargin from the horizontal colorbar compress the plot area
+        //  into a ~2.5:1 shape.)
+        plotAreaH = plotAreaW / ratio;
+        totalH = plotAreaH + margin.t + margin.b;
+    } else {
+        // Line/CEA2034 graphs: enforce plot area ratio so the data region itself
+        // has consistent proportions across graphs (legend/title vary in size).
+        plotAreaH = plotAreaW / ratio;
+        totalH = plotAreaH + margin.t + margin.b;
+    }
+    const totalW = containerWidth;
+
+    return {
+        width: totalW,
+        height: totalH,
+        margin: margin,
+        legend: legend,
+        plotArea: { w: plotAreaW, h: plotAreaH },
+    };
 }
 
 const GraphProperties = Object.freeze({
@@ -281,7 +467,7 @@ const GraphProperties = Object.freeze({
         isGraph: true,
         isSpin: false,
         isRadar: false,
-        isSurface: true,
+        isSurface: false,
         isGlobe: false,
     },
     'SPL Horizontal Contour': {
@@ -382,6 +568,27 @@ const GraphProperties = Object.freeze({
         isSurface: false,
         isGlobe: false,
     },
+    'Frequency Response': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Frequency Response Compensated': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Target Deviation': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
 });
 
 export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraphProperties, outputNumberGraphs) {
@@ -426,32 +633,67 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
+    // Set zorder: grid (default 0) -> bands (-2) -> band lines (-1) -> SPL curves (1)
+    if (datas != null) {
+        for (let k = 0; k < datas.length; k++) {
+            const trace = datas[k];
+            if (trace.fill) {
+                trace.zorder = -2;
+            } else if (
+                trace.name &&
+                (trace.name.indexOf('Midrange') !== -1 ||
+                    trace.name.indexOf('Linear') !== -1 ||
+                    trace.name.indexOf('Reg') !== -1)
+            ) {
+                trace.zorder = -1;
+            } else {
+                trace.zorder = 1;
+            }
+        }
+    }
+
     // If after the above logic, layout or datas are still null (e.g. inputGraphsData had unexpected structure)
     if (layout === null || datas === null) {
         console.log('Error: No valid graph data to process in setGraphOptions');
         return { data: null, layout: null, config: null };
     }
 
-    const isVertical = isDisplayVertical();
-    const isCompact = isDisplayCompact();
+    const isVertical = windowWidth <= windowHeight;
+    const isCompact = windowWidth < graphSmall || windowHeight < graphSmall;
 
     let fontDelta = 0;
     if (!isCompact) {
         fontDelta = Math.round(windowWidth / 300);
     }
 
+    // Title state shared between computeTitle (which decides font size and line
+    // count) and applyComputeLayout (which reserves enough margin.t).
+    const titleInfo = { lines: 1, fontSize: fontSizeH3 };
+
     function computeXaxis() {
         if (layout.xaxis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
+            // No hardcoded color — applyConfig sets a theme-aware color via layout.font
             layout.xaxis.title.font = {
                 size: fontSizeH6 + fontDelta,
-                color: '#000',
             };
             layout.xaxis.automargin = 'height';
             layout.xaxis.side = 'bottom';
         }
+        // For log-scale frequency axes, add minor grid lines at the 2..9 subticks
+        // of each decade so the log scale is easier to read. applyConfig() assigns
+        // theme-appropriate colors.
+        if (layout.xaxis && layout.xaxis.type === 'log') {
+            layout.xaxis.minor = {
+                dtick: 'D1',
+                ticks: layout.xaxis.ticks || 'inside',
+                ticklen: 2,
+                showgrid: true,
+                gridcolor: 'rgba(0,0,0,0.07)',
+            };
+        }
         if (isCompact) {
-            if (isVertical && layout?.yaxis && layout.yaxis.title) {
+            if (isVertical && layout?.yaxis && layout.yaxis.title && layout?.xaxis?.range) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
@@ -484,6 +726,70 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
+    // Upgrade an SPL axis in-place so that:
+    //   - Major grid lines (prominent) are drawn every 5 dB
+    //   - Minor grid lines (faint) + tick marks are drawn every 1 dB
+    //   - Labels appear every 5 dB
+    //
+    // Safety rules:
+    //   - Never touches yaxis2 (DI axis in CEA2034 has custom semantics).
+    //   - Never touches axes with non-numeric or non-integer ranges.
+    //   - Never touches contour angle axes (title === 'Angle').
+    //
+    // Handles two source cases:
+    //   1) Backend provided tickvals every 1 dB with labels only every 10 dB
+    //      (On Axis, Early Reflections, ...): replace with dtick=5 + minor dtick=1.
+    //   2) Backend provided tickvals every 5 dB with labels every 10 dB
+    //      (CEA2034 yaxis): keep tickvals but relabel all of them.
+    function upgradeSplYaxis(ax) {
+        if (!ax) return;
+        if (ax.title && ax.title.text === 'Angle') return;
+        if (!ax.range || ax.range.length < 2) return;
+        const rMin = ax.range[0];
+        const rMax = ax.range[1];
+        if (!Number.isFinite(rMin) || !Number.isFinite(rMax)) return;
+        const span = Math.abs(rMax - rMin);
+        if (span < 10 || span > 100) return;
+
+        // Detect whether tickvals are 5-dB multiples only (case 2) or finer (case 1)
+        let useTickvalsPath = false;
+        if (Array.isArray(ax.tickvals) && ax.tickvals.length > 0) {
+            const allInt = ax.tickvals.every((v) => Number.isInteger(v));
+            const allDiv5 = allInt && ax.tickvals.every((v) => v % 5 === 0);
+            if (allInt && allDiv5) {
+                useTickvalsPath = true;
+            }
+        }
+
+        if (useTickvalsPath) {
+            // Case 2: keep 5-dB tickvals, relabel every position
+            ax.ticktext = ax.tickvals.map((v) => String(v));
+            ax.tickmode = 'array';
+            // Add 1-dB minor grid on top of the 5-dB major ticks
+            ax.minor = {
+                dtick: 1,
+                ticks: ax.ticks || 'inside',
+                ticklen: 2,
+                showgrid: true,
+                gridcolor: 'rgba(0,0,0,0.07)',
+            };
+        } else {
+            // Case 1: replace any 1-dB tickvals with dtick=5 so Plotly draws
+            // major grid lines only every 5 dB. Minor ticks fill in every 1 dB.
+            delete ax.tickvals;
+            delete ax.ticktext;
+            delete ax.tickmode;
+            ax.dtick = 5;
+            ax.minor = {
+                dtick: 1,
+                ticks: ax.ticks || 'inside',
+                ticklen: 2,
+                showgrid: true,
+                gridcolor: 'rgba(0,0,0,0.07)',
+            };
+        }
+    }
+
     function computeYaxis() {
         // hide axis to recover some space on mobile
         if (isCompact && isVertical) {
@@ -495,8 +801,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 layout.yaxis.title = null;
                 layout.yaxis.tickfont = { size: 10 };
                 layout.yaxis.mirror = 'ticks';
-                // layout.yaxis.automargin = 'width';
-                // layout.yaxis.visible = false;
             }
             if (layout.yaxis2) {
                 layout.yaxis2.title = null;
@@ -505,20 +809,55 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             }
         }
         if (layout.yaxis) {
-            layout.yaxis.dtick = 1;
+            if (layout.yaxis.nticks) {
+                delete layout.yaxis.dtick;
+                delete layout.yaxis.tickvals;
+                delete layout.yaxis.ticktext;
+            } else if (layout.yaxis.tickvals) {
+                // Axis with explicit tickvals — preserve and upgrade with 1-dB minor
+                // ticks + 5-dB labels for SPL-like axes.
+                layout.yaxis.constrain = 'domain';
+                upgradeSplYaxis(layout.yaxis);
+            } else {
+                // No tickvals: use major ticks every 5 dB, minor ticks every 1 dB
+                layout.yaxis.dtick = 5;
+                layout.yaxis.minor = {
+                    dtick: 1,
+                    ticks: layout.yaxis.ticks || 'inside',
+                    ticklen: 2,
+                    showgrid: true,
+                    gridcolor: 'rgba(0,0,0,0.07)',
+                };
+            }
             if (layout.yaxis.title) {
                 layout.yaxis.title.font = {
                     size: fontSizeH6 + fontDelta,
-                    color: '#000',
                 };
             }
         }
         if (layout.yaxis2) {
-            layout.yaxis2.dtick = 1;
+            if (layout.yaxis2.nticks) {
+                delete layout.yaxis2.dtick;
+                delete layout.yaxis2.tickvals;
+                delete layout.yaxis2.ticktext;
+            } else if (layout.yaxis2.tickvals) {
+                // yaxis2 (e.g. CEA2034 DI axis): preserve tickvals as-is.
+                // DI axis has custom semantics where tick positions don't match
+                // displayed labels, so we deliberately avoid any tick/label override.
+                layout.yaxis2.constrain = 'domain';
+            } else {
+                layout.yaxis2.dtick = 5;
+                layout.yaxis2.minor = {
+                    dtick: 1,
+                    ticks: layout.yaxis2.ticks || 'inside',
+                    ticklen: 2,
+                    showgrid: true,
+                    gridcolor: 'rgba(0,0,0,0.07)',
+                };
+            }
             if (layout.yaxis2.title) {
                 layout.yaxis2.title.font = {
                     size: fontSizeH6 + fontDelta,
-                    color: '#000',
                 };
             }
         }
@@ -536,7 +875,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         let pos0for = -1;
         let pos0by = -1;
         let speaker0 = '';
-        let version0 = '';
         let br0 = '';
         if (inputGraphsData[0] && inputGraphsData[0]?.layout.title.text) {
             if (inputGraphsData[1]) {
@@ -547,25 +885,31 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             pos0for = inputGraphsData[0].layout.title.text.indexOf(' for ');
             pos0by = inputGraphsData[0].layout.title.text.indexOf(' measured by ');
             speaker0 = inputGraphsData[0].layout.title.text.slice(pos0for, pos0by);
-            version0 = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
             br0 = inputGraphsData[0].layout.title.text.indexOf('<br>');
         }
         if (outputNumberGraphs === 1 && inputGraphsData[1] && inputGraphsData[1]?.layout.title.text) {
             const titlePart = br0 === -1 ? title : title.slice(0, br0);
-            title = titlePart + '<br> v.s. ' + addInitialLetter(inputGraphsData[1].layout.title.text, 'B');
+            const titleB = addInitialLetter(inputGraphsData[1].layout.title.text, 'B');
             const pos1for = inputGraphsData[1].layout.title.text.indexOf(' for ');
             const pos1by = inputGraphsData[1].layout.title.text.indexOf(' measured by ');
             const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);
-            const version1 = inputGraphsData[1].layout.title.text.slice(pos1by + 13);
             if (speaker0 === speaker1) {
-                title =
-                    inputGraphsData[0].layout.title.text.slice(0, pos0by) +
-                    '<br> measured by (A) ' +
-                    inputGraphsData[0].layout.title.text.slice(pos0by + 13) +
-                    ' v.s. by (B) ' +
-                    inputGraphsData[1].layout.title.text.slice(pos1by + 13);
-                // should also add A and B but kind of guessing where
+                const prefix = inputGraphsData[0].layout.title.text.slice(0, pos0by);
+                const suffixA = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
+                const suffixB = inputGraphsData[1].layout.title.text.slice(pos1by + 13);
+                const singleLine = prefix + ' measured by (A) ' + suffixA + ' v.s. by (B) ' + suffixB;
+                const titleFontSize = isCompact ? fontSizeH3 : fontSizeH3 + 2 * fontDelta;
+                const sep = titleFitsOnOneLine(singleLine, titleFontSize, windowWidth) ? ' ' : '<br> ';
+                title = prefix + sep + 'measured by (A) ' + suffixA + ' v.s. by (B) ' + suffixB;
             } else {
+                // Build single-line version first, add <br> only if it doesn't fit
+                const singleLine = titlePart + ' v.s. ' + titleB;
+                const titleFontSize = isCompact ? fontSizeH3 : fontSizeH3 + 2 * fontDelta;
+                if (titleFitsOnOneLine(singleLine, titleFontSize, windowWidth)) {
+                    title = singleLine;
+                } else {
+                    title = titlePart + '<br> v.s. ' + titleB;
+                }
                 // Add (A) or (B)
                 if (inputGraphsData[1]) {
                     for (let i = 0; i < datas.length; i++) {
@@ -588,28 +932,54 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 }
             }
         }
-        if (isCompact) {
-            if (outputNumberGraphs === 1) {
-                // assume fixed font size and average distribution and add 10% margin
-                const resize = 0.5 * 1.1;
-                const doSplit = isVertical && title.length * fontSizeH3 * resize > windowWidth;
-                if (doSplit) {
-                    // split title on 2 lines
-                    const measured_pos = title.indexOf(' measured ');
-                    if (measured_pos !== -1) {
-                        const vs_pos = title.indexOf(' v.s. ');
-                        if (vs_pos === -1) {
-                            title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
-                        }
-                    }
-                }
+        // Decide font size and whether to wrap. We measure against a
+        // generous "available width" — close to the full container width minus
+        // a small safety margin — so the title doesn't wrap unnecessarily when
+        // there's empty horizontal space (e.g. in a wide cell with a vertical
+        // legend on the right).
+        // Title font size: scale with viewport width but cap so it doesn't get
+        // huge at 4K.
+        // Cap the non-compact ideal font size: fontSizeH3 + 2*fontDelta grows
+        // linearly with windowWidth and was producing ~25px titles at 4K that
+        // forced long titles onto 2 lines for no good reason.
+        const idealFontSize = isCompact ? fontSizeH3 : Math.min(fontSizeH3 + 2 * fontDelta, 18);
+        const minTitleFontSize = isCompact ? 10 : 11;
+        // Available width for the title — give it ~96% of the container width
+        // since the title is centered and uses xref='container'.
+        const availTitleWidth = windowWidth - 24;
+
+        // If the title already contains <br> from earlier (compare mode), keep
+        // it; otherwise, scale font down to fit on a single line. If we hit
+        // the minimum font and it still doesn't fit, insert a single <br>.
+        let chosenFontSize = idealFontSize;
+        let lineCount;
+        if (title.indexOf('<br>') !== -1) {
+            // Title was already wrapped (compare mode produced explicit <br>).
+            lineCount = title.split('<br>').length;
+        } else {
+            while (chosenFontSize > minTitleFontSize && !titleFitsOnOneLine(title, chosenFontSize, availTitleWidth)) {
+                chosenFontSize -= 1;
             }
+            if (titleFitsOnOneLine(title, chosenFontSize, availTitleWidth)) {
+                lineCount = 1;
+            } else {
+                // Genuinely doesn't fit even at min font — insert a <br> at
+                // the most natural break point.
+                const breakAt = title.lastIndexOf(' measured ');
+                if (breakAt > 0) {
+                    title = title.slice(0, breakAt) + '<br>' + title.slice(breakAt + 1);
+                }
+                lineCount = title.split('<br>').length;
+            }
+        }
+        titleInfo.fontSize = chosenFontSize;
+        titleInfo.lines = lineCount;
+
+        if (isCompact) {
             layout.title = {
                 text: title,
-                font: {
-                    size: fontSizeH3,
-                    color: '#000',
-                },
+                // No hardcoded color — applyConfig sets a theme-aware color via layout.font
+                font: { size: chosenFontSize },
                 xref: 'paper',
                 xanchor: 'left',
                 x: 0.0,
@@ -617,128 +987,135 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         } else {
             layout.title = {
                 text: title,
-                font: {
-                    size: fontSizeH3 + 2 * fontDelta,
-                    color: '#000',
-                },
-                // automargin: true,
-                xref: 'paper',
+                // No hardcoded color — applyConfig sets a theme-aware color via layout.font
+                font: { size: chosenFontSize },
+                xref: 'container',
                 xanchor: 'center',
-                // title start sligthly on the right
                 x: 0.5,
-                // keep title below modBar if title is long
-                yref: 'container',
-                yanchor: 'top',
-                y: 1.025,
+                // Anchor the BOTTOM of the title to the top of the plot area
+                // and let it extend upward into margin.t. This avoids the
+                // first line being clipped when the title wraps to 2 lines
+                // (which could happen with yref='container' y=0.99).
+                yref: 'paper',
+                yanchor: 'bottom',
+                y: 1.0,
+                // Visual gap between the title's bottom and the plot-area top.
+                pad: { b: 16 },
             };
         }
     }
 
-    function computeMargin() {
-        if (isCompact) {
-            // get legend horizontal below the graph
-            layout.margin = {
-                l: graphMarginLeftSmall,
-                r: graphMarginRightSmall,
-                t: graphMarginTopSmall,
-                b: graphMarginBottomSmall,
-            };
+    // Apply computeLayout() output (width, height, margin, legend) to the Plotly layout object.
+    // layout.width must be set to the target container width before calling this.
+    // Everything else — total height, margins, legend placement — is derived here so the
+    // plot-area aspect ratio is guaranteed.
+    function applyComputeLayout(ratio) {
+        // Count visible traces and find the longest label (used for legend sizing).
+        let traceCount = 0;
+        let maxLabelLen = 0;
+        for (let k = 0; k < datas.length; k++) {
+            const t = datas[k];
+            if (t.visible !== false && t.showlegend !== false) {
+                traceCount++;
+                if (t.name && t.name.length > maxLabelLen) maxLabelLen = t.name.length;
+            }
+        }
+
+        const containerWidth = layout.width;
+        const result = computeLayout(
+            containerWidth,
+            isVertical,
+            isCompact,
+            outputGraphProperties,
+            traceCount,
+            maxLabelLen,
+            !!layout.yaxis2,
+            ratio,
+            fontDelta
+        );
+
+        layout.width = result.width;
+        layout.height = result.height;
+        layout.margin = result.margin;
+
+        // If the title wraps onto multiple lines, reserve extra top margin so
+        // the wrapped lines don't overlap the plot area. computeLayout uses a
+        // default margin.t = graphMarginTop (70) which already comfortably fits
+        // a single line. Each additional line needs ~ fontSize * 1.4 + small pad.
+        if (titleInfo.lines > 1) {
+            const extraLineH = titleInfo.fontSize * 1.4;
+            const extraTop = (titleInfo.lines - 1) * extraLineH + 8;
+            layout.margin.t += extraTop;
+            layout.height += extraTop;
+        }
+
+        // Non-compact titles use pad.b=16 to leave a visual gap between the
+        // title and the plot area. Grow margin.t by the same amount so the
+        // gap is taken out of the margin, not the breathing room above the title.
+        if (!isCompact) {
+            const titleGap = 16;
+            layout.margin.t += titleGap;
+            layout.height += titleGap;
+        }
+
+        if (result.legend.hidden) {
+            layout.showlegend = false;
+            layout.legend = {};
         } else {
-            // right margin depends on a if we have a second axis or not.
-            let offsetSecondYAxis = 25;
-            if (layout.yaxis2) {
-                offsetSecondYAxis = 0;
-            }
-            if (isVertical) {
-                layout.margin = {
-                    l: graphMarginLeft,
-                    r: graphMarginRight + offsetSecondYAxis,
-                    t: graphMarginTop,
-                    b: graphMarginBottom,
-                };
-            } else {
-                layout.margin = {
-                    l: graphMarginLeft,
-                    r: graphMarginRight,
-                    t: graphMarginTop,
-                    b: graphMarginBottom,
-                };
-            }
-            if (outputGraphProperties.isSpin) {
-                if (isVertical) {
-                    layout.margin.b += 140;
-                } else {
-                    layout.margin.r += 160;
-                }
-            }
-        }
-        if (outputGraphProperties.isGlobe) {
-            layout.margin.t += 50;
-        }
-        if (outputGraphProperties.isSurface) {
-            layout.margin.t += 20;
-        }
-    }
-
-    function computeLegend() {
-        const y_shift = 0.3;
-        layout.legend = {};
-        if (isCompact) {
-            if (isVertical) {
+            // Compute Plotly legend positioning from the decided orientation.
+            // - Horizontal: pinned to the bottom of the CONTAINER (not plot-area), so the
+            //   x-axis title sits above it inside the bottom margin and they don't overlap.
+            // - Vertical: placed to the right of plot, anchored at left so it grows rightward into margin.r.
+            if (result.legend.orientation === 'v') {
                 layout.legend = {
-                    orientation: 'h',
-                    y: -y_shift,
-                    x: 0.5,
-                    xref: 'container',
-                    xanchor: 'center',
-                    yanchor: 'bottom',
-                    yref: 'container',
+                    orientation: 'v',
+                    xref: 'paper',
+                    yref: 'paper',
+                    xanchor: 'left',
+                    yanchor: 'middle',
+                    x: 1.02,
+                    y: 0.5,
+                    font: { size: result.legend.font },
+                    entrywidth: result.legend.entryWidth,
+                    entrywidthmode: 'pixels',
+                    itemwidth: 20,
                     groupclick: 'toggleitem',
                 };
             } else {
-                layout.legend.orientation = 'v';
-                layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'middel';
-                layout.legend.x = 1.2;
-                layout.legend.y = 0;
-                layout.legend.entrywidth = graphLegendWidth;
-                layout.legend.entrywidthmode = 'pixels';
-            }
-        } else {
-            layout.legend.xref = 'paper';
-            if (isVertical) {
-                layout.legend.yref = 'container';
-                layout.legend.orientation = 'h';
-                layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'bottom';
-                layout.legend.x = 0.5;
-                layout.legend.y = -0.5;
-                layout.legend.entrywidth = 120;
-                layout.legend.entrywidthmode = 'pixels';
-            } else {
-                layout.legend.yref = 'paper';
-                layout.legend.orientation = 'v';
-                layout.legend.xanchor = 'center';
-                layout.legend.yanchor = 'middel';
-                layout.legend.x = 1.2;
-                layout.legend.y = 0;
-                layout.legend.entrywidth = graphLegendWidth;
-                layout.legend.entrywidthmode = 'pixels';
+                layout.legend = {
+                    orientation: 'h',
+                    xref: 'container',
+                    yref: 'container',
+                    xanchor: 'center',
+                    yanchor: 'bottom',
+                    x: 0.5,
+                    y: 0.005,
+                    font: { size: result.legend.font },
+                    entrywidth: result.legend.entryWidth,
+                    entrywidthmode: 'pixels',
+                    itemwidth: 20,
+                    groupclick: 'toggleitem',
+                };
             }
         }
-        // how many columns in legend?
+    }
+
+    // Handle legendgroup cleanup and group-title truncation (independent of sizing).
+    // Must run BEFORE applyComputeLayout() so that legendgroup cleanup affects the
+    // visible-trace count used for legend sizing.
+    function computeLegendGroups() {
         const groups = new Set();
         for (let k = 0; k < datas.length; k++) {
             if (datas[k].legendgroup) {
                 groups.add(datas[k].legendgroup);
             }
         }
-        if (outputNumberGraphs === 1 && isVertical) {
+        if (groups.size === 1) {
             for (let k = 0; k < datas.length; k++) {
                 datas[k].legendgroup = null;
                 datas[k].legendgrouptitle = null;
             }
-        } else if (!isCompact) {
+        } else if (!isCompact && groups.size > 1) {
             for (let k = 0; k < datas.length; k++) {
                 const title = datas[k].legendgrouptitle;
                 if (title?.text) {
@@ -749,7 +1126,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                     // Only truncate at ' for ' if we're not dealing with same speaker comparisons
                     const pos_for = title.text.indexOf(' for ');
                     if (pos_for !== -1) {
-                        // Check if this is a same speaker comparison that will get version info added
                         const needsVersionInfo =
                             outputNumberGraphs === 1 &&
                             inputGraphsData[1] &&
@@ -763,11 +1139,9 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                             const speaker0 = inputGraphsData[0].layout.title.text.slice(pos0for, pos0by);
                             const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);
                             if (speaker0 !== speaker1) {
-                                // Different speakers, truncate at ' for '
                                 datas[k].legendgrouptitle.text = title.text.slice(0, pos_for);
                             }
                         } else {
-                            // Not a comparison or single graph, truncate at ' for '
                             datas[k].legendgrouptitle.text = title.text.slice(0, pos_for);
                         }
                     }
@@ -775,16 +1149,13 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             }
         }
 
-        if (layout.legend) {
-            layout.legend.font = {
-                size: fontSizeH5 + fontDelta,
-            };
-        }
-
+        // Surface plots: hide all traces from the legend entirely.
         if (outputGraphProperties.isSurface) {
-            layout.showlegend = false;
-            for (let k = 1; k < datas.length; k++) {
-                datas[k].showscale = false;
+            for (let k = 0; k < datas.length; k++) {
+                datas[k].showlegend = false;
+                if (k > 0) {
+                    datas[k].showscale = false;
+                }
             }
         }
     }
@@ -834,17 +1205,37 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         }
     }
 
-    function computeLabel() {
-        if (isCompact) {
-            // shorten labels
-            for (let k = 0; k < datas.length; k++) {
-                // remove group
+    function computeLabel(userLabelConfig) {
+        const traceNames = datas.filter((d) => d.name).map((d) => d.name);
+        let ratio = graphRatio;
+        if (outputGraphProperties.isSurface) {
+            ratio = contourRatio;
+        } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
+            ratio = squareRatio;
+        }
+        if (layout._ratioOverride) {
+            ratio = layout._ratioOverride;
+        }
+        const useShort = shouldUseShortLabels(
+            traceNames,
+            layout.width,
+            layout.height,
+            isCompact,
+            isVertical,
+            ratio,
+            userLabelConfig || 'default'
+        );
+
+        for (let k = 0; k < datas.length; k++) {
+            if (isCompact) {
                 if (isVertical || inputGraphsData.length === 1) {
                     datas[k].legendgroup = null;
                     datas[k].legendgrouptitle = null;
                 }
-                if (datas[k].name && labelShort[datas[k].name]) {
-                    // shorten labels
+            }
+            if (datas[k].name) {
+                datas[k]._fullName = datas[k].name;
+                if (useShort && labelShort[datas[k].name]) {
                     datas[k].name = labelShort[datas[k].name];
                 }
             }
@@ -883,24 +1274,27 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 datas[k].colorbar.xref = 'paper';
                 datas[k].colorbar.yref = 'paper';
                 if (isVertical) {
+                    // Horizontal colorbar sits just below the x-axis title.
+                    // Keep the offset small — large negative y values used to
+                    // balloon margin.b via automargin and compress the plot area.
                     datas[k].colorbar.orientation = 'h';
                     datas[k].colorbar.xanchor = 'center';
                     datas[k].colorbar.x = 0.5;
-                    datas[k].colorbar.yanchor = 'bottom';
-                    datas[k].colorbar.y = -0.5;
+                    datas[k].colorbar.yanchor = 'top';
+                    datas[k].colorbar.y = -0.12;
                     if (isCompact) {
-                        datas[k].colorbar.y = -0.7;
+                        datas[k].colorbar.y = -0.18;
                     }
                 } else {
                     datas[k].colorbar.orientation = 'v';
-                    datas[k].colorbar.xanchor = 'top';
+                    datas[k].colorbar.xanchor = 'left';
                     datas[k].colorbar.yanchor = 'center';
                     datas[k].colorbar.x = 1.0;
                     datas[k].colorbar.yref = 'paper';
                     datas[k].colorbar.y = 0.5;
                 }
                 datas[k].colorbar.xpad = 20;
-                datas[k].colorbar.ypad = 20;
+                datas[k].colorbar.ypad = 8;
                 datas[k].colorbar.len = 0.8;
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
@@ -921,27 +1315,32 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
     if (layout != null && datas != null) {
         let ratio = graphRatio;
-        if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
+        if (outputGraphProperties.isSurface) {
+            ratio = contourRatio;
+        } else if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             ratio = squareRatio;
         }
-        [layout.width, layout.height] = computeDims(
-            windowWidth,
-            windowHeight,
-            isVertical,
-            isCompact,
-            outputNumberGraphs,
-            ratio
-        );
+        if (layout._ratioOverride) {
+            ratio = layout._ratioOverride;
+        }
+        // All graphs (SPL, CEA2034, contour, radar, globe) go through applyComputeLayout.
+        // The caller passes the actual DOM container width as `windowWidth`; computeLayout
+        // is the single source of truth for width/height/margins/legend, so we seed
+        // layout.width with the container width and let applyComputeLayout derive the rest.
+        layout.width = windowWidth;
+        layout.height = windowHeight; // temporary — applyComputeLayout will overwrite
+
         computeFont();
         computeXaxis();
         computeYaxis();
         computeTitle(); // before legend
-        computeLegend();
+        computeLegendGroups(); // cleanup legendgroup/legendgrouptitle on traces
         computeLabel();
         computeModbar();
         computeColorbar();
         computePolar();
-        computeMargin(); // must be last
+
+        applyComputeLayout(ratio);
     } else {
         // should be a pop up
         console.log('Error: No graph is available');
@@ -960,12 +1359,11 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             '}'
     );
 */
-    return { data: datas, layout: layout, config: config };
+    return { data: datas, layout: layout, config: config, _graphType: outputGraphProperties };
 }
 
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
-    let legendShift = 0;
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
@@ -1006,11 +1404,6 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
     }
     let option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
 
-    if (legendShift > 0) {
-        option.layout.margin.t += 5 * legendShift;
-        option.layout.height += 5 * legendShift;
-    }
-
     // move the legend2 such that they do not overlap
     if (option.layout.legend2) {
         if (!isDisplayVertical()) {
@@ -1026,54 +1419,17 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
         option.layout.height += 22 * 14;
     }
 
-    // hide annotations if we compare 2 graphs
-    if (speakerGraphs.length > 1) {
-        if ('annotations' in option.layout) {
-            for (let i = 0; i < option.layout.annotations.length; i++) {
-                option.layout.annotations[i]['visible'] = false;
-            }
-        }
-    }
-    /* can enable with the menu
-    else if (!isCompact) {
-        if ('annotations' in option.layout) {
-            for (let i = 0; i < option.layout.annotations.length; i++) {
-                option.layout.annotations[i]['visible'] = 'legendonly';
-            }
-        }
-    }
-    */
     return [option];
 }
 
 export function setGraph(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-    const isCompact = isDisplayCompact();
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
             for (const trace in speakerGraphs[i].data) {
-                const name = speakerGraphs[i].data[trace].name;
-                // hide yellow bands since when you have more than one it is difficult to see the graphs
-                // also remove the midrange lines for the same reason
-                if (
-                    speakerGraphs.length > 1 &&
-                    name != null &&
-                    (name === 'Band ±3dB' ||
-                        name === 'Band ±1.5dB' ||
-                        name === 'Midrange Band +3dB' ||
-                        name === 'Midrange Band -3dB')
-                ) {
-                    speakerGraphs[i].data[trace].visible = 'legendonly';
-                }
-                if (speakerGraphs.length > 1 && !isCompact) {
-                    if (
-                        'name' in speakerGraphs[i].data[trace] &&
-                        speakerGraphs[i].data[trace].name.indexOf('recommended') === 0
-                    ) {
-                        speakerGraphs[i].data[trace]['visible'] = 'legendonly';
-                    }
-                }
+                // Trendline and zone visibility is now controlled by the config menu
+                // via applyConfig() with per-speaker toggles (showA/showB)
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[trace].legendgrouptitle = {
                     text: speakerNames[i],
@@ -1085,6 +1441,11 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
         }
     }
     let option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
+    return [option];
+}
+
+export function setHeadphone(measurement, speakerNames, speakerGraphs, width, height) {
+    const option = setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement], 1);
     return [option];
 }
 
@@ -1133,7 +1494,9 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             graphsConfigs.push(options);
         }
     }
-    if (speakerGraphs.length <= 1 || graphsConfigs.length === 0) {
+    // The merge code below only makes sense when we have at least 2 valid graphs.
+    // Return early for single-speaker or if one of the inputs failed to produce a layout.
+    if (graphsConfigs.length < 2) {
         return graphsConfigs;
     }
 
@@ -1143,31 +1506,38 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         layout: structuredClone(graphsConfigs[0].layout),
         config: structuredClone(graphsConfigs[0].config),
     };
-    if (isDisplayCompact()) {
-        mergedConfig.layout.width = window.innerWidth;
-        mergedConfig.layout.height = mergedConfig.layout.width + 280;
-        mergedConfig.layout.margin = {
-            t: 160, // double lines title + axis
-            r: 10, // colorbar horizontal
-            l: 10,
-            b: 120,
-        };
+    // Target per-sub-plot aspect ratio (width/height) — matches single-contour contourRatio.
+    const CONTOUR_RATIO = 1.6;
+    if (isDisplayCompact() || isDisplayVertical()) {
+        // Compact or portrait: stack the two contours vertically (yaxis + yaxis2
+        // domains split top/bottom) so each contour uses the full width.
+        // Each sub-plot height = plotW / ratio; total height = 2 * sub-plot + margins.
+        const totalW = isDisplayCompact() ? window.innerWidth : window.innerWidth - graphMarginRight;
+        const marginT = 160; // double-line title + axis
+        const marginB = isDisplayCompact() ? 120 : 60;
+        const marginL = 10;
+        const marginR = isDisplayCompact() ? 10 : 100; // colorbar
+        const plotW = Math.max(1, totalW - marginL - marginR);
+        const subPlotH = plotW / CONTOUR_RATIO;
+        const gap = 40; // space between the two sub-plots
+        mergedConfig.layout.width = totalW;
+        mergedConfig.layout.height = marginT + marginB + 2 * subPlotH + gap;
+        mergedConfig.layout.margin = { t: marginT, b: marginB, l: marginL, r: marginR };
     } else {
-        if (isDisplayVertical()) {
-            mergedConfig.layout.width = window.innerWidth - graphMarginRight;
-            mergedConfig.layout.height = mergedConfig.layout.width + 240;
-            mergedConfig.layout.margin = {
-                t: 160, // double lines title + axis
-                r: 100, // colorbar
-            };
-        } else {
-            mergedConfig.layout.width = window.innerWidth;
-            mergedConfig.layout.margin = {
-                t: 60, // title
-                b: 40, // axis
-                r: 40, // colorbar
-            };
-        }
+        // Non-compact horizontal: place the two contours side by side
+        // (xaxis domains [0, 0.49] and [0.51, 1]).
+        // Each sub-plot has half the plot width → plotH = (plotW * 0.49) / ratio.
+        const totalW = window.innerWidth;
+        const marginT = 60;
+        const marginB = 40;
+        const marginL = 30;
+        const marginR = 80; // colorbar at right
+        const plotW = Math.max(1, totalW - marginL - marginR);
+        const subPlotW = plotW * 0.49;
+        const plotH = subPlotW / CONTOUR_RATIO;
+        mergedConfig.layout.width = totalW;
+        mergedConfig.layout.height = marginT + marginB + plotH;
+        mergedConfig.layout.margin = { t: marginT, b: marginB, l: marginL, r: marginR };
     }
     // customise title
     function split(title) {
@@ -1182,9 +1552,35 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     if (graphsConfigs.length > 1) {
         const split0 = split(graphsConfigs[0].layout.title.text);
         const split1 = split(graphsConfigs[1].layout.title.text);
-        title = '(A) ' + split0[0] + ' ' + split0[1] + ' v.s. (B) ' + split1[0] + ' ' + split1[1];
-        if (isDisplayCompact() || isDisplayVertical()) {
-            title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+        const singleLine =
+            '(A) ' +
+            split0[0] +
+            ' ' +
+            split0[1] +
+            ' by ' +
+            split0[2] +
+            ' v.s. (B) ' +
+            split1[0] +
+            ' ' +
+            split1[1] +
+            ' by ' +
+            split1[2];
+        if (titleFitsOnOneLine(singleLine, 14, window.innerWidth)) {
+            title = singleLine;
+        } else {
+            title =
+                '(A) ' +
+                split0[0] +
+                ' ' +
+                split0[1] +
+                ' by ' +
+                split0[2] +
+                ' <br>v.s. (B) ' +
+                split1[0] +
+                ' ' +
+                split1[1] +
+                ' by ' +
+                split1[2];
         }
     } else if (graphsConfigs.length === 1) {
         title = graphsConfigs[0].layout.title.text;
@@ -1281,29 +1677,34 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
         mergedConfig.layout.xaxis.side = 'bottom';
         mergedConfig.layout.xaxis.tick = 'outside';
 
-        mergedConfig.layout.xaxis2.side = 'bottom';
-        mergedConfig.layout.xaxis2.tick = 'outside';
-
         mergedConfig.layout.yaxis.tick = 'outside';
         if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
             mergedConfig.layout.yaxis.title.text = 'Angle (A)';
         }
 
-        mergedConfig.layout.yaxis2.side = 'right';
-        mergedConfig.layout.yaxis2.tick = 'outside';
-        mergedConfig.layout.yaxis2['anchor'] = 'x2';
-        if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
-            mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+        if (mergedConfig.layout.xaxis2) {
+            mergedConfig.layout.xaxis2.side = 'bottom';
+            mergedConfig.layout.xaxis2.tick = 'outside';
+            mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
+        }
+        if (mergedConfig.layout.yaxis2) {
+            mergedConfig.layout.yaxis2.side = 'right';
+            mergedConfig.layout.yaxis2.tick = 'outside';
+            mergedConfig.layout.yaxis2['anchor'] = 'x2';
+            if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+                mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+            }
         }
 
-        const range0 = graphsConfigs[0].layout.yaxis.range;
-        const range1 = graphsConfigs[1].layout.yaxis.range;
-        const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
-
         mergedConfig.layout.xaxis['domain'] = [0, 0.49];
-        mergedConfig.layout.xaxis2['domain'] = [0.51, 1];
-        mergedConfig.layout.yaxis.range = range;
-        mergedConfig.layout.yaxis2.range = range;
+
+        if (graphsConfigs.length >= 2) {
+            const range0 = graphsConfigs[0].layout.yaxis.range;
+            const range1 = graphsConfigs[1].layout.yaxis.range;
+            const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+            mergedConfig.layout.yaxis.range = range;
+            if (mergedConfig.layout.yaxis2) mergedConfig.layout.yaxis2.range = range;
+        }
     }
 
     return [mergedConfig];
@@ -1552,6 +1953,14 @@ export function setPlotForMeasurement(measurement, speakersName, graphs, windowW
         measurement === 'SPL Vertical Globe Normalized'
     ) {
         return setGlobe(measurement, speakersName, graphs, windowWidth, windowHeight);
+    }
+
+    if (
+        measurement === 'Frequency Response' ||
+        measurement === 'Frequency Response Compensated' ||
+        measurement === 'Target Deviation'
+    ) {
+        return setHeadphone(measurement, speakersName, graphs, windowWidth, windowHeight);
     }
 
     console.error('Measurement ' + measurement + ' is unknown');

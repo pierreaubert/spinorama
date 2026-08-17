@@ -48,8 +48,8 @@ compute_eq()
     target_dir="$(pwd)/build/eqs/$3/$2-$1-${smooth}-${full}"
     echo "Creating ${target_dir}"
     mkdir -p "$target_dir"
-    # echo  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=15000 --speaker="$3" --max-peq=$1 --fitness=$2 --ray-cluster=$IP:$PORT ${EXTRA}  --output-dir="$target_dir"
-    { ./generate_peqs.py \
+    # echo  ./scripts/generate_peqs.py --verbose --force --optimisation=global --max-iter=15000 --speaker="$3" --max-peq=$1 --fitness=$2 --ray-cluster=$IP:$PORT ${EXTRA}  --output-dir="$target_dir"
+    { ./scripts/generate_peqs.py \
 	  --verbose \
 	  --force \
 	  --optimisation=global \

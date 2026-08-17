@@ -1,0 +1,14 @@
+EQ for RCF KXW 4-A computed from Vendors-RCF data
+Preference Score 0.90 with EQ 1.97
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-15-19:33:20
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc    83 Hz Gain -6.42 dB Q 3.00
+Filter  2: ON PK Fc   219 Hz Gain -4.23 dB Q 2.98
+Filter  3: ON PK Fc   243 Hz Gain +2.99 dB Q 3.00
+Filter  4: ON PK Fc   879 Hz Gain +1.03 dB Q 1.44
+Filter  5: ON PK Fc  2406 Hz Gain -2.95 dB Q 2.00
+Filter  6: ON PK Fc  3068 Hz Gain +3.00 dB Q 1.78
+Filter  7: ON PK Fc 11476 Hz Gain -2.58 dB Q 0.51

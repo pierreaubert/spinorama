@@ -21,7 +21,7 @@ import argparse
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     """Generate CORS headers"""
 
-    def do_GET(self):  # noqa: N802
+    def do_GET(self):
         f = self.send_head()
         if f:
             try:
@@ -29,9 +29,21 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
             finally:
                 f.close()
 
+    def do_OPTIONS(self):
+        """Answer browser CORS preflight requests."""
+        self.send_response(204)
+        self.end_headers()
+
     def end_headers(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET")
+        origin = self.headers.get("Origin")
+        self.send_header("Access-Control-Allow-Origin", origin or "*")
+        if origin:
+            self.send_header("Vary", "Origin")
+        self.send_header("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
+        requested_headers = self.headers.get("Access-Control-Request-Headers")
+        if requested_headers:
+            self.send_header("Access-Control-Allow-Headers", requested_headers)
+        self.send_header("Access-Control-Max-Age", "600")
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
         return super(CORSRequestHandler, self).end_headers()
 

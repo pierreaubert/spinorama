@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 import numpy as np
 import pandas as pd
@@ -25,7 +24,6 @@ import pandas as pd
 from datas import Parameters
 
 from spinorama import logger, setup_logger
-from spinorama.ltype import DataSpeaker
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
 from spinorama.filter_peq import Peq, peq_apply_measurements
@@ -34,6 +32,7 @@ from spinorama.filter_scores import noscore_apply_filter
 from spinorama.compute_misc import unify_freq
 from spinorama.compute_estimates import compute_sensitivity, compute_sensitivity_details
 
+from spinorama.measurements import Measurements, Sensitivity
 from spinorama.misc import (
     graph_melt,
     graph_unmelt,
@@ -42,13 +41,13 @@ from spinorama.misc import (
     measurements_complete_freq,
     measurements_complete_spl,
 )
-from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_princeton import parse_graphs_speaker_princeton
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
-from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
-from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
-from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.loaders import (
+    CURVE_LOADERS,
+    HV_LOADERS,
+    SpeakerLoadParams,
+    UnknownMeasurementFormatError,
+)
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 from spinorama.constant_paths import (
     MIDRANGE_MIN_FREQ,
@@ -139,6 +138,39 @@ def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | np.ndarray | None = None
     return _normalize_spl_unmelted(spl_unmelted, on)
 
 
+# Below 20 dB the SPL value is most likely already normalised (e.g. for EQ
+# speakers); don't record sensitivity in that case.
+_SENSITIVITY_NORMALISED_THRESHOLD = 20.0
+
+
+def _mean_in_band(spl: pd.DataFrame, mean_min: float, mean_max: float) -> float:
+    """Return the average on-axis SPL inside the ``[mean_min, mean_max]`` band."""
+    return float(np.mean(spl.loc[(spl.Freq > mean_min) & (spl.Freq < mean_max)]["On Axis"]))
+
+
+def _sensitivity_if_meaningful(
+    spl: pd.DataFrame, mformat: str, mdistance: float
+) -> Sensitivity | None:
+    spl_at_distance, spl_at_1m = compute_sensitivity(spl, mformat, mdistance)
+    if spl_at_distance is None or spl_at_distance <= _SENSITIVITY_NORMALISED_THRESHOLD:
+        return None
+    return Sensitivity(spl=spl_at_distance, distance=mdistance, spl_at_1m=spl_at_1m)
+
+
+def _try_compute(name: str, speaker_name: str, fn, *args) -> pd.DataFrame | None:
+    """Run a compute step, returning ``None`` (with a log line) on ``KeyError``."""
+    try:
+        result = fn(*args)
+    except KeyError as key_error:
+        logger.warning(
+            "%s computation failed with key:%s for speaker %s", name, key_error, speaker_name
+        )
+        return None
+    if result is None:
+        logger.info("%s computation is None for speaker %s", name, speaker_name)
+    return result
+
+
 def filter_graphs(
     speaker_name: str,
     h_spl: None | pd.DataFrame,
@@ -147,171 +179,107 @@ def filter_graphs(
     mean_max: float,
     mformat: str,
     mdistance: float,
-) -> dict:
-    """Filter and process a set of horizontal and vertical SPL measurements.
+) -> Measurements:
+    """Build the per-axis :class:`Measurements` from raw H/V SPL sweeps.
 
-    Args:
-        speaker_name: Name of the speaker being measured
-        h_spl: DataFrame containing horizontal SPL measurements
-        v_spl: DataFrame containing vertical SPL measurements
-        mean_min: Minimum frequency for mean calculation
-        mean_max: Maximum frequency for mean calculation
-        mformat: Measurement format identifier
-        mdistance: Measurement distance in meters
-
-    Returns:
-        Dictionary containing processed measurements including:
-        - SPL Horizontal/Vertical
-        - CEA2034
-        - Estimated In-Room Response
-        - Various normalized versions
-
-    Notes:
-        This function performs several operations:
-        1. Filters the measurements
-        2. Computes CEA2034 standard measurements
-        3. Estimates in-room response
-        4. Normalizes measurements relative to reference points
+    Every derived curve is computed once in wide form and stored on the
+    returned :class:`Measurements`; downstream code accesses fields directly.
     """
-    dfs = {}
-    # add H and V SPL graphs
-    mean_min_max = None
-    mean_sensitivity = None
-    mean_sensitivity_1m = None
-    sv_spl = None
-    sh_spl = None
+    m = Measurements()
+
+    sh_spl: pd.DataFrame | None = None
+    sv_spl: pd.DataFrame | None = None
+    mean_in_band: float | None = None
+    sensitivity: Sensitivity | None = None
 
     if h_spl is not None:
-        mean_min_max = np.mean(
-            h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
-        )
-        mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(h_spl, mformat, mdistance)
-        sh_spl = shift_spl(h_spl, mean_min_max)
-        dfs["SPL Horizontal"] = graph_melt(sh_spl)
-        dfs["SPL Horizontal_unmelted"] = sh_spl
-        dfs["SPL Horizontal_normalized_unmelted"] = normalize_spl(sh_spl)
+        mean_in_band = _mean_in_band(h_spl, mean_min, mean_max)
+        sensitivity = _sensitivity_if_meaningful(h_spl, mformat, mdistance)
+        sh_spl = shift_spl(h_spl, mean_in_band)
+        m.h_spl = sh_spl
+        m.h_spl_normalized = normalize_spl(sh_spl)
     else:
         logger.info("h_spl is None for speaker %s", speaker_name)
 
     if v_spl is not None:
-        if mean_min_max is None:
-            mean_min_max = np.mean(
-                v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
-            )
-        if mean_sensitivity is None:
-            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(v_spl, mformat, mdistance)
-        sv_spl = shift_spl(v_spl, mean_min_max)
-        dfs["SPL Vertical"] = graph_melt(sv_spl)
-        dfs["SPL Vertical_unmelted"] = sv_spl
-        dfs["SPL Vertical_normalized_unmelted"] = normalize_spl(sv_spl)
+        if mean_in_band is None:
+            mean_in_band = _mean_in_band(v_spl, mean_min, mean_max)
+        if sensitivity is None:
+            sensitivity = _sensitivity_if_meaningful(v_spl, mformat, mdistance)
+        sv_spl = shift_spl(v_spl, mean_in_band)
+        m.v_spl = sv_spl
+        m.v_spl_normalized = normalize_spl(sv_spl)
     else:
         logger.info("v_spl is None for speaker %s", speaker_name)
 
-    # horrible hack for EQ speakers which are already normalized
-    if mean_sensitivity is not None and mean_sensitivity > 20:
-        logger.debug("%s sensitivity %f", speaker_name, mean_sensitivity)
-        dfs["sensitivity"] = mean_sensitivity
-        dfs["sensitivity_distance"] = mdistance
-        dfs["sensitivity_1m"] = mean_sensitivity_1m
-    logger.debug(
-        "%s sensitivity: %f and sensitivity 1m: %f",
-        speaker_name,
-        mean_sensitivity,
-        mean_sensitivity_1m,
-    )
-
-    # add computed graphs
-    table = [
-        ["Early Reflections", early_reflections],
-        ["Horizontal Reflections", horizontal_reflections],
-        ["Vertical Reflections", vertical_reflections],
-        ["Estimated In-Room Response", estimated_inroom_hv],
-        ["Estimated In-Room Response Normalized", estimated_inroom_hv],
-        ["On Axis", compute_onaxis],
-        ["CEA2034", compute_cea2034],
-        ["CEA2034 Normalized", compute_cea2034],
-    ]
+    m.sensitivity = sensitivity
+    if sensitivity is not None:
+        logger.debug(
+            "%s sensitivity: %f and sensitivity 1m: %f",
+            speaker_name,
+            sensitivity.spl,
+            sensitivity.spl_at_1m,
+        )
 
     complete_spl = measurements_complete_spl(h_spl, v_spl)
-    complete_freq = measurements_complete_freq(h_spl, v_spl)
-    complete = complete_spl and complete_freq
-
+    complete = complete_spl and measurements_complete_freq(h_spl, v_spl)
     logger.info(
-        "%s completeness %s SPL %s Freq %s",
+        "%s completeness %s SPL %s",
         speaker_name,
         str(complete),
         str(complete_spl),
-        str(complete_freq),
     )
 
+    # Partial path: at least one axis is missing — compute the minimum.
     if sh_spl is None or sv_spl is None:
-        #
-        df_on_axis = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df_on_axis
-        dfs["On Axis"] = graph_melt(df_on_axis)
-        # SPL H
+        m.on_axis = compute_onaxis(sh_spl, sv_spl)
         if sh_spl is not None and complete_spl:
-            df_horizontals = horizontal_reflections(sh_spl)
-            dfs["Horizontal Reflections_unmelted"] = df_horizontals
-            dfs["Horizontal Reflections"] = graph_melt(df_horizontals)
-        # SPL V
+            m.horizontal_reflections = horizontal_reflections(sh_spl)
         if sv_spl is not None and complete_spl:
-            df_verticals = vertical_reflections(sv_spl)
-            dfs["Vectical Reflections_unmelted"] = df_verticals
-            dfs["Vectical Reflections"] = graph_melt(df_verticals)
-        # that's all folks
-        return dfs
+            m.vertical_reflections = vertical_reflections(sv_spl)
+        return m
 
-    for title, functor in table:
-        try:
-            # skip all except on-axis if not complete
-            if not complete and title != "On Axis":
-                continue
-            df_funct = None
-            if title == "Horizontal Reflections":
-                df_funct = functor(sh_spl)
-            elif title == "Vertical Reflections":
-                df_funct = functor(sv_spl)
-            elif "Normalized" in title:
-                df_funct = functor(normalize_spl(sh_spl), normalize_spl(sv_spl))
-            else:
-                df_funct = functor(sh_spl, sv_spl)
-            if df_funct is not None:
-                dfs[title + "_unmelted"] = df_funct
-                dfs[title] = graph_melt(df_funct)
-            else:
-                logger.info("%s computation is None for speaker %s", title, speaker_name)
-        except KeyError as key_error:
-            logger.warning(
-                "%s computation failed with key:%s for speaker %s", title, key_error, speaker_name
-            )
+    # Full path: both axes present. On-axis is always computed.
+    m.on_axis = _try_compute("On Axis", speaker_name, compute_onaxis, sh_spl, sv_spl)
+    if not complete:
+        return m
 
-    df_out = {}
-    for k, df_item in dfs.items():
-        if not isinstance(df_item, pd.DataFrame):
-            df_out[k] = df_item
-            continue
-        if "unmelted" in k:
-            if "Measurements" in df_item:
-                logger.error("Correct misshaped data for %s", k)
-                df_out[k] = graph_unmelt(df_item)
-            else:
-                df_out[k] = df_item
-        else:
-            if "Measurements" in df_item:
-                df_out[k] = df_item
-            else:
-                logger.error("Correct misshaped data for %s", k)
-                df_out[k] = graph_melt(df_item)
-    return df_out
+    m.early_reflections = _try_compute(
+        "Early Reflections", speaker_name, early_reflections, sh_spl, sv_spl
+    )
+    m.horizontal_reflections = _try_compute(
+        "Horizontal Reflections", speaker_name, horizontal_reflections, sh_spl
+    )
+    m.vertical_reflections = _try_compute(
+        "Vertical Reflections", speaker_name, vertical_reflections, sv_spl
+    )
+    m.eir = _try_compute(
+        "Estimated In-Room Response", speaker_name, estimated_inroom_hv, sh_spl, sv_spl
+    )
+    m.eir_normalized = _try_compute(
+        "Estimated In-Room Response Normalized",
+        speaker_name,
+        estimated_inroom_hv,
+        normalize_spl(sh_spl),
+        normalize_spl(sv_spl),
+    )
+    m.cea2034 = _try_compute("CEA2034", speaker_name, compute_cea2034, sh_spl, sv_spl)
+    m.cea2034_normalized = _try_compute(
+        "CEA2034 Normalized",
+        speaker_name,
+        compute_cea2034,
+        normalize_spl(sh_spl),
+        normalize_spl(sv_spl),
+    )
+
+    return m
 
 
 def filter_graphs_partial(df_in, mformat, mdistance):
     df_out = {}
     # normalize first
     mean_midrange = None
-    mean_sensitivity = None
-    mean_sensitivity_1m = None
+    sensitivity: Sensitivity | None = None
     on = None
     if "CEA2034" in df_in:
         on = df_in["CEA2034"]
@@ -333,9 +301,11 @@ def filter_graphs_partial(df_in, mformat, mdistance):
                     & (on.Measurements == curve)
                 ].dB
             )
-            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity_details(
-                on, curve, mformat, mdistance
-            )
+            spl_at_distance, spl_at_1m = compute_sensitivity_details(on, curve, mformat, mdistance)
+            if spl_at_distance > _SENSITIVITY_NORMALISED_THRESHOLD:
+                sensitivity = Sensitivity(
+                    spl=spl_at_distance, distance=mdistance, spl_at_1m=spl_at_1m
+                )
 
     if mean_midrange is None:
         mean_midrange = 0.0
@@ -401,14 +371,14 @@ def filter_graphs_partial(df_in, mformat, mdistance):
             df_out[k] = df_in[k]
 
     # update sensitivity
-    if mean_sensitivity is not None and mean_sensitivity > 20:
-        df_out["sensitivity"] = mean_sensitivity
-        df_out["sensitivity_distance"] = mdistance
-        df_out["sensitivity_1m"] = mean_sensitivity_1m
+    if sensitivity is not None:
+        df_out["sensitivity"] = sensitivity.spl
+        df_out["sensitivity_distance"] = sensitivity.distance
+        df_out["sensitivity_1m"] = sensitivity.spl_at_1m
 
     logger.debug("DEBUG filter_graphs_partial  IN (%s)", ", ".join(df_in.keys()))
     logger.debug("DEBUG filter_graphs_partial partial OUT (%s)", ", ".join(df_out.keys()))
-    return df_out
+    return Measurements.from_legacy_dict(df_out)
 
 
 def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
@@ -532,6 +502,11 @@ def spin_compute_di_eir(
     return dfs
 
 
+def _mirror_angle(col: str) -> str:
+    """Return the opposite-sign angle column name (``"30°" → "-30°"``, ``"-40°" → "40°"``)."""
+    return col[1:] if col[0] == "-" else "-{}".format(col)
+
+
 def symmetrise_speaker_measurements(
     h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None, symmetry: str | None
 ) -> tuple[pd.DataFrame | None, pd.DataFrame | None]:
@@ -556,7 +531,7 @@ def symmetrise_speaker_measurements(
         new_spl = spl.copy()
         for col in cols:
             if col not in ("Freq", "On Axis", "180°") and "Phase" not in col:
-                m_angle = "{}".format(col[1:]) if col[0] == "-" else "-{}".format(col)
+                m_angle = _mirror_angle(col)
                 if m_angle not in spl.columns:
                     new_spl[m_angle] = spl[col]
         return sort_angles(new_spl)
@@ -607,159 +582,144 @@ def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
     return mean_min, mean_max
 
 
+def _parse_hv_speaker(
+    params: SpeakerLoadParams,
+    mean_min: float,
+    mean_max: float,
+) -> Measurements | None:
+    """Run an HV loader, symmetrise, and assemble the per-axis :class:`Measurements`."""
+    status, (h_spl, v_spl) = HV_LOADERS[params.mformat](params)
+
+    if not status:
+        logger.debug("Failed to load %s from measurement %s", params.speaker_name, params.mversion)
+        if h_spl is not None and "Freq" not in h_spl:
+            h_spl = None
+        if v_spl is not None and "Freq" not in v_spl:
+            v_spl = None
+        if h_spl is None and v_spl is None:
+            logger.error(
+                "Failed to load %s from measurement %s", params.speaker_name, params.mversion
+            )
+            return None
+
+    h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, params.msymmetry)
+    if h_spl2 is None or v_spl2 is None:
+        logger.error(
+            "Failed to symmetrise %s from measurement %s",
+            params.speaker_name,
+            params.mversion,
+        )
+        return None
+
+    return filter_graphs(
+        params.speaker_name,
+        h_spl2,
+        v_spl2,
+        mean_min,
+        mean_max,
+        params.mformat,
+        params.distance,
+    )
+
+
+def _parse_curve_speaker(params: SpeakerLoadParams) -> Measurements | None:
+    """Run a single-curve loader and pipe through the partial-graph pipeline."""
+    status, (title, df_uneven) = CURVE_LOADERS[params.mformat](params)
+    if not status:
+        logger.info(
+            "Load %s failed for %s %s %s",
+            params.mformat,
+            params.speaker_name,
+            params.mversion,
+            params.morigin,
+        )
+        return None
+
+    df_even = graph_melt(unify_freq(df_uneven))
+    nan_count = check_nan({"test": df_even})
+    if nan_count > 0:
+        logger.error("df_uneven %s has %d NaNs", params.speaker_name, nan_count)
+
+    logger.debug("DEBUG title: %s", title)
+    if df_even is None:
+        logger.info("INFO df_even is None")
+        return None
+    logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
+    logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
+
+    try:
+        if title == "CEA2034":
+            df_full = spin_compute_di_eir(params.speaker_name, title, df_even)
+        else:
+            df_full = {title: unify_freq(graph_melt(df_even))}
+        nan_count = check_nan(df_full)
+        if nan_count > 0:
+            logger.error("df_full %s has %d NaNs", params.speaker_name, nan_count)
+            for k in df_full:
+                if isinstance(df_full[k], pd.DataFrame):
+                    logger.error("------------ %s -----------", k)
+                    logger.error(df_full[k].head())
+
+        m_graph = filter_graphs_partial(df_full, params.mformat, params.distance)
+        legacy_view = m_graph.to_legacy_dict()
+        nan_count = check_nan(legacy_view)
+        if nan_count > 0:
+            logger.error("df_graph %s has %d NaNs", params.speaker_name, nan_count)
+            for k, v in legacy_view.items():
+                if isinstance(v, pd.DataFrame):
+                    logger.error("------------ %s -----------", k)
+                    logger.error(v.head())
+        return m_graph
+    except ValueError as ve:
+        logger.exception("ValueError for speaker %s: %s", params.speaker_name, ve)
+        return None
+    except KeyError as ke:
+        logger.exception("KeyError for speaker %s: %s", params.speaker_name, ke)
+        return None
+
+
 def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
     speaker_name: str,
     speaker_parameters: dict,
     log_level: int,
-) -> dict:
+) -> Measurements:
     setup_logger(level=log_level)
 
-    mformat = speaker_parameters["mformat"]
-    morigin = speaker_parameters["morigin"]
-    mversion = speaker_parameters["mversion"]
-    msymmetry = speaker_parameters["msymmetry"]
-    mparameters = speaker_parameters["mparameters"]
-    distance = speaker_parameters["distance"]
-    shape = speaker_parameters["shape"]
-    df_graph = None
-    measurement_path = f"{speaker_path}"
-    mean_min, mean_max = get_mean_min_max(mparameters)
+    params = SpeakerLoadParams.from_legacy(
+        speaker_path, speaker_brand, speaker_name, speaker_parameters
+    )
+    mean_min, mean_max = get_mean_min_max(params.mparameters)
 
-    status = False
-    h_spl = pd.DataFrame()
-    v_spl = pd.DataFrame()
-    if mformat in ("klippel", "princeton", "spl_hv_txt", "gll_hv_txt"):
-        if mformat == "klippel":
-            status, (h_spl, v_spl) = parse_graphs_speaker_klippel(
-                measurement_path, speaker_brand, speaker_name, mversion, shape
-            )
-        elif mformat == "princeton":
-            status, (h_spl, v_spl) = parse_graphs_speaker_princeton(
-                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-            )
-        elif mformat == "spl_hv_txt":
-            status, (h_spl, v_spl) = parse_graphs_speaker_spl_hv_txt(
-                measurement_path, speaker_brand, speaker_name, mversion
-            )
-        elif mformat == "gll_hv_txt":
-            status, (h_spl, v_spl) = parse_graphs_speaker_gll_hv_txt(
-                measurement_path, speaker_name, mversion
-            )
-
-        if not status:
-            logger.debug("Failed to load %s from measurement %s", speaker_name, mversion)
-            if h_spl is not None and "Freq" not in h_spl:
-                h_spl = None
-            if v_spl is not None and "Freq" not in v_spl:
-                v_spl = None
-            if h_spl is None and v_spl is None:
-                logger.error("Failed to load %s from measurement %s", speaker_name, mversion)
-                return {}
-
-        h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, msymmetry)
-        if h_spl2 is None or v_spl2 is None:
-            logger.error("Failed to symmetrise %s from measurement %s", speaker_name, mversion)
-            return {}
-
-        df_graph = filter_graphs(
-            speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
-        )
-
-        # print('debug: after filter_graph {}'.format(df_graph['SPL Horizontal_unmelted'].keys()))
-        # print('debug: after filter_graph {}'.format(df_graph['SPL Vertical_unmelted'].keys()))
-    elif mformat in ("webplotdigitizer", "rew_text_dump"):
-        title = None
-        df_even = None
-        df_uneven = None
-        if mformat == "webplotdigitizer":
-            status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
-                measurement_path, speaker_brand, speaker_name, morigin, mversion
-            )
-            if not status:
-                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
-                return {}
-        elif mformat == "rew_text_dump":
-            status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
-                measurement_path, speaker_brand, speaker_name, morigin, mversion
-            )
-            if not status:
-                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
-                return {}
-
-        # normalize frequency for all graphs
-        df_even = graph_melt(unify_freq(df_uneven))
-
-        # check NaN
-        nan_count = check_nan({"test": df_even})
-        if nan_count > 0:
-            logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
-
-        logger.debug("DEBUG title: %s", title)
-        if df_even is not None:
-            logger.debug("DEBUG df_even keys (%s)", ", ".join(df_even.keys()))
-            logger.debug("DEBUG df_even measurements (%s)", ", ".join(set(df_even.Measurements)))
-        else:
-            logger.info("INFO df_even is None")
-            return {}
-
-        try:
-            if title == "CEA2034":
-                df_full = spin_compute_di_eir(speaker_name, title, df_even)
-            else:
-                df_full = {title: unify_freq(graph_melt(df_even))}
-            nan_count = check_nan(df_full)
-            if nan_count > 0:
-                logger.error("df_full %s has %d NaNs", speaker_name, nan_count)
-                for k in df_full:
-                    if isinstance(df_full[k], pd.DataFrame):
-                        logger.error("------------ %s -----------", k)
-                        logger.error(df_full[k].head())
-
-            # for k in df_full:
-            #     logger.debug("-- DF FULL ---------- %s -----------", k)
-            #     if isinstance(df_full[k], pd.DataFrame):
-            #         logger.debug(df_full[k].head())
-
-            df_graph = filter_graphs_partial(df_full, mformat, distance)
-            nan_count = check_nan(df_graph)
-            if nan_count > 0:
-                logger.error("df_graph %s has %d NaNs", speaker_name, nan_count)
-                for k in df_graph:
-                    if isinstance(df_graph[k], pd.DataFrame):
-                        logger.error("------------ %s -----------", k)
-                        logger.error(df_graph[k].head())
-
-            # for k in df_graph:
-            #     if isinstance(df_graph[k], pd.DataFrame):
-            #         logger.debug("-- DF ---------- %s -----------", k)
-            #         logger.debug(df_graph[k].head())
-        except ValueError as ve:
-            logger.exception("ValueError for speaker %s: %s", speaker_name, ve)
-            return {}
-        except KeyError as ke:
-            logger.exception("KeyError for speaker %s: %s", speaker_name, ke)
-            return {}
-
+    if params.mformat in HV_LOADERS:
+        m_graph = _parse_hv_speaker(params, mean_min, mean_max)
+    elif params.mformat in CURVE_LOADERS:
+        m_graph = _parse_curve_speaker(params)
     else:
-        logger.fatal("Format %s is unkown", mformat)
-        sys.exit(1)
+        logger.fatal("Format %s is unkown", params.mformat)
+        raise UnknownMeasurementFormatError(params.mformat)
 
-    if df_graph is None:
-        logger.warning("Parsing failed for %s/%s/%s", measurement_path, speaker_name, mversion)
-        return {}
+    if m_graph is None or m_graph.is_empty():
+        logger.warning(
+            "Parsing failed for %s/%s/%s",
+            params.measurement_path,
+            params.speaker_name,
+            params.mversion,
+        )
+        return Measurements()
 
-    return df_graph
+    return m_graph
 
 
 def parse_eq_speaker(
     speaker_path: str,
     speaker_name: str,
-    df_ref: dict,
+    ref: Measurements,
     speaker_parameters: dict,
     log_level: int,
-) -> tuple[Peq, DataSpeaker]:
+) -> tuple[Peq, Measurements]:
+    """Apply an on-disk PEQ to ``ref`` and return ``(peq, equalised_measurements)``."""
     setup_logger(level=log_level)
     mformat = speaker_parameters["mformat"]
     mparameters = speaker_parameters["mparameters"]
@@ -767,22 +727,18 @@ def parse_eq_speaker(
 
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)
-    if df_ref is None or not isinstance(df_ref, dict) or not os.path.isfile(iirname):
-        return [], {}
+    if ref is None or ref.is_empty() or not os.path.isfile(iirname):
+        return [], Measurements()
 
     srate = 48000
     logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
     iir = parse_eq_iir_rews(iirname, srate)
 
-    df_eq = {}
-
     # full measurement
-    if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
-        h_spl = df_ref["SPL Horizontal_unmelted"]
-        v_spl = df_ref["SPL Vertical_unmelted"]
-        eq_h_spl = peq_apply_measurements(h_spl, iir)
-        eq_v_spl = peq_apply_measurements(v_spl, iir)
-        df_eq = filter_graphs(
+    if ref.h_spl is not None and ref.v_spl is not None:
+        eq_h_spl = peq_apply_measurements(ref.h_spl, iir)
+        eq_v_spl = peq_apply_measurements(ref.v_spl, iir)
+        return iir, filter_graphs(
             speaker_name,
             eq_h_spl,
             eq_v_spl,
@@ -791,37 +747,30 @@ def parse_eq_speaker(
             mformat,
             distance,
         )
-        return iir, df_eq
 
-    # partial_measurements
-    if "CEA2034" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
+    # partial_measurements: apply EQ to the pre-computed curves.
+    m = Measurements(eq=iir)
+
+    if ref.cea2034 is not None:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(ref, iir, False)
         if spin_eq is not None:
-            df_eq["CEA2034"] = spin_eq
-            df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
-
+            m.cea2034 = graph_unmelt(spin_eq)
         if eir_eq is not None:
-            df_eq["Estimated In-Room Response"] = eir_eq
-            df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
-
+            m.eir = graph_unmelt(eir_eq)
         if on_eq is not None:
-            df_eq["On Axis"] = on_eq
-            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+            m.on_axis = graph_unmelt(on_eq)
 
-        df_eq["eq"] = iir
-
-    if "CEA2034 Normalized" in df_ref:
-        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, True)
+    if ref.cea2034_normalized is not None:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(ref, iir, True)
         if spin_eq is not None:
-            df_eq["CEA2034 Normalized"] = spin_eq
-            df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
-
+            m.cea2034_normalized = graph_unmelt(spin_eq)
         if eir_eq is not None:
-            df_eq["Estimated In-Room Response Normalized"] = eir_eq
-            df_eq["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(eir_eq)
-
+            m.eir_normalized = graph_unmelt(eir_eq)
         if on_eq is not None:
-            df_eq["On Axis"] = on_eq
-            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+            m.on_axis = graph_unmelt(on_eq)
 
-    return iir, df_eq
+    # An EQ with no curves to attach to is useless to the caller.
+    if m.cea2034 is None and m.cea2034_normalized is None:
+        return iir, Measurements()
+
+    return iir, m

@@ -51,13 +51,13 @@ def test_scrape_cli_aggregates_and_calls_llm(monkeypatch):
         ),
     }
 
-    def fake_fetch(url: str, engine: str = "auto") -> Tuple[str, str]:  # noqa: ARG001
+    def fake_fetch(url: str, engine: str = "auto") -> Tuple[str, str]:
         return pages[url]
 
     monkeypatch.setattr(cli, "fetch_url", fake_fetch)
 
     # Mock LLM to contribute one more field
-    def fake_llm(prompt: str, port: int):  # noqa: ARG001
+    def fake_llm(prompt: str, port: int):
         # Return a JSON-like mapping the normalizer can understand
         return {
             "overall frequency response": "40Hz - 20kHz",
@@ -100,7 +100,7 @@ def test_fetcher_requests_engine(monkeypatch):
         def raise_for_status(self):
             return None
 
-    def fake_get(url: str, timeout: int = 20):  # noqa: ARG001
+    def fake_get(url: str, timeout: int = 20):
         return DummyResp()
 
     monkeypatch.setattr(fetcher, "requests", type("R", (), {"get": staticmethod(fake_get)}))

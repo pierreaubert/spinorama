@@ -24,7 +24,7 @@ import pandas as pd
 import plotly.io
 
 from datas import Measurement
-from datas.metadata import speakers_info
+from datas.speaker import speakers_info
 from datas.helpers import measurement_valid_freq
 from spinorama import logger
 
@@ -380,3 +380,14 @@ def measurements_valid_freq_range(
     min_valid_freq = max(20.0, min_valid_freq)
     max_valid_freq = min(20000.0, max_valid_freq)
     return min_valid_freq, max_valid_freq
+
+
+def sanitize_filename(name: str) -> str:
+    """Replace characters invalid on Windows filesystems with underscores.
+
+    Windows doesn't allow: | < > : " / \\ ? * and control characters.
+    """
+    invalid_chars = '|:<>"\\/\\?*'
+    for char in invalid_chars:
+        name = name.replace(char, "_")
+    return name

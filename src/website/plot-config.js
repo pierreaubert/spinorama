@@ -19,7 +19,6 @@
 /*eslint no-undef: "error"*/
 
 import { labelShort, labelLong } from './plot.js';
-import { getUrlParameter } from './misc.js';
 
 // Color palettes for graphs
 export const colorPalettes = {
@@ -60,16 +59,16 @@ export const colorPalettes = {
         'rgb(245, 222, 179)',
     ],
     dark: [
-        'rgb(44, 62, 80)',
-        'rgb(231, 76, 60)',
-        'rgb(52, 152, 219)',
-        'rgb(46, 204, 113)',
-        'rgb(243, 156, 18)',
-        'rgb(155, 89, 182)',
-        'rgb(26, 188, 156)',
-        'rgb(52, 73, 94)',
-        'rgb(230, 126, 34)',
-        'rgb(149, 165, 166)',
+        'rgb(185, 195, 255)',
+        'rgb(255, 180, 171)',
+        'rgb(80, 220, 160)',
+        'rgb(255, 193, 70)',
+        'rgb(226, 186, 217)',
+        'rgb(193, 197, 221)',
+        'rgb(255, 157, 120)',
+        'rgb(133, 193, 233)',
+        'rgb(255, 214, 102)',
+        'rgb(174, 214, 181)',
     ],
     monochrome: [
         'rgb(44, 62, 80)',
@@ -154,6 +153,16 @@ export const contourColorscales = {
     ],
 };
 
+// Trendline trace names (module-level constant, not recreated per call)
+const trendNames = new Set([
+    'Band ±3dB',
+    'Band ±1.5dB',
+    'Midrange Band +3dB',
+    'Midrange Band -3dB',
+    'Midrange ±3dB',
+    'Linear interpolation',
+]);
+
 // Default delta configuration options for plots
 export const defaultConfig = {
     font: {
@@ -161,7 +170,6 @@ export const defaultConfig = {
         size: 0, // 0 means no change to original size
         color: 'default', // 'default' means keep original color
     },
-    theme: 'default', // 'default' means keep original theme
     colors: {
         palette: 'default', // 'default' means keep original palette
     },
@@ -173,11 +181,12 @@ export const defaultConfig = {
         color: 'default', // 'default' means keep original color
     },
     legend: {
+        show: true, // Boolean overrides original value
         position: 'default', // 'default' means keep original position
         xanchor: 'default', // 'default' means keep original xanchor
         yanchor: 'default', // 'default' means keep original yanchor
-        xoffset: 0, // 0 means no change to original offset
-        yoffset: 0, // 0 means no change to original offset
+        xoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
+        yoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
         label: 'default', // 'default' means keep original label style
     },
     margins: {
@@ -198,6 +207,18 @@ export const defaultConfig = {
     },
     annotations: {
         show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
+    },
+    trendlines: {
+        show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
+    },
+    zones: {
+        show: true, // Boolean overrides original value
+        showA: true, // Per-speaker A (compare mode)
+        showB: true, // Per-speaker B (compare mode)
     },
 };
 
@@ -316,6 +337,104 @@ export function applyConfig(options, config) {
             });
         }
 
+        // Apply theme (light/dark) to graph backgrounds and colors
+        if (config.theme && config.theme !== 'default') {
+            switch (config.theme) {
+                case 'light': {
+                    const fg = '#1b1b21';
+                    layout.paper_bgcolor = '#faf8ff';
+                    layout.plot_bgcolor = '#faf8ff';
+                    if (!layout.font) layout.font = {};
+                    layout.font.color = fg;
+                    // Force title color (Plotly default may not inherit from layout.font)
+                    if (layout.title) {
+                        if (!layout.title.font) layout.title.font = {};
+                        layout.title.font.color = fg;
+                    }
+                    ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
+                        if (layout[axis]) {
+                            // Major grid: darker so 5 dB lines stand out
+                            layout[axis].gridcolor = 'rgba(0,0,0,0.22)';
+                            layout[axis].linecolor = '#45464f';
+                            layout[axis].zerolinecolor = '#767680';
+                            if (layout[axis].minor) {
+                                // Minor grid: lighter so 1 dB lines are visible but subordinate
+                                layout[axis].minor.gridcolor = 'rgba(0,0,0,0.07)';
+                            }
+                            // Tick and axis title text colors
+                            if (layout[axis].tickfont) layout[axis].tickfont.color = fg;
+                            else layout[axis].tickfont = { color: fg };
+                            if (layout[axis].title) {
+                                if (!layout[axis].title.font) layout[axis].title.font = {};
+                                layout[axis].title.font.color = fg;
+                            }
+                        }
+                    });
+                    break;
+                }
+                case 'dark': {
+                    const fg = '#e3e1e9';
+                    layout.paper_bgcolor = '#131318';
+                    layout.plot_bgcolor = '#1f1f25';
+                    if (!layout.font) layout.font = {};
+                    layout.font.color = fg;
+                    if (layout.title) {
+                        if (!layout.title.font) layout.title.font = {};
+                        layout.title.font.color = fg;
+                    }
+                    ['xaxis', 'yaxis', 'yaxis2', 'zaxis'].forEach((axis) => {
+                        if (layout[axis]) {
+                            // Major grid: brighter so 5 dB lines stand out
+                            layout[axis].gridcolor = 'rgba(255,255,255,0.22)';
+                            layout[axis].linecolor = '#c6c5d0';
+                            layout[axis].zerolinecolor = '#45464f';
+                            if (layout[axis].minor) {
+                                // Minor grid: dimmer so 1 dB lines are subordinate
+                                layout[axis].minor.gridcolor = 'rgba(255,255,255,0.07)';
+                            }
+                            if (layout[axis].tickfont) layout[axis].tickfont.color = fg;
+                            else layout[axis].tickfont = { color: fg };
+                            if (layout[axis].title) {
+                                if (!layout[axis].title.font) layout[axis].title.font = {};
+                                layout[axis].title.font.color = fg;
+                            }
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+
+        // Enforce plot borders on SPL vs frequency graphs (not contour/radar/globe)
+        var gt = options._graphType;
+        var isSplGraph = !gt || (gt.isGraph && !gt.isSurface && !gt.isRadar && !gt.isGlobe);
+        if (isSplGraph) {
+            var borderColor = config.theme === 'dark' ? '#c6c5d0' : '#45464f';
+            ['xaxis', 'yaxis', 'yaxis2'].forEach(function (ax) {
+                if (layout[ax]) {
+                    layout[ax].showline = true;
+                    layout[ax].linewidth = 1;
+                    layout[ax].linecolor = borderColor;
+                    layout[ax].mirror = true;
+                }
+            });
+            // Add explicit border rectangle to guarantee all 4 edges are visible.
+            // Use 'x domain' / 'y domain' references so the rect follows the actual
+            // plot area (including when yaxis2 side='right' reserves extra margin).
+            var borderShape = {
+                type: 'rect',
+                xref: 'x domain',
+                yref: 'y domain',
+                x0: 0,
+                y0: 0,
+                x1: 1,
+                y1: 1,
+                line: { color: borderColor, width: 1 },
+            };
+            if (!layout.shapes) layout.shapes = [];
+            layout.shapes.push(borderShape);
+        }
+
         // Apply margins as deltas to existing margins
         if (config.margins) {
             if (!layout.margin) {
@@ -344,69 +463,53 @@ export function applyConfig(options, config) {
                 layout.legend = {};
             }
 
-            if (config.legend.show !== undefined) {
+            // Only force legend on if the graph didn't explicitly disable it (e.g. contour plots)
+            if (config.legend.show !== undefined && layout.showlegend !== false) {
                 layout.showlegend = config.legend.show;
             }
 
             // Apply legend position
             if (config.legend.position && config.legend.position !== 'default') {
                 switch (config.legend.position) {
-                    case 'top-left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.99;
-                        break;
                     case 'top':
                         layout.legend.x = 0.5;
-                        layout.legend.y = 0.99;
-                        break;
-                    case 'top-right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.99;
-                        break;
-                    case 'left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.5;
-                        break;
-                    case 'center':
-                        layout.legend.x = 0.5;
-                        layout.legend.y = 0.5;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'bottom';
+                        layout.legend.orientation = 'h';
                         break;
                     case 'right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.5;
-                        break;
-                    case 'bottom-left':
-                        layout.legend.x = 0.01;
-                        layout.legend.y = 0.01;
+                        layout.legend.x = 1.0;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'left';
+                        layout.legend.yanchor = 'auto';
+                        layout.legend.orientation = 'v';
                         break;
                     case 'bottom':
                         layout.legend.x = 0.5;
-                        layout.legend.y = 0.01;
+                        layout.legend.y = -0.1;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'top';
+                        layout.legend.orientation = 'h';
                         break;
-                    case 'bottom-right':
-                        layout.legend.x = 0.99;
-                        layout.legend.y = 0.01;
+                    case 'left':
+                        layout.legend.x = 0.0;
+                        layout.legend.y = 1.0;
+                        layout.legend.xanchor = 'right';
+                        layout.legend.yanchor = 'auto';
+                        layout.legend.orientation = 'v';
                         break;
                 }
             }
 
-            // Apply legend anchor
-            if (config.legend.xanchor && config.legend.xanchor !== 'default') {
-                layout.legend.xanchor = config.legend.xanchor;
-            }
-
-            if (config.legend.yanchor && config.legend.yanchor !== 'default') {
-                layout.legend.yanchor = config.legend.yanchor;
-            }
-
             // Apply legend offset as deltas
-            if (config.legend.xoffset !== undefined) {
-                if (!layout.legend.x) layout.legend.x = 0;
+            if (config.legend.xoffset !== undefined && config.legend.xoffset !== 0) {
+                if (layout.legend.x === undefined) layout.legend.x = 0;
                 layout.legend.x += config.legend.xoffset;
             }
 
-            if (config.legend.yoffset !== undefined) {
-                if (!layout.legend.y) layout.legend.y = 0;
+            if (config.legend.yoffset !== undefined && config.legend.yoffset !== 0) {
+                if (layout.legend.y === undefined) layout.legend.y = 0;
                 layout.legend.y += config.legend.yoffset;
             }
 
@@ -442,90 +545,138 @@ export function applyConfig(options, config) {
         }
     }
 
+    // Apply annotation visibility
+    if (config.annotations) {
+        if (options.layout && options.layout.annotations) {
+            for (const ann of options.layout.annotations) {
+                // The Python annotation layout solver can suppress a label
+                // when the plot is too crowded to place it readably. Keep
+                // that decision authoritative even when the user enables all
+                // annotations through the configuration panel.
+                if (typeof ann.name === 'string' && ann.name.startsWith('layout-hidden:')) {
+                    ann.visible = false;
+                    continue;
+                }
+                // Per-speaker annotation visibility (annotations have no legendgroup,
+                // so we use showA/showB as a combined toggle in compare mode)
+                if (ann._speakerIndex === 1 && config.annotations.showB !== undefined) {
+                    ann.visible = config.annotations.showB;
+                } else if (ann._speakerIndex === 0 && config.annotations.showA !== undefined) {
+                    ann.visible = config.annotations.showA;
+                } else if (config.annotations.show !== undefined) {
+                    ann.visible = config.annotations.show;
+                }
+            }
+        }
+    }
+
     // Apply to data traces if they exist
     if (options.data && Array.isArray(options.data)) {
-        options.data.forEach((trace) => {
-            if (trace.colorbar) {
-                // Apply colorbar configuration if it exists
-                if (config.colorbar) {
-                    if (config.colorbar.thickness !== undefined) {
-                        // Apply thickness as delta
-                        trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
-                    }
-                    if (config.colorbar.len !== undefined) {
-                        // Apply length as delta
-                        trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
-                    }
-                    if (config.colorbar.show !== undefined) {
-                        trace.colorbar.visible = config.colorbar.show;
-                    }
-                }
+        // Pre-compute flags to skip unnecessary work inside the trace loop
+        const hasFontConfig = Object.keys(fontConfig).length > 0;
+        const hasColorbar =
+            config.colorbar && (config.colorbar.thickness || config.colorbar.len || config.colorbar.show !== undefined);
+        const hasLegendConfig = !!config.legend;
+        const legendLabel = config.legend?.label;
+        const hasLegendLabel = legendLabel && legendLabel !== 'default';
+        const hasTrendlines = !!config.trendlines;
+        const hasZones = !!config.zones;
+        const legendFontSize = options.layout?.legend?.font?.size;
+
+        // Auto-select dark palette when in dark theme and user hasn't chosen one
+        if (config.theme === 'dark' && config.colors && (!config.colors.palette || config.colors.palette === 'default')) {
+            config.colors.palette = 'dark';
+        }
+        const applyPalette = config.colors?.palette && config.colors.palette !== 'default';
+        const selectedPalette = applyPalette ? colorPalettes[config.colors.palette] || colorPalettes.default : null;
+        const applyColorscale = config.contour?.colorscale && config.contour.colorscale !== 'default';
+        const selectedColorscale = applyColorscale
+            ? contourColorscales[config.contour.colorscale] || contourColorscales.default
+            : null;
+
+        // Single pass over all traces
+        for (let index = 0; index < options.data.length; index++) {
+            const trace = options.data[index];
+
+            // Colorbar
+            if (hasColorbar && trace.colorbar) {
+                if (config.colorbar.thickness)
+                    trace.colorbar.thickness = (trace.colorbar.thickness || 0) + config.colorbar.thickness;
+                if (config.colorbar.len) trace.colorbar.len = (trace.colorbar.len || 0) + config.colorbar.len;
+                if (config.colorbar.show !== undefined) trace.colorbar.visible = config.colorbar.show;
             }
 
-            if (trace.marker && trace.marker.textfont && Object.keys(fontConfig).length > 0) {
-                trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
+            // Font overrides (rare)
+            if (hasFontConfig) {
+                if (trace.marker?.textfont) trace.marker.textfont = { ...trace.marker.textfont, ...fontConfig };
+                if (trace.hoverlabel?.font) trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
             }
 
-            if (trace.hoverlabel && trace.hoverlabel.font && Object.keys(fontConfig).length > 0) {
-                trace.hoverlabel.font = { ...trace.hoverlabel.font, ...fontConfig };
-            }
-
-            // Apply legend settings
-            if (config.legend) {
-                // Show/hide legend
-                if (config.legend.show !== undefined) {
+            // Legend show/hide and label format
+            if (hasLegendConfig) {
+                if (config.legend.show !== undefined && trace.showlegend !== false) {
                     trace.showlegend = config.legend.show;
                 }
-
-                // Apply label format (short or long)
-                if (trace.name) {
+                if (hasLegendLabel && trace.name) {
                     trace._fullName = trace.name;
-                    if (config.legend.label && config.legend.label !== 'default') {
-                        if (config.legend.label === 'short') {
-                            trace.name = labelShort[trace._fullName] || trace.name;
-                        } else if (config.legend.label === 'long') {
-                            trace.name = labelLong[trace._fullName] || trace.name;
-                        }
+                    if (legendLabel === 'short') {
+                        trace.name = labelShort[trace._fullName] || trace.name;
+                    } else if (legendLabel === 'long') {
+                        trace.name = labelLong[trace._fullName] || trace.name;
                     }
                 }
             }
-        });
 
-        // Only apply color palette if not set to 'default'
-        if (config.colors && config.colors.palette && config.colors.palette !== 'default') {
-            const selectedPalette = colorPalettes[config.colors.palette] || colorPalettes.default;
-            options.data.forEach((trace, index) => {
-                if (trace.type === 'scatter') {
-                    const colorIndex = index % selectedPalette.length;
-                    const color = selectedPalette[colorIndex];
-
-                    if (trace.marker) {
-                        trace.marker.color = color;
-                    }
-                    if (trace.line) {
-                        trace.line.color = color;
-                    }
-                    if (!trace.marker && !trace.line) {
-                        trace.marker = { color: color };
-                        trace.line = { color: color };
+            // Trendline visibility (Set.has is O(1) vs Array.includes O(N))
+            if (hasTrendlines && trace.name) {
+                if (trendNames.has(trace.name) || trace.name.endsWith(' slope')) {
+                    if (trace.legendgroup === 'speaker1' && config.trendlines.showB !== undefined) {
+                        trace.visible = config.trendlines.showB;
+                    } else if (trace.legendgroup === 'speaker0' && config.trendlines.showA !== undefined) {
+                        trace.visible = config.trendlines.showA;
+                    } else if (config.trendlines.show !== undefined) {
+                        trace.visible = config.trendlines.show;
                     }
                 }
-            });
-        }
+            }
 
-        // Only apply colorscale if not set to 'default'
-        if (config.contour && config.contour.colorscale && config.contour.colorscale !== 'default') {
-            const selectedColorscale = contourColorscales[config.contour.colorscale] || contourColorscales.default;
-            options.data.forEach((trace) => {
-                if (
-                    trace.type === 'contour' ||
-                    trace.type === 'heatmap' ||
-                    trace.type === 'surface' ||
-                    trace.type === 'contourgl'
-                ) {
-                    trace.colorscale = selectedColorscale;
+            // Recommended zone visibility
+            if (hasZones && trace.name && trace.name.startsWith('recommended ')) {
+                if (trace.legendgroup === 'speaker1' && config.zones.showB !== undefined) {
+                    trace.visible = config.zones.showB;
+                } else if (trace.legendgroup === 'speaker0' && config.zones.showA !== undefined) {
+                    trace.visible = config.zones.showA;
+                } else if (config.zones.show !== undefined) {
+                    trace.visible = config.zones.show;
                 }
-            });
+            }
+
+            // Legend group title font
+            if (legendFontSize && trace.legendgrouptitle?.text) {
+                if (!trace.legendgrouptitle.font) trace.legendgrouptitle.font = {};
+                if (!trace.legendgrouptitle.font.size || trace.legendgrouptitle.font.size < legendFontSize) {
+                    trace.legendgrouptitle.font.size = legendFontSize;
+                }
+            }
+
+            // Color palette (only if non-default)
+            if (selectedPalette && trace.type === 'scatter') {
+                const color = selectedPalette[index % selectedPalette.length];
+                if (trace.marker) trace.marker.color = color;
+                if (trace.line) trace.line.color = color;
+                if (!trace.marker && !trace.line) {
+                    trace.marker = { color };
+                    trace.line = { color };
+                }
+            }
+
+            // Colorscale (only if non-default)
+            if (
+                selectedColorscale &&
+                (trace.type === 'contour' || trace.type === 'heatmap' || trace.type === 'surface' || trace.type === 'contourgl')
+            ) {
+                trace.colorscale = selectedColorscale;
+            }
         }
     }
 
@@ -537,333 +688,65 @@ export function applyConfig(options, config) {
     return options;
 }
 
-// Create plot configuration menu
-export function createConfigMenu(divName, config, updateCallback) {
-    // Don't create menu if in compact mode with ploty=1 flag
-    const plotyFlag = getUrlParameter('ploty');
-    const graphSmall = 550; // Same as plot.js
-    const isCompact = window.innerWidth < graphSmall || window.innerHeight < graphSmall;
+// Legacy per-graph config menu — now a no-op (config lives in the global navbar panel)
+export function createConfigMenu(_divName, _config, _updateCallback, _menuOptions) {
+    return;
+}
 
-    if (plotyFlag === '1' && isCompact) {
+// Notify all listeners that global config changed
+function dispatchConfigChange(config) {
+    saveConfigToStorage(config);
+    window.dispatchEvent(new CustomEvent('spinorama-config-change', { detail: config }));
+}
+
+// Initialize the global config panel inside #global-config-panel in the navbar
+export function initGlobalConfigPanel(config) {
+    const panel = document.getElementById('global-config-panel');
+    if (!panel || panel.dataset.initialized) {
         return;
     }
+    panel.dataset.initialized = 'true';
 
-    // Get the container element
-    const container = typeof divName === 'string' ? document.getElementById(divName) : divName;
-    if (!container) {
-        console.error('Cannot find container for configuration menu');
-        return;
-    }
+    const updateCallback = (updatedConfig) => dispatchConfigChange(updatedConfig);
+    const menuOptions = {};
 
-    // Check if config menu already exists
-    let configContainer = container.querySelector('.plot-config-container');
-    if (configContainer) {
-        return; // Menu already exists
-    }
-
-    // Create main config container with grid layout
-    configContainer = document.createElement('div');
-    configContainer.className = 'plot-config-container';
-    configContainer.style.cssText = `
-        width: 100%;
-        margin-bottom: 20px;
-        order: -1; /* Ensure it appears before other elements in flex contexts */
-        display: flex;
-        justify-content: center;
-    `;
-
-    // Create grid container
-    const gridContainer = document.createElement('div');
-    gridContainer.className = 'grid';
-    gridContainer.style.cssText = `
-        justify-content: center;
-        text-align: center;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    `;
-    configContainer.appendChild(gridContainer);
-
-    // Create cell for the main config dropdown
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-
-    // Create dropdown structure
-    const dropdown = document.createElement('div');
-    dropdown.className = 'dropdown is-hoverable';
-
-    // Create dropdown trigger
-    const dropdownTrigger = document.createElement('div');
-    dropdownTrigger.className = 'dropdown-trigger';
-
-    // Create main button
-    const mainButton = document.createElement('button');
-    mainButton.className = 'button';
-    mainButton.setAttribute('aria-haspopup', 'true');
-    mainButton.setAttribute('aria-controls', 'dropdown-plotconfig-main');
-
-    const buttonText = document.createElement('span');
-    buttonText.textContent = 'Plot Configuration';
-
-    const buttonIcon = document.createElement('span');
-    buttonIcon.className = 'icon is-small';
-    buttonIcon.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>';
-
-    mainButton.appendChild(buttonText);
-    mainButton.appendChild(buttonIcon);
-    dropdownTrigger.appendChild(mainButton);
-
-    // Create dropdown menu
-    const dropdownMenu = document.createElement('div');
-    dropdownMenu.className = 'dropdown-menu';
-    dropdownMenu.id = 'dropdown-plotconfig-main';
-    dropdownMenu.setAttribute('role', 'menu');
-    dropdownMenu.style.cssText = `
-        left: 50%;
-        transform: translateX(-50%);
-        position: absolute;
-    `;
-
-    // Create dropdown content
-    const dropdownContent = document.createElement('div');
-    dropdownContent.className = 'dropdown-content';
-    dropdownContent.style.cssText = `
-        min-width: 400px;
-        max-width: 600px;
-    `;
-
-    dropdownMenu.appendChild(dropdownContent);
-
-    // Assemble dropdown structure
-    dropdown.appendChild(dropdownTrigger);
-    dropdown.appendChild(dropdownMenu);
-    cell.appendChild(dropdown);
-    gridContainer.appendChild(cell);
-
-    // Create config panel container (inside dropdown content)
+    // Build config UI directly inside the global panel
     const configPanel = document.createElement('div');
-    configPanel.className = 'config-panel';
-    configPanel.style.cssText = `
-        padding: 15px;
-    `;
-    dropdownContent.appendChild(configPanel);
+    configPanel.className = 'plot-config-inner';
+    panel.appendChild(configPanel);
 
-    // Array to keep track of all sections for accordion behavior
-    const allSections = [];
-
-    // Create group sections to organize controls
+    // Create group sections — flat layout, no accordion
     function createGroupSection(title) {
         const section = document.createElement('div');
-        section.className = 'config-section';
-        section.style.cssText = `
-            margin-bottom: 20px;
-            padding: 0px;
-        `;
+        section.className = 'plot-config-section';
 
-        // Create collapsible section header
-        const sectionHeader = document.createElement('div');
-        sectionHeader.className = 'section-header is-clickable';
-        sectionHeader.style.cssText = `
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: rgb(245, 245, 245);
-            border-radius: 4px;
-            cursor: pointer;
-            border: 1px solid rgb(224, 224, 224);
-        `;
-
-        // Section title
-        const heading = document.createElement('h4');
+        const heading = document.createElement('div');
+        heading.className = 'config-label';
         heading.textContent = title;
-        heading.style.cssText = `
-            margin: 0px;
-            font-size: 1rem;
-            font-weight: bold;
-            flex-grow: 1;
-        `;
+        section.appendChild(heading);
 
-        // Toggle icon - start with closed state
-        const toggleIcon = document.createElement('span');
-        toggleIcon.innerHTML = '►';
-        toggleIcon.style.cssText = `
-            margin-left: 10px;
-            font-size: 0.8rem;
-            transition: transform 0.2s;
-        `;
-
-        sectionHeader.appendChild(heading);
-        sectionHeader.appendChild(toggleIcon);
-        section.appendChild(sectionHeader);
-
-        // Create content area for form elements - start closed
         const contentArea = document.createElement('div');
         contentArea.className = 'section-content';
-        contentArea.style.cssText = `
-            display: none;
-            padding: 10px;
-            border-right: 1px solid rgb(224, 224, 224);
-            border-bottom: 1px solid rgb(224, 224, 224);
-            border-left: 1px solid rgb(224, 224, 224);
-            border-image: initial;
-            border-top: none;
-            background: rgb(255, 255, 255);
-            border-radius: 0px 0px 4px 4px;
-        `;
 
-        // Create a flex container for form elements
         const flexContainer = document.createElement('div');
         flexContainer.className = 'config-flex-container';
-        flexContainer.style.cssText = `
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: flex-start;
-        `;
-
         contentArea.appendChild(flexContainer);
         section.appendChild(contentArea);
 
-        // Store section data for accordion behavior
-        const sectionData = {
-            sectionHeader,
-            contentArea,
-            toggleIcon,
-            isContentVisible: false, // Start closed
-        };
-
-        // Add this section to the allSections array
-        allSections.push(sectionData);
-
-        // Store a reference to close all other sections function
-        section._closeOthers = () => {
-            allSections.forEach((otherSection) => {
-                if (otherSection !== sectionData) {
-                    otherSection.isContentVisible = false;
-                    otherSection.contentArea.style.display = 'none';
-                    otherSection.toggleIcon.innerHTML = '►';
-                    otherSection.toggleIcon.style.transform = 'rotate(-90deg)';
-                }
-            });
-        };
-
-        // Add click handler for accordion behavior
-        sectionHeader.addEventListener('click', () => {
-            const wasVisible = sectionData.isContentVisible;
-
-            // Close all other sections first
-            section._closeOthers();
-
-            // Toggle this section
-            sectionData.isContentVisible = !wasVisible;
-            contentArea.style.display = sectionData.isContentVisible ? 'block' : 'none';
-            toggleIcon.innerHTML = sectionData.isContentVisible ? '▼' : '►';
-            toggleIcon.style.transform = sectionData.isContentVisible ? 'rotate(0)' : 'rotate(-90deg)';
-        });
-
-        // Override the appendChild method to add items to the flex container
-        const originalAppendChild = section.appendChild;
+        // Override appendChild to route into flexContainer
+        const originalAppendChild = section.appendChild.bind(section);
         section.appendChild = function (element) {
-            if (element !== sectionHeader && element !== contentArea && element !== flexContainer) {
-                // Ensure each form control has proper styling for the flex layout
-                if (element.classList.contains('form-group')) {
-                    element.style.cssText += `
-                        width: 100%;
-                        flex: 1 1 auto;
-                        min-width: 180px;
-                        max-width: 300px;
-                    `;
-                }
+            if (element !== heading && element !== contentArea && element !== flexContainer) {
                 return flexContainer.appendChild(element);
             }
-            return originalAppendChild.call(this, element);
+            return originalAppendChild(element);
         };
 
         return section;
     }
 
-    // Theme section
-    const themeSection = createGroupSection('Theme & Appearance');
-
-    // Custom theme selector with SVG icons
-    const themeGroup = document.createElement('div');
-    themeGroup.className = 'form-group field';
-    // themeGroup.style.cssText = `
-    //     width: 100%;
-    // `;
-
-    const themeLabel = document.createElement('label');
-    themeLabel.className = 'label is-small';
-    themeLabel.textContent = 'Theme';
-    themeGroup.appendChild(themeLabel);
-
-    const themeContainer = document.createElement('div');
-    themeContainer.style.cssText = `
-        display: flex;
-        gap: 10px;
-        padding: 5px 0;
-    `;
-
-    // Light theme option
-    const lightTheme = document.createElement('div');
-    lightTheme.className = `theme-option ${config.theme === 'light' ? 'active' : ''}`;
-    lightTheme.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z" fill="currentColor"/>
-        <path d="M12 2L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M12 20L12 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M22 12L20 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M4 12L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M19.0711 4.92893L17.6569 6.34315" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M6.34315 17.6569L4.92893 19.0711" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M19.0711 19.0711L17.6569 17.6569" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M6.34315 6.34315L4.92893 4.92893" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>`;
-    lightTheme.style.cssText = `
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 1px solid ${config.theme === 'light' ? '#4285f4' : '#ddd'};
-        background-color: ${config.theme === 'light' ? '#e8f0fe' : 'transparent'};
-    `;
-    lightTheme.dataset.value = 'light';
-
-    // Dark theme option
-    const darkTheme = document.createElement('div');
-    darkTheme.className = `theme-option ${config.theme === 'dark' ? 'active' : ''}`;
-    darkTheme.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20V4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="currentColor"/>
-    </svg>`;
-    darkTheme.style.cssText = `
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 1px solid ${config.theme === 'dark' ? '#4285f4' : '#ddd'};
-        background-color: ${config.theme === 'dark' ? '#e8f0fe' : 'transparent'};
-    `;
-    darkTheme.dataset.value = 'dark';
-
-    // Theme option click handlers
-    [lightTheme, darkTheme].forEach((option) => {
-        option.addEventListener('click', () => {
-            const themeValue = option.dataset.value;
-            config.theme = themeValue;
-
-            // Update UI
-            document.querySelectorAll('.theme-option').forEach((opt) => {
-                opt.style.border = opt === option ? '1px solid #4285f4' : '1px solid #ddd';
-                opt.style.backgroundColor = opt === option ? '#e8f0fe' : 'transparent';
-            });
-
-            updateCallback(config);
-        });
-    });
-
-    themeContainer.appendChild(lightTheme);
-    themeContainer.appendChild(darkTheme);
-    themeGroup.appendChild(themeContainer);
-
-    themeSection.appendChild(themeGroup);
+    // Fonts section
+    const themeSection = createGroupSection('Fonts');
 
     themeSection.appendChild(
         createFormGroup(
@@ -970,7 +853,7 @@ export function createConfigMenu(divName, config, updateCallback) {
             'select',
             config.legend.position,
             'config-legend-position',
-            ['right', 'bottom', 'top', 'left'],
+            ['default', 'top', 'right', 'bottom', 'left'],
             (e) => {
                 config.legend.position = e.target.value;
                 updateCallback(config);
@@ -980,10 +863,17 @@ export function createConfigMenu(divName, config, updateCallback) {
 
     // Add legend label format options
     legendSection.appendChild(
-        createFormGroup('Label Format', 'select', config.legend.label, 'config-legend-label', ['short', 'long'], (e) => {
-            config.legend.label = e.target.value;
-            updateCallback(config);
-        })
+        createFormGroup(
+            'Label Format',
+            'select',
+            config.legend.label,
+            'config-legend-label',
+            ['default', 'short', 'long'],
+            (e) => {
+                config.legend.label = e.target.value;
+                updateCallback(config);
+            }
+        )
     );
 
     // Add legend position adjustment sliders
@@ -1007,10 +897,10 @@ export function createConfigMenu(divName, config, updateCallback) {
         // Create slider input for incremental adjustments
         const sliderInput = document.createElement('input');
         sliderInput.type = 'range';
-        sliderInput.min = '-20';
-        sliderInput.max = '20';
+        sliderInput.min = '-100';
+        sliderInput.max = '100';
         sliderInput.step = '1';
-        sliderInput.value = Math.round(config.legend[axis + 'offset'] * 100); // Convert from -0.2...0.2 to -20...20
+        sliderInput.value = Math.round(config.legend[axis + 'offset'] * 100); // Convert from -1.0...1.0 to -100...100
         sliderInput.id = `config-legend-offset-${axis}`;
         sliderInput.style.cssText = `
             flex-grow: 1;
@@ -1029,7 +919,7 @@ export function createConfigMenu(divName, config, updateCallback) {
         // Update handler
         sliderInput.addEventListener('input', (e) => {
             const sliderValue = parseInt(e.target.value);
-            const offsetValue = sliderValue / 100; // Convert slider value to offset (-0.2 to 0.2)
+            const offsetValue = sliderValue / 100; // Convert slider value to offset (-1.0 to 1.0)
             config.legend[axis + 'offset'] = offsetValue;
             valueDisplay.textContent = offsetValue.toFixed(2);
             updateCallback(config);
@@ -1340,15 +1230,67 @@ export function createConfigMenu(divName, config, updateCallback) {
     );
 
     // Create annotations section
-    const annotationsSection = createGroupSection('Annotations');
+    const annotationsSection = createGroupSection('Annotations & Trend Lines');
 
-    // Add checkbox to show/hide annotations
-    annotationsSection.appendChild(
-        createFormGroup('Show Annotations', 'checkbox', config.annotations.show, 'config-annotations-show', null, (e) => {
-            config.annotations.show = e.target.checked;
-            updateCallback(config);
-        })
-    );
+    if (menuOptions && menuOptions.compareMode) {
+        // Per-speaker controls for compare mode
+        annotationsSection.appendChild(
+            createFormGroup('Annotations (A)', 'checkbox', config.annotations.showA, 'config-annotations-showA', null, (e) => {
+                config.annotations.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Annotations (B)', 'checkbox', config.annotations.showB, 'config-annotations-showB', null, (e) => {
+                config.annotations.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Trend Lines (A)', 'checkbox', config.trendlines.showA, 'config-trendlines-showA', null, (e) => {
+                config.trendlines.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Trend Lines (B)', 'checkbox', config.trendlines.showB, 'config-trendlines-showB', null, (e) => {
+                config.trendlines.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Recommended Zones (A)', 'checkbox', config.zones.showA, 'config-zones-showA', null, (e) => {
+                config.zones.showA = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Recommended Zones (B)', 'checkbox', config.zones.showB, 'config-zones-showB', null, (e) => {
+                config.zones.showB = e.target.checked;
+                updateCallback(config);
+            })
+        );
+    } else {
+        // Single speaker mode
+        annotationsSection.appendChild(
+            createFormGroup('Show Annotations', 'checkbox', config.annotations.show, 'config-annotations-show', null, (e) => {
+                config.annotations.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Show Trend Lines', 'checkbox', config.trendlines.show, 'config-trendlines-show', null, (e) => {
+                config.trendlines.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+        annotationsSection.appendChild(
+            createFormGroup('Show Recommended Zones', 'checkbox', config.zones.show, 'config-zones-show', null, (e) => {
+                config.zones.show = e.target.checked;
+                updateCallback(config);
+            })
+        );
+    }
 
     // Add all sections to the config panel
     configPanel.appendChild(themeSection);
@@ -1369,21 +1311,6 @@ export function createConfigMenu(divName, config, updateCallback) {
 
     resetContainer.appendChild(resetButton);
     configPanel.appendChild(resetContainer);
-
-    // Make container a flex container to control the order properly
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-
-    // Insert config container at start of target container
-    container.insertBefore(configContainer, container.firstChild);
-
-    // Find any plotly graph containers and ensure they display properly
-    Array.from(container.querySelectorAll('.js-plotly-plot')).forEach((plotContainer) => {
-        if (plotContainer !== configContainer) {
-            // Ensure the plot container takes full width
-            plotContainer.style.width = '100%';
-        }
-    });
 }
 
 // Helper function to create form groups
@@ -1392,12 +1319,6 @@ export function createFormGroup(label, type, value, name, options, onChange) {
 
     group = document.createElement('div');
     group.className = 'form-group field';
-    group.style.cssText = `
-        width: 100%;
-        flex: 1 1 auto;
-        min-width: 180px;
-        max-width: 300px;
-    `;
 
     // Label with Bulma styling
     if (label) {

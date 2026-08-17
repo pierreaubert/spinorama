@@ -46,6 +46,10 @@ website:
           href: 03_metadata.qmd
         - text: "How to use the library"
           href: 04_library.qmd
+        - text: "How to compute a spinorama"
+          href: 08_compute_spin.qmd
+      - text: "API"
+        href: 09_api.qmd
       - text: "FAQ"
         href: 05_faq.qmd
     tools:
@@ -68,6 +72,10 @@ website:
           href: 03_metadata.qmd
         - section: "How to use the library?"
           href: 04_library.qmd
+        - section: "Compute a spinorama"
+          href: 08_compute_spin.qmd
+        - section: "API"
+          href: 09_api.qmd
         - section: "FAQ"
           href: 05_faq.qmd
         - section: "Data sources"
@@ -75,6 +83,8 @@ website:
         - section: "Bibliography"
           href: 07_biblio.qmd
 
+execute:
+  enabled: false
 
 bibliography: audio.bib
 

@@ -1,0 +1,14 @@
+EQ for RCF KX 10-A computed from Vendors-RCF data
+Preference Score 2.18 with EQ 4.20
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-15-19:21:03
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc   102 Hz Gain -5.61 dB Q 2.47
+Filter  2: ON PK Fc   172 Hz Gain -2.30 dB Q 1.38
+Filter  3: ON PK Fc   560 Hz Gain -1.94 dB Q 3.00
+Filter  4: ON PK Fc  1381 Hz Gain +2.98 dB Q 2.15
+Filter  5: ON PK Fc  2862 Hz Gain +2.87 dB Q 1.67
+Filter  6: ON PK Fc  4194 Hz Gain -2.84 dB Q 0.92
+Filter  7: ON PK Fc  8694 Hz Gain -2.88 dB Q 1.49

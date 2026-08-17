@@ -7,7 +7,7 @@ import logging
 
 try:
     # Prefer real metadata database when available
-    from datas.metadata import speakers_info  # type: ignore[import-not-found]
+    from datas.speaker import speakers_info  # type: ignore[import-not-found]
 except Exception:
     # Test/lean environments may not ship the datas package as an importable module.
     # Provide a safe, typed fallback so UI can still function with empty lists.
@@ -54,7 +54,7 @@ def reload_metadata() -> None:
     fresh data without restarting the process.
     """
     try:
-        dm = importlib.import_module("datas.metadata")  # type: ignore[import-not-found]
+        dm = importlib.import_module("datas.speaker")  # type: ignore[import-not-found]
         mod = importlib.reload(dm)
         # Rebind our module-level name to the freshly loaded dictionary
         globals()["speakers_info"] = mod.speakers_info  # type: ignore[attr-defined]

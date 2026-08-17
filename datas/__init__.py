@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # you can check the syntax with pylint or with ../scripts/check_meta.py
 """All speaker measurements metadata are stored in this format
-Due to the size of the file (metadata.py) it has been splitted into several files, one per letter of the alphabet.
+Due to the size of the file (speaker.py) it has been splitted into several files, one per letter of the alphabet.
 """
 
 from typing import TypedDict, Literal
@@ -63,7 +63,13 @@ class Extras(TypedDict, total=False):
 
 
 MeasurementFormat = Literal[
-    "klippel", "webplotdigitizer", "spl_hv_txt", "gll_hv_txt", "princeton", "rew_text_dump"
+    "klippel",
+    "webplotdigitizer",
+    "spl_hv_txt",
+    "gll_hv_txt",
+    "princeton",
+    "rew_text_dump",
+    "csv_freq_spl",
 ]
 
 
@@ -187,6 +193,70 @@ class Speaker(SpeakerRequired, total=False):
 
 
 SpeakerDatabase = dict[str, Speaker]
+
+
+# ---------------------------------------------------------------------------
+# Headphone types
+# ---------------------------------------------------------------------------
+
+DeviceKind = Literal["speaker", "headphone"]
+
+
+HeadphoneShape = Literal["over-ear", "on-ear", "in-ear", "earbud"]
+
+
+HeadphoneType = Literal["wired", "wireless", "hybrid"]
+
+
+HeadphoneMeasurementFormat = Literal["freq_response", "rew_text_dump"]
+
+
+class HeadphoneSpecifications(TypedDict, total=False):
+    impedance: float
+    sensitivity: float
+    sensitivity_mV_94dB: float
+    driver_size: float
+    weight: float
+    noise_cancelling: bool
+    bluetooth_codecs: list[str]
+
+
+class HeadphoneMeasurement(TypedDict, total=False):
+    origin: str
+    format: HeadphoneMeasurementFormat
+    review: str
+    reviews: dict[str, str]
+    review_published: str
+    quality: MeasurementQuality
+    notes: str
+    recommendation: str
+    specifications: HeadphoneSpecifications
+    extras: Extras
+
+
+class HeadphoneRequired(TypedDict):
+    brand: str
+    model: str
+    type: HeadphoneType
+    shape: HeadphoneShape
+    default_measurement: str
+    measurements: dict[str, HeadphoneMeasurement]
+
+
+class Headphone(HeadphoneRequired, total=False):
+    price: str
+    skip: bool
+    default_eq: str
+    eqs: dict[str, EQ]
+    nearest: list[tuple[float, str]]
+
+
+HeadphoneDatabase = dict[str, Headphone]
+
+
+# ---------------------------------------------------------------------------
+# Common GLL extraction
+# ---------------------------------------------------------------------------
 
 # common GLL extraction
 gll_data_acquisition_std: DataAcquisition = {

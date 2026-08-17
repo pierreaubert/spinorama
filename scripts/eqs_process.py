@@ -9,6 +9,7 @@ import shutil
 
 from generate_common import find_metadata_file
 from autoeq.auto_save import get_previous_score
+from spinorama.misc import sanitize_filename
 
 
 def update_eq(speaker_name, from_dir, to_dir):
@@ -29,7 +30,7 @@ def process(speaker: str, metadata: dict):
     #
     speaker_name = os.path.basename(speaker)
     #
-    prev_eq_path = "./datas/eq/{}/iir-autoeq.txt".format(speaker_name)
+    prev_eq_path = "./datas/eq/{}/iir-autoeq.txt".format(sanitize_filename(speaker_name))
     prev_score = get_previous_score(prev_eq_path)
     prev_score = prev_score if prev_score is not None else -10.0
     computed_eqs = list(path.glob("*/iir-autoeq.txt"))

@@ -14,15 +14,14 @@ sleep(5000).then(() => {
         const alert = document.getElementById('alert');
         alert.classList.remove('hidden');
         const debug = document.getElementById('alertdebug');
-        debug.innerHTML =
-            '<li>Found: ' +
-            counter +
-            ' speakers</li>' +
-            '<li> Href: ' +
-            window?.location.href +
-            '</li>' +
-            '<li> Browser' +
-            window?.navigator.appVersion +
-            '</li>';
+        debug.textContent = '';
+        const makeItem = (text) => {
+            const li = document.createElement('li');
+            li.textContent = text;
+            return li;
+        };
+        debug.appendChild(makeItem('Found: ' + counter + ' speakers'));
+        debug.appendChild(makeItem(' Href: ' + (window?.location.href ?? '')));
+        debug.appendChild(makeItem(' Browser' + (window?.navigator.appVersion ?? '')));
     }
 });

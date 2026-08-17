@@ -48,7 +48,7 @@ class TestValidationResult:
         result.add_warning("Warning 1")
         result.add_error("Error 1")
         result.add_warning("Warning 2")
-        
+
         assert result.valid is False
         assert len(result.messages) == 3
         assert "WARNING: Warning 1" in result.messages
@@ -62,11 +62,11 @@ class TestValidateImpedance:
     def test_valid_impedance_values(self):
         """Test valid impedance values."""
         result = ValidationResult()
-        
+
         # Test common valid values
         for impedance in [4.0, 6.0, 8.0, 16.0, 2.0]:
             validate_impedance("Test Speaker", "test_measurement", impedance, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -74,7 +74,7 @@ class TestValidateImpedance:
         """Test impedance values that are too low."""
         result = ValidationResult()
         validate_impedance("Test Speaker", "test_measurement", 1.0, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 1
         assert "WARNING:" in result.messages[0]
@@ -85,7 +85,7 @@ class TestValidateImpedance:
         """Test impedance values that are too high."""
         result = ValidationResult()
         validate_impedance("Test Speaker", "test_measurement", 32.0, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 1
         assert "WARNING:" in result.messages[0]
@@ -95,7 +95,7 @@ class TestValidateImpedance:
         """Test non-numeric impedance values."""
         result = ValidationResult()
         validate_impedance("Test Speaker", "test_measurement", "not_a_number", result)
-        
+
         assert result.valid is False
         assert len(result.messages) == 1
         assert "ERROR:" in result.messages[0]
@@ -104,11 +104,11 @@ class TestValidateImpedance:
     def test_impedance_edge_cases(self):
         """Test impedance edge cases."""
         result = ValidationResult()
-        
+
         # Test exact boundaries
         validate_impedance("Test Speaker", "test_measurement", IMPEDANCE_MIN, result)
         validate_impedance("Test Speaker", "test_measurement", IMPEDANCE_MAX, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -119,11 +119,11 @@ class TestValidateSensitivity:
     def test_valid_sensitivity_values(self):
         """Test valid sensitivity values."""
         result = ValidationResult()
-        
+
         # Test common valid values
         for sensitivity in [85.0, 88.0, 92.0, 95.0, 100.0]:
             validate_sensitivity("Test Speaker", "test_measurement", sensitivity, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -131,7 +131,7 @@ class TestValidateSensitivity:
         """Test sensitivity values that are too low."""
         result = ValidationResult()
         validate_sensitivity("Test Speaker", "test_measurement", 60.0, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 1
         assert "WARNING:" in result.messages[0]
@@ -142,7 +142,7 @@ class TestValidateSensitivity:
         """Test sensitivity values that are too high."""
         result = ValidationResult()
         validate_sensitivity("Test Speaker", "test_measurement", 130.0, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 1
         assert "WARNING:" in result.messages[0]
@@ -152,7 +152,7 @@ class TestValidateSensitivity:
         """Test non-numeric sensitivity values."""
         result = ValidationResult()
         validate_sensitivity("Test Speaker", "test_measurement", "not_a_number", result)
-        
+
         assert result.valid is False
         assert len(result.messages) == 1
         assert "ERROR:" in result.messages[0]
@@ -161,11 +161,11 @@ class TestValidateSensitivity:
     def test_sensitivity_edge_cases(self):
         """Test sensitivity edge cases."""
         result = ValidationResult()
-        
+
         # Test exact boundaries
         validate_sensitivity("Test Speaker", "test_measurement", SENSITIVITY_MIN, result)
         validate_sensitivity("Test Speaker", "test_measurement", SENSITIVITY_MAX, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -182,11 +182,11 @@ class TestValidateMeasurement:
             "specifications": {
                 "impedance": 8.0,
                 "sensitivity": 88.0,
-            }
+            },
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -199,11 +199,11 @@ class TestValidateMeasurement:
             "specifications": {
                 "impedance": 1.0,  # Too low
                 "sensitivity": 130.0,  # Too high
-            }
+            },
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 2
         assert any("Unlikely impedance value 1.0Ω" in msg for msg in result.messages)
@@ -217,9 +217,9 @@ class TestValidateMeasurement:
             "format": "klippel",
             "sensitivity": 88.0,
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -231,9 +231,9 @@ class TestValidateMeasurement:
             "format": "klippel",
             "sensitivity": 60.0,  # Too low
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         assert len(result.messages) == 1
         assert "Unlikely sensitivity value 60.0dB" in result.messages[0]
@@ -245,9 +245,9 @@ class TestValidateMeasurement:
             "origin": "Test Origin",
             "format": "klippel",
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -259,9 +259,9 @@ class TestValidateMeasurement:
             "format": "klippel",
             "specifications": "not_a_dict",
         }
-        
+
         validate_measurement("Test Speaker", "test_measurement", measurement, result)
-        
+
         assert result.valid is True
         assert len(result.messages) == 0
 
@@ -285,13 +285,13 @@ class TestValidateSpeakerData:
                     "specifications": {
                         "impedance": 8.0,
                         "sensitivity": 88.0,
-                    }
+                    },
                 }
-            }
+            },
         }
-        
+
         result = validate_speaker_data("Test Brand Test Model", speaker_data)
-        
+
         assert result.valid is True
         # Should have no warnings about impedance/sensitivity
         impedance_warnings = [msg for msg in result.messages if "impedance" in msg.lower()]
@@ -315,13 +315,13 @@ class TestValidateSpeakerData:
                     "specifications": {
                         "impedance": 1.0,  # Too low
                         "sensitivity": 130.0,  # Too high
-                    }
+                    },
                 }
-            }
+            },
         }
-        
+
         result = validate_speaker_data("Test Brand Test Model", speaker_data)
-        
+
         assert result.valid is True  # Warnings don't invalidate
         impedance_warnings = [msg for msg in result.messages if "impedance" in msg.lower()]
         sensitivity_warnings = [msg for msg in result.messages if "sensitivity" in msg.lower()]
@@ -348,9 +348,9 @@ class TestValidateSpeakerDatabase:
                         "specifications": {
                             "impedance": 8.0,
                             "sensitivity": 88.0,
-                        }
+                        },
                     }
-                }
+                },
             },
             "Invalid Speaker": {
                 "brand": "Invalid",
@@ -365,19 +365,23 @@ class TestValidateSpeakerDatabase:
                         "specifications": {
                             "impedance": 0.5,  # Too low
                             "sensitivity": 140.0,  # Too high
-                        }
+                        },
                     }
-                }
-            }
+                },
+            },
         }
-        
+
         result = validate_speaker_database(speakers)
-        
+
         assert result.valid is True  # Warnings don't invalidate
-        
+
         # Should have warnings for the invalid speaker
-        impedance_warnings = [msg for msg in result.messages if "impedance" in msg.lower() and "0.5" in msg]
-        sensitivity_warnings = [msg for msg in result.messages if "sensitivity" in msg.lower() and "140.0" in msg]
+        impedance_warnings = [
+            msg for msg in result.messages if "impedance" in msg.lower() and "0.5" in msg
+        ]
+        sensitivity_warnings = [
+            msg for msg in result.messages if "sensitivity" in msg.lower() and "140.0" in msg
+        ]
         assert len(impedance_warnings) == 1
         assert len(sensitivity_warnings) == 1
 

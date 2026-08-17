@@ -20,13 +20,13 @@ import numpy as np
 from typing import Any
 from numpy.typing import NDArray
 import scipy.optimize as opt
-import pandas as pd
 from scipy.stats import linregress
 
 from datas.grapheq import vendor_info as grapheq_db
 
 from spinorama import logger
 from spinorama.ltype import Vector
+from spinorama.measurements import Measurements
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl
 from autoeq.auto_loss import score_loss
@@ -36,7 +36,7 @@ from autoeq.auto_preflight import optim_preflight
 
 def optim_grapheq(
     speaker_name: str,
-    df_speaker: dict[str, pd.DataFrame],
+    m: Measurements,
     curve_freq: Vector,
     curve_target: list[Vector],
     curve_target_interp: list[Vector],
@@ -47,7 +47,7 @@ def optim_grapheq(
 
     logger.debug("Starting optim graphEQ for %s", speaker_name)
 
-    if not optim_preflight(curve_freq, curve_target, curve_target_interp, df_speaker):
+    if not optim_preflight(curve_freq, curve_target, curve_target_interp, m):
         logger.error("Preflight check failed!")
         return False, ((0, 0.0, -1000.0), [])
 
@@ -81,7 +81,7 @@ def optim_grapheq(
     )
     pref_score = -10.0
     if use_score:
-        pref_score = score_loss(df_speaker, auto_peq)
+        pref_score = score_loss(m, auto_peq)
     initial_pref_score = pref_score
 
     afreq = np.array(curve_freq)
@@ -119,7 +119,7 @@ def optim_grapheq(
             _, _, r_value, _, _ = linregress(np.log10(afreq), delta)
             return r_value**2
         elif which_loss == "score_loss":
-            auto_score = score_loss(df_speaker, current_peq)
+            auto_score = score_loss(m, current_peq)
             return auto_score
         else:
             print("ERROR loss function {} is not supported".format(which_loss))
@@ -138,6 +138,6 @@ def optim_grapheq(
     opt_error = loss(opt_param)
 
     if use_score:
-        pref_score = score_loss(df_speaker, auto_peq)
+        pref_score = score_loss(m, auto_peq)
         print("pref_score {:4.2f} --> {:4.2f}".format(-initial_pref_score, -pref_score))
     return True, ((1, int(opt_error), -pref_score), auto_peq)

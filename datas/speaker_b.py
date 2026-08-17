@@ -1,0 +1,1363 @@
+# -*- coding: utf-8 -*-
+from . import SpeakerDatabase, gll_data_acquisition_std
+
+speakers_info_b: SpeakerDatabase = {
+    "BIC America FH6-LCR Center": {
+        "brand": "BIC America",
+        "model": "FH6-LCR Center",
+        "type": "passive",
+        "shape": "center",
+        "price": "150",
+        "amount": "each",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
+            },
+        },
+    },
+    "BIC America Venturi DV62si": {
+        "brand": "BIC America",
+        "model": "Venturi DV62si",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "275",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-america-dv62si-bookshelf-speaker-review.14918/",
+                "review_published": "20200725",
+            },
+            "vendor": {"origin": "Vendors-BIC America", "format": "rew_text_dump"},
+        },
+    },
+    "Bang & Olufsen Beolab 20": {
+        "brand": "Bang & Olufsen",
+        "model": "Beolab 20",
+        "type": "active",
+        "shape": "floorstanders",
+        "price": "15000",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/b-o-beolab-20-speaker-review.43041/",
+                "review_published": "20230318",
+            }
+        },
+    },
+    "Bang & Olufsen Beosound Balance": {
+        "brand": "Bang & Olufsen",
+        "model": "Beosound Balance",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "3300",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bang-olufsen-beosound-balance-review.56971/",
+                "review_published": "20240913",
+                "specifications": {
+                    "SPL": {"peak": 104},
+                    "size": {"height": 380, "width": 200, "depth": 200},
+                    "weight": 7.2,
+                },
+            }
+        },
+    },
+    "Barefoot Footprint 01": {
+        "brand": "Barefoot",
+        "model": "Footprint 01",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "4000",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/barefoot-footprint-01-review-studio-monitor.23524/",
+                "review_published": "20210519",
+            }
+        },
+    },
+    "Barefoot Footprint 02": {
+        "brand": "Barefoot",
+        "model": "Footprint 02",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "3000",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {"akr": "https://audiore.kr/barefoot-footprint-02-%eb%a6%ac%eb%b7%b0/"},
+                "review_published": "20250812",
+                "data_acquisition": {"min_valid_freq": 500},
+                "specifications": {
+                    "size": {"height": 308, "width": 222, "depth": 330},
+                    "weight": 12.7,
+                },
+                "notes": "Data is valid above 500Hz. The On-Axis is correct below that",
+            }
+        },
+    },
+    "Behringer B2030p": {
+        "brand": "Behringer",
+        "model": "B2030p",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "200",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/behringer-b2030p-studio-monitor-review.14719",
+                "review_published": "20200715",
+            }
+        },
+    },
+    "Behringer B2031A": {
+        "brand": "Behringer",
+        "model": "B2031A",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "200",
+        "amount": "pair",
+        "default_measurement": "misc-avs",
+        "measurements": {
+            "misc-avs": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://www.avsforum.com/threads/cambridge-audio-s30-or-infinity-primus-163.1489764/#post-23716707",
+                "quality": "low",
+            }
+        },
+    },
+    "Behringer C5A": {
+        "brand": "Behringer",
+        "model": "C5A",
+        "type": "active",
+        "price": "99",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "data_acquisition": {"min_valid_freq": 200},
+                "review": "https://audiore.kr/behringer-c5a/",
+                "review_published": "20250125",
+                "symmetry": "coaxial",
+                "notes": "Data is valid above ~200Hz.",
+            }
+        },
+    },
+    "Behringer Eurolive B212XL": {
+        "brand": "Behringer",
+        "model": "Eurolive B212XL",
+        "type": "passive",
+        "shape": "liveportable",
+        "price": "135",
+        "amount": "each",
+        "default_measurement": "eac-pattern-90x60",
+        "measurements": {
+            "eac-pattern-90x60": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/behringer_b212xl/",
+                "review_published": "20230618",
+                "specifications": {
+                    "dispersion": {"horizontal": 90, "vertical": 60},
+                    "sensitivity": 95,
+                    "impedance": 8,
+                    "size": {"height": 550, "width": 345, "depth": 270},
+                    "weight": 10.9,
+                },
+            }
+        },
+    },
+    "Behringer Eurolive B215XL": {
+        "brand": "Behringer",
+        "model": "Eurolive B215XL",
+        "type": "passive",
+        "shape": "liveportable",
+        "price": "145",
+        "amount": "each",
+        "default_measurement": "eac-pattern-70x40",
+        "measurements": {
+            "eac-pattern-70x40": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/behringer_b215xl/",
+                "review_published": "20230618",
+                "specifications": {
+                    "dispersion": {"horizontal": 70, "vertical": 40},
+                    "sensitivity": 96,
+                    "impedance": 8,
+                    "size": {"height": 695, "width": 440, "depth": 335},
+                    "weight": 17.6,
+                },
+            }
+        },
+    },
+    "BiAmp Community IC6-1062": {
+        "brand": "BiAmp",
+        "model": "Community IC6-1062",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community IC6-1082": {
+        "brand": "BiAmp",
+        "model": "Community IC6-1082",
+        "type": "passive",
+        "price": "1230",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community IC6-1122": {
+        "brand": "BiAmp",
+        "model": "Community IC6-1122",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community IC6-1152": {
+        "brand": "BiAmp",
+        "model": "Community IC6-1152",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community IC8-1153": {
+        "brand": "BiAmp",
+        "model": "Community IC8-1153",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community V2-26": {
+        "brand": "BiAmp",
+        "model": "Community V2-26",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+            }
+        },
+    },
+    "BiAmp Community V2-28": {
+        "brand": "BiAmp",
+        "model": "Community V2-28",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+            }
+        },
+    },
+    "BiAmp Community V2-3294": {
+        "brand": "BiAmp",
+        "model": "Community V2-3294",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+            }
+        },
+    },
+    "BiAmp Community V2-3594": {
+        "brand": "BiAmp",
+        "model": "Community V2-3594",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+            }
+        },
+    },
+    "BiAmp Community V2-6": {
+        "brand": "BiAmp",
+        "model": "Community V2-6",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "BiAmp Community V2-8": {
+        "brand": "BiAmp",
+        "model": "Community V2-8",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-BiAmp",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "medium",
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            }
+        },
+    },
+    "Bose 141": {
+        "brand": "Bose",
+        "model": "141",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "75",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {"vendor": {"origin": "Vendors-Bose", "format": "rew_text_dump"}},
+    },
+    "Bose 301 Series IV": {
+        "brand": "Bose",
+        "model": "301 Series IV",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "159",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {"vendor": {"origin": "Vendors-Bose", "format": "rew_text_dump"}},
+    },
+    "Bose 901 Series V": {
+        "brand": "Bose",
+        "model": "901 Series V",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "700",
+        "amount": "each",
+        "default_measurement": "eac-noeq",
+        "measurements": {
+            "eac-noeq": {
+                "origin": "ErinsAudioCorner",
+                "format": "spl_hv_txt",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
+                "review_published": "20200722",
+            },
+            "eac-eq-neutral": {
+                "origin": "ErinsAudioCorner",
+                "format": "spl_hv_txt",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
+                "review_published": "20200722",
+            },
+            "eac-eq-v3": {
+                "origin": "ErinsAudioCorner",
+                "format": "spl_hv_txt",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
+                "review_published": "20200722",
+            },
+        },
+    },
+    "Bose AMM108": {
+        "brand": "Bose",
+        "model": "AMM108",
+        "type": "passive",
+        "price": "1500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 60},
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {"continuous": 116, "peak": 128},
+                    "size": {"height": 318, "width": 318, "depth": 268},
+                    "weight": 13.04,
+                },
+            }
+        },
+    },
+    "Bose AMM112": {
+        "brand": "Bose",
+        "model": "AMM112",
+        "type": "passive",
+        "price": "2400",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 110, "vertical": 60},
+                    "sensitivity": 96,
+                    "impedance": 8,
+                    "SPL": {"continuous": 121, "peak": 131},
+                    "size": {"height": 457, "width": 457, "depth": 383},
+                    "weight": 22.04,
+                },
+            }
+        },
+    },
+    "Bose ArenaMatch AM10": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM10",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x10",
+        "measurements": {
+            "vendor-pattern-100x10": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 10},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 127},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x10": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 10},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 127},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x10": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 10},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 129},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose ArenaMatch AM20": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM20",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x20",
+        "measurements": {
+            "vendor-pattern-100x20": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 20},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 128},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x20": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 20},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 128},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x20": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 20},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 130},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose ArenaMatch AM40": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM40",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x40",
+        "measurements": {
+            "vendor-pattern-100x40": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 100, "vertical": 40},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 125},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x40": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 80, "vertical": 40},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 127},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {"horizontal": 60, "vertical": 40},
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {"peak": 127},
+                    "size": {"height": 409, "width": 783, "depth": 420},
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose DesignMax DM5SE": {
+        "brand": "Bose",
+        "model": "DesignMax DM5SE",
+        "type": "passive",
+        "price": "530",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-130x130",
+        "measurements": {
+            "vendor-pattern-130x130": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230601",
+                "specifications": {
+                    "dispersion": {"horizontal": 130, "vertical": 130},
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "SPL": {"peak": 111},
+                    "size": {"height": 286, "width": 192, "depth": 197},
+                    "weight": 4.38,
+                },
+            }
+        },
+    },
+    "Bose DesignMax DM6SE": {
+        "brand": "Bose",
+        "model": "DesignMax DM6SE",
+        "type": "passive",
+        "price": "530",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-125x125",
+        "measurements": {
+            "vendor-pattern-125x125": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230530",
+                "specifications": {
+                    "dispersion": {"horizontal": 125, "vertical": 125},
+                    "sensitivity": 89,
+                    "impedance": 8,
+                    "SPL": {"peak": 107},
+                    "size": {"height": 340, "width": 222, "depth": 229},
+                    "weight": 5.93,
+                },
+            }
+        },
+    },
+    "Bose DesignMax DM8S": {
+        "brand": "Bose",
+        "model": "DesignMax DM8S",
+        "type": "passive",
+        "price": "666",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-130x130",
+        "measurements": {
+            "vendor-pattern-130x130": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5.0,
+                },
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230524",
+                "specifications": {
+                    "dispersion": {"horizontal": 130, "vertical": 130},
+                    "sensitivity": 93,
+                    "impedance": 8,
+                    "SPL": {"peak": 115},
+                    "size": {"height": 395, "width": 249, "depth": 273},
+                    "weight": 10.34,
+                },
+            }
+        },
+    },
+    "Bose SoundLink Revolve": {
+        "brand": "Bose",
+        "model": "SoundLink Revolve",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "180",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_soundlink_comparison/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-soundlink-revolve-vs-revolve-bluetooth-speaker-review.24587/",
+                },
+                "review_published": "20210627",
+            }
+        },
+    },
+    "Bose SoundLink Revolve+": {
+        "brand": "Bose",
+        "model": "SoundLink Revolve+",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_soundlink_comparison/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-soundlink-revolve-vs-revolve-bluetooth-speaker-review.24587/",
+                },
+                "review_published": "20210627",
+            }
+        },
+    },
+    "Bose TV Speaker Soundbar": {
+        "brand": "Bose",
+        "model": "TV Speaker Soundbar",
+        "type": "active",
+        "shape": "soundbar",
+        "price": "250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_tv_speaker_soundbar/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-tv-speaker-soundbar-review.23974/",
+                },
+                "review_published": "20210606",
+            }
+        },
+    },
+    "Boston Acoustics A 25": {
+        "brand": "Boston Acoustics",
+        "model": "A 25",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "180",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/boston-acoustics-a-25-speaker-review.17625/",
+                "review_published": "20201117",
+            }
+        },
+    },
+    "Bowers & Wilkins 607 S2 Anniversary Edition": {
+        "brand": "Bowers & Wilkins",
+        "model": "607 S2 Anniversary Edition",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "740",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-607-s2-anniversary-edition-review.21597/",
+            }
+        },
+    },
+    "Bowers & Wilkins 686 S2": {
+        "brand": "Bowers & Wilkins",
+        "model": "686 S2",
+        "type": "passive",
+        "price": "275",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-686-s2-spinorama-measurements-cta-2034.59307/#post-2167509",
+                    "noa": "https://noaudiophile.com/Bowers_and_Wilkins_686_S2/",
+                    "ssn": "https://www.soundstagenetwork.com/index.php?option=com_content&view=article&id=1645:nrc-measurements-bowers-wilkins-685-s2-loudspeakers&catid=77&Itemid=153",
+                },
+                "review_published": "20241215",
+                "symmetry": "horizontal",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 5.2,
+                    "size": {"height": 315, "width": 160, "depth": 229},
+                    "weight": 4.6,
+                },
+            }
+        },
+    },
+    "Bowers & Wilkins 802N": {
+        "brand": "Bowers & Wilkins",
+        "model": "802N",
+        "type": "passive",
+        "shape": "floorstanders",
+        "price": "4000",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {"origin": "Vendors-Bowers & Wilkins", "format": "webplotdigitizer"}
+        },
+    },
+    "Bowers & Wilkins 803 D3": {
+        "brand": "Bowers & Wilkins",
+        "model": "803 D3",
+        "type": "passive",
+        "shape": "floorstanders",
+        "price": "9000",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {"origin": "Vendors-Bowers & Wilkins", "format": "webplotdigitizer"}
+        },
+    },
+    "Bowers & Wilkins 805S": {
+        "brand": "Bowers & Wilkins",
+        "model": "805S",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "2500",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-805s-bookshelf-speaker-review.16523/",
+                "review_published": "20201006",
+            }
+        },
+    },
+    "Bowers & Wilkins CWM7.3 S2": {
+        "brand": "Bowers & Wilkins",
+        "model": "CWM7.3 S2",
+        "type": "passive",
+        "price": "2100",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/bw_cwm73s2/",
+                "review_published": "20220514",
+            }
+        },
+    },
+    "Bowers & Wilkins CWM7.5": {
+        "brand": "Bowers & Wilkins",
+        "model": "CWM7.5",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
+            }
+        },
+    },
+    "Bowers & Wilkins Formation Flex": {
+        "brand": "Bowers & Wilkins",
+        "model": "Formation Flex",
+        "type": "active",
+        "price": "500",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-formation-flex-review-speaker.33995/",
+                "review_published": "20220516",
+            }
+        },
+    },
+    "Bowers & Wilkins HTM81 D4": {
+        "brand": "Bowers & Wilkins",
+        "model": "HTM81 D4",
+        "type": "passive",
+        "price": "9600",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bower_wilkins_htm81_d4/"
+                },
+                "review_published": "20250708",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 3,
+                    "size": {"height": 334, "width": 847, "depth": 371},
+                    "weight": 32.2,
+                },
+            }
+        },
+    },
+    "Buchardt Audio A10": {
+        "brand": "Buchardt Audio",
+        "model": "A10",
+        "type": "active",
+        "price": "3800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a10/",
+                    "yt": "https://youtu.be/VL7WtnxIZc8?si=iKZpDSVfWf68GNxj",
+                },
+                "review_published": "20240916",
+                "specifications": {
+                    "size": {"height": 370, "width": 178, "depth": 245},
+                    "weight": 6.8,
+                },
+            }
+        },
+    },
+    "Buchardt Audio A500": {
+        "brand": "Buchardt Audio",
+        "model": "A500",
+        "type": "active",
+        "price": "4100",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a500/",
+                    "yt": "https://www.youtube.com/watch?v=VBVxEnKGuME",
+                },
+                "review_published": "20220303",
+            },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-a500-measurements-and-spinorama.15473/",
+                    "tnw": "https://thenextweb.com/news/buchardt-a500-review-and-measurements-this-feels-like-the-future-of-hi-fi-speakers",
+                },
+                "review_published": "20200821",
+            },
+        },
+    },
+    "Buchardt Audio A700": {
+        "brand": "Buchardt Audio",
+        "model": "A700",
+        "type": "active",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/"},
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/"},
+                "review_published": "20230312",
+            },
+        },
+    },
+    "Buchardt Audio E50": {
+        "brand": "Buchardt Audio",
+        "model": "E50",
+        "type": "passive",
+        "price": "1975",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {"yt": "https://youtu.be/MmrIYaFii5Q?si=JT8pRsT6t6y-U5TK"},
+                "review_published": "20250918",
+                "specifications": {
+                    "sensitivity": 85.0,
+                    "impedance": 5.0,
+                    "size": {"height": 395.0, "width": 190.0, "depth": 284.0},
+                    "weight": 8.6,
+                },
+                "symmetry": "none",
+            }
+        },
+    },
+    "Buchardt Audio S300": {
+        "brand": "Buchardt Audio",
+        "model": "S300",
+        "type": "passive",
+        "price": "1200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2019/04/Spinorama-data-Buchardt.html",
+            }
+        },
+    },
+    "Buchardt Audio S400": {
+        "brand": "Buchardt Audio",
+        "model": "S400",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1800",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-s400-speaker-review.12844/",
+                "format": "klippel",
+                "review_published": "20200424",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_audio_s400_bookshelf/",
+                "format": "webplotdigitizer",
+                "review_published": "20200613",
+                "quality": "low",
+            },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-s400-on-and-off-axis-measurements-and-the-benefits-of-manufacturer-data.10075/page-2#post-366916"
+                },
+            },
+            "vendor": {"origin": "Vendors-Buchardt Audio", "format": "webplotdigitizer"},
+        },
+    },
+    "Buchardt Audio S400 MKII": {
+        "brand": "Buchardt Audio",
+        "model": "S400 MKII",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "2250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_s400_mkii/",
+                    "yt": "https://www.youtube.com/live/yXhsJejwGuw?feature=shared",
+                },
+                "format": "klippel",
+                "review_published": "20230919",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {"height": 365, "width": 180, "depth": 280},
+                    "weight": 7.5,
+                },
+            }
+        },
+    },
+    "Børresen X3": {
+        "brand": "Børresen",
+        "model": "X3",
+        "type": "passive",
+        "price": "20000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/b%C3%B8rresen_x3/",
+                    "yt": "https://youtu.be/EfasOu928tQ?si=M4CuGOGwbgHQdizF",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {"height": 1290, "width": 345, "depth": 607},
+                    "weight": 55.0,
+                },
+            }
+        },
+    },
+}

@@ -1,2 +1,9 @@
 @charset "utf-8";
-@import "../../../node_modules/bulma/bulma.sass";
+
+// Use Bulma with @use (modern Sass module system)
+// This includes both light and dark themes via [data-theme=dark] and prefers-color-scheme
+@use "bulma/sass" with (
+  // Customize Bulma variables for Spinorama
+  $scheme-h: 232,
+  $scheme-s: 6%
+);

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title>A collection of headphone measurements</title>
+    <%include file="head.html"/>
+  </head>
+  <body>
+    <%include file="symbols.html"/>
+    <%include file="headphone_nav_search.html"/>
+    <%namespace name="util" module="website.utils" import="*"/>
+
+    <div class="container has-background-white-bis">
+      <div class="section">
+        <div class="grid is-col-min-12 column-gap-0 row-gap-1" id="headphones" data-num="0">
+        </div>
+      </div>
+      <div class="section">
+	<div id="pagination">
+	</div>
+      </div>
+    </div>
+
+    <script type="module" src="/js/headphone_index-${versions['CACHE']}${min}.js"></script>
+
+    <%include file="search.html"/>
+    <%include file="error.html"/>
+  </body>
+</html>

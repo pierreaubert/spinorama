@@ -20,16 +20,16 @@
 /*eslint no-undef: "error"*/
 
 import { getEQdata } from './download.js';
-import { openModal, closeModal, getPeq, getID } from './misc.js';
+import { openModal, closeModal, getPeq, getID, sanitizeFilename } from './misc.js';
 import { process, urlParameters2Sort } from './search.js';
 import { pagination } from './pagination.js';
 
 function getPictureEqCompare(brand, model, suffix) {
-    return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
+    return encodeURI('speakers/' + sanitizeFilename(brand) + ' ' + sanitizeFilename(model) + '/eq_compare.' + suffix);
 }
 
 function getPictureEqDetails(brand, model, version) {
-    return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters');
+    return encodeURI('speakers/' + sanitizeFilename(brand) + ' ' + sanitizeFilename(model) + '/' + version + '/filters');
 }
 
 getEQdata()

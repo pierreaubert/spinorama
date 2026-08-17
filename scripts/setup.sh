@@ -1,4 +1,9 @@
 #!/bin/bash
+# Resolve paths from this script's location so it can be invoked from anywhere.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+cd "${ROOT_DIR}"
+
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
@@ -27,17 +32,19 @@ if test "$OS" = "Linux"; then
   sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python${PYVERSION}-venv
   # ------------ LOCALE
   # add locale if they don't exist possibly C.utf8 would work
-  sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
-  # or maybe
-  # sudo apt -y install language-pack-en-base && localectl set-locale LANG=en_US.UTF-8
+  if command -v locale-gen >/dev/null 2>&1; then
+    sudo locale-gen en_US.UTF-8
+  elif command -v localedef >/dev/null 2>&1; then
+    sudo localedef -f UTF-8 -i en_US en_US.UTF-8
+  fi
 elif test "$OS" = "Darwin"; then
-    brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
+    brew install npm hdf5 c-blosc2 lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
     xattr -d com.apple.quarantine $(which chromedriver)
     chmod 755 $(which chromedriver)
     export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
-export PYTHONPATH=./src:./src/website
+export PYTHONPATH="${ROOT_DIR}/src:${ROOT_DIR}/src/website"
 
 # python section
 python${PYVERSION} -m venv .venv
@@ -64,9 +71,6 @@ npm install .
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv
 
-# install deepsource
-[ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
-
 # install 3rd parties
 ./scripts/update_3rdparties.sh
 
@@ -74,7 +78,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .ve
 mkdir -p build dist
 
 # compile cython
-cd src/spinorama/compute_scores_cython && \
+cd "${ROOT_DIR}/src/spinorama/compute_scores_cython" && \
     PYTHONPATH=../../.. python$PYVERSION setup.py build_ext --inplace && \
     rm -f compute_scores_cython.so && \
     SO_FILE=$(ls compute_scores_cython.cpython-*.so 2>/dev/null | head -1) && \
@@ -82,7 +86,5 @@ cd src/spinorama/compute_scores_cython && \
     cd ../../..
 
 # compile rust
-cd src/spinorama/compute_scores_rust && \
-    maturin build --release && \
-    cd ../../../
-
+cd "${ROOT_DIR}" && \
+    maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/compute_scores_rust/Cargo.toml"

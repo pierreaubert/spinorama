@@ -40,9 +40,7 @@ from spinorama.load import (
 )
 from tests.test_common import (
     parse_full_each_format,
-    EXPECTED_FULL_SET,
-    EXPECTED_PARTIAL_SET,
-    EXPECTED_LIMITED_SET,
+    _count_filled,
     parse_partial_each_format,
 )
 
@@ -264,11 +262,10 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
 
     def test_keys(self):
         for res in self.dfs.values():
-            full, df = res["full"], res["graphs"]
-            if full:
-                self.assertSetEqual(EXPECTED_FULL_SET, set(df.keys()))
-            else:
-                self.assertSetEqual(EXPECTED_LIMITED_SET, set(df.keys()))
+            full, m = res["full"], res["graphs"]
+            # Full HV: every frame field populated (12) + sensitivity.
+            # Limited HV: H+V SPL (+ normalized) + on_axis + sensitivity.
+            self.assertEqual(_count_filled(m), 13 if full else 6, res["speaker_name"])
 
     def test_freq_ranges(self):
         expected_freq_range = {
@@ -304,8 +301,9 @@ class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
         self.dfs = parse_partial_each_format()
 
     def test_keys(self):
-        for df in self.dfs.values():
-            self.assertSetEqual(EXPECTED_PARTIAL_SET, set(df.keys()))
+        for m in self.dfs.values():
+            # cea2034 + cea2034_normalized + on_axis + eir + eir_normalized + sensitivity = 6
+            self.assertEqual(_count_filled(m), 6)
 
 
 if __name__ == "__main__":
