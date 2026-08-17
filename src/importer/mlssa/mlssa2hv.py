@@ -170,14 +170,10 @@ def parse_tim_header(path: Path) -> TimInfo:
         )
 
     title = (
-        _decode_c_string(data[title_offset:comment_offset])
-        if len(data) >= comment_offset
-        else ""
+        _decode_c_string(data[title_offset:comment_offset]) if len(data) >= comment_offset else ""
     )
     comment = (
-        _decode_c_string(data[comment_offset:setup_offset])
-        if len(data) >= setup_offset
-        else ""
+        _decode_c_string(data[comment_offset:setup_offset]) if len(data) >= setup_offset else ""
     )
     fft_size: int | None = None
     window_type: int | None = None
@@ -266,12 +262,7 @@ def blackman_harris(n: int) -> np.ndarray:
     if n <= 1:
         return np.ones(n, dtype=np.float64)
     x = 2.0 * np.pi * np.arange(n) / (n - 1)
-    return (
-        0.35875
-        - 0.48829 * np.cos(x)
-        + 0.14128 * np.cos(2.0 * x)
-        - 0.01168 * np.cos(3.0 * x)
-    )
+    return 0.35875 - 0.48829 * np.cos(x) + 0.14128 * np.cos(2.0 * x) - 0.01168 * np.cos(3.0 * x)
 
 
 def tim_fft_segment(samples: np.ndarray, info: TimInfo) -> tuple[np.ndarray, int, int]:
@@ -683,7 +674,9 @@ def cmd_export_tim(args: argparse.Namespace) -> int:
         raw_curves["V"][0] = raw_curves["H"][0]
 
     if args.synthesize_72:
-        freq_grid = np.geomspace(max(args.min_freq, 20.0), min(args.max_freq, 20000.0), args.grid_points)
+        freq_grid = np.geomspace(
+            max(args.min_freq, 20.0), min(args.max_freq, 20000.0), args.grid_points
+        )
         if args.target_h == "pm90":
             target_h = [a for a in range(-90, 91, 10)]
         else:
@@ -740,6 +733,7 @@ def cmd_export_tim(args: argparse.Namespace) -> int:
             f"phase_offset={global_phase_offset:.4f} deg"
         )
     if args.report_confidence:
+
         def classify_quality(row: ConfidenceRow) -> str:
             if row.synthesized:
                 return "synth"
@@ -763,15 +757,11 @@ def cmd_export_tim(args: argparse.Namespace) -> int:
                     f"{row.fs:.6f},{row.plausibility:.6f},{row.points},{int(row.synthesized)},{row.quality}\n"
                 )
         flagged = [
-            row
-            for row in confidence
-            if (not row.synthesized) and row.quality in ("warn", "bad")
+            row for row in confidence if (not row.synthesized) and row.quality in ("warn", "bad")
         ]
         flags_report = output_dir / "mlssa_confidence_flags.csv"
         with flags_report.open("w", encoding="utf-8") as f:
-            f.write(
-                "filename,axis,angle,decode_mode,fs,plausibility,points,quality\n"
-            )
+            f.write("filename,axis,angle,decode_mode,fs,plausibility,points,quality\n")
             for row in sorted(flagged, key=lambda r: (r.quality, r.axis, r.angle, r.filename)):
                 f.write(
                     f"{row.filename},{row.axis},{row.angle},{row.decode_mode},"
@@ -781,8 +771,12 @@ def cmd_export_tim(args: argparse.Namespace) -> int:
             "total_rows": len(confidence),
             "decoded_rows": sum(1 for r in confidence if not r.synthesized),
             "synthesized_rows": sum(1 for r in confidence if r.synthesized),
-            "decoded_good": sum(1 for r in confidence if (not r.synthesized) and r.quality == "good"),
-            "decoded_warn": sum(1 for r in confidence if (not r.synthesized) and r.quality == "warn"),
+            "decoded_good": sum(
+                1 for r in confidence if (not r.synthesized) and r.quality == "good"
+            ),
+            "decoded_warn": sum(
+                1 for r in confidence if (not r.synthesized) and r.quality == "warn"
+            ),
             "decoded_bad": sum(1 for r in confidence if (not r.synthesized) and r.quality == "bad"),
             "flagged_rows": len(flagged),
             "calibration_spl_offset_db": global_spl_offset,
@@ -818,7 +812,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_probe.add_argument("--header-bytes", type=int, default=None)
     p_probe.set_defaults(func=cmd_probe)
 
-    p_export_tim = sub.add_parser("export-tim", help="export mapped TIM files to HV txt via FFT decode")
+    p_export_tim = sub.add_parser(
+        "export-tim", help="export mapped TIM files to HV txt via FFT decode"
+    )
     p_export_tim.add_argument("--speaker", required=True)
     p_export_tim.add_argument("--data-dir", type=Path, required=True)
     p_export_tim.add_argument("--output-dir", type=Path, required=True)

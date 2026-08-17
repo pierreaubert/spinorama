@@ -210,7 +210,16 @@ export function getReviews(value) {
         let origin = measurement.origin;
         let originLong = measurement.origin;
         let originShort = measurement.origin;
-        const url = 'speakers/' + sanitizeFilename(value.brand) + ' ' + sanitizeFilename(value.model) + '/' + removeVendors(origin) + '/index_' + version + '.html';
+        const url =
+            'speakers/' +
+            sanitizeFilename(value.brand) +
+            ' ' +
+            sanitizeFilename(value.model) +
+            '/' +
+            removeVendors(origin) +
+            '/index_' +
+            version +
+            '.html';
         if (origin === 'Misc') {
             origin = version.replace('misc-', '');
             originShort = version.replace('misc-', '');

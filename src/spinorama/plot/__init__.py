@@ -61,6 +61,13 @@ from spinorama.plot.axes import (
     generate_yaxis_spl,
     plot_valid_freq_ranges,
 )
+from spinorama.plot.annotations import (
+    AnnotationGeometry,
+    AnnotationRequest,
+    annotation_dicts,
+    estimate_annotation_size,
+    place_annotations,
+)
 from spinorama.plot.layouts import (
     common_layout,
     contour_layout,
@@ -130,6 +137,12 @@ __all__ = [
     "generate_yaxis_phases",
     "generate_yaxis_spl",
     "plot_valid_freq_ranges",
+    # annotations
+    "AnnotationGeometry",
+    "AnnotationRequest",
+    "annotation_dicts",
+    "estimate_annotation_size",
+    "place_annotations",
     # layouts
     "common_layout",
     "contour_layout",

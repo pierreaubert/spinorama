@@ -586,7 +586,6 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_lsx_ii_lt/",
-
                 },
                 "review_published": "20240916",
                 "specifications": {
@@ -609,9 +608,8 @@ speakers_info_k: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
-		"quality": "low",
-                "reviews": {
-                },
+                "quality": "low",
+                "reviews": {},
                 "review_published": "20251029",
                 "data_acquisition": {"min_valid_freq": 350},
                 "specifications": {

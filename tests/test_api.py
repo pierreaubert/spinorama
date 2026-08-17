@@ -116,17 +116,13 @@ class TestSpeakerMeasurements:
 
     @patch("src.api.routers.speaker.glob")
     @patch("os.path.exists", return_value=True)
-    def test_success(
-        self, mock_exists: Mock, mock_glob: Mock, client: TestClient
-    ) -> None:
+    def test_success(self, mock_exists: Mock, mock_glob: Mock, client: TestClient) -> None:
         mock_glob.return_value = [
             "/path/CEA2034.json",
             "/path/On Axis.png",
             "/path/SPL Horizontal.webp",
         ]
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/version1/measurements"
-        )
+        response = client.get("/v1/speaker/Test Speaker 1/version/version1/measurements")
         assert response.status_code == 200
         measurements = response.json()
         assert isinstance(measurements, list)
@@ -135,9 +131,7 @@ class TestSpeakerMeasurements:
         assert "SPL Horizontal" in measurements
 
     def test_speaker_not_found(self, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Unknown Speaker/version/v1/measurements"
-        )
+        response = client.get("/v1/speaker/Unknown Speaker/version/v1/measurements")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
@@ -145,9 +139,7 @@ class TestSpeakerMeasurements:
 
     def test_version_not_found(self, client: TestClient) -> None:
         """Known speaker but unknown version returns an error with valid keys."""
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/bad_version/measurements"
-        )
+        response = client.get("/v1/speaker/Test Speaker 1/version/bad_version/measurements")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
@@ -156,9 +148,7 @@ class TestSpeakerMeasurements:
 
     @patch("os.path.exists", return_value=False)
     def test_no_precomputed_dir(self, mock_exists: Mock, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/version1/measurements"
-        )
+        response = client.get("/v1/speaker/Test Speaker 1/version/version1/measurements")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
@@ -166,20 +156,17 @@ class TestSpeakerMeasurements:
 
     def test_vendor_origin_prefix_stripped(self, client: TestClient) -> None:
         """Version with 'Vendors-' origin prefix should strip it for path lookup."""
-        with patch("os.path.exists") as mock_exists, patch(
-            "src.api.routers.speaker.glob", return_value=["/path/CEA2034.json"]
+        with (
+            patch("os.path.exists") as mock_exists,
+            patch("src.api.routers.speaker.glob", return_value=["/path/CEA2034.json"]),
         ):
             mock_exists.return_value = True
-            response = client.get(
-                "/v1/speaker/Test Speaker 1/version/version2/measurements"
-            )
+            response = client.get("/v1/speaker/Test Speaker 1/version/version2/measurements")
             assert response.status_code == 200
             # Verify the glob was called with stripped origin
             from src.api.main import SPINFILES
 
-            mock_exists.assert_any_call(
-                f"{SPINFILES}/Test Speaker 1/TestVendor/version2"
-            )
+            mock_exists.assert_any_call(f"{SPINFILES}/Test Speaker 1/TestVendor/version2")
 
 
 class TestSpeakerMeasurementsData:
@@ -187,36 +174,28 @@ class TestSpeakerMeasurementsData:
 
     @patch("os.path.exists", return_value=True)
     def test_json_success(self, mock_exists: Mock, client: TestClient) -> None:
-        with patch(
-            "builtins.open", mock_open(read_data='[{"freq": 100, "dB": -3.0}]')
-        ):
+        with patch("builtins.open", mock_open(read_data='[{"freq": 100, "dB": -3.0}]')):
             response = client.get(
                 "/v1/speaker/Test Speaker 1/version/version1/measurements/CEA2034"
             )
             assert response.status_code == 200
 
     def test_speaker_not_found(self, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Unknown/version/v1/measurements/CEA2034"
-        )
+        response = client.get("/v1/speaker/Unknown/version/v1/measurements/CEA2034")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
         assert "is not in our database" in data["error"]
 
     def test_version_not_found(self, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/bad/measurements/CEA2034"
-        )
+        response = client.get("/v1/speaker/Test Speaker 1/version/bad/measurements/CEA2034")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
         assert "is not known" in data["error"]
 
     @patch("os.path.exists", return_value=True)
-    def test_invalid_measurement_name(
-        self, mock_exists: Mock, client: TestClient
-    ) -> None:
+    def test_invalid_measurement_name(self, mock_exists: Mock, client: TestClient) -> None:
         response = client.get(
             "/v1/speaker/Test Speaker 1/version/version1/measurements/Bogus Measurement"
         )
@@ -236,12 +215,8 @@ class TestSpeakerMeasurementsData:
     @patch("os.path.exists")
     def test_file_not_found(self, mock_exists: Mock, client: TestClient) -> None:
         # Directory exists but measurement file doesn't
-        mock_exists.side_effect = (
-            lambda path: not path.endswith(".json") and "speakers" in path
-        )
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/version1/measurements/CEA2034"
-        )
+        mock_exists.side_effect = lambda path: not path.endswith(".json") and "speakers" in path
+        response = client.get("/v1/speaker/Test Speaker 1/version/version1/measurements/CEA2034")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
@@ -277,9 +252,7 @@ class TestConsistency:
             versions = client.get(f"/v1/speaker/{name}/versions").json()
             assert isinstance(versions, list)
             for version in versions:
-                resp = client.get(
-                    f"/v1/speaker/{name}/version/{version}/measurements"
-                )
+                resp = client.get(f"/v1/speaker/{name}/version/{version}/measurements")
                 data = resp.json()
                 assert isinstance(data, list), (
                     f"Speaker '{name}' version '{version}' returned error from "
@@ -292,9 +265,7 @@ class TestSpeakerMeasurementsPathTraversal:
 
     def test_speaker_name_with_dotdot_rejected(self, client: TestClient) -> None:
         # %2E%2E is decoded to '..' inside the path parameter.
-        response = client.get(
-            "/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements"
-        )
+        response = client.get("/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
@@ -305,18 +276,14 @@ class TestSpeakerMeasurementsDataPathTraversal:
     """Path-injection defences for the measurement data endpoint."""
 
     def test_speaker_name_with_dotdot_rejected(self, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements/CEA2034"
-        )
+        response = client.get("/v1/speaker/Evil%2E%2ESpeaker/version/v1/measurements/CEA2034")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data
         assert "Invalid" in data["error"]
 
     def test_version_with_dotdot_rejected(self, client: TestClient) -> None:
-        response = client.get(
-            "/v1/speaker/Test Speaker 1/version/%2E%2Ev1/measurements/CEA2034"
-        )
+        response = client.get("/v1/speaker/Test Speaker 1/version/%2E%2Ev1/measurements/CEA2034")
         assert response.status_code == 200
         data = response.json()
         assert "error" in data

@@ -105,28 +105,28 @@ speakers_info_s: SpeakerDatabase = {
                     "weight": 9.5,
                 },
             },
-# pre-prod data, removed from main site.
-#            "vendor-v1": {
-#                "origin": "Vendors-Sigberg Audio",
-#                "format": "spl_hv_txt",
-#                "quality": "medium",
-#                "review_published": "20251216",
-#                "notes": "Anechoic data measured by Seas with a subwoofer, prototype version",
-#                "reviews": {
-#                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-development-thread-sigberg-audio-sbs-generation-2.65962",
-#                },
-#                "specifications": {
-#                    "SPL": {
-#                        "peak": 116,
-#                    },
-#                    "size": {
-#                        "height": 410,
-#                        "width": 190,
-#                        "depth": 230,
-#                    },
-#                    "weight": 9.5,
-#                },
-#            },
+            # pre-prod data, removed from main site.
+            #            "vendor-v1": {
+            #                "origin": "Vendors-Sigberg Audio",
+            #                "format": "spl_hv_txt",
+            #                "quality": "medium",
+            #                "review_published": "20251216",
+            #                "notes": "Anechoic data measured by Seas with a subwoofer, prototype version",
+            #                "reviews": {
+            #                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-development-thread-sigberg-audio-sbs-generation-2.65962",
+            #                },
+            #                "specifications": {
+            #                    "SPL": {
+            #                        "peak": 116,
+            #                    },
+            #                    "size": {
+            #                        "height": 410,
+            #                        "width": 190,
+            #                        "depth": 230,
+            #                    },
+            #                    "weight": 9.5,
+            #                },
+            #            },
         },
     },
     "Salk WoW1": {

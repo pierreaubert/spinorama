@@ -550,6 +550,14 @@ export function applyConfig(options, config) {
     if (config.annotations) {
         if (options.layout && options.layout.annotations) {
             for (const ann of options.layout.annotations) {
+                // The Python annotation layout solver can suppress a label
+                // when the plot is too crowded to place it readably. Keep
+                // that decision authoritative even when the user enables all
+                // annotations through the configuration panel.
+                if (typeof ann.name === 'string' && ann.name.startsWith('layout-hidden:')) {
+                    ann.visible = false;
+                    continue;
+                }
                 // Per-speaker annotation visibility (annotations have no legendgroup,
                 // so we use showA/showB as a combined toggle in compare mode)
                 if (ann._speakerIndex === 1 && config.annotations.showB !== undefined) {

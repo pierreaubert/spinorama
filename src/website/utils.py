@@ -65,7 +65,9 @@ def eqtype2str(context, eq_type: str) -> str:
 import re  # noqa: E402
 
 
-_VALID_SHAPES = frozenset(["floorstanders", "bookshelves", "center", "columns", "liveportable", "cinema"])
+_VALID_SHAPES = frozenset(
+    ["floorstanders", "bookshelves", "center", "columns", "liveportable", "cinema"]
+)
 
 
 def _remove_vendors(text):
@@ -110,7 +112,14 @@ def get_dollar(context, price):
 
 
 def get_picture_url(context, brand, model, suffix):
-    return _encode_uri("pictures/" + sanitize_filename(context, brand) + " " + sanitize_filename(context, model) + "." + suffix)
+    return _encode_uri(
+        "pictures/"
+        + sanitize_filename(context, brand)
+        + " "
+        + sanitize_filename(context, model)
+        + "."
+        + suffix
+    )
 
 
 def icon_value(context, value):
@@ -179,7 +188,9 @@ def get_score(context, value):
         "lfx": "{:.0f}".format(float(lfx)) if lfx != "***" else lfx,
         "flatness": "{:.1f}".format(float(flatness)),
         "smoothness": "{:.1f}".format(float(smoothness)) if smoothness != "***" else smoothness,
-        "scoreScaled": "{:.1f}".format(float(score_scaled)) if score_scaled != "***" else score_scaled,
+        "scoreScaled": "{:.1f}".format(float(score_scaled))
+        if score_scaled != "***"
+        else score_scaled,
         "lfxScaled": lfx_scaled,
         "flatnessScaled": flatness_scaled,
         "smoothnessScaled": smoothness_scaled,
@@ -188,11 +199,7 @@ def get_score(context, value):
 
 def get_sensitivity(context, value):
     defm = value.get("default_measurement")
-    if (
-        value.get("type") == "passive"
-        and defm
-        and defm in value.get("measurements", {})
-    ):
+    if value.get("type") == "passive" and defm and defm in value.get("measurements", {}):
         measurement = value["measurements"][defm]
         specs = measurement.get("specifications", {})
         if specs and "sensitivity" in specs:
@@ -240,10 +247,19 @@ def get_default_url(context, value):
 
 
 _REVIEWER_ICONS = [
-    ("Audio First Design", '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp" alt="">'),
-    ("Audio Science Review", '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp" alt="">'),
+    (
+        "Audio First Design",
+        '<img width="16" height="16" src="/pictures/icon-afd-32x32.webp" alt="">',
+    ),
+    (
+        "Audio Science Review",
+        '<img width="16" height="16" src="/pictures/icon-asr-32x32.webp" alt="">',
+    ),
     ("Danley", '<img width="16" height="16" src="/pictures/icon-danley-32x32.webp" alt="">'),
-    ("Erin's Audio Corner", '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp" alt="">'),
+    (
+        "Erin's Audio Corner",
+        '<img width="16" height="16" src="/pictures/icon-eac-32x32.webp" alt="">',
+    ),
     ("JBL", '<img width="16" height="16" src="/pictures/icon-jbl-32x32.webp" alt="">'),
     ("KEF", '<img width="16" height="16" src="/pictures/icon-kef-32x32.webp" alt="">'),
     ("Genelec", '<img width="16" height="16" src="/pictures/icon-genelec-32x32.webp" alt="">'),
@@ -423,15 +439,19 @@ def get_reviews(context, value):
 
         ipattern = version.find("pattern")
         if ipattern != -1:
-            sversion = version[ipattern + 8:]
+            sversion = version[ipattern + 8 :]
             times_pos = sversion.find("x")
             if times_pos != -1:
                 vertical_angle = sversion[times_pos:]
                 dash_pos = vertical_angle.find("-")
                 if dash_pos == -1:
-                    sversion_deg = " " + sversion[:times_pos] + "\u00ba" + sversion[times_pos:] + "\u00ba"
+                    sversion_deg = (
+                        " " + sversion[:times_pos] + "\u00ba" + sversion[times_pos:] + "\u00ba"
+                    )
                 else:
-                    sversion_deg = " " + sversion[:times_pos] + "\u00ba" + vertical_angle[:dash_pos] + "\u00ba"
+                    sversion_deg = (
+                        " " + sversion[:times_pos] + "\u00ba" + vertical_angle[:dash_pos] + "\u00ba"
+                    )
             else:
                 sversion_deg = " " + sversion + "\u00ba"
             origin = origin + sversion_deg
@@ -440,7 +460,7 @@ def get_reviews(context, value):
         pos_version = re.search(r"-v([123456])-", version)
         if pos_version:
             vnum = pos_version.group(1)
-            rest = version[pos_version.end():]
+            rest = version[pos_version.end() :]
             origin = origin + " (v" + vnum + "-" + rest + ")"
             origin_long = origin_long + " (v" + vnum + "-" + rest + ")"
 
@@ -452,7 +472,7 @@ def get_reviews(context, value):
 
         pos_config = version.find("-configuration-")
         if pos_config != -1:
-            config_str = version[pos_config + 15:].replace("-", " ")
+            config_str = version[pos_config + 15 :].replace("-", " ")
             origin = origin + " (" + config_str + ")"
             origin_long = origin_long + " (" + config_str + ")"
 
@@ -469,12 +489,14 @@ def get_reviews(context, value):
                 )
                 break
 
-        reviews.append({
-            "url": url,
-            "origin": origin,
-            "originShort": origin_short,
-            "originLong": origin_long,
-        })
+        reviews.append(
+            {
+                "url": url,
+                "origin": origin,
+                "originShort": origin_short,
+                "originLong": origin_long,
+            }
+        )
     return reviews
 
 
@@ -493,11 +515,11 @@ def sensitivity_html(context, stype, sensitivity):
     if stype == "active":
         return "Active"
     if sensitivity and float(sensitivity) != 0:
-        return 'Sensitivity: <b>{:.0f}</b>&nbsp;dB'.format(float(sensitivity))
-    return 'Sensitivity: <b>?</b>&nbsp;dB'
+        return "Sensitivity: <b>{:.0f}</b>&nbsp;dB".format(float(sensitivity))
+    return "Sensitivity: <b>?</b>&nbsp;dB"
 
 
 def spl_html(context, splinfo, splvalue):
     if splinfo == "***" or splinfo == "0":
         return "SPL ? dB"
-    return '{} SPL: <b>{}</b>&nbsp;dB'.format(splinfo, splvalue)
+    return "{} SPL: <b>{}</b>&nbsp;dB".format(splinfo, splvalue)

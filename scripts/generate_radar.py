@@ -120,7 +120,9 @@ def print_radar(meta_data, scale, speaker_data):
         logger.debug("skipping measurement no pref_rating and no estimates")
         return
     filename = "{}/{} {}/spider.json".format(
-        CPATH_DIST_SPEAKERS, sanitize_filename(meta_data["brand"]), sanitize_filename(meta_data["model"])
+        CPATH_DIST_SPEAKERS,
+        sanitize_filename(meta_data["brand"]),
+        sanitize_filename(meta_data["model"]),
     )
     # TODO: to add check for dependancies
     if pathlib.Path(filename).is_file():
@@ -142,7 +144,10 @@ def print_radar(meta_data, scale, speaker_data):
             continue
         # load eq
         eq_filename = "{}/{} {}/iir-{}.txt".format(
-            CPATH_DATAS_EQ, sanitize_filename(meta_data["brand"]), sanitize_filename(meta_data["model"]), eq_key.replace("_", "-")
+            CPATH_DATAS_EQ,
+            sanitize_filename(meta_data["brand"]),
+            sanitize_filename(meta_data["model"]),
+            eq_key.replace("_", "-"),
         )
         # print("loading eq {}".format(eq_filename))
         iir = parse_eq_iir_rews(eq_filename, 48000)
@@ -150,11 +155,7 @@ def print_radar(meta_data, scale, speaker_data):
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
         dfs = speaker_data[measurement["origin"]][def_measurement]
-        _m = (
-            dfs
-            if isinstance(dfs, Measurements)
-            else Measurements.from_legacy_dict(dfs)
-        )
+        _m = dfs if isinstance(dfs, Measurements) else Measurements.from_legacy_dict(dfs)
         if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
             _, _, pref_rating_eq = scores_apply_filter(_m, iir)
         else:

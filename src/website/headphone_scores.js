@@ -42,10 +42,12 @@ const container = document.querySelector('[data-num="0"');
 
 function getHeadphoneMetadata() {
     const url = urlSite + 'json/headphone_metadata.json';
-    return fetch(url).then(r => r.json()).then((data) => {
-        if (!data) return new Map();
-        return new Map(Object.values(data).map((hp) => [getID(hp.brand, hp.model), hp]));
-    });
+    return fetch(url)
+        .then((r) => r.json())
+        .then((data) => {
+            if (!data) return new Map();
+            return new Map(Object.values(data).map((hp) => [getID(hp.brand, hp.model), hp]));
+        });
 }
 
 function getReviewUrl(value) {
@@ -53,7 +55,15 @@ function getReviewUrl(value) {
     const measurement = value.measurements[defaultMeasurement];
     if (measurement && measurement.origin) {
         const origin = measurement.origin.replace('Vendors-', '');
-        return 'headphones/' + encodeURI(value.brand + ' ' + value.model) + '/' + encodeURI(origin) + '/index_' + defaultMeasurement + '.html';
+        return (
+            'headphones/' +
+            encodeURI(value.brand + ' ' + value.model) +
+            '/' +
+            encodeURI(origin) +
+            '/index_' +
+            defaultMeasurement +
+            '.html'
+        );
     }
     return '#';
 }

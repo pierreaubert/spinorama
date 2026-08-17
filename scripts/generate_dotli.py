@@ -159,7 +159,11 @@ def compute_initial_pic_manifest(meta, manifest, logger):
         }
 
     manifest["pic_chunks"] = pic_chunks
-    logger.info("Initial pic manifest: %d chunks for %d pictures", len(pic_chunks), len(all_speakers_ordered))
+    logger.info(
+        "Initial pic manifest: %d chunks for %d pictures",
+        len(pic_chunks),
+        len(all_speakers_ordered),
+    )
 
 
 def assign_new_speakers(manifest, new_speakers, speaker_data_map, logger):
@@ -245,7 +249,9 @@ def assign_new_pic_speakers(manifest, new_pic_speakers, logger):
         active_chunk["speakers"].append(speaker_name)
         dirty.add(active_idx)
 
-    logger.info("Assigned %d new pic speakers, %d dirty pic chunks", len(new_pic_speakers), len(dirty))
+    logger.info(
+        "Assigned %d new pic speakers, %d dirty pic chunks", len(new_pic_speakers), len(dirty)
+    )
     return dirty
 
 
@@ -509,7 +515,9 @@ def extract_layout_presets(logger):
                                 graph_json = json.load(f)
                             layout = graph_json.get("layout", {})
                             # Remove template from the layout preset
-                            layout_no_template = {k: v for k, v in layout.items() if k != "template"}
+                            layout_no_template = {
+                                k: v for k, v in layout.items() if k != "template"
+                            }
                             presets[graph_type] = layout_no_template
                         except (json.JSONDecodeError, OSError):
                             pass
@@ -593,9 +601,7 @@ def generate_index_json(meta, speaker_chunk_map, pic_chunk_map, logger):
         if chunk_idx < 0:
             continue
 
-        entry = extract_speaker_index_entry(
-            speaker_name, speaker_data, chunk_idx, chunk_pos
-        )
+        entry = extract_speaker_index_entry(speaker_name, speaker_data, chunk_idx, chunk_pos)
 
         # Picture chunk index (-1 if no picture available)
         entry["pc"] = pic_chunk_map.get(speaker_name, -1)
@@ -789,7 +795,9 @@ def generate_picture_chunks(meta, manifest, force_rebuild, logger):
 
     if work_items:
         num_workers = multiprocessing.cpu_count()
-        logger.info("Compressing %d dirty picture chunks using %d workers...", len(work_items), num_workers)
+        logger.info(
+            "Compressing %d dirty picture chunks using %d workers...", len(work_items), num_workers
+        )
         total_compressed = 0
 
         with ProcessPoolExecutor(max_workers=num_workers) as pool:
@@ -823,7 +831,9 @@ def generate_js_bundle(logger, layout_presets, plotly_template):
     # Run esbuild
     esbuild_bin = "./src/dotli/dotli-starter/node_modules/.bin/esbuild"
     if not os.path.exists(esbuild_bin):
-        logger.error("esbuild not found at %s. Run: cd src/dotli/dotli-starter && npm install", esbuild_bin)
+        logger.error(
+            "esbuild not found at %s. Run: cd src/dotli/dotli-starter && npm install", esbuild_bin
+        )
         sys.exit(1)
 
     entry = "./src/dotli/app/main.js"
@@ -868,7 +878,9 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate blockchain-optimized static site for spinorama."
     )
-    parser.add_argument("--version", action="version", version="./scripts/generate_dotli.py version 0.1")
+    parser.add_argument(
+        "--version", action="version", version="./scripts/generate_dotli.py version 0.1"
+    )
     parser.add_argument(
         "--log-level",
         default="INFO",

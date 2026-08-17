@@ -213,7 +213,9 @@ def plot_graph(
             slope, intercept, _, _, _ = stats.linregress(
                 np.log10(restricted_df["Freq"]), restricted_df[trend_curve]
             )
-            trend_traces = plot_graph_traces(df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range)
+            trend_traces = plot_graph_traces(
+                df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range
+            )
             # Skip the last trace (the data curve itself, already added in the for loop)
             for t in trend_traces[:-1]:
                 fig.add_trace(t)
@@ -241,7 +243,9 @@ def plot_graph_spl(
             slope, intercept, _, _, _ = stats.linregress(
                 np.log10(restricted_df["Freq"]), restricted_df[trend_curve]
             )
-            trend_traces = plot_graph_traces(df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range)
+            trend_traces = plot_graph_traces(
+                df, trend_curve, params, slope, intercept, "Trend line", valid_freq_range
+            )
 
     for measurement in df:
         if measurement != "Freq":

@@ -59,6 +59,7 @@ def average_headphone_channels(df: pd.DataFrame) -> pd.DataFrame:
 
     return pd.DataFrame({"Freq": df["Freq_L"], "dB": db_avg})
 
+
 # Strict keywords for detecting the header row (no x/y — too generic)
 _HEADER_FREQ_KW = {"frequency", "freq", "hz"}
 _HEADER_DB_KW = {"raw", "spl", "db", "dbspl", "level"}
@@ -79,9 +80,7 @@ def _find_header_rows(lines: list[str]) -> list[tuple[int, int, int]]:
         parts = {p.strip().strip('"').lower() for p in line.split(",")}
         if parts & _HEADER_FREQ_KW and parts & _HEADER_DB_KW:
             cols = [p.strip().strip('"').lower() for p in line.split(",")]
-            n_freq = sum(
-                1 for c in cols if c and any(c.startswith(k) for k in ("hz", "freq"))
-            )
+            n_freq = sum(1 for c in cols if c and any(c.startswith(k) for k in ("hz", "freq")))
             n_db = sum(
                 1 for c in cols if c and any(c.startswith(k) for k in ("dbspl", "spl", "db"))
             )

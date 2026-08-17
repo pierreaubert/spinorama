@@ -279,9 +279,7 @@ def optim_save_peq(
         return False, ("", (0, 0, 0), [])
 
     # do we have CEA2034 data (temporary test, should be much smarter)
-    smoke_test, smoke_empty = smoke_test_cea2034(
-        current_speaker_name, current_speaker_origin, m
-    )
+    smoke_test, smoke_empty = smoke_test_cea2034(current_speaker_name, current_speaker_origin, m)
     if not smoke_test:
         return smoke_test, smoke_empty
 

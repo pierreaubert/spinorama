@@ -152,7 +152,9 @@ def _display_inroom_common(
     )
 
 
-def display_inroom(m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+def display_inroom(
+    m: Measurements, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     return _display_inroom_common(m, graph_params, False, valid_freq_range)
 
 
@@ -378,7 +380,13 @@ def display_radar_vertical(
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
     filedir = (
-        CPATH_DIST_SPEAKERS + "/" + sanitize_filename(speaker) + "/" + origin.replace("Vendors-", "") + "/" + version
+        CPATH_DIST_SPEAKERS
+        + "/"
+        + sanitize_filename(speaker)
+        + "/"
+        + origin.replace("Vendors-", "")
+        + "/"
+        + version
     )
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     filename = filedir + "/" + graph_name.replace("_smoothed", "")
@@ -642,9 +650,7 @@ def emit_figures(
 
         filename_json = build_filename(speaker, origin, version_key, key, "json")
         if not (
-            force_print
-            or not os.path.exists(filename_json)
-            or os.path.getsize(filename_json) == 0
+            force_print or not os.path.exists(filename_json) or os.path.getsize(filename_json) == 0
         ):
             continue
 

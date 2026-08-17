@@ -100,18 +100,26 @@ def _make_synthetic_plot(
         curves = {
             "Fundamental": (
                 (200, 200, 0),  # cyan in BGR
-                [(f, 85.0 - 5.0 * abs(math.log10(f / 1000))) for f in np.logspace(math.log10(20), math.log10(20000), 200)],
+                [
+                    (f, 85.0 - 5.0 * abs(math.log10(f / 1000)))
+                    for f in np.logspace(math.log10(20), math.log10(20000), 200)
+                ],
             ),
             "THD": (
                 (0, 0, 200),  # red in BGR
-                [(f, 55.0 - 3.0 * abs(math.log10(f / 1000))) for f in np.logspace(math.log10(20), math.log10(20000), 200)],
+                [
+                    (f, 55.0 - 3.0 * abs(math.log10(f / 1000)))
+                    for f in np.logspace(math.log10(20), math.log10(20000), 200)
+                ],
             ),
         }
 
     for _name, (color, points) in curves.items():
         prev_pt = None
         for freq, db in points:
-            x = int(px_min + plot_w * (math.log10(freq) - log_freq_min) / (log_freq_max - log_freq_min))
+            x = int(
+                px_min + plot_w * (math.log10(freq) - log_freq_min) / (log_freq_max - log_freq_min)
+            )
             y = int(py_max - plot_h * (db - db_min) / (db_max - db_min))
 
             if px_min <= x <= px_max and py_min <= y <= py_max:

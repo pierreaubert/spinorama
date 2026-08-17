@@ -79,7 +79,9 @@ def _detect_grid_mask(plot_img: npt.NDArray) -> npt.NDArray:
     grid_mask = np.zeros((h, w), dtype=np.uint8)
 
     lines = cv2.HoughLinesP(
-        edges, 1, np.pi / 180,
+        edges,
+        1,
+        np.pi / 180,
         threshold=50,
         minLineLength=int(0.3 * min(h, w)),
         maxLineGap=5,

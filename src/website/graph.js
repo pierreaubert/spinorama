@@ -20,6 +20,7 @@
 
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
+import { layoutAnnotations } from './annotation-layout.js';
 import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 function detectTheme() {
@@ -179,6 +180,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         // Plotly's own responsive scaling — it conflicts with our layout recomputation
         // (e.g. scales vertical legends outside the visible area).
         options.config.responsive = false;
+        layoutAnnotations(options);
         return options;
     }
 

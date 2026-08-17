@@ -92,25 +92,36 @@ def _process_image(image_path: Path) -> dict:
                 key = f"{region.title} - {curve_name}" if region.title else curve_name
                 all_curves[key] = pts
 
-        region_infos.append({
-            "title": region.title,
-            "x": region.x, "y": region.y, "w": region.w, "h": region.h,
-            "calibration": {
-                "freq_min": round(calibration.freq_min, 1),
-                "freq_max": round(calibration.freq_max, 1),
-                "db_min": round(calibration.db_min, 1),
-                "db_max": round(calibration.db_max, 1),
-            },
-            "curves": {
-                name: {
-                    "n_points": len(pts),
-                    "freq_range": [round(min(p[0] for p in pts), 1), round(max(p[0] for p in pts), 1)],
-                    "db_range": [round(min(p[1] for p in pts), 1), round(max(p[1] for p in pts), 1)],
-                    "mean_db": round(sum(p[1] for p in pts) / len(pts), 1),
-                }
-                for name, pts in region_curves.items()
-            },
-        })
+        region_infos.append(
+            {
+                "title": region.title,
+                "x": region.x,
+                "y": region.y,
+                "w": region.w,
+                "h": region.h,
+                "calibration": {
+                    "freq_min": round(calibration.freq_min, 1),
+                    "freq_max": round(calibration.freq_max, 1),
+                    "db_min": round(calibration.db_min, 1),
+                    "db_max": round(calibration.db_max, 1),
+                },
+                "curves": {
+                    name: {
+                        "n_points": len(pts),
+                        "freq_range": [
+                            round(min(p[0] for p in pts), 1),
+                            round(max(p[0] for p in pts), 1),
+                        ],
+                        "db_range": [
+                            round(min(p[1] for p in pts), 1),
+                            round(max(p[1] for p in pts), 1),
+                        ],
+                        "mean_db": round(sum(p[1] for p in pts) / len(pts), 1),
+                    }
+                    for name, pts in region_curves.items()
+                },
+            }
+        )
 
     return {
         "file": image_path.name,
@@ -122,7 +133,9 @@ def _process_image(image_path: Path) -> dict:
     }
 
 
-def _downsample(pts: list[tuple[float, float]], max_points: int = 400) -> tuple[list[float], list[float]]:
+def _downsample(
+    pts: list[tuple[float, float]], max_points: int = 400
+) -> tuple[list[float], list[float]]:
     if len(pts) <= max_points:
         return [p[0] for p in pts], [p[1] for p in pts]
     step = len(pts) / max_points
@@ -137,12 +150,15 @@ def _build_traces_json(curves: dict[str, list[tuple[float, float]]]) -> str:
         # strip region prefix to find color
         base_name = name.split(" - ")[-1] if " - " in name else name
         color = CURVE_COLORS.get(base_name, "#888888")
-        traces.append({
-            "x": xs, "y": ys,
-            "mode": "lines",
-            "name": name,
-            "line": {"color": color, "width": 2},
-        })
+        traces.append(
+            {
+                "x": xs,
+                "y": ys,
+                "mode": "lines",
+                "name": name,
+                "line": {"color": color, "width": 2},
+            }
+        )
     return json.dumps(traces)
 
 
@@ -193,7 +209,7 @@ def generate_report(results: list[dict], output_path: Path) -> None:
         cal_rows = ""
         for i, reg_info in enumerate(r["regions"]):
             cal = reg_info["calibration"]
-            reg_title = reg_info["title"] or f"Region {i+1}"
+            reg_title = reg_info["title"] or f"Region {i + 1}"
             cal_rows += (
                 f"<tr>"
                 f"<td>{html_mod.escape(reg_title)}</td>"
@@ -233,7 +249,7 @@ Plotly.newPlot("{div_id}", {traces_json}, {{
       <h3 class="title is-5 mb-0">{escaped_file}</h3>
     </div>
     <div class="level-right">
-      <span class="tag is-success is-medium mr-2">{r['n_regions']} region(s)</span>
+      <span class="tag is-success is-medium mr-2">{r["n_regions"]} region(s)</span>
       <span class="tag is-info is-medium">{n_curves} curve(s)</span>
     </div>
   </div>
@@ -348,9 +364,13 @@ Plotly.newPlot("{div_id}", {traces_json}, {{
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Extract curves from PNGs and generate HTML report")
+    parser = argparse.ArgumentParser(
+        description="Extract curves from PNGs and generate HTML report"
+    )
     parser.add_argument("--input-dir", type=Path, required=True, help="Directory with PNG images")
-    parser.add_argument("--output", type=Path, default=Path("report_extraction.html"), help="Output HTML file")
+    parser.add_argument(
+        "--output", type=Path, default=Path("report_extraction.html"), help="Output HTML file"
+    )
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -366,7 +386,7 @@ def main() -> int:
 
     results: list[dict] = []
     for i, png in enumerate(pngs):
-        print(f"  [{i+1}/{len(pngs)}] {png.name}")
+        print(f"  [{i + 1}/{len(pngs)}] {png.name}")
         result = _process_image(png)
         results.append(result)
         if result["status"] == "success":

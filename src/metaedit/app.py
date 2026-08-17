@@ -1316,9 +1316,7 @@ class MetadataMainWindow(QMainWindow):
         self.page_review.apply_btn.clicked.connect(self._apply_merge)  # type: ignore[arg-type]
         self.page_review.exit_btn.clicked.connect(self.close)  # type: ignore[arg-type]
         # Wire search functionality (delegated to the page)
-        self.page_select.speakers_search.textChanged.connect(
-            self.page_select.filter_speakers
-        )  # type: ignore[arg-type]
+        self.page_select.speakers_search.textChanged.connect(self.page_select.filter_speakers)  # type: ignore[arg-type]
         self.page_edit.add_meas_btn.clicked.connect(self._add_measurement_panel)  # type: ignore[arg-type]
         self.page_review.start_over_btn.clicked.connect(self._start_over)  # type: ignore[arg-type]
         # Picture choose handler

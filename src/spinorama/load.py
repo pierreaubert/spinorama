@@ -301,9 +301,7 @@ def filter_graphs_partial(df_in, mformat, mdistance):
                     & (on.Measurements == curve)
                 ].dB
             )
-            spl_at_distance, spl_at_1m = compute_sensitivity_details(
-                on, curve, mformat, mdistance
-            )
+            spl_at_distance, spl_at_1m = compute_sensitivity_details(on, curve, mformat, mdistance)
             if spl_at_distance > _SENSITIVITY_NORMALISED_THRESHOLD:
                 sensitivity = Sensitivity(
                     spl=spl_at_distance, distance=mdistance, spl_at_1m=spl_at_1m
@@ -593,9 +591,7 @@ def _parse_hv_speaker(
     status, (h_spl, v_spl) = HV_LOADERS[params.mformat](params)
 
     if not status:
-        logger.debug(
-            "Failed to load %s from measurement %s", params.speaker_name, params.mversion
-        )
+        logger.debug("Failed to load %s from measurement %s", params.speaker_name, params.mversion)
         if h_spl is not None and "Freq" not in h_spl:
             h_spl = None
         if v_spl is not None and "Freq" not in v_spl:

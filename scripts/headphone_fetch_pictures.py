@@ -58,6 +58,7 @@ logger = logging.getLogger("headphone_pictures")
 # Brave Image Search
 # ---------------------------------------------------------------------------
 
+
 def search_image(api_key: str, brand: str, model: str) -> list[dict]:
     """Search Brave Image Search for a headphone product image.
 
@@ -135,12 +136,15 @@ def _pick_best_image(results: list[dict]) -> str | None:
 # Download
 # ---------------------------------------------------------------------------
 
+
 def _get_session() -> requests.Session:
     session = requests.Session()
-    session.headers.update({
-        "User-Agent": "spinorama-headphone-pictures/1.0",
-        "Accept": "image/*,*/*;q=0.8",
-    })
+    session.headers.update(
+        {
+            "User-Agent": "spinorama-headphone-pictures/1.0",
+            "Accept": "image/*,*/*;q=0.8",
+        }
+    )
     return session
 
 
@@ -175,6 +179,7 @@ def download_image(session: requests.Session, url: str, dest: Path) -> bool:
 # ---------------------------------------------------------------------------
 # Main logic
 # ---------------------------------------------------------------------------
+
 
 def picture_exists(brand: str, model: str) -> bool:
     """Check if a picture already exists for this headphone."""
@@ -264,10 +269,7 @@ def main():
     try:
         from datas.headphones import headphones_info
     except ImportError:
-        logger.error(
-            "Cannot import headphone metadata. "
-            "Make sure datas/headphones.py exists."
-        )
+        logger.error("Cannot import headphone metadata. Make sure datas/headphones.py exists.")
         sys.exit(1)
 
     PICTURES_DIR.mkdir(parents=True, exist_ok=True)

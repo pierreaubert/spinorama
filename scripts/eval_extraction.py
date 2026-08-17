@@ -81,16 +81,24 @@ def print_summary(aggregate: dict) -> None:
     print("\n--- By Graph Type ---")
     for gt, stats in aggregate["by_graph_type"].items():
         print(f"\n  {gt}:")
-        print(f"    Success rate: {stats['success_rate']:.1%} ({stats['success']}/{stats['total']})")
+        print(
+            f"    Success rate: {stats['success_rate']:.1%} ({stats['success']}/{stats['total']})"
+        )
         if stats["rms_error_db"]:
             rms = stats["rms_error_db"]
-            print(f"    RMS error (dB):  median={rms['median']:.2f}  mean={rms['mean']:.2f}  p95={rms['p95']:.2f}  max={rms['max']:.2f}")
+            print(
+                f"    RMS error (dB):  median={rms['median']:.2f}  mean={rms['mean']:.2f}  p95={rms['p95']:.2f}  max={rms['max']:.2f}"
+            )
         if stats["correlation"]:
             corr = stats["correlation"]
-            print(f"    Correlation:     median={corr['median']:.4f}  mean={corr['mean']:.4f}  p95={corr['p95']:.4f}")
+            print(
+                f"    Correlation:     median={corr['median']:.4f}  mean={corr['mean']:.4f}  p95={corr['p95']:.4f}"
+            )
         if stats["frequency_coverage"]:
             cov = stats["frequency_coverage"]
-            print(f"    Coverage:        median={cov['median']:.1%}  mean={cov['mean']:.1%}  p95={cov['p95']:.1%}")
+            print(
+                f"    Coverage:        median={cov['median']:.1%}  mean={cov['mean']:.1%}  p95={cov['p95']:.1%}"
+            )
 
     # By curve name
     print("\n--- By Curve Name ---")
@@ -98,35 +106,48 @@ def print_summary(aggregate: dict) -> None:
         rms = stats["rms_error_db"]
         if not rms:
             continue
-        print(f"  {cn:30s}  RMS median={rms['median']:.2f}  mean={rms['mean']:.2f}  n={rms['count']}")
+        print(
+            f"  {cn:30s}  RMS median={rms['median']:.2f}  mean={rms['mean']:.2f}  n={rms['count']}"
+        )
 
     # Worst cases
     print("\n--- Worst Cases (by RMS) ---")
     for i, wc in enumerate(aggregate["worst_cases"]):
-        print(f"  {i+1:2d}. RMS={wc['rms_error_db']:.2f} dB  max={wc['max_abs_error_db']:.2f} dB  "
-              f"curve={wc['curve_name']}  file={Path(wc['file_path']).parent.name}")
+        print(
+            f"  {i + 1:2d}. RMS={wc['rms_error_db']:.2f} dB  max={wc['max_abs_error_db']:.2f} dB  "
+            f"curve={wc['curve_name']}  file={Path(wc['file_path']).parent.name}"
+        )
 
     print("\n" + "=" * 80)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate extraction pipeline quality")
-    parser.add_argument("--data-dir", type=Path, required=True,
-                        help="Path to speakers directory with Plotly JSON files")
-    parser.add_argument("--graph-types", nargs="+", default=["CEA2034"],
-                        help="Graph types to evaluate (default: CEA2034)")
-    parser.add_argument("--sample-size", type=int, default=0,
-                        help="Number of files to sample (0=all)")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Random seed for sampling")
-    parser.add_argument("--calibration-mode", choices=["oracle", "auto"], default="oracle",
-                        help="Calibration mode (default: oracle)")
-    parser.add_argument("--output", type=Path, default=None,
-                        help="Output JSON file for results")
-    parser.add_argument("--html", type=Path, default=None,
-                        help="Output HTML report file")
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="Verbose logging")
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        required=True,
+        help="Path to speakers directory with Plotly JSON files",
+    )
+    parser.add_argument(
+        "--graph-types",
+        nargs="+",
+        default=["CEA2034"],
+        help="Graph types to evaluate (default: CEA2034)",
+    )
+    parser.add_argument(
+        "--sample-size", type=int, default=0, help="Number of files to sample (0=all)"
+    )
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for sampling")
+    parser.add_argument(
+        "--calibration-mode",
+        choices=["oracle", "auto"],
+        default="oracle",
+        help="Calibration mode (default: oracle)",
+    )
+    parser.add_argument("--output", type=Path, default=None, help="Output JSON file for results")
+    parser.add_argument("--html", type=Path, default=None, help="Output HTML report file")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
     args = parser.parse_args()
 
     # Setup logging
@@ -165,7 +186,7 @@ def main() -> None:
     results = evaluate_batch(sampled, calibration_mode=args.calibration_mode)
     elapsed = time.monotonic() - t0
 
-    print(f"\nEvaluation completed in {elapsed:.1f}s ({elapsed/len(sampled):.2f}s/file)")
+    print(f"\nEvaluation completed in {elapsed:.1f}s ({elapsed / len(sampled):.2f}s/file)")
 
     # Aggregate stats
     aggregate = compute_aggregate_stats(results)

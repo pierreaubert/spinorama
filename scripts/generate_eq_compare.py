@@ -40,9 +40,13 @@ VERSION = 0.2
 def build_eq_figure_and_filename(data):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.json".format(CPATH_DIST_SPEAKERS, sanitize_filename(brand), sanitize_filename(model))
+    filename = "{}/{} {}/eq_compare.json".format(
+        CPATH_DIST_SPEAKERS, sanitize_filename(brand), sanitize_filename(model)
+    )
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
-    eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, sanitize_filename(brand), sanitize_filename(model)))
+    eqs = glob.glob(
+        "{}/{} {}/*.txt".format(CPATH_DATAS_EQ, sanitize_filename(brand), sanitize_filename(model))
+    )
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names)
@@ -93,7 +97,9 @@ def main(force, batch_size):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate EQ comparison plots.")
     parser.add_argument(
-        "--version", action="version", version=f"./scripts/generate_eq_compare.py version {VERSION:.1f}"
+        "--version",
+        action="version",
+        version=f"./scripts/generate_eq_compare.py version {VERSION:.1f}",
     )
     parser.add_argument(
         "--force", action="store_true", help="Regenerate pictures even if they already exist."

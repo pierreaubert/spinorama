@@ -52,24 +52,24 @@ def next_power_of_2(n):
 
 def _resample(x1: list[float], x2: list[float], y1: list[float]) -> list[float]:
     """Resample y1 from x1 coordinates to x2 coordinates using log-scale spline interpolation.
-    
+
     Args:
         x1: Original frequency values (must be positive)
         x2: Target frequency values (must be positive)
         y1: Original y values corresponding to x1
-        
+
     Returns:
         Interpolated y values at x2 frequencies
-        
+
     Raises:
         ValueError: If any frequency values are <= 0
     """
     x1_arr = np.asarray(x1)
     x2_arr = np.asarray(x2)
-    
+
     if np.any(x1_arr <= 0) or np.any(x2_arr <= 0):
         raise ValueError("Frequencies must be positive for log-scale interpolation")
-    
+
     spline = InterpolatedUnivariateSpline(np.log10(x1_arr), y1, k=3)
     return spline(np.log10(x2_arr))
 
@@ -221,7 +221,9 @@ class GlobalOptimizer(object):
         # configurable weights for flatness penalty (higher = more flexibility, less flat)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_on_bass_mid) / bass_mid_weight + float(flatness_on_mid_high) / mid_high_weight
+        return score, score + float(flatness_on_bass_mid) / bass_mid_weight + float(
+            flatness_on_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_score_lw(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
@@ -235,7 +237,9 @@ class GlobalOptimizer(object):
         flatness_lw_mid_high = np.linalg.norm(flat_lw[self.freq_midrange_index :], ord=2)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_lw_bass_mid) / bass_mid_weight + float(flatness_lw_mid_high) / mid_high_weight
+        return score, score + float(flatness_lw_bass_mid) / bass_mid_weight + float(
+            flatness_lw_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_score_pir(self, x: Encoded) -> tuple[float, float]:
         # for  a given encoded peq, compute the score
@@ -249,7 +253,9 @@ class GlobalOptimizer(object):
         flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         bass_mid_weight = self.config.get("flatness_bass_mid_weight", 15.0)
         mid_high_weight = self.config.get("flatness_mid_high_weight", 50.0)
-        return score, score + float(flatness_pir_bass_mid) / bass_mid_weight + float(flatness_pir_mid_high) / mid_high_weight
+        return score, score + float(flatness_pir_bass_mid) / bass_mid_weight + float(
+            flatness_pir_mid_high
+        ) / mid_high_weight
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
@@ -386,15 +392,16 @@ class GlobalOptimizer(object):
             q_max_above_threshold_1 = self.config.get("q_max_above_threshold_1", 2.0)
             q_freq_threshold_2 = self.config.get("q_freq_threshold_2", 3500)
             q_max_above_threshold_2 = self.config.get("q_max_above_threshold_2", 1.5)
-            
+
             l = len(x) // 4
             for i in range(l):
                 _, f, q, _, _ = self._x2params(x, i)
                 if q > self.max_q or q < self.min_q:
                     return 1
                 f_hz = self._index2freq(f)
-                if (f_hz > q_freq_threshold_1 and q > q_max_above_threshold_1) or \
-                   (f_hz > q_freq_threshold_2 and q > q_max_above_threshold_2):
+                if (f_hz > q_freq_threshold_1 and q > q_max_above_threshold_1) or (
+                    f_hz > q_freq_threshold_2 and q > q_max_above_threshold_2
+                ):
                     return 1
             return -1
 

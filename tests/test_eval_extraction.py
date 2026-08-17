@@ -183,8 +183,14 @@ def test_load_plotly_ground_truth():
     gt_data = load_plotly_ground_truth(_SAMPLE_CEA2034)
 
     assert len(gt_data.curves) >= 6, f"Expected at least 6 traces, got {len(gt_data.curves)}"
-    expected_names = {"On Axis", "Listening Window", "Early Reflections",
-                      "Sound Power", "Early Reflections DI", "Sound Power DI"}
+    expected_names = {
+        "On Axis",
+        "Listening Window",
+        "Early Reflections",
+        "Sound Power",
+        "Early Reflections DI",
+        "Sound Power DI",
+    }
     assert expected_names.issubset(set(gt_data.curves.keys()))
 
     for name, (x, y) in gt_data.curves.items():

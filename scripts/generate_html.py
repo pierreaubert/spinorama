@@ -244,7 +244,9 @@ def generate_measurement(
                 versions=versions,
             )
             graph_deps = [
-                *glob("./datas/measurements/{}/{}/*.*".format(sanitize_filename(speaker_name), key)),
+                *glob(
+                    "./datas/measurements/{}/{}/*.*".format(sanitize_filename(speaker_name), key)
+                ),
                 *glob("./src/spinorama/*.py"),
             ]
             graph_force = need_update(graph_filename, graph_deps)
@@ -289,7 +291,11 @@ def generate_speaker(
                     )
                 )
                 print("Maybe you forgot to cache the computations? Try running:")
-                print("./scripts/generate_graphs.py --speaker='{}' --update-cache".format(speaker_name))
+                print(
+                    "./scripts/generate_graphs.py --speaker='{}' --update-cache".format(
+                        speaker_name
+                    )
+                )
                 print("./scripts/generate_meta.py")
 
 
@@ -336,7 +342,9 @@ def main():
         ("eqdata", eqdata_json_filename),
     ):
         if json_check is None:
-            logger.error("Cannot find %s, you should run ./scripts/generate_meta.py again!", radical)
+            logger.error(
+                "Cannot find %s, you should run ./scripts/generate_meta.py again!", radical
+            )
             sys.exit(1)
 
     meta = None
@@ -457,7 +465,7 @@ def main():
                 meta=meta_sorted_score,
                 site=site,
                 use_search=use_search,
-                    min=".min" if flag_optim else "",
+                min=".min" if flag_optim else "",
                 versions=versions,
             )
             item_filename = cpaths.CPATH_DIST + "/" + item_name
@@ -524,9 +532,7 @@ def main():
                 m_data = hp_data.get("measurements", {}).get(default_m, {})
                 origin = m_data.get("origin", "ASR")
 
-                hp_dist_dir = "{}/{}/{}/".format(
-                    cpaths.CPATH_DIST_HEADPHONES, hp_name, origin
-                )
+                hp_dist_dir = "{}/{}/{}/".format(cpaths.CPATH_DIST_HEADPHONES, hp_name, origin)
                 os.makedirs(hp_dist_dir, exist_ok=True)
 
                 # Check which graphs exist
@@ -603,9 +609,7 @@ def main():
                 # per-EQ-graph html pages
                 for eq_subdir, graphs in eq_graphs.values():
                     for graph_name in graphs:
-                        graph_filename = "{}/{}/{}.html".format(
-                            hp_dist_dir, eq_subdir, graph_name
-                        )
+                        graph_filename = "{}/{}/{}.html".format(hp_dist_dir, eq_subdir, graph_name)
                         graph_content = graph_html.render(
                             speaker=hp_name,
                             graph=graph_name,
@@ -618,6 +622,7 @@ def main():
     except Exception as e:
         print("Generating headphone pages failed with {}".format(e))
         import traceback
+
         traceback.print_exc()
 
     # write a file per speaker
@@ -801,7 +806,9 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate HTML website for spinorama data.")
-    parser.add_argument("--version", action="version", version="./scripts/generate_html.py version 1.23")
+    parser.add_argument(
+        "--version", action="version", version="./scripts/generate_html.py version 1.23"
+    )
     parser.add_argument(
         "--dev",
         action="store_true",

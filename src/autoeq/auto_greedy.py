@@ -46,8 +46,8 @@ def optim_greedy(
     use_score: bool,
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy.
-    
-    Note: Future improvement could add warm-starting by passing previous 
+
+    Note: Future improvement could add warm-starting by passing previous
     filter parameters as initial guess (x0) to differential_evolution.
     This could speed up convergence when adding successive filters.
     """

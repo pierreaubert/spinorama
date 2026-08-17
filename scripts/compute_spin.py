@@ -99,9 +99,7 @@ def detect_format(data_dir: str, speaker_name: str) -> tuple[str, str] | None:
     # Helper to check a directory for valid formats
     def check_dir(path: Path, version: str) -> tuple[str, str] | None:
         # Check for Klippel format (SPL Horizontal.txt / SPL Vertical.txt)
-        if (path / "SPL Horizontal.txt").exists() and (
-            path / "SPL Vertical.txt"
-        ).exists():
+        if (path / "SPL Horizontal.txt").exists() and (path / "SPL Vertical.txt").exists():
             return ("klippel", version)
 
         # Check for Princeton format (*_H_IR.mat / *_V_IR.mat)
@@ -139,7 +137,7 @@ def detect_format(data_dir: str, speaker_name: str) -> tuple[str, str] | None:
         return result
 
     # If no files in base, check subdirectories
-    subdirs = [d for d in base_path.iterdir() if d.is_dir() and not d.name.startswith('.')]
+    subdirs = [d for d in base_path.iterdir() if d.is_dir() and not d.name.startswith(".")]
     for version_dir in subdirs:
         result = check_dir(version_dir, version_dir.name)
         if result is not None:
@@ -304,10 +302,12 @@ def generate_graphs(
 
     # Add in-room response if available
     if m.eir is not None:
-        graphs_to_generate.extend([
-            ("Estimated_In-Room_Response", display_inroom, False),
-            ("Estimated_In-Room_Response_Normalized", display_inroom_normalized, False),
-        ])
+        graphs_to_generate.extend(
+            [
+                ("Estimated_In-Room_Response", display_inroom, False),
+                ("Estimated_In-Room_Response_Normalized", display_inroom_normalized, False),
+            ]
+        )
 
     # Generate and save each graph
     for graph_name, display_func, _is_contour in graphs_to_generate:
@@ -400,7 +400,11 @@ def generate_graphs(
             ("SPL_Vertical_Contour_Normalized", display_contour_vertical_normalized, False),
             ("SPL_Horizontal_Contour_3D", display_contour_horizontal_3d, True),
             ("SPL_Vertical_Contour_3D", display_contour_vertical_3d, True),
-            ("SPL_Horizontal_Contour_Normalized_3D", display_contour_horizontal_normalized_3d, True),
+            (
+                "SPL_Horizontal_Contour_Normalized_3D",
+                display_contour_horizontal_normalized_3d,
+                True,
+            ),
             ("SPL_Vertical_Contour_Normalized_3D", display_contour_vertical_normalized_3d, True),
         ]
 
@@ -495,7 +499,15 @@ Examples:
     parser.add_argument("directory", help="Directory containing speaker measurement data")
     parser.add_argument(
         "--format",
-        choices=["auto", "klippel", "princeton", "spl_hv_txt", "gll_hv_txt", "rew_text_dump", "webplotdigitizer"],
+        choices=[
+            "auto",
+            "klippel",
+            "princeton",
+            "spl_hv_txt",
+            "gll_hv_txt",
+            "rew_text_dump",
+            "webplotdigitizer",
+        ],
         default="auto",
         help="Input format (default: auto-detect)",
     )
@@ -513,12 +525,8 @@ Examples:
     parser.add_argument(
         "--height", type=int, default=600, help="Graph height in pixels (default: 600)"
     )
-    parser.add_argument(
-        "--force", action="store_true", help="Overwrite existing files"
-    )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose output"
-    )
+    parser.add_argument("--force", action="store_true", help="Overwrite existing files")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
     parser.add_argument(
         "--symmetry",
         choices=["auto", "mirror", "shift", "none"],
@@ -590,7 +598,9 @@ Examples:
 
     # Load speaker data
     print(f"\nLoading speaker data (format: {fmt})...")
-    success, df_graph, parameters = load_speaker_data(data_dir, speaker_name, fmt, version, symmetry)
+    success, df_graph, parameters = load_speaker_data(
+        data_dir, speaker_name, fmt, version, symmetry
+    )
 
     if not success or not df_graph:
         print("\nError: Failed to load speaker data.")

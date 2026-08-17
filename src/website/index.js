@@ -72,7 +72,15 @@ function getDefaultUrl(value) {
     if (def && value.measurements[def]) {
         const origin = value.measurements[def].origin;
         return encodeURI(
-            'speakers/' + sanitizeFilename(value.brand) + ' ' + sanitizeFilename(value.model) + '/' + removeVendors(origin) + '/index_' + def + '.html'
+            'speakers/' +
+                sanitizeFilename(value.brand) +
+                ' ' +
+                sanitizeFilename(value.model) +
+                '/' +
+                removeVendors(origin) +
+                '/index_' +
+                def +
+                '.html'
         );
     }
     return null;

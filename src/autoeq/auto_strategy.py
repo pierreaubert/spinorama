@@ -344,9 +344,7 @@ def optim_strategy(
                         auto_peq2,
                         auto_slope_lw2,
                     ),
-                ) = optim_eval_strategy(
-                    current_speaker_name, m, current_optim_config, use_score
-                )
+                ) = optim_eval_strategy(current_speaker_name, m, current_optim_config, use_score)
                 logger.debug(
                     "strategy2: %s %s %s %s %s",
                     auto_status2,

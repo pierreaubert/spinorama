@@ -64,7 +64,11 @@ def fetch_headphone_index() -> list[dict]:
     resp.raise_for_status()
     data = resp.json()
     entries = data.get("headphoneall", [])
-    logger.info("ASR API returned %d headphones (total: %d)", len(entries), data.get("totalRecordCount", len(entries)))
+    logger.info(
+        "ASR API returned %d headphones (total: %d)",
+        len(entries),
+        data.get("totalRecordCount", len(entries)),
+    )
     return entries
 
 
@@ -78,7 +82,12 @@ def build_headphones_from_api(entries: list[dict]) -> dict:
             continue
         shape = DEVICE_TYPE_MAP.get(device_type)
         if shape is None:
-            logger.warning("Unknown DeviceType %r for %s %s", device_type, entry.get("Brand"), entry.get("Model"))
+            logger.warning(
+                "Unknown DeviceType %r for %s %s",
+                device_type,
+                entry.get("Brand"),
+                entry.get("Model"),
+            )
             continue
 
         brand = entry.get("Brand", "").strip()
@@ -179,13 +188,13 @@ def group_by_key(headphones: dict) -> dict[str, dict]:
 def format_measurement(meas: dict, indent: str) -> list[str]:
     """Format a measurement dict as Python source lines."""
     lines = []
-    lines.append(f"{indent}\"origin\": {repr(meas['origin'])},")
-    lines.append(f"{indent}\"format\": {repr(meas['format'])},")
+    lines.append(f'{indent}"origin": {repr(meas["origin"])},')
+    lines.append(f'{indent}"format": {repr(meas["format"])},')
     for field in ("review", "review_published", "quality", "notes", "recommendation"):
         if field in meas:
             lines.append(f"{indent}{repr(field)}: {repr(meas[field])},")
     if "sensitivity_mV_94dB" in meas:
-        lines.append(f"{indent}\"sensitivity_mV_94dB\": {meas['sensitivity_mV_94dB']},")
+        lines.append(f'{indent}"sensitivity_mV_94dB": {meas["sensitivity_mV_94dB"]},')
     return lines
 
 
@@ -204,13 +213,13 @@ def write_headphone_file(key: str, headphones: dict, datas_dir: str) -> None:
     for name in sorted(headphones.keys()):
         hp = headphones[name]
         lines.append(f"    {repr(name)}: {{")
-        lines.append(f"        \"brand\": {repr(hp['brand'])},")
-        lines.append(f"        \"model\": {repr(hp['model'])},")
-        lines.append(f"        \"shape\": {repr(hp['shape'])},")
-        lines.append(f"        \"default_measurement\": {repr(hp['default_measurement'])},")
+        lines.append(f'        "brand": {repr(hp["brand"])},')
+        lines.append(f'        "model": {repr(hp["model"])},')
+        lines.append(f'        "shape": {repr(hp["shape"])},')
+        lines.append(f'        "default_measurement": {repr(hp["default_measurement"])},')
         if "price" in hp:
-            lines.append(f"        \"price\": {repr(hp['price'])},")
-        lines.append("        \"measurements\": {")
+            lines.append(f'        "price": {repr(hp["price"])},')
+        lines.append('        "measurements": {')
         for mkey, mval in hp["measurements"].items():
             lines.append(f"            {repr(mkey)}: {{")
             lines.extend(format_measurement(mval, " " * 16))

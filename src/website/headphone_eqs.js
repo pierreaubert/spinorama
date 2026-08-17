@@ -28,8 +28,10 @@ function getHeadphoneEQData() {
     const metaUrl = urlSite + 'json/headphone_metadata.json';
     const eqUrl = urlSite + 'json/headphone_eqdata.json';
 
-    const metaPromise = fetch(metaUrl).then(r => r.json());
-    const eqPromise = fetch(eqUrl).then(r => r.json()).catch(() => ({}));
+    const metaPromise = fetch(metaUrl).then((r) => r.json());
+    const eqPromise = fetch(eqUrl)
+        .then((r) => r.json())
+        .catch(() => ({}));
 
     return Promise.all([metaPromise, eqPromise]).then(([metaData, eqData]) => {
         const merged = new Map();
@@ -75,9 +77,7 @@ function getContext(pKey, pIndex, pValue) {
         autoeq: {
             key: defaultEQ,
             name: defaultEqData.display_name,
-            url:
-                'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
-                encodeURI(defaultEqData.filename),
+            url: 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' + encodeURI(defaultEqData.filename),
             preamp_gain: defaultEqData.preamp_gain,
             peq: getPeq(defaultEqData.peq),
         },

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Backwards-compatibility shim. See ``spinorama.compute.scores``."""
+
 from spinorama.compute.scores import (
     Any,
     LFQ_DEFAULT,
@@ -23,5 +24,23 @@ from spinorama.compute.scores import (
 )
 
 __all__ = [
-    'Any', 'LFQ_DEFAULT', 'LFX_DEFAULT', 'List', 'Tuple', 'aad', 'consecutive_groups', 'floating', 'lfq', 'lfx', 'linregress', 'logger', 'mad', 'nbd', 'octave', 'pref_rating', 'round_down', 'sm', 'speaker_pref_rating',
+    "Any",
+    "LFQ_DEFAULT",
+    "LFX_DEFAULT",
+    "List",
+    "Tuple",
+    "aad",
+    "consecutive_groups",
+    "floating",
+    "lfq",
+    "lfx",
+    "linregress",
+    "logger",
+    "mad",
+    "nbd",
+    "octave",
+    "pref_rating",
+    "round_down",
+    "sm",
+    "speaker_pref_rating",
 ]

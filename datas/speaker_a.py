@@ -989,7 +989,7 @@ speakers_info_a: SpeakerDatabase = {
                 "specifications": {
                     "sensitivit": 88,
                     "impedance": 4,
-                    "SPL": { "peak": 107},
+                    "SPL": {"peak": 107},
                     "size": {"height": 390, "width": 230, "depth": 362},
                     "weight": 16.0,
                 },
@@ -1504,8 +1504,8 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20260805",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-cbm-170se2-speaker-review.72683/",
-                }
-            }
+                },
+            },
         },
     },
     "Ascend Acoustics CMT-340 Center": {
@@ -1968,7 +1968,7 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "high",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-a6b-speaker-review.69864/",
-                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/"
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                 },
                 "review_published": "20260304",
                 "specifications": {
@@ -2115,7 +2115,7 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "high",
                 "reviews": {
                     "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-v1-1-measurement-update.70219/",
-                    "asr1": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/"
+                    "asr1": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/",
                 },
                 "review_published": "20260323",
                 "specifications": {
@@ -2131,7 +2131,7 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-c8c-active-speaker-review.69938/"
                 },
                 "review_published": "20260308",
-            }
+            },
         },
     },
     "AsciLab F6B": {
@@ -2456,7 +2456,6 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
-
     "Audiofocus VENU 8a": {
         "brand": "Audiofocus",
         "model": "VENU 8a",

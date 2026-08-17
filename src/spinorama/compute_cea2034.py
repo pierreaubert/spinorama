@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Backwards-compatibility shim. See ``spinorama.compute.cea2034``."""
+
 from spinorama.compute.cea2034 import (
     column_trim,
     column_valid,
@@ -30,5 +31,30 @@ from spinorama.compute.cea2034 import (
 )
 
 __all__ = [
-    'column_trim', 'column_valid', 'compute_area_q', 'compute_cea2034', 'compute_onaxis', 'compute_weigths', 'compute_weigths_hv', 'early_reflections', 'estimated_inroom', 'estimated_inroom_hv', 'horizontal_reflections', 'listening_window', 'logger', 'pressure2spl', 'sound_power', 'sp_weigths', 'sp_weigths_hv', 'spatial_average', 'spatial_average1', 'spatial_average2', 'spl2pressure', 'std_weigths', 'total_early_reflections', 'total_horizontal_reflections', 'total_vertical_reflections', 'vertical_reflections',
+    "column_trim",
+    "column_valid",
+    "compute_area_q",
+    "compute_cea2034",
+    "compute_onaxis",
+    "compute_weigths",
+    "compute_weigths_hv",
+    "early_reflections",
+    "estimated_inroom",
+    "estimated_inroom_hv",
+    "horizontal_reflections",
+    "listening_window",
+    "logger",
+    "pressure2spl",
+    "sound_power",
+    "sp_weigths",
+    "sp_weigths_hv",
+    "spatial_average",
+    "spatial_average1",
+    "spatial_average2",
+    "spl2pressure",
+    "std_weigths",
+    "total_early_reflections",
+    "total_horizontal_reflections",
+    "total_vertical_reflections",
+    "vertical_reflections",
 ]

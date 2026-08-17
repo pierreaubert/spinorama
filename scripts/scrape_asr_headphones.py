@@ -370,7 +370,12 @@ def scrape_asr_headphones(
         device_type = entry.get("DeviceType", "")
 
         if device_type in SKIP_DEVICE_TYPES:
-            logger.info("Skipping accessory: %s %s (%s)", entry.get("Brand"), entry.get("Model"), device_type)
+            logger.info(
+                "Skipping accessory: %s %s (%s)",
+                entry.get("Brand"),
+                entry.get("Model"),
+                device_type,
+            )
             continue
 
         shape = DEVICE_TYPE_MAP.get(device_type)
@@ -459,7 +464,9 @@ def scrape_asr_headphones(
 
 def main():
     parser = argparse.ArgumentParser(description="Scrape ASR headphone reviews")
-    parser.add_argument("--dry-run", action="store_true", help="List new headphones without downloading")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="List new headphones without downloading"
+    )
     parser.add_argument(
         "--rescrape-bad",
         action="store_true",

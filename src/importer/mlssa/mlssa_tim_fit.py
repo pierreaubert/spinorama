@@ -98,13 +98,19 @@ def fit_one(tim_path: Path, fft_path: Path, _header_bytes: int) -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Fit MLSSA TIM decode mode against reference FFT files")
+    ap = argparse.ArgumentParser(
+        description="Fit MLSSA TIM decode mode against reference FFT files"
+    )
     ap.add_argument("--data-dir", type=Path, required=True)
     ap.add_argument("--header-bytes", type=int, default=14, help=argparse.SUPPRESS)
     ap.add_argument("--output-json", type=Path, default=None)
     args = ap.parse_args()
 
-    pairs = [("RUSR-LFG.TIM", "RUSR-LFG.FFT"), ("RUSR-HFG.TIM", "RUSR-HFG.FFT"), ("RUSR-PO.TIM", "RUSR-PO.FFT")]
+    pairs = [
+        ("RUSR-LFG.TIM", "RUSR-LFG.FFT"),
+        ("RUSR-HFG.TIM", "RUSR-HFG.FFT"),
+        ("RUSR-PO.TIM", "RUSR-PO.FFT"),
+    ]
     results = []
     for t, f in pairs:
         tp = args.data_dir / t
@@ -114,7 +120,9 @@ def main() -> int:
     if not results:
         raise SystemExit("no TIM/FFT training pairs found")
     for r in results:
-        print(f"{r['tim']} vs {r['fft']}: mode={r['mode']} fs={r['fs']} score={r['score']:.4f} n={r['n']}")
+        print(
+            f"{r['tim']} vs {r['fft']}: mode={r['mode']} fs={r['fs']} score={r['score']:.4f} n={r['n']}"
+        )
 
     # choose globally most frequent/lowest score
     by_mode = {}

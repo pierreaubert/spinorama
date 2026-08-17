@@ -353,6 +353,17 @@ describe('applyConfig - annotations visibility', () => {
 
         expect(result.layout.annotations[0].visible).toBe(true);
     });
+
+    it('keeps solver-hidden annotations hidden when annotations.show is true', () => {
+        const options = makeOptions({
+            annotations: [{ name: 'layout-hidden:secondary', visible: false }],
+        });
+        const config = structuredClone(defaultConfig);
+        config.annotations.show = true;
+        const result = applyConfig(options, config);
+
+        expect(result.layout.annotations[0].visible).toBe(false);
+    });
 });
 
 describe('applyConfig - trendlines visibility', () => {

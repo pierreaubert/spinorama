@@ -67,7 +67,9 @@ def graph_eq(freq, peq):
     full_freq = np.logspace(math.log10(20), math.log10(20000), max(len(freq), 200))
     data_frame = pd.DataFrame({"Freq": full_freq})
     for i, (pos, biquad) in enumerate(peq):
-        data_frame[f"{biquad.type2str_short()}{i}: {biquad.freq:.0f}Hz"] = peq_spl(full_freq, [(pos, biquad)])
+        data_frame[f"{biquad.type2str_short()}{i}: {biquad.freq:.0f}Hz"] = peq_spl(
+            full_freq, [(pos, biquad)]
+        )
 
     # print('DEBUG: #{} freq[0]: {}'.format(len(freq), freq[0]))
     traces = []

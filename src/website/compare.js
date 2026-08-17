@@ -24,6 +24,7 @@ import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
+import { layoutAnnotations } from './annotation-layout.js';
 import { loadConfigFromStorage, saveConfigToStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = true;
@@ -202,6 +203,7 @@ getMetadata()
                     const configuredGraphs = graphsConfigs.map((graphConfig) => {
                         if (graphConfig && flagGraphConfig) {
                             graphConfig = applyConfig(graphConfig, config);
+                            layoutAnnotations(graphConfig);
                         }
 
                         // Configure for compact non-interactive mode if needed

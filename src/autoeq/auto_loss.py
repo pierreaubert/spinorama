@@ -316,18 +316,19 @@ def compute_scores_prep_full(
     freq = spl_h["Freq"].to_numpy()
     spl_h = spl_h.drop("Freq", axis=1)
     spl_v = spl_v.drop("Freq", axis=1)
-    
+
     # Filter out angles that are not multiples of 10 (e.g., 5°, 15°, -5°, -15°)
     def is_multiple_of_10(angle_str: str) -> bool:
         """Check if angle string represents a multiple of 10 degrees"""
         import re
+
         if angle_str == "On Axis":
             return True
-        match = re.match(r'^(-?\d+)°$', angle_str)
+        match = re.match(r"^(-?\d+)°$", angle_str)
         if match:
             return int(match.group(1)) % 10 == 0
         return True  # Keep non-numeric columns
-    
+
     # Filter columns in both DataFrames
     spl_h = spl_h[[col for col in spl_h.columns if is_multiple_of_10(col)]]
     spl_v = spl_v[[col for col in spl_v.columns if is_multiple_of_10(col)]]
@@ -439,9 +440,7 @@ def flat_pir(freq: Vector, m: Measurements, peq: Peq) -> float:
     else:
         pir_filtered = pir.copy()
         if len(peq) > 0:
-            pir_filtered["Estimated In-Room Response"].add(
-                peq_spl(pir_filtered.Freq.values, peq)
-            )
+            pir_filtered["Estimated In-Room Response"].add(peq_spl(pir_filtered.Freq.values, peq))
         pir_filtered = graph_melt(pir_filtered)
 
     data = pir_filtered.loc[(pir_filtered.Freq >= 100) & (pir_filtered.Freq <= 16000)]
@@ -513,9 +512,6 @@ def loss(
         return score + flatness * flatness_weight
     if which_loss == "combine_loss":
         weigths = optim_config["loss_weigths"]
-        return (
-            score_loss(m, peq)
-            + flat_loss(freq, local_target, peq, iterations, weigths) / 20
-        )
+        return score_loss(m, peq) + flat_loss(freq, local_target, peq, iterations, weigths) / 20
     logger.error("loss function is unknown %s", which_loss)
     return -1

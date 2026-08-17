@@ -163,7 +163,9 @@ def process_single_measurement(
         return True, speaker, morigin, mversion, {"df": results, "eq": results_eq}, None
 
     except Exception as e:
-        logger.exception("Error processing speaker [%s] origin [%s] version [%s]", speaker, origin, mversion)
+        logger.exception(
+            "Error processing speaker [%s] origin [%s] version [%s]", speaker, origin, mversion
+        )
     else:
         return False, speaker, origin, mversion, {}
 
@@ -435,7 +437,11 @@ def generate_headphone_graphs(data_dir: str, force: bool):
 
         # Check if we need to regenerate
         fr_json = os.path.join(out_dir, "Frequency Response.json")
-        if not force and os.path.isfile(fr_json) and os.path.getmtime(fr_json) > os.path.getmtime(fr_file):
+        if (
+            not force
+            and os.path.isfile(fr_json)
+            and os.path.getmtime(fr_json) > os.path.getmtime(fr_file)
+        ):
             logger.debug("Graphs up to date for %s", hp_name)
             continue
 
@@ -490,9 +496,7 @@ def generate_headphone_graphs(data_dir: str, force: bool):
                     "line": {"color": "#ff7f0e", "dash": "dash"},
                 },
             ]
-            spec_comp = make_plotly_json(
-                traces_comp, f"{brand} {model} - vs Harman Target"
-            )
+            spec_comp = make_plotly_json(traces_comp, f"{brand} {model} - vs Harman Target")
             comp_json = os.path.join(out_dir, "Frequency Response Compensated.json")
             with open(comp_json, "w") as f:
                 json_module.dump(spec_comp, f)
@@ -643,7 +647,9 @@ def generate_headphone_graphs(data_dir: str, force: bool):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate spinorama graphs from measurement data.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    parser.add_argument("--version", action="version", version=f"./scripts/generate_graphs.py v{VERSION}")
+    parser.add_argument(
+        "--version", action="version", version=f"./scripts/generate_graphs.py v{VERSION}"
+    )
     parser.add_argument("--width", type=int, help="Width size in pixel for graphs")
     parser.add_argument("--height", type=int, help="Height size in pixel for graphs")
     parser.add_argument("--force", action="store_true", help="Force regeneration of all graphs")
@@ -674,9 +680,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--processes", type=int, help="Number of processes to use (default: CPU count - 1)"
     )
-    parser.add_argument(
-        "--headphones", action="store_true", help="Generate headphone graphs only"
-    )
+    parser.add_argument("--headphones", action="store_true", help="Generate headphone graphs only")
 
     args = parser.parse_args()
 

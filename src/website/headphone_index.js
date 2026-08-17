@@ -44,16 +44,16 @@ function getShapeLabel(shape) {
         'over-ear': 'Over-Ear',
         'on-ear': 'On-Ear',
         'in-ear': 'IEM',
-        'earbud': 'Earbud',
+        earbud: 'Earbud',
     };
     return labels[shape] || shape;
 }
 
 function getTypeLabel(type) {
     const labels = {
-        'wired': 'Wired',
-        'wireless': 'Wireless',
-        'hybrid': 'Hybrid',
+        wired: 'Wired',
+        wireless: 'Wireless',
+        hybrid: 'Hybrid',
     };
     return labels[type] || type;
 }
@@ -63,7 +63,15 @@ function getReviewUrl(value) {
     const measurement = value.measurements[defaultMeasurement];
     if (measurement && measurement.origin) {
         const origin = measurement.origin.replace('Vendors-', '');
-        return 'headphones/' + encodeURI(value.brand + ' ' + value.model) + '/' + encodeURI(origin) + '/index_' + defaultMeasurement + '.html';
+        return (
+            'headphones/' +
+            encodeURI(value.brand + ' ' + value.model) +
+            '/' +
+            encodeURI(origin) +
+            '/index_' +
+            defaultMeasurement +
+            '.html'
+        );
     }
     return '#';
 }

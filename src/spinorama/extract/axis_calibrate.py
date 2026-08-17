@@ -186,7 +186,9 @@ def _detect_grid_lines(plot_img: npt.NDArray) -> tuple[list[int], list[int]]:
     edges = cv2.Canny(gray, 30, 100)
 
     # Detect lines
-    lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=50, minLineLength=int(0.3 * min(h, w)), maxLineGap=5)
+    lines = cv2.HoughLinesP(
+        edges, 1, np.pi / 180, threshold=50, minLineLength=int(0.3 * min(h, w)), maxLineGap=5
+    )
 
     vertical_xs: list[int] = []
     horizontal_ys: list[int] = []
@@ -405,7 +407,9 @@ def calibrate_axes(
     if len(x_ticks) >= 3 and len(y_ticks) >= 2:
         try:
             a, b = _fit_log_linear([t[0] for t in x_ticks], [t[1] for t in x_ticks], log_scale=True)
-            c, d = _fit_log_linear([t[0] for t in y_ticks], [t[1] for t in y_ticks], log_scale=False)
+            c, d = _fit_log_linear(
+                [t[0] for t in y_ticks], [t[1] for t in y_ticks], log_scale=False
+            )
 
             # Estimate plot bounds from tick positions
             x_pixels = [t[0] for t in x_ticks]

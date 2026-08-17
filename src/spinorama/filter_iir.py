@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Backwards-compatibility shim. See ``spinorama.filters.iir``."""
+
 from spinorama.filters.iir import (
     Biquad,
     DEFAULT_Q_HIGH_LOW_PASS,
@@ -11,5 +12,11 @@ from spinorama.filters.iir import (
 )
 
 __all__ = [
-    'Biquad', 'DEFAULT_Q_HIGH_LOW_PASS', 'DEFAULT_Q_HIGH_LOW_SHELF', 'Vector', 'bw2q', 'frozendict', 'q2bw',
+    "Biquad",
+    "DEFAULT_Q_HIGH_LOW_PASS",
+    "DEFAULT_Q_HIGH_LOW_SHELF",
+    "Vector",
+    "bw2q",
+    "frozendict",
+    "q2bw",
 ]

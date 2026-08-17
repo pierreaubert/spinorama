@@ -219,9 +219,11 @@ def curves_to_wpd_json(results: list[ExtractionResult]) -> dict:
 
         for curve_name, points in result.curves.items():
             data = [{"value": [freq, db]} for freq, db in points]
-            dataset_coll.append({
-                "name": f"{title_prefix}{curve_name}",
-                "data": data,
-            })
+            dataset_coll.append(
+                {
+                    "name": f"{title_prefix}{curve_name}",
+                    "data": data,
+                }
+            )
 
     return {"datasetColl": dataset_coll}

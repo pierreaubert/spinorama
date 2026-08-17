@@ -18,7 +18,6 @@
 
 """The combined spinorama figure (CEA2034 + DI on a secondary axis)."""
 
-import bisect
 import math
 
 import numpy as np
@@ -34,6 +33,12 @@ from spinorama.plot.axes import (
     generate_yaxis_di,
     generate_yaxis_spl,
     plot_valid_freq_ranges,
+)
+from spinorama.plot.annotations import (
+    AnnotationGeometry,
+    AnnotationRequest,
+    annotation_dicts,
+    place_annotations,
 )
 from spinorama.plot.layouts import common_layout
 from spinorama.plot.theme import (
@@ -204,58 +209,82 @@ def plot_spinorama_annotation(
     if not FLAG_FEATURE_ANNOTATION:
         return fig
 
-    _graph_param = (
-        (2000, "On Axis", "y", -20, "right", "bottom"),
-        (16000, "Listening Window", "y", -20, "right", "bottom"),
-        (10000, "Early Reflections", "y", 20, "right", "top"),
-        (10000, "Sound Power", "y", 20, "right", "top"),
-        (10000, "Early Reflections DI", "y2", 20, "right", "top"),
-        (10000, "Sound Power DI", "y2", -20, "right", "bottom"),
+    graph_params = (
+        (2000, "On Axis", "y", 100, ("lower", "bottom", "middle")),
+        (16000, "Listening Window", "y", 95, ("lower", "bottom", "middle")),
+        (10000, "Early Reflections", "y", 80, ("middle", "upper", "lower")),
+        (10000, "Sound Power", "y", 75, ("upper", "middle", "lower")),
+        (10000, "Early Reflections DI", "y2", 70, ("lower", "bottom", "middle")),
+        (10000, "Sound Power DI", "y2", 65, ("bottom", "lower", "middle")),
     )
-
-    for freq_initial, measurement, yref, ay_initial, xanchor, yanchor in _graph_param:
-        ay = ay_initial
+    requests = []
+    for freq_initial, measurement, yref, priority, preferred_lanes in graph_params:
         freq = freq_initial
         if measurement not in spin:
             continue
         _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
-        closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
+        closest_freq = int(np.searchsorted(spin.Freq.to_numpy(), freq, side="left"))
         curve = spin[measurement].to_numpy()
         closest_freq = min(closest_freq, len(curve) - 1)
         spl = curve[closest_freq]
         if measurement == "On Axis":
             res_spin = spin.loc[(spin.Freq >= 1000) & (spin.Freq < 5000)]
-            on = res_spin["On Axis"].to_numpy()
-            idx = on.argmax()
-            spl = on[idx]
-            freq = res_spin.Freq.to_numpy()[idx]
+            if len(res_spin) > 0:
+                on = res_spin["On Axis"].to_numpy()
+                idx = on.argmax()
+                spl = on[idx]
+                freq = res_spin.Freq.to_numpy()[idx]
         elif measurement == "Listening Window":
             res_spin = spin.loc[(spin.Freq >= 8000) & (spin.Freq < 16000)]
-            lw = res_spin["Listening Window"].to_numpy()
-            idx = lw.argmax()
-            spl = lw[idx]
-            freq = res_spin.Freq.to_numpy()[idx]
-            if "On Axis" in res_spin:
-                spl_on = res_spin["On Axis"].to_numpy()[idx]
-                ay -= int((spl_on - spl) * 5)
-        fig.add_annotation(
-            x=math.log10(freq),
-            y=spl,
-            text="{:4.2f} db/oct sm {:3.2f}".format(slope, sm),
-            font=dict(
-                size=10,
+            if len(res_spin) > 0:
+                lw = res_spin["Listening Window"].to_numpy()
+                idx = lw.argmax()
+                spl = lw[idx]
+                freq = res_spin.Freq.to_numpy()[idx]
+        requests.append(
+            AnnotationRequest(
+                key=measurement,
+                x=math.log10(freq),
+                y=float(spl),
+                yref=yref,
+                text="{:4.2f} db/oct sm {:3.2f}".format(slope, sm),
                 color=UNIFORM_COLORS.get(measurement, "black"),
-            ),
-            bordercolor=UNIFORM_COLORS.get(measurement, "black"),
-            showarrow=True,
-            arrowhead=2,
-            arrowcolor=UNIFORM_COLORS.get(measurement, "black"),
-            xanchor=xanchor,
-            yanchor=yanchor,
-            yref=yref,
-            ay=ay,
-            visible=FLAG_FEATURE_VISIBLE,
+                priority=priority,
+                preferred_lanes=preferred_lanes,
+            )
         )
+
+    width = float(fig.layout.width or 1200)
+    height = float(fig.layout.height or 800)
+    margin = fig.layout.margin.to_plotly_json() if fig.layout.margin else {}
+    x_range = tuple(fig.layout.xaxis.range or (math.log10(20), math.log10(20000)))
+    y_range = tuple(fig.layout.yaxis.range or (-45, 5))
+    y2_range = tuple(fig.layout.yaxis2.range or (-5, 45))
+    geometry = AnnotationGeometry(
+        width=width,
+        height=height,
+        margin=margin,
+        x_range=x_range,
+        y_ranges={"y": y_range, "y2": y2_range},
+        x_scale="log",
+    )
+    trace_points = []
+    for trace in fig.data:
+        if trace.x is None or trace.y is None:
+            continue
+        trace_yref = "y2" if trace.yaxis == "y2" else "y"
+        for x, y in zip(trace.x, trace.y, strict=False):
+            try:
+                trace_points.append((float(x), float(y), trace_yref))
+            except (TypeError, ValueError):
+                continue
+    placements = place_annotations(requests, geometry, trace_points=trace_points)
+    for annotation in annotation_dicts(
+        placements,
+        visible=FLAG_FEATURE_VISIBLE,
+        geometry=geometry,
+    ):
+        fig.add_annotation(annotation)
     return fig
 
 

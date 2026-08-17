@@ -56,8 +56,15 @@ def hex_to_hsv_range(
     return lower, upper
 
 
-def _spec(name: str, hex_color: str, *, h_tol: int = 10, s_tol: int = 40, v_tol: int = 40,
-          remove_grid_first: bool = False) -> CurveColorSpec:
+def _spec(
+    name: str,
+    hex_color: str,
+    *,
+    h_tol: int = 10,
+    s_tol: int = 40,
+    v_tol: int = 40,
+    remove_grid_first: bool = False,
+) -> CurveColorSpec:
     """Build a CurveColorSpec from a hex color."""
     hsv_range = hex_to_hsv_range(hex_color, h_tol=h_tol, s_tol=s_tol, v_tol=v_tol)
 
@@ -95,10 +102,10 @@ _HEX_TOTAL_EARLY_REFLECTION = "#76b7b2"  # colors[7]
 
 # Early Reflections sub-curves share colors with other assignments
 _HEX_CEILING_BOUNCE = "#dc842a"  # colors[1]
-_HEX_FLOOR_BOUNCE = "#c85857"    # colors[2]
-_HEX_FRONT_WALL = "#89b5b1"      # colors[3]
-_HEX_SIDE_WALL = "#bab0ac"       # colors[5]
-_HEX_REAR_WALL = "#71a152"       # colors[4]
+_HEX_FLOOR_BOUNCE = "#c85857"  # colors[2]
+_HEX_FRONT_WALL = "#89b5b1"  # colors[3]
+_HEX_SIDE_WALL = "#bab0ac"  # colors[5]
+_HEX_REAR_WALL = "#71a152"  # colors[4]
 
 
 # ── CEA2034 ─────────────────────────────────────────────────────────

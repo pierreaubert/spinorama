@@ -75,7 +75,9 @@ async def get_speaker_measurements(
         return {"error": "Speaker name and measurement name are mandatory"}
 
     if not (safe_segment(speaker_name) and safe_segment(speaker_version)):
-        return {"error": f"Invalid speaker_name {speaker_name} or speaker_version {speaker_version}!"}
+        return {
+            "error": f"Invalid speaker_name {speaker_name} or speaker_version {speaker_version}!"
+        }
 
     if speaker_name not in metadata:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
@@ -114,9 +116,7 @@ async def get_speaker_measurements(
     return sorted(set([s.split(".")[0] for s in m1]))
 
 
-@router.get(
-    "/speaker/{speaker_name}/version/{speaker_version}/measurements/{measurement_name}"
-)
+@router.get("/speaker/{speaker_name}/version/{speaker_version}/measurements/{measurement_name}")
 async def get_speaker_measurements_data(
     speaker_name: str,
     speaker_version: str,

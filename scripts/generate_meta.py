@@ -486,7 +486,9 @@ def _eq_worker(speaker_path, speaker_name):
         ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
         ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
     ):
-        eq_filename = "{}/eq/{}/iir-{}.txt".format(speaker_path, sanitize_filename(speaker_name), suffix)
+        eq_filename = "{}/eq/{}/iir-{}.txt".format(
+            speaker_path, sanitize_filename(speaker_name), suffix
+        )
         iir = load_parse_eq_iir_rews(eq_filename, 48000)
         if iir is not None and len(iir) > 0:
             if suffix == "autoeq":
@@ -966,7 +968,9 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate metadata for spinorama speakers.")
-    parser.add_argument("--version", action="version", version="./scripts/generate_meta.py version 1.6")
+    parser.add_argument(
+        "--version", action="version", version="./scripts/generate_meta.py version 1.6"
+    )
     parser.add_argument(
         "--log-level",
         default="WARNING",

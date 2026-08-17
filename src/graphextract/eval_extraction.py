@@ -219,7 +219,9 @@ def compare_curves(
 
     # Interpolate both curves on log10(freq)
     gt_interp = interp1d(np.log10(gt_x), gt_y, kind="linear", bounds_error=False, fill_value=np.nan)
-    ext_interp = interp1d(np.log10(ext_x), ext_y, kind="linear", bounds_error=False, fill_value=np.nan)
+    ext_interp = interp1d(
+        np.log10(ext_x), ext_y, kind="linear", bounds_error=False, fill_value=np.nan
+    )
 
     gt_on_grid = gt_interp(np.log10(grid))
     ext_on_grid = ext_interp(np.log10(grid))
@@ -308,8 +310,11 @@ def evaluate_single_graph(
 
     def _err(msg: str) -> SingleGraphResult:
         return SingleGraphResult(
-            file_path=str(json_path), graph_type=graph_type,
-            status="error", error=msg, curves={},
+            file_path=str(json_path),
+            graph_type=graph_type,
+            status="error",
+            error=msg,
+            curves={},
         )
 
     curve_specs = GRAPH_TYPE_SPECS.get(graph_type)
@@ -338,20 +343,25 @@ def evaluate_single_graph(
         calibration_y2 = None
         if layout.get("yaxis2") and y2_curve_names:
             calibration_y2 = calibration_from_plotly_layout(
-                layout, render_width, render_height, yaxis_key="yaxis2",
+                layout,
+                render_width,
+                render_height,
+                yaxis_key="yaxis2",
             )
     else:
         # Auto: use the full extraction pipeline's calibration
         from spinorama.extract_plot_detect import PlotRegion
+
         region = PlotRegion(x=0, y=0, w=render_width, h=render_height, title=graph_type)
         from spinorama.extract_axis_calibrate import calibrate_axes
+
         calibration = calibrate_axes(img, region)
         calibration_y2 = None
 
     # Extract the plot area from the image using calibration bounds
     plot_img = img[
-        calibration.plot_y_min:calibration.plot_y_max,
-        calibration.plot_x_min:calibration.plot_x_max,
+        calibration.plot_y_min : calibration.plot_y_max,
+        calibration.plot_x_min : calibration.plot_x_max,
     ]
 
     # Color segmentation
@@ -530,13 +540,15 @@ def compute_aggregate_stats(results: list[SingleGraphResult]) -> dict:
         for curve_name, metrics in r.curves.items():
             rms = metrics["rms_error_db"]
             if np.isfinite(rms):
-                worst_cases.append({
-                    "file_path": r.file_path,
-                    "graph_type": r.graph_type,
-                    "curve_name": curve_name,
-                    "rms_error_db": rms,
-                    "max_abs_error_db": metrics["max_abs_error_db"],
-                })
+                worst_cases.append(
+                    {
+                        "file_path": r.file_path,
+                        "graph_type": r.graph_type,
+                        "curve_name": curve_name,
+                        "rms_error_db": rms,
+                        "max_abs_error_db": metrics["max_abs_error_db"],
+                    }
+                )
 
     worst_cases.sort(key=lambda x: x["rms_error_db"], reverse=True)
     worst_cases = worst_cases[:10]
@@ -555,7 +567,9 @@ def _img_to_data_uri(img: npt.NDArray) -> str:
     return f"data:image/png;base64,{b64}"
 
 
-def _downsample_for_json(pts: list[tuple[float, float]], max_points: int = 300) -> tuple[list[float], list[float]]:
+def _downsample_for_json(
+    pts: list[tuple[float, float]], max_points: int = 300
+) -> tuple[list[float], list[float]]:
     """Thin a point list to at most max_points for the inline Plotly chart."""
     if len(pts) <= max_points:
         return [p[0] for p in pts], [p[1] for p in pts]
@@ -581,7 +595,8 @@ def _build_plotly_traces_json(
         xs, ys = _downsample_for_json(list(zip(gt_x.tolist(), gt_y.tolist())))
         color = CURVE_HEX_COLORS.get(name, "#888888")
         trace: dict = {
-            "x": xs, "y": ys,
+            "x": xs,
+            "y": ys,
             "mode": "lines",
             "name": f"{name} (truth)",
             "line": {"color": color, "width": 2},
@@ -596,7 +611,8 @@ def _build_plotly_traces_json(
         xs, ys = _downsample_for_json(pts)
         color = CURVE_HEX_COLORS.get(name, "#888888")
         trace = {
-            "x": xs, "y": ys,
+            "x": xs,
+            "y": ys,
             "mode": "lines",
             "name": f"{name} (extracted)",
             "line": {"color": color, "width": 2, "dash": "dash"},
@@ -700,7 +716,9 @@ def generate_html_report(
         if r.extracted_curves or r.gt_curves:
             traces_json = _build_plotly_traces_json(r)
             div_id = f"chart_{idx}"
-            has_y2 = any(n in _Y2_CURVES for n in r.gt_curves) or any(n in _Y2_CURVES for n in r.extracted_curves)
+            has_y2 = any(n in _Y2_CURVES for n in r.gt_curves) or any(
+                n in _Y2_CURVES for n in r.extracted_curves
+            )
             y2_layout = ""
             if has_y2:
                 y2_layout = 'yaxis2: {title: "DI (dB)", overlaying: "y", side: "right", showgrid: false, zeroline: true, zerolinecolor: "#ccc", range: [-5, 25]},'
