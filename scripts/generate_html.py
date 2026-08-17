@@ -685,14 +685,8 @@ def main():
             len_dist = len("/dist/")
             metadata_filename = metadata_json_filename[len_dist:]
             metadata_filename_head = metadata_json_chunks["head"][len_dist:]
-            js_chunks = "[{}]".format(
-                ", ".join(
-                    [
-                        "'{}'".format(v[len_dist:])
-                        for k, v in metadata_json_chunks.items()
-                        if k != "head"
-                    ]
-                )
+            js_chunks = json.dumps(
+                [v[len_dist:] for k, v in metadata_json_chunks.items() if k != "head"]
             )
             # pipeline
             item_name = "{}.js".format(item)

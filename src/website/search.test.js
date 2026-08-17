@@ -217,7 +217,6 @@ describe('test full text search and filtering', () => {
         const [, results] = actualSearch(metadata, params);
 
         // There should be at least one no-score speaker in the fixture (JBL-LSR308)
-        const scored = results.filter((k) => getScore(k) > -5);
         const noScore = results.filter((k) => getScore(k) <= -5);
         expect(noScore.length).toBeGreaterThan(0);
 
@@ -595,7 +594,7 @@ describe('test full text search and filtering', () => {
     it('filter by sensitivity excludes speakers without sensitivity data', () => {
         const url = new URL(TEST_URL + '?sensitivityMin=0&sensitivityMax=200&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         // only speakers with computed sensitivity should be included (631 passive)
         // active speakers (no sensitivity) are excluded
         expect(results.length).toBe(631);
@@ -612,14 +611,14 @@ describe('test full text search and filtering', () => {
     it('filter by sensitivity high min returns no results', () => {
         const url = new URL(TEST_URL + '?sensitivityMin=200&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         expect(results.length).toBe(0);
     });
 
     it('filter by sensitivity low max returns few results', () => {
         const url = new URL(TEST_URL + '?sensitivityMax=70&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         expect(results.length).toBe(1);
         results.forEach((key) => {
             const result = metadata.get(key);
@@ -633,7 +632,7 @@ describe('test full text search and filtering', () => {
     it('filter by sensitivity above 90dB', () => {
         const url = new URL(TEST_URL + '?sensitivityMin=90&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         expect(results.length).toBe(218);
         results.forEach((key) => {
             const result = metadata.get(key);
@@ -647,7 +646,7 @@ describe('test full text search and filtering', () => {
     it('filter by sensitivity combined with passive type', () => {
         const url = new URL(TEST_URL + '?sensitivityMin=85&power=passive&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         expect(results.length).toBeGreaterThan(0);
         results.forEach((key) => {
             const result = metadata.get(key);
@@ -662,7 +661,7 @@ describe('test full text search and filtering', () => {
     it('sort by sensitivity returns speakers in descending sensitivity order', () => {
         const url = new URL(TEST_URL + '?sort=sensitivity&count=1000');
         const params = urlParameters2Sort(url);
-        const [maxResults, results] = actualSearch(metadata, params);
+        const [_maxResults, results] = actualSearch(metadata, params);
         expect(results.length).toBeGreaterThan(0);
         // verify descending order for speakers that have sensitivity
         let prevSensitivity = Infinity;

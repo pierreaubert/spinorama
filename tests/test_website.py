@@ -82,7 +82,8 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         dist_dir = os.path.join(project_root, "dist")
 
         if not os.path.exists(dist_dir):
-            raise RuntimeError(f"dist directory not found at {dist_dir}")
+            msg = f"dist directory not found at {dist_dir}"
+            raise RuntimeError(msg)
 
         cls.DEV = f"http://localhost:{DEV_PORT}"
 
@@ -103,10 +104,11 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         try:
             cls.server = ReuseAddrTCPServer(("localhost", DEV_PORT), Handler)
         except OSError as e:
-            raise unittest.SkipTest(
+            msg = (
                 f"Port {DEV_PORT} is in use but not serving HTTP. "
                 f"Stop the process or run the dev server: {e}"
             )
+            raise unittest.SkipTest(msg)
 
         cls.server_thread = threading.Thread(target=cls.server.serve_forever)
         cls.server_thread.daemon = True

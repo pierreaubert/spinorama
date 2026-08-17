@@ -37,16 +37,6 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-function graph_ratio(width, height) {
-    width = Math.round(width);
-    height = Math.round(height);
-    let ratio = height / width;
-    if (width > height) {
-        ratio = width / height;
-    }
-    return ratio;
-}
-
 // computeDims has been removed — all sizing now goes through computeLayout/applyComputeLayout.
 
 describe('setGraphOptions', () => {

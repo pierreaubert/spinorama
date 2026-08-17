@@ -13,9 +13,9 @@ from spinorama.loaders.rew_eq import (
 )
 
 __all__ = [
-    "Biquad",
     "INPUT_MAX_GAIN",
     "INPUT_MAX_Q",
+    "Biquad",
     "Peq",
     "bw2q",
     "logger",

@@ -15,8 +15,8 @@ from spinorama.extract.color_segment import (
 )
 
 __all__ = [
-    "CurveColorSpec",
     "DEFAULT_CURVE_SPECS",
+    "CurveColorSpec",
     "_apply_hsv_mask",
     "_create_watermark_mask",
     "_detect_grid_mask",

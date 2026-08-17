@@ -60,14 +60,16 @@ def extract_curves(
     image_path = Path(image_path)
     img = cv2.imread(str(image_path))
     if img is None:
-        raise FileNotFoundError(f"Cannot read image: {image_path}")
+        msg = f"Cannot read image: {image_path}"
+        raise FileNotFoundError(msg)
 
     if curve_specs is None:
         curve_specs = DEFAULT_CURVE_SPECS
 
     regions = detect_plot_regions(img, debug=debug)
     if not regions:
-        raise ValueError(f"No plot regions detected in {image_path}")
+        msg = f"No plot regions detected in {image_path}"
+        raise ValueError(msg)
 
     logger.info("Detected %d plot region(s) in %s", len(regions), image_path.name)
 

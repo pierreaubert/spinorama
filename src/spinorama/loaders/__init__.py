@@ -179,9 +179,9 @@ CURVE_LOADERS: dict[str, CurveLoader] = {
 
 __all__ = [
     "CURVE_LOADERS",
+    "HV_LOADERS",
     "CurveLoader",
     "HVLoader",
-    "HV_LOADERS",
     "SpeakerLoadParams",
     "UnknownMeasurementFormatError",
 ]

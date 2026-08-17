@@ -89,7 +89,7 @@ def fit_one(tim_path: Path, fft_path: Path, _header_bytes: int) -> dict:
         "fft": fft_path.name,
         "mode": "f32le",
         "fs": info.sample_rate_hz,
-        "n": int(len(sig)),
+        "n": len(sig),
         "window_start": int(start),
         "window_stop": int(stop),
         "fft_size": int(nfft),

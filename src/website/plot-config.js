@@ -19,7 +19,6 @@
 /*eslint no-undef: "error"*/
 
 import { labelShort, labelLong } from './plot.js';
-import { getUrlParameter } from './misc.js';
 
 // Color palettes for graphs
 export const colorPalettes = {
@@ -690,7 +689,7 @@ export function applyConfig(options, config) {
 }
 
 // Legacy per-graph config menu — now a no-op (config lives in the global navbar panel)
-export function createConfigMenu(divName, config, updateCallback, menuOptions) {
+export function createConfigMenu(_divName, _config, _updateCallback, _menuOptions) {
     return;
 }
 

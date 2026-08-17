@@ -39,6 +39,6 @@
     "coverage": "npx vitest run --coverage",
     "format": "npx prettier --write \"src/website/*.js\"",
     "upgrade": "npx npm-check-updates -u",
-    "lint": "npx oxlint@1.51.0"
+    "lint": "oxlint"
   }
 }

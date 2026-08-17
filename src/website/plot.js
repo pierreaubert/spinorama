@@ -38,7 +38,7 @@ function titleFitsOnOneLine(text, fontSize, maxWidth) {
         }
         _measureCtx.font = fontSize + 'px "Open Sans", sans-serif';
         return _measureCtx.measureText(plain).width <= maxWidth;
-    } catch (_) {
+    } catch {
         // canvas unavailable (test environment) — rough fallback
         return plain.length * fontSize * 0.55 <= maxWidth;
     }
@@ -875,7 +875,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
         let pos0for = -1;
         let pos0by = -1;
         let speaker0 = '';
-        let version0 = '';
         let br0 = '';
         if (inputGraphsData[0] && inputGraphsData[0]?.layout.title.text) {
             if (inputGraphsData[1]) {
@@ -886,7 +885,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             pos0for = inputGraphsData[0].layout.title.text.indexOf(' for ');
             pos0by = inputGraphsData[0].layout.title.text.indexOf(' measured by ');
             speaker0 = inputGraphsData[0].layout.title.text.slice(pos0for, pos0by);
-            version0 = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
             br0 = inputGraphsData[0].layout.title.text.indexOf('<br>');
         }
         if (outputNumberGraphs === 1 && inputGraphsData[1] && inputGraphsData[1]?.layout.title.text) {
@@ -895,7 +893,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             const pos1for = inputGraphsData[1].layout.title.text.indexOf(' for ');
             const pos1by = inputGraphsData[1].layout.title.text.indexOf(' measured by ');
             const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);
-            const version1 = inputGraphsData[1].layout.title.text.slice(pos1by + 13);
             if (speaker0 === speaker1) {
                 const prefix = inputGraphsData[0].layout.title.text.slice(0, pos0by);
                 const suffixA = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
@@ -1367,7 +1364,6 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
 
 export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
-    let legendShift = 0;
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
@@ -1428,7 +1424,6 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
 
 export function setGraph(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-    const isCompact = width < graphSmall || height < graphSmall;
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)

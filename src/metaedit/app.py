@@ -1018,7 +1018,9 @@ class EditMetadataPage(QWidget):
         self.update_picture()
 
     def populate_form(self, raw_loaded: dict[str, Any] | None = None) -> None:
-        assert self.current is not None
+        if self.current is None:
+            message = "Cannot populate form without a current speaker"
+            raise RuntimeError(message)
         c = self.current
         p = self
         p.form_brand.setText(c.brand)

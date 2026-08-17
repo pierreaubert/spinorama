@@ -101,6 +101,7 @@ from spinorama.plot.radar import (
 from spinorama.plot.eqs import plot_eqs
 
 __all__ = [
+    "CONTOUR_COLORSCALE",
     # theme
     "FLAG_FEATURE_ANNOTATION",
     "FLAG_FEATURE_CONFIDENCE_ZONES",
@@ -119,15 +120,22 @@ __all__ = [
     "FONT_SIZE_H4",
     "FONT_SIZE_H5",
     "FONT_SIZE_H6",
-    "CONTOUR_COLORSCALE",
     "RADAR_COLORS",
     "UNIFORM_COLORS",
+    # annotations
+    "AnnotationGeometry",
+    "AnnotationRequest",
+    "annotation_dicts",
     "colors",
+    # layouts
+    "common_layout",
+    "contour_layout",
     "contour_params_default",
-    "label_short",
-    "legend_rank",
-    "plot_params_default",
-    "radar_params_default",
+    "estimate_annotation_size",
+    # radar
+    "find_nearest_freq",
+    # contour
+    "flatten",
     # axes
     "generate_colorbar",
     "generate_xaxis",
@@ -136,21 +144,13 @@ __all__ = [
     "generate_yaxis_gd",
     "generate_yaxis_phases",
     "generate_yaxis_spl",
-    "plot_valid_freq_ranges",
-    # annotations
-    "AnnotationGeometry",
-    "AnnotationRequest",
-    "annotation_dicts",
-    "estimate_annotation_size",
+    "label_short",
+    "legend_rank",
     "place_annotations",
-    # layouts
-    "common_layout",
-    "contour_layout",
-    "radar_layout",
-    # spinorama
-    "plot_spinorama",
-    "plot_spinorama_annotation",
-    "plot_spinorama_traces",
+    "plot_contour",
+    "plot_contour_3d",
+    # eqs
+    "plot_eqs",
     # spl
     "plot_graph",
     "plot_graph_flat",
@@ -161,13 +161,13 @@ __all__ = [
     "plot_graph_regression_traces",
     "plot_graph_spl",
     "plot_graph_traces",
-    # contour
-    "flatten",
-    "plot_contour",
-    "plot_contour_3d",
-    # radar
-    "find_nearest_freq",
+    "plot_params_default",
     "plot_radar",
-    # eqs
-    "plot_eqs",
+    # spinorama
+    "plot_spinorama",
+    "plot_spinorama_annotation",
+    "plot_spinorama_traces",
+    "plot_valid_freq_ranges",
+    "radar_layout",
+    "radar_params_default",
 ]

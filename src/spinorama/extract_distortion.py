@@ -21,9 +21,9 @@ from spinorama.extract.distortion import (
 )
 
 __all__ = [
+    "DEFAULT_CURVE_SPECS",
     "AxisCalibration",
     "CurveColorSpec",
-    "DEFAULT_CURVE_SPECS",
     "ExtractionResult",
     "Path",
     "PlotRegion",

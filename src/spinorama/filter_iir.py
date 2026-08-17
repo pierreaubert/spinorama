@@ -12,9 +12,9 @@ from spinorama.filters.iir import (
 )
 
 __all__ = [
-    "Biquad",
     "DEFAULT_Q_HIGH_LOW_PASS",
     "DEFAULT_Q_HIGH_LOW_SHELF",
+    "Biquad",
     "Vector",
     "bw2q",
     "frozendict",

@@ -9,4 +9,4 @@ sections (key/value) and a minimal CLI. PDF and discovery modules are
 intentionally minimal and can be expanded.
 """
 
-from .schema import SpeakerSpecs, ConfidenceValue, Range  # noqa: F401
+from .schema import SpeakerSpecs, ConfidenceValue, Range

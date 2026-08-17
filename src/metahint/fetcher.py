@@ -42,7 +42,8 @@ def fetch_url(
     - engine="auto": try requests first, fall back to Playwright if available
     """
     if engine not in {"auto", "requests", "playwright"}:
-        raise ValueError(f"Unknown engine: {engine}")
+        msg = f"Unknown engine: {engine}"
+        raise ValueError(msg)
 
     def _via_requests() -> Tuple[str, str]:
         resp = requests.get(url, timeout=20)

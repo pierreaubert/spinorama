@@ -25,7 +25,7 @@ import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './do
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
 import { layoutAnnotations } from './annotation-layout.js';
-import { loadConfigFromStorage, saveConfigToStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = true;
 

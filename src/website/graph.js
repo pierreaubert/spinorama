@@ -31,7 +31,7 @@ function detectTheme() {
         if (window.matchMedia) {
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
-    } catch (_) {
+    } catch {
         /* test environment */
     }
     return 'light';
@@ -53,7 +53,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         try {
             var cols = parseInt(document.documentElement.getAttribute('data-graph-cols') || '1');
             if (cols > 1) return cols;
-        } catch (_) {}
+    } catch {}
         return 1;
     }
 

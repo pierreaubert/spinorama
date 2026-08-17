@@ -85,7 +85,9 @@ def load_metadata() -> Generator[dict, None, None]:
         with open(METADATA, "r", encoding="utf8") as f:
             _metadata_cache = json.load(f)
 
-    assert _metadata_cache is not None
+    if _metadata_cache is None:
+        message = "Metadata cache was not loaded"
+        raise RuntimeError(message)
     yield _metadata_cache
 
 
@@ -103,7 +105,9 @@ def load_headphone_metadata() -> Generator[dict, None, None]:
             with open(HEADPHONE_METADATA, "r", encoding="utf8") as f:
                 _headphone_metadata_cache = json.load(f)
 
-    assert _headphone_metadata_cache is not None
+    if _headphone_metadata_cache is None:
+        message = "Headphone metadata cache was not loaded"
+        raise RuntimeError(message)
     yield _headphone_metadata_cache
 
 

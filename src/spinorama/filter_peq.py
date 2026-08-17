@@ -23,8 +23,8 @@ from spinorama.filters.peq import (
 )
 
 __all__ = [
-    "Biquad",
     "DEFAULT_Q_HIGH_LOW_PASS",
+    "Biquad",
     "Peq",
     "Vector",
     "logger",

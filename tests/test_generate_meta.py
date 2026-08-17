@@ -35,7 +35,8 @@ class TestGenerateMetaAddMeasurement(unittest.TestCase):
         for key, path in paths.items():
             status, (_, df) = parse_graph_freq_klippel(path)
             if not status:
-                raise RuntimeError(f"Failed to load {path}")
+                msg = f"Failed to load {path}"
+                raise RuntimeError(msg)
             frames[key] = df
         return Measurements(
             cea2034=frames["cea2034"],

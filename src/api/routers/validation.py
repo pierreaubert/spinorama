@@ -42,6 +42,6 @@ async def validate_speaker_metadata(request: Request):
     except Exception as e:
         return {
             "valid": False,
-            "messages": [f"ERROR: Validation failed - {str(e)}"],
+            "messages": [f"ERROR: Validation failed - {e!s}"],
             "speaker_name": "Unknown",
         }

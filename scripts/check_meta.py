@@ -109,7 +109,7 @@ def validate_measurement_files(
                     speaker_parameters=parameters,
                     log_level=logging.ERROR,
                 )
-            except Exception as exc:  # noqa: BLE001 - report all loader failures
+            except Exception as exc:
                 result.add_error(
                     f"Measurement '{measurement_key}' in {speaker_name} could not be loaded: {exc}"
                 )

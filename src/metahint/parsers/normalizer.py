@@ -98,11 +98,7 @@ def normalize_raw_map(raw: Dict[str, str]) -> Dict[str, Any]:
                 norm[can] = ConfidenceValue(
                     value=_to_float(num.group()), confidence="high", source_hint="specs_html"
                 )
-        elif can == "overall_freq_hz":
-            r = _parse_range_hz(v)
-            if r:
-                norm[can] = ConfidenceValue(value=r, confidence="high", source_hint="specs_html")
-        elif can == "minus3db_freq_hz":
+        elif can == "overall_freq_hz" or can == "minus3db_freq_hz":
             r = _parse_range_hz(v)
             if r:
                 norm[can] = ConfidenceValue(value=r, confidence="high", source_hint="specs_html")

@@ -181,8 +181,8 @@ def _normalize_expected_export(raw: Dict[str, Any]) -> Dict[str, Any]:
             cast(Dict[str, Any], sp.get("size")) if isinstance(sp.get("size"), dict) else {}
         )
         spl = cast(Dict[str, Any], sp.get("SPL")) if isinstance(sp.get("SPL"), dict) else None
-        spl_peak = sp.get("spl_peak", None)
-        spl_long = sp.get("spl_long_term", None)
+        spl_peak = sp.get("spl_peak")
+        spl_long = sp.get("spl_long_term")
         if spl is not None:
             if spl_peak is None:
                 spl_peak = spl.get("peak")

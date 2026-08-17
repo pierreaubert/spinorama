@@ -21,7 +21,7 @@ import argparse
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     """Generate CORS headers"""
 
-    def do_GET(self):  # noqa: N802
+    def do_GET(self):
         f = self.send_head()
         if f:
             try:

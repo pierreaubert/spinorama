@@ -261,9 +261,7 @@ def plot_graph_spl(
                 "60°",
             ):
                 visible = True
-            elif measurement in ("-10°", "-20°", "-30°", "-40°", "-50°", "-60°"):
-                visible = "legendonly"
-            elif include_all_angles and angle is not None:
+            elif measurement in ("-10°", "-20°", "-30°", "-40°", "-50°", "-60°") or (include_all_angles and angle is not None):
                 visible = "legendonly"
             else:
                 continue

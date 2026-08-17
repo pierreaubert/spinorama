@@ -188,11 +188,11 @@ def group_by_key(headphones: dict) -> dict[str, dict]:
 def format_measurement(meas: dict, indent: str) -> list[str]:
     """Format a measurement dict as Python source lines."""
     lines = []
-    lines.append(f'{indent}"origin": {repr(meas["origin"])},')
-    lines.append(f'{indent}"format": {repr(meas["format"])},')
+    lines.append(f'{indent}"origin": {meas["origin"]!r},')
+    lines.append(f'{indent}"format": {meas["format"]!r},')
     for field in ("review", "review_published", "quality", "notes", "recommendation"):
         if field in meas:
-            lines.append(f"{indent}{repr(field)}: {repr(meas[field])},")
+            lines.append(f"{indent}{field!r}: {meas[field]!r},")
     if "sensitivity_mV_94dB" in meas:
         lines.append(f'{indent}"sensitivity_mV_94dB": {meas["sensitivity_mV_94dB"]},')
     return lines
@@ -212,16 +212,16 @@ def write_headphone_file(key: str, headphones: dict, datas_dir: str) -> None:
 
     for name in sorted(headphones.keys()):
         hp = headphones[name]
-        lines.append(f"    {repr(name)}: {{")
-        lines.append(f'        "brand": {repr(hp["brand"])},')
-        lines.append(f'        "model": {repr(hp["model"])},')
-        lines.append(f'        "shape": {repr(hp["shape"])},')
-        lines.append(f'        "default_measurement": {repr(hp["default_measurement"])},')
+        lines.append(f"    {name!r}: {{")
+        lines.append(f'        "brand": {hp["brand"]!r},')
+        lines.append(f'        "model": {hp["model"]!r},')
+        lines.append(f'        "shape": {hp["shape"]!r},')
+        lines.append(f'        "default_measurement": {hp["default_measurement"]!r},')
         if "price" in hp:
-            lines.append(f'        "price": {repr(hp["price"])},')
+            lines.append(f'        "price": {hp["price"]!r},')
         lines.append('        "measurements": {')
         for mkey, mval in hp["measurements"].items():
-            lines.append(f"            {repr(mkey)}: {{")
+            lines.append(f"            {mkey!r}: {{")
             lines.extend(format_measurement(mval, " " * 16))
             lines.append("            },")
         lines.append("        },")

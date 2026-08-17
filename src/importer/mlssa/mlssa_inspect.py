@@ -39,10 +39,12 @@ class TimInfo:
 def parse_tim_info(path: Path) -> TimInfo:
     data = path.read_bytes()
     if len(data) < 14:
-        raise ValueError(f"{path} is too short ({len(data)} bytes)")
+        msg = f"{path} is too short ({len(data)} bytes)"
+        raise ValueError(msg)
     magic = struct.unpack_from("<I", data, 0)[0]
     if magic != MLSSA_MAGIC:
-        raise ValueError(f"{path} has bad MLSSA magic: 0x{magic:08x}")
+        msg = f"{path} has bad MLSSA magic: 0x{magic:08x}"
+        raise ValueError(msg)
     algorithm = struct.unpack_from("<H", data, 4)[0]
     delta_time_ms = struct.unpack_from("<f", data, 6)[0]
     sample_count = struct.unpack_from("<I", data, 10)[0]

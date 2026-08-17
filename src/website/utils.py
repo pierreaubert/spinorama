@@ -62,7 +62,7 @@ def eqtype2str(context, eq_type: str) -> str:
     return infos.get(eq_type, "??")
 
 
-import re  # noqa: E402
+import re
 
 
 _VALID_SHAPES = frozenset(

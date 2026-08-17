@@ -32,7 +32,7 @@ REPO_ROOT = APP_ROOT.parent.parent
 # install the package.
 sys.path.insert(0, str(REPO_ROOT))
 
-from datas.headphones import headphones_info  # noqa: E402  (after sys.path tweak)
+from datas.headphones import headphones_info
 
 
 PICTURES_DIR = REPO_ROOT / "datas" / "pictures"

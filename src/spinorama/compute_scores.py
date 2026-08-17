@@ -24,9 +24,9 @@ from spinorama.compute.scores import (
 )
 
 __all__ = [
-    "Any",
     "LFQ_DEFAULT",
     "LFX_DEFAULT",
+    "Any",
     "List",
     "Tuple",
     "aad",

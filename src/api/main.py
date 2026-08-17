@@ -6,23 +6,23 @@ from __future__ import annotations
 # Re-exports for back-compat (tests and external callers do
 # ``from api.main import app, METADATA, SPINFILES, load_metadata, glob``).
 # Removing these would force every consumer to know the new layout.
-from glob import glob  # noqa: F401  (re-exported for test patches)
+from glob import glob
 
 from fastapi import FastAPI
 
 from .state import (
     API_VERSION,
-    ALIAS_MEASUREMENTS,  # noqa: F401  (re-export)
-    APIFILES,  # noqa: F401  (re-export)
-    HEADPHONE_FILES,  # noqa: F401  (re-export)
-    HEADPHONE_METADATA,  # noqa: F401  (re-export)
-    KNOWN_MEASUREMENTS,  # noqa: F401  (re-export)
-    METADATA,  # noqa: F401  (re-export)
+    ALIAS_MEASUREMENTS,
+    APIFILES,
+    HEADPHONE_FILES,
+    HEADPHONE_METADATA,
+    KNOWN_MEASUREMENTS,
+    METADATA,
     SOFTWARE_VERSION,
-    SPINFILES,  # noqa: F401  (re-export)
+    SPINFILES,
     lifespan,
-    load_headphone_metadata,  # noqa: F401  (re-export, used as Depends in routers)
-    load_metadata,  # noqa: F401  (re-export, used as Depends in routers)
+    load_headphone_metadata,
+    load_metadata,
 )
 from .routers import headphone, speaker, validation
 

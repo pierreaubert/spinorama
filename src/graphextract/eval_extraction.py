@@ -148,7 +148,8 @@ def render_plotly_to_png(
     arr = np.frombuffer(png_bytes, dtype=np.uint8)
     img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
     if img is None:
-        raise RuntimeError(f"Failed to decode rendered PNG for {json_path}")
+        msg = f"Failed to decode rendered PNG for {json_path}"
+        raise RuntimeError(msg)
 
     return img
 

@@ -223,5 +223,6 @@ class Measurements:
     def has(self, field_name: str) -> bool:
         """Sugar for ``getattr(m, name) is not None`` with field-name validation."""
         if not any(f.name == field_name for f in fields(self)):
-            raise AttributeError(f"Measurements has no field {field_name!r}")
+            msg = f"Measurements has no field {field_name!r}"
+            raise AttributeError(msg)
         return getattr(self, field_name) is not None

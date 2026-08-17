@@ -21,10 +21,10 @@ from spinorama.extract.axis_calibrate import (
 )
 
 __all__ = [
-    "AxisCalibration",
-    "PlotRegion",
     "STANDARD_DB_TICKS",
     "STANDARD_FREQ_TICKS",
+    "AxisCalibration",
+    "PlotRegion",
     "_cluster_positions",
     "_detect_grid_lines",
     "_fit_log_linear",

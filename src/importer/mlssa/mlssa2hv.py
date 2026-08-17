@@ -93,7 +93,8 @@ def parse_fft(path: Path) -> Curve:
         spl.append(float(m.group(2)))
         phase.append(float(m.group(3)))
     if not freq:
-        raise ValueError(f"no freq/spl/phase rows found in {path}")
+        msg = f"no freq/spl/phase rows found in {path}"
+        raise ValueError(msg)
     return Curve(freq=freq, spl=spl, phase=phase)
 
 
@@ -148,25 +149,30 @@ def _decode_c_string(data: bytes) -> str:
 def parse_tim_header(path: Path) -> TimInfo:
     data = path.read_bytes()
     if len(data) < TIM_FIXED_HEADER_BYTES:
-        raise ValueError(f"{path} too short")
+        msg = f"{path} too short"
+        raise ValueError(msg)
     magic = struct.unpack_from("<I", data, 0)[0]
     if magic != MLSSA_MAGIC:
-        raise ValueError(f"{path} invalid magic 0x{magic:08x}")
+        msg = f"{path} invalid magic 0x{magic:08x}"
+        raise ValueError(msg)
     algorithm = struct.unpack_from("<H", data, 4)[0]
     delta_time_ms = struct.unpack_from("<f", data, 6)[0]
     sample_count = struct.unpack_from("<I", data, 10)[0]
     if sample_count <= 0:
-        raise ValueError(f"{path} has invalid sample count {sample_count}")
+        msg = f"{path} has invalid sample count {sample_count}"
+        raise ValueError(msg)
     if not math.isfinite(delta_time_ms) or delta_time_ms <= 0:
-        raise ValueError(f"{path} has invalid delta_time {delta_time_ms!r}")
+        msg = f"{path} has invalid delta_time {delta_time_ms!r}"
+        raise ValueError(msg)
 
     data_bytes = sample_count * 4
     title_offset = TIM_FIXED_HEADER_BYTES + data_bytes
     comment_offset = title_offset + TIM_TITLE_BYTES
     setup_offset = comment_offset + TIM_COMMENT_BYTES
     if len(data) < title_offset:
+        msg = f"{path} truncated: expected {title_offset} bytes through sample data, got {len(data)}"
         raise ValueError(
-            f"{path} truncated: expected {title_offset} bytes through sample data, got {len(data)}"
+            msg
         )
 
     title = (
@@ -222,11 +228,13 @@ def parse_tim_header(path: Path) -> TimInfo:
 def decode_tim_samples(data: bytes, info: TimInfo) -> np.ndarray:
     end = info.data_offset + info.sample_count * 4
     if len(data) < end:
-        raise ValueError(f"{info.path} truncated: expected {end} bytes, got {len(data)}")
+        msg = f"{info.path} truncated: expected {end} bytes, got {len(data)}"
+        raise ValueError(msg)
     arr = np.frombuffer(data, dtype="<f4", count=info.sample_count, offset=info.data_offset)
     arr = arr.astype(np.float64)
     if not np.all(np.isfinite(arr)):
-        raise ValueError(f"{info.path} contains non-finite TIM samples")
+        msg = f"{info.path} contains non-finite TIM samples"
+        raise ValueError(msg)
     return arr
 
 
@@ -286,7 +294,8 @@ def tim_to_curve(path: Path, mode: str = "f32le", fs: float | None = None) -> Cu
     samples = decode_tim_samples(data, info)
     sig, _, _ = tim_fft_segment(samples, info)
     if len(sig) < 16:
-        raise ValueError(f"{path} decoded to too few windowed samples ({len(sig)})")
+        msg = f"{path} decoded to too few windowed samples ({len(sig)})"
+        raise ValueError(msg)
     sig = sig - np.mean(sig)
     nfft = info.fft_size or len(sig)
     if nfft < len(sig):

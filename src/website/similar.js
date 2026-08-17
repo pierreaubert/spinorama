@@ -22,7 +22,7 @@ import Plotly from 'plotly.js-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setContour3D } from './plot.js';
-import { loadConfigFromStorage, saveConfigToStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
+import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 function detectTheme() {
     const attr = document.documentElement.getAttribute('data-theme');
@@ -64,7 +64,6 @@ getMetadata()
         // Load plot configuration from storage
         let config = loadConfigFromStorage('Graph');
         config.theme = detectTheme();
-        let currentGraphOptions = [];
 
         // Initialize the global config panel
         initGlobalConfigPanel(config);
@@ -82,7 +81,6 @@ getMetadata()
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
                     // Reset current graph options for this new plot
-                    currentGraphOptions = [];
                     const speakersName0 = speakersName[0];
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
