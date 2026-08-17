@@ -19,9 +19,17 @@
 
 import unittest
 
+from mako.template import Template
+
 import spinorama.constant_paths as cpaths
 
-from generate_html import adapt_imports, get_versions, get_files, CACHE_VERSION
+from generate_html import (
+    CACHE_VERSION,
+    WEBSITE_JS_FILES,
+    adapt_imports,
+    get_files,
+    get_versions,
+)
 
 
 class JSImportTests(unittest.TestCase):
@@ -85,6 +93,21 @@ import {
         self.assertIn("/js/meta-{}.js".format(CACHE_VERSION), transformed)
         self.assertIn("/js/plot-{}.js".format(CACHE_VERSION), transformed)
         self.assertIn(self.versions["FUSE"], transformed)
+
+    def test_meta_template_compiles(self):
+        template = Template(filename=f"{cpaths.CPATH_WEBSITE}/meta.js")
+        rendered = template.render(
+            site="https://www.spinorama.org",
+            metadata_filename_head="json/metadata.json",
+            metadata_filename_chunks='["json/metadata-0.json"]',
+            eqdata_filename="json/eqdata.json",
+        )
+
+        self.assertIn("startsWith('$' + '{')", rendered)
+        self.assertIn('JSON.parse(metadataFilenameChunksValue)', rendered)
+
+    def test_annotation_layout_is_bundled(self):
+        self.assertIn("annotation-layout", WEBSITE_JS_FILES)
 
 
 if __name__ == "__main__":

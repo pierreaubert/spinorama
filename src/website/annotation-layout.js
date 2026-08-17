@@ -23,13 +23,20 @@ const ANNOTATION_PRIORITIES = {
 };
 
 const ANNOTATION_LANES = {
-    'On Axis': ['lower', 'bottom', 'middle'],
-    'Listening Window': ['lower', 'bottom', 'middle'],
+    'On Axis': ['top', 'upper', 'middle'],
+    'Listening Window': ['top', 'upper', 'middle'],
     'Early Reflections': ['middle', 'upper', 'lower'],
     'Sound Power': ['upper', 'middle', 'lower'],
     'Early Reflections DI': ['lower', 'bottom', 'middle'],
     'Sound Power DI': ['bottom', 'lower', 'middle'],
 };
+
+const ANNOTATION_DIRECTIONS = {
+    'On Axis': 'above',
+    'Listening Window': 'above',
+};
+
+const TRACE_CLEARANCE = 14;
 
 function finite(value) {
     return typeof value === 'number' && Number.isFinite(value);
@@ -60,6 +67,87 @@ function rectOverlap(first, second) {
     const bottom = Math.min(first[3], second[3]);
     if (right <= left || bottom <= top) return 0;
     return (right - left) * (bottom - top);
+}
+
+function expandRect(rect, padding) {
+    return [rect[0] - padding, rect[1] - padding, rect[2] + padding, rect[3] + padding];
+}
+
+function pointsEqual(first, second) {
+    return Math.abs(first[0] - second[0]) < 0.001 && Math.abs(first[1] - second[1]) < 0.001;
+}
+
+function cross(first, second, third) {
+    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0]);
+}
+
+function between(value, first, second) {
+    return value >= Math.min(first, second) - 0.001 && value <= Math.max(first, second) + 0.001;
+}
+
+function segmentsIntersect(firstStart, firstEnd, secondStart, secondEnd) {
+    // Arrows sharing an anchor are allowed to fan out independently.
+    if (
+        pointsEqual(firstStart, secondStart) ||
+        pointsEqual(firstStart, secondEnd) ||
+        pointsEqual(firstEnd, secondStart) ||
+        pointsEqual(firstEnd, secondEnd)
+    ) {
+        return false;
+    }
+
+    const firstCross = cross(firstStart, firstEnd, secondStart);
+    const secondCross = cross(firstStart, firstEnd, secondEnd);
+    const thirdCross = cross(secondStart, secondEnd, firstStart);
+    const fourthCross = cross(secondStart, secondEnd, firstEnd);
+    const firstProper = (firstCross > 0 && secondCross < 0) || (firstCross < 0 && secondCross > 0);
+    const secondProper = (thirdCross > 0 && fourthCross < 0) || (thirdCross < 0 && fourthCross > 0);
+    if (firstProper && secondProper) return true;
+
+    return (
+        (Math.abs(firstCross) < 0.001 &&
+            between(secondStart[0], firstStart[0], firstEnd[0]) &&
+            between(secondStart[1], firstStart[1], firstEnd[1])) ||
+        (Math.abs(secondCross) < 0.001 &&
+            between(secondEnd[0], firstStart[0], firstEnd[0]) &&
+            between(secondEnd[1], firstStart[1], firstEnd[1])) ||
+        (Math.abs(thirdCross) < 0.001 &&
+            between(firstStart[0], secondStart[0], secondEnd[0]) &&
+            between(firstStart[1], secondStart[1], secondEnd[1])) ||
+        (Math.abs(fourthCross) < 0.001 &&
+            between(firstEnd[0], secondStart[0], secondEnd[0]) &&
+            between(firstEnd[1], secondStart[1], secondEnd[1]))
+    );
+}
+
+function pointInRect(point, rect) {
+    return point[0] > rect[0] && point[0] < rect[2] && point[1] > rect[1] && point[1] < rect[3];
+}
+
+function segmentCrossesRect(start, end, rect) {
+    // An arrow that starts inside a label is already attached to that label's
+    // curve; do not make the fallback solver hide every candidate in that case.
+    if (pointInRect(start, rect)) return false;
+    if (pointInRect(end, rect)) return true;
+    const edges = [
+        [
+            [rect[0], rect[1]],
+            [rect[2], rect[1]],
+        ],
+        [
+            [rect[2], rect[1]],
+            [rect[2], rect[3]],
+        ],
+        [
+            [rect[2], rect[3]],
+            [rect[0], rect[3]],
+        ],
+        [
+            [rect[0], rect[3]],
+            [rect[0], rect[1]],
+        ],
+    ];
+    return edges.some(([edgeStart, edgeEnd]) => segmentsIntersect(start, end, edgeStart, edgeEnd));
 }
 
 function annotationKey(annotation) {
@@ -116,7 +204,10 @@ function tracePoints(options, geometry) {
 }
 
 function reservedRects(layout, geometry) {
-    const reserved = [[geometry.left, geometry.top, geometry.right, geometry.top + 28]];
+    // The title lives in Plotly's top margin, outside the plot rectangle. Do
+    // not reserve the first plot pixels: that space is often the only place
+    // where a label can sit above a high SPL curve.
+    const reserved = [];
     if (layout.showlegend === false || !layout.legend) return reserved;
 
     const legend = layout.legend;
@@ -153,21 +244,49 @@ function candidateCenters(annotation, key, anchor, size, geometry) {
         }
     };
 
+    // Try short, local offsets before the full semantic lanes. A directional
+    // constraint in layoutAnnotations decides whether an above/below offset
+    // is valid, while the distance term keeps arrows compact whenever space
+    // permits it.
+    const verticalOffset = Math.max(24, size[1] / 2 + TRACE_CLEARANCE + 6);
+    const localOffsets = [
+        [0, -verticalOffset],
+        [0, verticalOffset],
+        [-48, -verticalOffset],
+        [48, -verticalOffset],
+        [-48, verticalOffset],
+        [48, verticalOffset],
+        [0, -2 * verticalOffset],
+        [0, 2 * verticalOffset],
+        [-96, -2 * verticalOffset],
+        [96, -2 * verticalOffset],
+        [-96, 2 * verticalOffset],
+        [96, 2 * verticalOffset],
+    ];
+    localOffsets.forEach(([dx, dy], index) => add([anchor[0] + dx, anchor[1] + dy], laneNames.length + index));
+
     laneNames.forEach((lane, laneRank) => {
         const y = geometry.top + LANE_FRACTIONS[lane] * (geometry.bottom - geometry.top);
         [0, -100, 100, -190, 190].forEach((dx) => add([anchor[0] + dx, y], laneRank));
     });
-    [
-        [0, -70],
-        [0, 70],
-        [-100, -55],
-        [100, -55],
-        [-100, 55],
-        [100, 55],
-        [0, -125],
-        [0, 125],
-    ].forEach(([dx, dy], index) => add([anchor[0] + dx, anchor[1] + dy], laneNames.length + index));
     return candidates;
+}
+
+function directionPenalty(direction, anchor, center) {
+    if (direction === 'above') return center[1] > anchor[1] ? 1000 + center[1] - anchor[1] : 0;
+    if (direction === 'below') return center[1] < anchor[1] ? 1000 + anchor[1] - center[1] : 0;
+    return 0;
+}
+
+function curvePenalty(rect, points) {
+    let penalty = 0;
+    const clearanceRect = expandRect(rect, TRACE_CLEARANCE);
+    for (const point of points) {
+        const pointRect = rectFromCenter(point, [5, 5]);
+        if (rectOverlap(rect, pointRect) > 0) return Infinity;
+        if (rectOverlap(clearanceRect, pointRect) > 0) penalty += 20;
+    }
+    return penalty;
 }
 
 function metadata(annotation, index) {
@@ -207,6 +326,7 @@ export function layoutAnnotations(options) {
     const curves = tracePoints(options, geometry);
     const reserved = reservedRects(layout, geometry);
     const occupied = [];
+    const arrows = [];
     const candidates = [];
 
     annotations.forEach((annotation, index) => {
@@ -224,6 +344,14 @@ export function layoutAnnotations(options) {
         });
     });
     candidates.sort((first, second) => {
+        const firstDirection = ANNOTATION_DIRECTIONS[first.info.key];
+        const secondDirection = ANNOTATION_DIRECTIONS[second.info.key];
+        // Labels that share the upper lane are laid out from right to left.
+        // This leaves the open space on the left available for the other
+        // high-priority curve instead of forcing it below the curves.
+        if (firstDirection === 'above' && secondDirection === 'above' && first.info.speaker === second.info.speaker) {
+            return second.anchor[0] - first.anchor[0];
+        }
         if (second.info.priority !== first.info.priority) return second.info.priority - first.info.priority;
         if (first.info.speaker !== second.info.speaker) return first.info.speaker - second.info.speaker;
         return first.index - second.index;
@@ -235,13 +363,16 @@ export function layoutAnnotations(options) {
             const rect = rectFromCenter(candidate.center, item.size);
             if (occupied.some((other) => rectOverlap(rect, other) > 0)) continue;
             if (reserved.some((other) => rectOverlap(rect, other) > 0)) continue;
+            if (arrows.some((arrow) => segmentsIntersect(item.anchor, candidate.center, arrow.start, arrow.end))) continue;
+            if (occupied.some((other) => segmentCrossesRect(item.anchor, candidate.center, other))) continue;
+            if (arrows.some((arrow) => segmentCrossesRect(arrow.start, arrow.end, rect))) continue;
 
-            let curvePenalty = 0;
-            for (const point of curves[item.yref]) {
-                if (rectOverlap(rect, rectFromCenter(point, [5, 5])) > 0) curvePenalty += 4;
-            }
+            const curveScore = curvePenalty(rect, curves[item.yref]);
+            if (!Number.isFinite(curveScore)) continue;
             const distance = Math.hypot(candidate.center[0] - item.anchor[0], candidate.center[1] - item.anchor[1]);
-            const score = candidate.laneRank * 15 + distance * 0.025 + curvePenalty;
+            const direction = ANNOTATION_DIRECTIONS[item.info.key];
+            const score =
+                distance + candidate.laneRank * 2 + directionPenalty(direction, item.anchor, candidate.center) + curveScore;
             if (!best || score < best.score) best = { score, center: candidate.center, rect };
         }
 
@@ -250,6 +381,7 @@ export function layoutAnnotations(options) {
             continue;
         }
         occupied.push(best.rect);
+        arrows.push({ start: item.anchor, end: best.center });
         item.annotation.bgcolor = item.annotation.bgcolor || 'rgba(255, 255, 255, 0.86)';
         item.annotation.borderpad = item.annotation.borderpad ?? 3;
         item.annotation.borderwidth = item.annotation.borderwidth ?? 1;

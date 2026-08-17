@@ -11,6 +11,7 @@
 """Collision-aware placement of Plotly annotations inside a plot area."""
 
 from dataclasses import dataclass
+from functools import cmp_to_key
 import math
 from typing import Iterable, Sequence
 
@@ -31,6 +32,7 @@ class AnnotationRequest:
     color: str
     priority: int = 0
     preferred_lanes: tuple[str, ...] = ("middle", "lower", "upper")
+    preferred_direction: str | None = None
 
 
 @dataclass(frozen=True)
@@ -79,6 +81,8 @@ _LANE_FRACTIONS = {
     "bottom": 0.86,
 }
 
+_TRACE_CLEARANCE = 14.0
+
 
 def estimate_annotation_size(
     text: str, font_size: float = 10, label_pad: float = 5
@@ -112,6 +116,80 @@ def _rect_overlap(first: Rect, second: Rect) -> float:
     if right <= left or bottom <= top:
         return 0.0
     return (right - left) * (bottom - top)
+
+
+def _expand_rect(rect: Rect, padding: float) -> Rect:
+    return rect[0] - padding, rect[1] - padding, rect[2] + padding, rect[3] + padding
+
+
+def _points_equal(first: Point, second: Point) -> bool:
+    return abs(first[0] - second[0]) < 0.001 and abs(first[1] - second[1]) < 0.001
+
+
+def _cross(first: Point, second: Point, third: Point) -> float:
+    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+
+
+def _between(value: float, first: float, second: float) -> bool:
+    return min(first, second) - 0.001 <= value <= max(first, second) + 0.001
+
+
+def _segments_intersect(first_start: Point, first_end: Point, second_start: Point, second_end: Point) -> bool:
+    """Return whether two arrow center-lines cross, ignoring shared anchors."""
+
+    if any(
+        _points_equal(first, second)
+        for first in (first_start, first_end)
+        for second in (second_start, second_end)
+    ):
+        return False
+
+    first_cross = _cross(first_start, first_end, second_start)
+    second_cross = _cross(first_start, first_end, second_end)
+    third_cross = _cross(second_start, second_end, first_start)
+    fourth_cross = _cross(second_start, second_end, first_end)
+    first_proper = (first_cross > 0 and second_cross < 0) or (first_cross < 0 and second_cross > 0)
+    second_proper = (third_cross > 0 and fourth_cross < 0) or (third_cross < 0 and fourth_cross > 0)
+    if first_proper and second_proper:
+        return True
+
+    return (
+        abs(first_cross) < 0.001
+        and _between(second_start[0], first_start[0], first_end[0])
+        and _between(second_start[1], first_start[1], first_end[1])
+    ) or (
+        abs(second_cross) < 0.001
+        and _between(second_end[0], first_start[0], first_end[0])
+        and _between(second_end[1], first_start[1], first_end[1])
+    ) or (
+        abs(third_cross) < 0.001
+        and _between(first_start[0], second_start[0], second_end[0])
+        and _between(first_start[1], second_start[1], second_end[1])
+    ) or (
+        abs(fourth_cross) < 0.001
+        and _between(first_end[0], second_start[0], second_end[0])
+        and _between(first_end[1], second_start[1], second_end[1])
+    )
+
+
+def _point_in_rect(point: Point, rect: Rect) -> bool:
+    return rect[0] < point[0] < rect[2] and rect[1] < point[1] < rect[3]
+
+
+def _segment_crosses_rect(start: Point, end: Point, rect: Rect) -> bool:
+    # An arrow that starts inside a label is already attached to that label's
+    # curve; do not make the fallback solver hide every candidate in that case.
+    if _point_in_rect(start, rect):
+        return False
+    if _point_in_rect(end, rect):
+        return True
+    edges = (
+        ((rect[0], rect[1]), (rect[2], rect[1])),
+        ((rect[2], rect[1]), (rect[2], rect[3])),
+        ((rect[2], rect[3]), (rect[0], rect[3])),
+        ((rect[0], rect[3]), (rect[0], rect[1])),
+    )
+    return any(_segments_intersect(start, end, edge_start, edge_end) for edge_start, edge_end in edges)
 
 
 def _value_to_pixel(
@@ -148,11 +226,38 @@ def _candidate_centers(
     if x_min > x_max or y_min > y_max:
         return
 
-    # Put the preferred semantic lanes first. The small horizontal offsets
-    # allow adjacent annotations to fan out without changing the margins.
+    # Try short, local offsets before the full semantic lanes. The solver's
+    # direction penalty decides whether an above/below offset is valid, while
+    # the distance term keeps arrows compact whenever space permits it.
     lane_names = list(request.preferred_lanes)
     lane_names.extend(name for name in _LANE_FRACTIONS if name not in lane_names)
     seen: set[tuple[int, int]] = set()
+
+    vertical_offset = max(24.0, size[1] / 2 + _TRACE_CLEARANCE + 6)
+    local_offsets = (
+        (0, -vertical_offset),
+        (0, vertical_offset),
+        (-48, -vertical_offset),
+        (48, -vertical_offset),
+        (-48, vertical_offset),
+        (48, vertical_offset),
+        (0, -2 * vertical_offset),
+        (0, 2 * vertical_offset),
+        (-96, -2 * vertical_offset),
+        (96, -2 * vertical_offset),
+        (-96, 2 * vertical_offset),
+        (96, 2 * vertical_offset),
+    )
+    for index, (dx, dy) in enumerate(local_offsets):
+        center = (
+            min(x_max, max(x_min, anchor[0] + dx)),
+            min(y_max, max(y_min, anchor[1] + dy)),
+        )
+        key = (round(center[0]), round(center[1]))
+        if key not in seen:
+            seen.add(key)
+            yield center, len(lane_names) + index
+
     for lane_rank, lane_name in enumerate(lane_names):
         fraction = _LANE_FRACTIONS[lane_name]
         lane_y = top + fraction * (bottom - top)
@@ -163,18 +268,24 @@ def _candidate_centers(
                 seen.add(key)
                 yield center, lane_rank
 
-    # If a preferred lane is crowded, try positions close to the anchor before
-    # considering suppression. These are deliberately pixel offsets because
-    # they behave consistently across the SPL and DI axes.
-    for lane_rank, (dx, dy) in enumerate(
-        ((0, -70), (0, 70), (-100, -55), (100, -55), (-100, 55), (100, 55), (0, -125), (0, 125)),
-        start=len(lane_names),
-    ):
-        center = (min(x_max, max(x_min, anchor[0] + dx)), min(y_max, max(y_min, anchor[1] + dy)))
-        key = (round(center[0]), round(center[1]))
-        if key not in seen:
-            seen.add(key)
-            yield center, lane_rank
+def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> float:
+    if direction == "above":
+        return 1000.0 + center[1] - anchor[1] if center[1] > anchor[1] else 0.0
+    if direction == "below":
+        return 1000.0 + anchor[1] - center[1] if center[1] < anchor[1] else 0.0
+    return 0.0
+
+
+def _curve_penalty(rect: Rect, points: Sequence[Point]) -> float | None:
+    penalty = 0.0
+    clearance_rect = _expand_rect(rect, _TRACE_CLEARANCE)
+    for point in points:
+        point_rect = _rect_from_center(point, (5, 5))
+        if _rect_overlap(rect, point_rect) > 0:
+            return None
+        if _rect_overlap(clearance_rect, point_rect) > 0:
+            penalty += 20.0
+    return penalty
 
 
 def place_annotations(
@@ -185,10 +296,11 @@ def place_annotations(
 ) -> list[PlacedAnnotation]:
     """Place annotations without overlapping labels or reserved regions.
 
-    Requests are placed by descending priority. Curves contribute a soft
-    penalty, while overlap with an existing label or reserved region makes a
-    candidate invalid. This lets labels move away from dense curves while
-    keeping the strongest annotations visible when space is scarce.
+    Requests are placed by descending priority. Actual contact with a trace,
+    existing label, or reserved region makes a candidate invalid; a small
+    clearance corridor around traces contributes a soft penalty. This keeps
+    labels readable while preserving the strongest annotations when space is
+    scarce.
     """
 
     points_by_axis: dict[str, list[Point]] = {axis: [] for axis in geometry.y_ranges}
@@ -206,10 +318,25 @@ def place_annotations(
             points_by_axis[yref].append((x_pixel, y_pixel))
 
     reserved = tuple(reserved_rects)
-    placed: list[PlacedAnnotation] = []
+    placed: list[PlacedAnnotation | None] = [None] * len(requests)
     occupied: list[Rect] = []
-    ordered = sorted(enumerate(requests), key=lambda item: (-item[1].priority, item[0]))
-    for _, request in ordered:
+    arrows: list[tuple[Point, Point]] = []
+
+    def compare_requests(first: tuple[int, AnnotationRequest], second: tuple[int, AnnotationRequest]) -> int:
+        first_index, first_request = first
+        second_index, second_request = second
+        if (
+            first_request.preferred_direction == "above"
+            and second_request.preferred_direction == "above"
+            and first_request.x != second_request.x
+        ):
+            return -1 if first_request.x > second_request.x else 1
+        if first_request.priority != second_request.priority:
+            return -1 if first_request.priority > second_request.priority else 1
+        return first_index - second_index
+
+    ordered = sorted(enumerate(requests), key=cmp_to_key(compare_requests))
+    for request_index, request in ordered:
         anchor = _anchor_pixel(request, geometry)
         size = estimate_annotation_size(request.text, geometry.font_size, geometry.label_pad)
         best: tuple[float, Point, Rect] | None = None
@@ -219,25 +346,36 @@ def place_annotations(
                 continue
             if any(_rect_overlap(rect, other) > 0 for other in reserved):
                 continue
+            if any(_segments_intersect(anchor, center, arrow_start, arrow_end) for arrow_start, arrow_end in arrows):
+                continue
+            if any(_segment_crosses_rect(anchor, center, other) for other in occupied):
+                continue
+            if any(_segment_crosses_rect(arrow_start, arrow_end, rect) for arrow_start, arrow_end in arrows):
+                continue
 
-            curve_penalty = 0.0
-            for point in points_by_axis.get(request.yref, []):
-                if _rect_overlap(rect, _rect_from_center(point, (5, 5))) > 0:
-                    curve_penalty += 4.0
+            curve_score = _curve_penalty(rect, points_by_axis.get(request.yref, []))
+            if curve_score is None:
+                continue
             distance = math.hypot(center[0] - anchor[0], center[1] - anchor[1])
-            score = lane_rank * 15.0 + distance * 0.025 + curve_penalty
+            score = (
+                distance
+                + lane_rank * 2.0
+                + _direction_penalty(request.preferred_direction, anchor, center)
+                + curve_score
+            )
             if best is None or score < best[0]:
                 best = score, center, rect
 
         if best is None:
-            placed.append(PlacedAnnotation(request, anchor, None, size, hidden=True))
+            placed[request_index] = PlacedAnnotation(request, anchor, None, size, hidden=True)
             continue
 
         _, center, rect = best
         occupied.append(rect)
-        placed.append(PlacedAnnotation(request, anchor, center, size))
+        arrows.append((anchor, center))
+        placed[request_index] = PlacedAnnotation(request, anchor, center, size)
 
-    return placed
+    return [placement for placement in placed if placement is not None]
 
 
 def annotation_dicts(

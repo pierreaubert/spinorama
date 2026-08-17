@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 import unittest
 
 import numpy as np
@@ -82,6 +83,97 @@ class AnnotationLayoutTests(unittest.TestCase):
         )
         self.assertTrue(non_overlapping)
         self.assertTrue(first.center[1] > first.anchor[1] or second.center[1] > second.anchor[1])
+
+    def test_keeps_primary_curve_labels_above_the_curves_and_short(self):
+        requests = [
+            AnnotationRequest(
+                key="On Axis",
+                x=3.5,
+                y=1,
+                yref="y",
+                text="0.26 db/oct sm 0.58",
+                color="blue",
+                priority=100,
+                preferred_lanes=("top", "upper", "middle"),
+                preferred_direction="above",
+            ),
+            AnnotationRequest(
+                key="Listening Window",
+                x=3.8,
+                y=0,
+                yref="y",
+                text="-0.04 db/oct sm 0.44",
+                color="orange",
+                priority=95,
+                preferred_lanes=("top", "upper", "middle"),
+                preferred_direction="above",
+            ),
+        ]
+        placements = place_annotations(requests, self.geometry)
+        first, second = placements
+
+        self.assertLess(first.center[1], first.anchor[1])
+        self.assertLess(second.center[1], second.anchor[1])
+        self.assertLess(math.dist(first.center, first.anchor), 120)
+
+        def rect(placement):
+            half_width, half_height = placement.size[0] / 2, placement.size[1] / 2
+            return (
+                placement.center[0] - half_width,
+                placement.center[1] - half_height,
+                placement.center[0] + half_width,
+                placement.center[1] + half_height,
+            )
+
+        first_rect = rect(first)
+        second_rect = rect(second)
+        self.assertTrue(
+            first_rect[2] <= second_rect[0]
+            or second_rect[2] <= first_rect[0]
+            or first_rect[3] <= second_rect[1]
+            or second_rect[3] <= first_rect[1]
+        )
+
+    def test_keeps_labels_clear_of_nearby_trace_points(self):
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(1.3, 4.3),
+            y_ranges={"y": (-45, 10)},
+        )
+        requests = [
+            AnnotationRequest(
+                key="On Axis",
+                x=3.5,
+                y=0,
+                yref="y",
+                text="0.26 db/oct sm 0.58",
+                color="blue",
+                priority=100,
+                preferred_lanes=("top", "upper", "middle"),
+                preferred_direction="above",
+            ),
+            AnnotationRequest(
+                key="Listening Window",
+                x=3.8,
+                y=-1,
+                yref="y",
+                text="-0.04 db/oct sm 0.44",
+                color="orange",
+                priority=95,
+                preferred_lanes=("top", "upper", "middle"),
+                preferred_direction="above",
+            ),
+        ]
+        placements = place_annotations(
+            requests,
+            geometry,
+            trace_points=((3.5, 0, "y"), (3.8, -1, "y")),
+        )
+
+        for placement in placements:
+            self.assertLess(placement.center[1] + placement.size[1] / 2, placement.anchor[1] - 10)
 
     def test_suppresses_annotation_when_plot_is_smaller_than_label(self):
         geometry = AnnotationGeometry(

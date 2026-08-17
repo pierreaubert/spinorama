@@ -116,7 +116,7 @@ def print_radar(meta_data, scale, speaker_data):
     def_measurement = meta_data["default_measurement"]
     measurement = meta_data["measurements"][def_measurement]
     mformat = measurement["format"]
-    if "pref_rating" not in measurement or "estimates" not in measurement:
+    if measurement.get("pref_rating") is None or measurement.get("estimates") is None:
         logger.debug("skipping measurement no pref_rating and no estimates")
         return
     filename = "{}/{} {}/spider.json".format(

@@ -210,15 +210,16 @@ def plot_spinorama_annotation(
         return fig
 
     graph_params = (
-        (2000, "On Axis", "y", 100, ("lower", "bottom", "middle")),
-        (16000, "Listening Window", "y", 95, ("lower", "bottom", "middle")),
+        (2000, "On Axis", "y", 100, ("top", "upper", "middle"), "above"),
+        (16000, "Listening Window", "y", 95, ("top", "upper", "middle"), "above"),
         (10000, "Early Reflections", "y", 80, ("middle", "upper", "lower")),
         (10000, "Sound Power", "y", 75, ("upper", "middle", "lower")),
         (10000, "Early Reflections DI", "y2", 70, ("lower", "bottom", "middle")),
         (10000, "Sound Power DI", "y2", 65, ("bottom", "lower", "middle")),
     )
     requests = []
-    for freq_initial, measurement, yref, priority, preferred_lanes in graph_params:
+    for graph_param in graph_params:
+        freq_initial, measurement, yref, priority, preferred_lanes, *direction = graph_param
         freq = freq_initial
         if measurement not in spin:
             continue
@@ -251,6 +252,7 @@ def plot_spinorama_annotation(
                 color=UNIFORM_COLORS.get(measurement, "black"),
                 priority=priority,
                 preferred_lanes=preferred_lanes,
+                preferred_direction=direction[0] if direction else None,
             )
         )
 

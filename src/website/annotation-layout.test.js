@@ -46,6 +46,46 @@ function makeOptions(width = 900, height = 600) {
     };
 }
 
+function annotationAnchor(annotation, options) {
+    const { width, height, margin } = options.layout;
+    const left = margin.l;
+    const right = width - margin.r;
+    const top = margin.t;
+    const bottom = height - margin.b;
+    const x =
+        options.layout.xaxis.type === 'log' && annotation.x > options.layout.xaxis.range[1] + 0.5
+            ? Math.log10(annotation.x)
+            : annotation.x;
+    const xPixel =
+        left +
+        ((x - options.layout.xaxis.range[0]) / (options.layout.xaxis.range[1] - options.layout.xaxis.range[0])) *
+            (right - left);
+    const yRange = annotation.yref === 'y2' ? options.layout.yaxis2.range : options.layout.yaxis.range;
+    const yPixel = bottom + ((annotation.y - yRange[0]) / (yRange[1] - yRange[0])) * (top - bottom);
+    return [xPixel, yPixel];
+}
+
+function annotationRect(annotation, options) {
+    const anchor = annotationAnchor(annotation, options);
+    const center = [anchor[0] + (annotation.ax || 0), anchor[1] + (annotation.ay || 0)];
+    const width = String(annotation.text).length * 10 * 0.62 + 12;
+    const height = 10 * 1.35 + 12;
+    return [center[0] - width / 2, center[1] - height / 2, center[0] + width / 2, center[1] + height / 2];
+}
+
+function rectanglesOverlap(first, second) {
+    return first[0] < second[2] && second[0] < first[2] && first[1] < second[3] && second[1] < first[3];
+}
+
+function segmentsCross(firstStart, firstEnd, secondStart, secondEnd) {
+    const cross = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+    const first = cross(firstStart, firstEnd, secondStart);
+    const second = cross(firstStart, firstEnd, secondEnd);
+    const third = cross(secondStart, secondEnd, firstStart);
+    const fourth = cross(secondStart, secondEnd, firstEnd);
+    return ((first > 0 && second < 0) || (first < 0 && second > 0)) && ((third > 0 && fourth < 0) || (third < 0 && fourth > 0));
+}
+
 describe('layoutAnnotations', () => {
     it('moves visible annotations into distinct readable positions', () => {
         const options = makeOptions();
@@ -54,12 +94,40 @@ describe('layoutAnnotations', () => {
         const [first, second] = options.layout.annotations;
         expect(first.visible).toBe(true);
         expect(second.visible).toBe(true);
-        expect(first.ay).toBeGreaterThan(0);
+        expect(first.ay).toBeLessThan(0);
+        expect(second.ay).toBeLessThan(0);
+        expect(Math.hypot(first.ax, first.ay)).toBeLessThan(120);
         expect(first.ax !== second.ax || first.ay !== second.ay).toBe(true);
         expect(first.axref).toBe('pixel');
         expect(first.ayref).toBe('pixel');
         expect(first.bgcolor).toBe('rgba(255, 255, 255, 0.86)');
         expect(first.borderwidth).toBe(1);
+        expect(rectanglesOverlap(annotationRect(first, options), annotationRect(second, options))).toBe(false);
+
+        const firstAnchor = annotationAnchor(first, options);
+        const secondAnchor = annotationAnchor(second, options);
+        const firstCenter = [firstAnchor[0] + first.ax, firstAnchor[1] + first.ay];
+        const secondCenter = [secondAnchor[0] + second.ax, secondAnchor[1] + second.ay];
+        expect(segmentsCross(firstAnchor, firstCenter, secondAnchor, secondCenter)).toBe(false);
+    });
+
+    it('keeps labels clear of nearby trace points', () => {
+        const options = makeOptions();
+        options.layout.yaxis.range = [-45, 10];
+        options.data[0] = {
+            x: [10 ** 3.5, 10 ** 3.8],
+            y: [0, -1],
+            type: 'scatter',
+        };
+        options.layout.annotations[0].y = 0;
+        options.layout.annotations[1].y = -1;
+        layoutAnnotations(options);
+
+        for (const annotation of options.layout.annotations) {
+            const anchor = annotationAnchor(annotation, options);
+            const rect = annotationRect(annotation, options);
+            expect(rect[3]).toBeLessThan(anchor[1] - 10);
+        }
     });
 
     it('solves compare annotations together while honoring speaker visibility', () => {

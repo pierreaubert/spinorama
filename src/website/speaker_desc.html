@@ -915,7 +915,9 @@ ${eqs_print_eqs(current_eqs)}
   ${eqs_print_graph('filters_on_hist_fullrange', 'On Axis (fullrange)', 300, 100, 3)}
   ${eqs_print_graph('filters_lw_hist_fullrange', 'Listening Window (fullrange)', 300, 100, 3)}
   ${eqs_print_graph('filters_pir_hist_fullrange', 'Predicted In-Room Response (fullrange)', 300, 100, 3)}
+% if has_spider:
   ${eqs_spider(eq)}
+% endif
 </div>
 % endif
 

@@ -20,7 +20,7 @@ export const urlSite = '${site}' + '/';
 
 export const metadataFilenameHead = '${metadata_filename_head}';
 const metadataFilenameChunksValue = '${metadata_filename_chunks}';
-export const metadataFilenameChunks = metadataFilenameChunksValue.startsWith('${')
+export const metadataFilenameChunks = metadataFilenameChunksValue.startsWith('$' + '{')
     ? []
     : JSON.parse(metadataFilenameChunksValue);
 export const eqdataFilename = '${eqdata_filename}';

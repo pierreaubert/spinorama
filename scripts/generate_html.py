@@ -68,6 +68,33 @@ def get_files(dir: str, ext: str) -> list[str]:
     return files
 
 
+WEBSITE_JS_FILES = (
+    "annotation-layout",
+    "compare",
+    "download",
+    "error",
+    "eqs",
+    "graph",
+    "index",
+    "meta",
+    "misc",
+    "onload",
+    "pagination",
+    "plot",
+    "plot-config",
+    "scores",
+    "search",
+    "similar",
+    "statistics",
+    "tabs",
+    "theme",
+    "headphone_index",
+    "headphone_eqs",
+    "headphone_scores",
+    "headphone_target",
+)
+
+
 def get_versions(filename: str) -> dict[str, str]:
     """get the current versions for some js libraries"""
     versions = {}
@@ -196,6 +223,9 @@ def generate_measurement(
     else:
         dirname += meta[speaker_name]["brand"]
     index_name = "{0}/index_{1}.html".format(dirname, key)
+    spider_filename = "{}/{}/spider.json".format(
+        cpaths.CPATH_DIST_SPEAKERS, sanitize_filename(speaker_name)
+    )
 
     # ensure directory exists
     os.makedirs(os.path.dirname(index_name), mode=0o755, exist_ok=True)
@@ -209,6 +239,7 @@ def generate_measurement(
         g_radar=radar,
         g_key=key,
         g_eq=eq,
+        has_spider=os.path.isfile(spider_filename),
         meta=meta,
         origin=origin,
         site=site,
@@ -656,30 +687,7 @@ def main():
 
     # copy css/js files
     logger.info("Copy js files to %s", cpaths.CPATH_DIST_JS)
-    for item in (
-        "compare",
-        "download",
-        "error",
-        "eqs",
-        "graph",
-        "index",
-        "meta",
-        "misc",
-        "onload",
-        "pagination",
-        "plot",
-        "plot-config",
-        "scores",
-        "search",
-        "similar",
-        "statistics",
-        "tabs",
-        "theme",
-        "headphone_index",
-        "headphone_eqs",
-        "headphone_scores",
-        "headphone_target",
-    ):
+    for item in WEBSITE_JS_FILES:
         try:
             # remove the ./dist parts
             len_dist = len("/dist/")
