@@ -2,6 +2,7 @@
 
 import math
 import unittest
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -9,11 +10,16 @@ import pandas as pd
 from spinorama.plot.annotations import (
     AnnotationGeometry,
     AnnotationRequest,
+    _curve_penalty,
+    _anchor_pixel,
+    _rect_from_center,
+    _leader_crosses_trace,
     annotation_dicts,
     estimate_annotation_size,
     place_annotations,
 )
 from spinorama.plot.spinorama import plot_spinorama
+from scripts.plot_cea2034_annotations import show_annotations
 
 
 class AnnotationLayoutTests(unittest.TestCase):
@@ -31,6 +37,61 @@ class AnnotationLayoutTests(unittest.TestCase):
         long = estimate_annotation_size("-1.43 db/oct sm 0.24")
         self.assertGreater(long[0], short[0])
         self.assertEqual(short[1], long[1])
+
+    def test_log_annotation_anchor_uses_axis_coordinate(self):
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(1, 4),
+            y_ranges={"y": (0, 1)},
+            x_scale="log",
+        )
+        anchor = _anchor_pixel(
+            AnnotationRequest("log", 2.5, 0.5, "y", "label", "black"), geometry
+        )
+
+        self.assertAlmostEqual(anchor[0], 400.0)
+
+    def test_placements_keep_label_rectangles_inside_plot_domain(self):
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(1, 4),
+            y_ranges={"y": (0, 1)},
+            x_domain=(0.0, 0.8),
+        )
+        placement = place_annotations(
+            [AnnotationRequest("edge", 4, 0.5, "y", "edge label", "black")], geometry
+        )[0]
+        left, top, right, bottom = geometry.plot_rect
+        rect = _rect_from_center(placement.center, placement.size)
+
+        self.assertGreaterEqual(rect[0], left)
+        self.assertLessEqual(rect[2], right)
+        self.assertGreaterEqual(rect[1], top)
+        self.assertLessEqual(rect[3], bottom)
+
+    def test_grid_alignment_is_a_soft_preference(self):
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(0, 1),
+            y_ranges={"y": (0, 1)},
+            grid_y={"y": (0.6,)},
+        )
+        request = AnnotationRequest("grid", 0.5, 0.5, "y", "grid label", "black")
+        placement = place_annotations([request], geometry)[0]
+
+        self.assertFalse(placement.hidden)
+        rect = _rect_from_center(placement.center, placement.size)
+        grid_pixel = 220.0
+        self.assertLessEqual(
+            min(abs(edge - grid_pixel) for edge in (rect[1], (rect[1] + rect[3]) / 2, rect[3])),
+            8.0,
+        )
 
     def test_places_labels_without_overlapping_each_other(self):
         requests = [
@@ -175,6 +236,58 @@ class AnnotationLayoutTests(unittest.TestCase):
         for placement in placements:
             self.assertLess(placement.center[1] + placement.size[1] / 2, placement.anchor[1] - 10)
 
+    def test_rejects_curve_segment_crossing_label_between_sampled_points(self):
+        rect = (100.0, 100.0, 200.0, 140.0)
+        points = ((40.0, 70.0), (260.0, 170.0))
+        segments = (((40.0, 70.0), (260.0, 170.0)),)
+
+        self.assertIsNone(_curve_penalty(rect, points, segments))
+
+    def test_rejects_leader_that_tracks_curve_after_anchor(self):
+        anchor = (400.0, 260.0)
+        curve = (((400.0, 260.0), (400.0, 100.0)),)
+
+        self.assertTrue(_leader_crosses_trace(anchor, (400.0, 180.0), curve))
+        self.assertFalse(_leader_crosses_trace(anchor, (500.0, 180.0), curve))
+
+    def test_solver_uses_longer_leader_when_short_path_tracks_curve(self):
+        request = AnnotationRequest(
+            key="curve",
+            x=0.5,
+            y=0.5,
+            yref="y",
+            text="curve label",
+            color="blue",
+            preferred_lanes=("upper",),
+        )
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(0, 1),
+            y_ranges={"y": (0, 1)},
+        )
+        anchor = (400.0, 260.0)
+        placements = place_annotations(
+            [request],
+            geometry,
+            trace_segments=((anchor, (400.0, 60.0), "y", "curve"),),
+        )
+
+        placement = placements[0]
+        self.assertFalse(placement.hidden)
+        self.assertGreaterEqual(math.dist(placement.anchor, placement.center), 48)
+        self.assertFalse(
+            _leader_crosses_trace(placement.anchor, placement.center, ((anchor, (400.0, 60.0)),))
+        )
+        annotation = annotation_dicts(
+            [placement], visible=True, geometry=geometry
+        )[0]
+        self.assertEqual(annotation["standoff"], 12.0)
+        self.assertEqual(annotation["axref"], "x")
+        self.assertEqual(annotation["ayref"], "y")
+        self.assertNotEqual(annotation["ay"], placement.request.y)
+
     def test_suppresses_annotation_when_plot_is_smaller_than_label(self):
         geometry = AnnotationGeometry(
             width=80,
@@ -197,6 +310,15 @@ class AnnotationLayoutTests(unittest.TestCase):
         self.assertTrue(
             annotation_dicts([placement], visible=True)[0]["name"].startswith("layout-hidden:")
         )
+
+    def test_show_annotations_preserves_solver_hidden_labels(self):
+        visible = SimpleNamespace(name="spinorama:visible", visible=False)
+        hidden = SimpleNamespace(name="layout-hidden:unplaced", visible=False)
+        figure = SimpleNamespace(layout=SimpleNamespace(annotations=[visible, hidden]))
+
+        self.assertEqual(show_annotations(figure), 1)
+        self.assertTrue(visible.visible)
+        self.assertFalse(hidden.visible)
 
 
 class SpinoramaAnnotationIntegrationTests(unittest.TestCase):
@@ -223,7 +345,7 @@ class SpinoramaAnnotationIntegrationTests(unittest.TestCase):
         self.assertEqual(figure.layout.margin.b, 10)
         self.assertEqual(len(figure.layout.annotations), 6)
         self.assertTrue(
-            all(annotation.axref == "x domain" for annotation in figure.layout.annotations)
+            all(annotation.axref == "x" for annotation in figure.layout.annotations)
         )
         self.assertTrue(all(annotation.bgcolor for annotation in figure.layout.annotations))
         self.assertTrue(any(annotation.ay > 0 for annotation in figure.layout.annotations))

@@ -22,7 +22,7 @@ Point = tuple[float, float]
 
 @dataclass(frozen=True)
 class AnnotationRequest:
-    """A data-space annotation anchor plus its layout preferences."""
+    """An axis-space annotation anchor plus its layout preferences."""
 
     key: str
     x: float
@@ -52,14 +52,44 @@ class AnnotationGeometry:
     x_scale: str = "linear"
     font_size: float = 10
     label_pad: float = 5
+    x_domain: tuple[float, float] = (0.0, 1.0)
+    y_domain: tuple[float, float] = (0.0, 1.0)
+    grid_x: tuple[float, ...] = ()
+    grid_y: dict[str, tuple[float, ...]] | None = None
 
     @property
     def plot_rect(self) -> Rect:
-        left = float(self.margin.get("l", 0))
-        top = float(self.margin.get("t", 0))
-        right = self.width - float(self.margin.get("r", 0))
-        bottom = self.height - float(self.margin.get("b", 0))
+        inner_left = float(self.margin.get("l", 0))
+        inner_top = float(self.margin.get("t", 0))
+        inner_right = self.width - float(self.margin.get("r", 0))
+        inner_bottom = self.height - float(self.margin.get("b", 0))
+        inner_width = inner_right - inner_left
+        inner_height = inner_bottom - inner_top
+        x_start, x_end = self.x_domain
+        y_start, y_end = self.y_domain
+        left = inner_left + x_start * inner_width
+        right = inner_left + x_end * inner_width
+        # Plotly axis domains are normalized from the bottom, while pixels
+        # are normalized from the top.
+        top = inner_top + (1.0 - y_end) * inner_height
+        bottom = inner_top + (1.0 - y_start) * inner_height
         return left, top, right, bottom
+
+    def grid_x_pixels(self) -> tuple[float, ...]:
+        left, _, right, _ = self.plot_rect
+        return tuple(
+            _value_to_pixel(value, self.x_range, left, right) for value in self.grid_x
+        )
+
+    def grid_y_pixels(self, yref: str) -> tuple[float, ...]:
+        if self.grid_y is None:
+            return ()
+        _, top, _, bottom = self.plot_rect
+        values = self.grid_y.get(yref, ())
+        value_range = self.y_ranges.get(yref)
+        if value_range is None:
+            return ()
+        return tuple(_value_to_pixel(value, value_range, bottom, top) for value in values)
 
 
 @dataclass(frozen=True)
@@ -82,6 +112,11 @@ _LANE_FRACTIONS = {
 }
 
 _TRACE_CLEARANCE = 14.0
+_LEADER_START_CLEARANCE = 12.0
+_LEADER_TRACE_CLEARANCE = 3.0
+_MIN_LEADER_LENGTH = 48.0
+_GRID_ALIGNMENT_TOLERANCE = 8.0
+_GRID_ALIGNMENT_WEIGHT = 0.35
 
 
 def estimate_annotation_size(
@@ -176,12 +211,13 @@ def _point_in_rect(point: Point, rect: Rect) -> bool:
     return rect[0] < point[0] < rect[2] and rect[1] < point[1] < rect[3]
 
 
-def _segment_crosses_rect(start: Point, end: Point, rect: Rect) -> bool:
-    # An arrow that starts inside a label is already attached to that label's
-    # curve; do not make the fallback solver hide every candidate in that case.
-    if _point_in_rect(start, rect):
-        return False
-    if _point_in_rect(end, rect):
+def _point_in_or_on_rect(point: Point, rect: Rect) -> bool:
+    return rect[0] <= point[0] <= rect[2] and rect[1] <= point[1] <= rect[3]
+
+
+def _segment_intersects_rect(start: Point, end: Point, rect: Rect) -> bool:
+    """Return whether a line segment touches or crosses a rectangle."""
+    if _point_in_or_on_rect(start, rect) or _point_in_or_on_rect(end, rect):
         return True
     edges = (
         ((rect[0], rect[1]), (rect[2], rect[1])),
@@ -192,6 +228,96 @@ def _segment_crosses_rect(start: Point, end: Point, rect: Rect) -> bool:
     return any(_segments_intersect(start, end, edge_start, edge_end) for edge_start, edge_end in edges)
 
 
+def _point_to_segment_distance(point: Point, start: Point, end: Point) -> float:
+    segment_x = end[0] - start[0]
+    segment_y = end[1] - start[1]
+    segment_length_squared = segment_x * segment_x + segment_y * segment_y
+    if segment_length_squared == 0:
+        return math.dist(point, start)
+    projection = (
+        (point[0] - start[0]) * segment_x + (point[1] - start[1]) * segment_y
+    ) / segment_length_squared
+    projection = min(1.0, max(0.0, projection))
+    closest = (start[0] + projection * segment_x, start[1] + projection * segment_y)
+    return math.dist(point, closest)
+
+
+def _segment_distance(
+    first_start: Point,
+    first_end: Point,
+    second_start: Point,
+    second_end: Point,
+) -> float:
+    if _segments_intersect(first_start, first_end, second_start, second_end):
+        return 0.0
+    return min(
+        _point_to_segment_distance(first_start, second_start, second_end),
+        _point_to_segment_distance(first_end, second_start, second_end),
+        _point_to_segment_distance(second_start, first_start, first_end),
+        _point_to_segment_distance(second_end, first_start, first_end),
+    )
+
+
+def _leader_crosses_trace(
+    anchor: Point,
+    center: Point,
+    trace_segments: Sequence[tuple[Point, Point]],
+) -> bool:
+    """Return whether the visible part of a leader is too close to a curve.
+
+    The first few pixels are intentionally exempt: every valid leader starts
+    on its own curve. The rest of the arrow must clear the curve polyline
+    supplied by the caller.
+    """
+
+    leader_length = math.dist(anchor, center)
+    if leader_length <= _LEADER_START_CLEARANCE:
+        return True
+    fraction = _LEADER_START_CLEARANCE / leader_length
+    visible_start = (
+        anchor[0] + (center[0] - anchor[0]) * fraction,
+        anchor[1] + (center[1] - anchor[1]) * fraction,
+    )
+    return any(
+        _segment_distance(visible_start, center, trace_start, trace_end)
+        <= _LEADER_TRACE_CLEARANCE
+        for trace_start, trace_end in trace_segments
+    )
+
+
+def _leader_curve_penalty(
+    anchor: Point,
+    center: Point,
+    trace_segments: Sequence[tuple[Point, Point]],
+) -> float:
+    """Penalize near misses and crossings when a global route is impossible."""
+
+    leader_length = math.dist(anchor, center)
+    if leader_length <= _LEADER_START_CLEARANCE:
+        return 1000.0
+    fraction = _LEADER_START_CLEARANCE / leader_length
+    visible_start = (
+        anchor[0] + (center[0] - anchor[0]) * fraction,
+        anchor[1] + (center[1] - anchor[1]) * fraction,
+    )
+    penalty = 0.0
+    for trace_start, trace_end in trace_segments:
+        distance = _segment_distance(visible_start, center, trace_start, trace_end)
+        if distance <= _LEADER_TRACE_CLEARANCE:
+            penalty += 100.0
+        elif distance < 20.0:
+            penalty += 20.0 - distance
+    return penalty
+
+
+def _segment_crosses_rect(start: Point, end: Point, rect: Rect) -> bool:
+    # An arrow that starts inside a label is already attached to that label's
+    # curve; do not make the fallback solver hide every candidate in that case.
+    if _point_in_rect(start, rect):
+        return False
+    return _segment_intersects_rect(start, end, rect)
+
+
 def _value_to_pixel(
     value: float, value_range: tuple[float, float], start: float, end: float
 ) -> float:
@@ -200,6 +326,16 @@ def _value_to_pixel(
         return (start + end) / 2
     fraction = (value - minimum) / (maximum - minimum)
     return start + fraction * (end - start)
+
+
+def _pixel_to_value(
+    pixel: float, value_range: tuple[float, float], start: float, end: float
+) -> float:
+    minimum, maximum = value_range
+    if start == end:
+        return minimum
+    fraction = (pixel - start) / (end - start)
+    return minimum + fraction * (maximum - minimum)
 
 
 def _anchor_pixel(request: AnnotationRequest, geometry: AnnotationGeometry) -> Point:
@@ -226,6 +362,17 @@ def _candidate_centers(
     if x_min > x_max or y_min > y_max:
         return
 
+    def add_candidate(center: Point, lane_rank: int):
+        clamped = (
+            min(x_max, max(x_min, center[0])),
+            min(y_max, max(y_min, center[1])),
+        )
+        key = (round(clamped[0]), round(clamped[1]))
+        if key in seen:
+            return None
+        seen.add(key)
+        return clamped, lane_rank
+
     # Try short, local offsets before the full semantic lanes. The solver's
     # direction penalty decides whether an above/below offset is valid, while
     # the distance term keeps arrows compact whenever space permits it.
@@ -233,7 +380,7 @@ def _candidate_centers(
     lane_names.extend(name for name in _LANE_FRACTIONS if name not in lane_names)
     seen: set[tuple[int, int]] = set()
 
-    vertical_offset = max(24.0, size[1] / 2 + _TRACE_CLEARANCE + 6)
+    vertical_offset = max(_MIN_LEADER_LENGTH, size[1] / 2 + _TRACE_CLEARANCE + 6)
     local_offsets = (
         (0, -vertical_offset),
         (0, vertical_offset),
@@ -249,24 +396,39 @@ def _candidate_centers(
         (96, 2 * vertical_offset),
     )
     for index, (dx, dy) in enumerate(local_offsets):
-        center = (
-            min(x_max, max(x_min, anchor[0] + dx)),
-            min(y_max, max(y_min, anchor[1] + dy)),
+        candidate = add_candidate(
+            (anchor[0] + dx, anchor[1] + dy), len(lane_names) + index
         )
-        key = (round(center[0]), round(center[1]))
-        if key not in seen:
-            seen.add(key)
-            yield center, len(lane_names) + index
+        if candidate is not None:
+            yield candidate
+
+    base_x = (anchor[0], anchor[0] - 48, anchor[0] + 48, anchor[0] - 96, anchor[0] + 96)
+    base_y = (
+        anchor[1] - vertical_offset,
+        anchor[1] + vertical_offset,
+        anchor[1] - 2 * vertical_offset,
+        anchor[1] + 2 * vertical_offset,
+    )
+    for grid_x in geometry.grid_x_pixels():
+        for center_x in (grid_x, grid_x - label_width / 2, grid_x + label_width / 2):
+            for center_y in base_y:
+                candidate = add_candidate((center_x, center_y), 1)
+                if candidate is not None:
+                    yield candidate
+    for grid_y in geometry.grid_y_pixels(request.yref):
+        for center_y in (grid_y, grid_y - label_height / 2, grid_y + label_height / 2):
+            for center_x in base_x:
+                candidate = add_candidate((center_x, center_y), 1)
+                if candidate is not None:
+                    yield candidate
 
     for lane_rank, lane_name in enumerate(lane_names):
         fraction = _LANE_FRACTIONS[lane_name]
         lane_y = top + fraction * (bottom - top)
         for dx in (0, -100, 100, -190, 190):
-            center = (min(x_max, max(x_min, anchor[0] + dx)), min(y_max, max(y_min, lane_y)))
-            key = (round(center[0]), round(center[1]))
-            if key not in seen:
-                seen.add(key)
-                yield center, lane_rank
+            candidate = add_candidate((anchor[0] + dx, lane_y), lane_rank)
+            if candidate is not None:
+                yield candidate
 
 def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> float:
     if direction == "above":
@@ -276,7 +438,11 @@ def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> f
     return 0.0
 
 
-def _curve_penalty(rect: Rect, points: Sequence[Point]) -> float | None:
+def _curve_penalty(
+    rect: Rect,
+    points: Sequence[Point],
+    segments: Sequence[tuple[Point, Point]] = (),
+) -> float | None:
     penalty = 0.0
     clearance_rect = _expand_rect(rect, _TRACE_CLEARANCE)
     for point in points:
@@ -285,7 +451,32 @@ def _curve_penalty(rect: Rect, points: Sequence[Point]) -> float | None:
             return None
         if _rect_overlap(clearance_rect, point_rect) > 0:
             penalty += 20.0
+    for start, end in segments:
+        if _segment_intersects_rect(start, end, rect):
+            return None
+        if _segment_intersects_rect(start, end, clearance_rect):
+            penalty += 20.0
     return penalty
+
+
+def _grid_alignment_penalty(
+    rect: Rect,
+    x_lines: Sequence[float],
+    y_lines: Sequence[float],
+) -> float:
+    """Softly prefer a label edge or center to sit on a visible grid line."""
+
+    def axis_penalty(edges: tuple[float, float, float], lines: Sequence[float]) -> float:
+        if not lines:
+            return 0.0
+        distance = min(abs(edge - line) for edge in edges for line in lines)
+        return max(0.0, distance - _GRID_ALIGNMENT_TOLERANCE)
+
+    x_edges = (rect[0], (rect[0] + rect[2]) / 2, rect[2])
+    y_edges = (rect[1], (rect[1] + rect[3]) / 2, rect[3])
+    return _GRID_ALIGNMENT_WEIGHT * (
+        axis_penalty(x_edges, x_lines) + axis_penalty(y_edges, y_lines)
+    )
 
 
 def place_annotations(
@@ -293,17 +484,26 @@ def place_annotations(
     geometry: AnnotationGeometry,
     trace_points: Iterable[tuple[float, float, str]] = (),
     reserved_rects: Iterable[Rect] = (),
+    trace_segments: Iterable[
+        tuple[Point, Point, str] | tuple[Point, Point, str, str]
+    ] = (),
 ) -> list[PlacedAnnotation]:
-    """Place annotations without overlapping labels or reserved regions.
+    """Place annotations without overlapping labels, curves, or leaders.
 
     Requests are placed by descending priority. Actual contact with a trace,
-    existing label, or reserved region makes a candidate invalid; a small
+    existing label, or reserved region makes a candidate invalid. Leaders
+    also need to clear the trace after their attachment point. A small
     clearance corridor around traces contributes a soft penalty. This keeps
     labels readable while preserving the strongest annotations when space is
     scarce.
     """
 
     points_by_axis: dict[str, list[Point]] = {axis: [] for axis in geometry.y_ranges}
+    segments_by_axis: dict[str, list[tuple[Point, Point]]] = {
+        axis: [] for axis in geometry.y_ranges
+    }
+    segments_by_curve: dict[tuple[str, str], list[tuple[Point, Point]]] = {}
+    all_trace_segments: list[tuple[Point, Point]] = []
     left, top, right, bottom = geometry.plot_rect
     for x, y, yref in trace_points:
         if yref not in geometry.y_ranges or not math.isfinite(x) or not math.isfinite(y):
@@ -316,6 +516,19 @@ def place_annotations(
         y_pixel = _value_to_pixel(y, (y_min, y_max), bottom, top)
         if left <= x_pixel <= right and top <= y_pixel <= bottom:
             points_by_axis[yref].append((x_pixel, y_pixel))
+    for trace_segment in trace_segments:
+        if len(trace_segment) not in (3, 4):
+            continue
+        start, end, yref = trace_segment[:3]
+        if yref not in geometry.y_ranges:
+            continue
+        if not all(math.isfinite(value) for value in (*start, *end)):
+            continue
+        segments_by_axis[yref].append((start, end))
+        all_trace_segments.append((start, end))
+        if len(trace_segment) == 4:
+            curve_key = trace_segment[3]
+            segments_by_curve.setdefault((yref, curve_key), []).append((start, end))
 
     reserved = tuple(reserved_rects)
     placed: list[PlacedAnnotation | None] = [None] * len(requests)
@@ -340,31 +553,74 @@ def place_annotations(
         anchor = _anchor_pixel(request, geometry)
         size = estimate_annotation_size(request.text, geometry.font_size, geometry.label_pad)
         best: tuple[float, Point, Rect] | None = None
-        for center, lane_rank in _candidate_centers(request, anchor, size, geometry):
-            rect = _rect_from_center(center, size)
-            if any(_rect_overlap(rect, other) > 0 for other in occupied):
-                continue
-            if any(_rect_overlap(rect, other) > 0 for other in reserved):
-                continue
-            if any(_segments_intersect(anchor, center, arrow_start, arrow_end) for arrow_start, arrow_end in arrows):
-                continue
-            if any(_segment_crosses_rect(anchor, center, other) for other in occupied):
-                continue
-            if any(_segment_crosses_rect(arrow_start, arrow_end, rect) for arrow_start, arrow_end in arrows):
-                continue
+        axis_segments = segments_by_axis.get(request.yref, [])
+        leader_segments = segments_by_curve.get((request.yref, request.key), axis_segments)
+        candidates = tuple(_candidate_centers(request, anchor, size, geometry))
+        for require_global_clearance in (True, False):
+            phase_best: tuple[float, Point, Rect] | None = None
+            for center, lane_rank in candidates:
+                rect = _rect_from_center(center, size)
+                distance = math.dist(center, anchor)
+                if distance < _MIN_LEADER_LENGTH:
+                    continue
+                if not (
+                    left <= rect[0]
+                    and rect[2] <= right
+                    and top <= rect[1]
+                    and rect[3] <= bottom
+                ):
+                    continue
+                if any(_rect_overlap(rect, other) > 0 for other in occupied):
+                    continue
+                if any(_rect_overlap(rect, other) > 0 for other in reserved):
+                    continue
+                if any(
+                    _segments_intersect(anchor, center, arrow_start, arrow_end)
+                    for arrow_start, arrow_end in arrows
+                ):
+                    continue
+                if any(_segment_crosses_rect(anchor, center, other) for other in occupied):
+                    continue
+                if any(
+                    _segment_crosses_rect(arrow_start, arrow_end, rect)
+                    for arrow_start, arrow_end in arrows
+                ):
+                    continue
+                if require_global_clearance:
+                    if _leader_crosses_trace(anchor, center, all_trace_segments):
+                        continue
+                    leader_score = 0.0
+                else:
+                    if _leader_crosses_trace(anchor, center, leader_segments):
+                        continue
+                    leader_score = _leader_curve_penalty(
+                        anchor, center, all_trace_segments
+                    )
 
-            curve_score = _curve_penalty(rect, points_by_axis.get(request.yref, []))
-            if curve_score is None:
-                continue
-            distance = math.hypot(center[0] - anchor[0], center[1] - anchor[1])
-            score = (
-                distance
-                + lane_rank * 2.0
-                + _direction_penalty(request.preferred_direction, anchor, center)
-                + curve_score
-            )
-            if best is None or score < best[0]:
-                best = score, center, rect
+                curve_score = _curve_penalty(
+                    rect,
+                    points_by_axis.get(request.yref, []),
+                    axis_segments,
+                )
+                if curve_score is None:
+                    continue
+                score = (
+                    distance
+                    + lane_rank * 2.0
+                    + _direction_penalty(request.preferred_direction, anchor, center)
+                    + curve_score
+                    + leader_score
+                    + _grid_alignment_penalty(
+                        rect,
+                        geometry.grid_x_pixels(),
+                        geometry.grid_y_pixels(request.yref),
+                    )
+                )
+                if phase_best is None or score < phase_best[0]:
+                    phase_best = score, center, rect
+            if phase_best is not None:
+                best = phase_best
+                break
 
         if best is None:
             placed[request_index] = PlacedAnnotation(request, anchor, None, size, hidden=True)
@@ -405,11 +661,12 @@ def annotation_dicts(
             align="center",
             showarrow=True,
             arrowhead=2,
+            standoff=_LEADER_START_CLEARANCE,
             arrowcolor=request.color,
             xanchor="center",
             yanchor="middle",
-            axref="x domain" if geometry is not None else "pixel",
-            ayref=f"{request.yref} domain" if geometry is not None else "pixel",
+            axref="x" if geometry is not None else "pixel",
+            ayref=request.yref if geometry is not None else "pixel",
             visible=visible and not placement.hidden,
         )
         if placement.center is not None:
@@ -418,8 +675,15 @@ def annotation_dicts(
                 annotation["ay"] = round(placement.center[1] - placement.anchor[1])
             else:
                 left, top, right, bottom = geometry.plot_rect
-                annotation["ax"] = (placement.center[0] - left) / (right - left)
-                annotation["ay"] = (bottom - placement.center[1]) / (bottom - top)
+                annotation["ax"] = _pixel_to_value(
+                    placement.center[0], geometry.x_range, left, right
+                )
+                annotation["ay"] = _pixel_to_value(
+                    placement.center[1],
+                    geometry.y_ranges[request.yref],
+                    bottom,
+                    top,
+                )
         else:
             annotation["ax"] = 0
             annotation["ay"] = 0

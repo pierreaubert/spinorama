@@ -37,6 +37,7 @@ from spinorama.plot.axes import (
 from spinorama.plot.annotations import (
     AnnotationGeometry,
     AnnotationRequest,
+    _value_to_pixel,
     annotation_dicts,
     place_annotations,
 )
@@ -49,6 +50,32 @@ from spinorama.plot.theme import (
     UNIFORM_COLORS,
     label_short,
 )
+
+
+def _log_grid_values(value_range: tuple[float, float]) -> tuple[float, ...]:
+    """Return log-axis coordinates for the visible 1..9 grid lines."""
+
+    minimum, maximum = value_range
+    values = []
+    for decade in range(math.floor(minimum) - 1, math.ceil(maximum) + 1):
+        for multiplier in range(1, 10):
+            value = decade + math.log10(multiplier)
+            if minimum <= value <= maximum:
+                values.append(value)
+    return tuple(values)
+
+
+def _axis_tick_values(axis, value_range: tuple[float, float]) -> tuple[float, ...]:
+    tickvals = getattr(axis, "tickvals", None)
+    if tickvals:
+        return tuple(float(value) for value in tickvals)
+    dtick = getattr(axis, "dtick", None)
+    if not isinstance(dtick, (int, float)) or dtick <= 0:
+        return ()
+    minimum, maximum = value_range
+    first = math.ceil(minimum / dtick) * dtick
+    count = math.floor((maximum - first) / dtick) + 1
+    return tuple(first + index * dtick for index in range(max(0, count)))
 
 
 def plot_spinorama_traces(
@@ -269,18 +296,64 @@ def plot_spinorama_annotation(
         x_range=x_range,
         y_ranges={"y": y_range, "y2": y2_range},
         x_scale="log",
+        x_domain=tuple(fig.layout.xaxis.domain or (0.0, 1.0)),
+        y_domain=tuple(fig.layout.yaxis.domain or (0.0, 1.0)),
+        grid_x=_log_grid_values(x_range),
+        grid_y={
+            "y": _axis_tick_values(fig.layout.yaxis, y_range),
+            "y2": _axis_tick_values(fig.layout.yaxis2, y2_range),
+        },
     )
     trace_points = []
+    trace_segments = []
     for trace in fig.data:
         if trace.x is None or trace.y is None:
             continue
         trace_yref = "y2" if trace.yaxis == "y2" else "y"
+        previous_point = None
         for x, y in zip(trace.x, trace.y, strict=False):
             try:
-                trace_points.append((float(x), float(y), trace_yref))
+                raw_x = float(x)
+                raw_y = float(y)
             except (TypeError, ValueError):
+                previous_point = None
                 continue
-    placements = place_annotations(requests, geometry, trace_points=trace_points)
+            if not math.isfinite(raw_x) or not math.isfinite(raw_y) or (
+                geometry.x_scale == "log" and raw_x <= 0
+            ):
+                previous_point = None
+                continue
+            x_value = math.log10(raw_x) if geometry.x_scale == "log" else raw_x
+            x_pixel = _value_to_pixel(
+                x_value,
+                geometry.x_range,
+                geometry.plot_rect[0],
+                geometry.plot_rect[2],
+            )
+            y_min, y_max = geometry.y_ranges[trace_yref]
+            y_pixel = _value_to_pixel(
+                raw_y,
+                (y_min, y_max),
+                geometry.plot_rect[3],
+                geometry.plot_rect[1],
+            )
+            current_point = (x_pixel, y_pixel)
+            if previous_point is not None:
+                trace_segments.append(
+                    (previous_point, current_point, trace_yref, str(trace.name or ""))
+                )
+            previous_point = current_point
+            if (
+                geometry.plot_rect[0] <= x_pixel <= geometry.plot_rect[2]
+                and geometry.plot_rect[1] <= y_pixel <= geometry.plot_rect[3]
+            ):
+                trace_points.append((raw_x, raw_y, trace_yref))
+    placements = place_annotations(
+        requests,
+        geometry,
+        trace_points=trace_points,
+        trace_segments=trace_segments,
+    )
     for annotation in annotation_dicts(
         placements,
         visible=FLAG_FEATURE_VISIBLE,
