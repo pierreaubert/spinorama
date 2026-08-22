@@ -1,62 +1,63 @@
 ---
 title: "FAQ"
-date: 2026-03-12
+date: 2026-08-22
 ---
 
-# Can I trust the data?
+## Can I trust the data?
 
-The measurements are collected on the internet. Some are of very high quality and done by independant reviewers, some are of medium or low quality or provided by vendors.
+Treat the data as evidence, not as a guarantee. Measurements come from
+independent reviewers, research labs, and manufacturers, with different rooms,
+equipment, processing, and reporting practices. The measurement quality field
+helps you filter the website results, but it cannot remove every source of
+uncertainty.
 
-You can filter the results by clicking the wheel on the website near the search bar.
+## How should I compare measurement quality?
 
-![How to filter on high quality measurements](https://spinorama.org/help_pictures/help_select_high_quality.jpg)
+- **High** generally means a Klippel NFS or a large anechoic-chamber
+  measurement.
+- **Medium** generally means a smaller or less controlled measurement setup,
+  often with reduced confidence at low frequencies.
+- **Low** includes vendor data, heavily processed data, or measurements made
+  without a fully anechoic setup.
 
-## How precise are the measurement data?
+Even a high-quality measurement may be smoothed. Compare like with like and
+check the source, format, smoothing, and frequency range before drawing a
+conclusion.
 
-- **High quality data**: provided by a Klippel NFS or measured in a large anechoic chamber.
+## How precise are the scores?
 
-  - Data precision is around 1%.
-  - Smoothing post measurement can be done by the Klippel software so you cannot necessary compare two Klippel measurements.
-- **Medium quality data**: medium size anechoc chamber, data precision decreases &lt;500Hz. By how much is unknown.
-- **Low quality data**:
+Scores inherit the limitations of their input data. Smoothing, missing angles,
+different calibration conventions, and incomplete bass data can change a
+result. Avoid treating small score differences as meaningful, and do not use a
+preference score to infer distortion, compression, maximum output, reliability,
+or room response.
 
-  - measured without an anechoic chamber but using windowing for high frequency and plane ground method for low frequency. Precision can be as good as a Klippel measurements.
-  - provided by vendors: usually smoothed data (less measurement points, or data is smoothed, or quality is just unknown).
+## Can the data tell me which speaker to buy?
 
-## Impact of smoothed or poor quality measurements.
+It can narrow a choice, especially when you value smooth on-axis response and
+predictable directivity. Also consider price, placement, listening distance,
+maximum level, bass requirements, warranty, service, and your room. Read
+[How to understand Spinorama measurements](01_intro.qmd) for context.
 
-Smoothing <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037">generates on average</a> a higher score by `+0.7` with respect to a score computed from the raw data. Note that the `0.7` can change depending on the amount of smoothing and other factors. Personally I never compare a score computed with high quality data with something else.
+## Should I use room EQ?
 
-## How precise are the computed data?
+Room EQ can improve tonal balance, especially below the transition frequency
+where room modes dominate. Correct the listening position, speaker placement,
+and room problems first. Equalization cannot repair severe directivity errors,
+distortion, or insufficient maximum output.
 
-- Generally precision depends on the quality of the input data. If you want to compare 2 measurements, you should select them from the same category.
-- Score computations
+## What does focused or broad directivity mean?
 
-  - The score is not significant &pm;0.5. It means that 2 speakers  which have a difference in score less than 1 are in the same broad bucket. No point to look at the decimals.
+Focused speakers send less energy toward room boundaries and can work well in
+reflective rooms, but they usually have a smaller listening area. Broad or
+constant-directivity speakers can sound more spacious, but their room
+reflections matter more. The best choice depends on room treatment, distance,
+and listening position.
 
-- Anechoic EQ computations
+## How can I contribute?
 
-  - EQ is for one measurement. Since there are variations speaker to speaker, you should not look at very sharp or very precise EQ. How much variation between speakers? This is very brand/model dependant. Some manufactures provide tolerance like Neumann or Genelec.
-
-  - IIR eq (aka PEQs) are not working if the phase is varying a lot over some frequency range. Group delay (phase derivative) must be relatively flat. That may explain why EQing around the crossover frequency does not necessary give excellent results. On this other side, we are less sensitive to phase anomaly than frequency anomaly.
-
-# Can I use this data to decide which speaker to buy
-
-See dedicated section below.
-
-# Should I use room EQ?
-
-Absolutly! Dirac, REW, Audyssey etc will provide audible improvement to the sound, in general making it flatter (so more tonally correct). Almost all AVR have one built-in. All computers and most phones can do  it with a built-in or free application.
-
-# Focus or broad radiation pattern?
-
-Speakers do not radiate uniformly. Some speakers are designed to be very focus: they minimise the reflections but the sweet spot is very tiny. Some speakers are designed to diffuse sound, research proved it is  something that people usually like.
-
-- If you are near field, for example on a desk, low directivity works well.
-- The farther from the speaker you are, the more good directivity becomes important.
-- If you live in a modern flat with hard walls and floor to ceiling windows, looking for speakers with a narrow directivity can be a very good way to solve room issues. You can also think about speakers with a large and smooth horizontal directivity and with a more narrow vertical directivity. They are likely to have less bounce on the frequency response but the sweet spot will be smaller.
-
-# How can I contribute?
-
-- This website is generated from <a href="https://github.com/pierreaubert/spinorama">this code</a> and data from various websites (see below). You are very welcome to contribute.
-- You can provide feedback (esp. on bugs, UX, data errors) or add more datas at <a href="https://github.com/pierreaubert/spinorama/issues">github</a> or in this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a> at ASR.
+The project is open source on [GitHub](https://github.com/pierreaubert/spinorama).
+Use the [metadata manager](03_metadata.qmd) to add or update speaker metadata,
+and open an issue for bugs, incorrect data, missing measurements, or UX
+feedback. Include the measurement source and relevant file paths, but do not
+upload copyrighted or private material without permission.

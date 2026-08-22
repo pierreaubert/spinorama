@@ -1,172 +1,164 @@
 ---
-title: "How to install the software?"
-date: 2026-04-23
+title: "Install and run Spinorama"
+date: 2026-08-22
+abstract: >
+  Install the Spinorama development environment, metadata manager, command-line
+  tools, and documentation dependencies.
 ---
 
-# Prerequisites
+This project has two audiences: people who want to run the analysis tools and
+people who want to develop or contribute data. The setup script creates the
+complete environment. A smaller installation is also provided for users who
+only need Python analysis or the metadata manager.
 
-| Tool | Version | Notes |
-|------|---------|-------|
-| Python | 3.12+ | Required |
-| Node.js / npm | LTS | Required |
-| git | any | Required |
-| Rust / cargo | latest | Optional, for the Rust scoring extension |
-| maturin | latest | Optional, `pip install maturin` |
+## Requirements
 
-# How to use the software?
+| Tool | Version | Required for |
+|---|---|---|
+| Python | 3.12 or 3.13 (`>=3.12,<3.14`) | Python tools and metadata manager |
+| Git | Any recent version | Source checkout and contributions |
+| Node.js/npm | LTS | Website build and JavaScript tests |
+| Rust/cargo | Current stable | Optional scoring extension |
+| maturin | Current | Optional Rust extension build |
+| Quarto | Current | Documentation build |
 
-## Linux or Mac user
+## Complete setup
 
-First install a few packages:
+### Linux and macOS
 
-``` {.shell}
-apt install imagemagick npm
-```
+Clone the repository and run the setup script from its root:
 
-On a Mac you can replace all `apt` calls by `brew`.
-
-### Using python3, ipython and Jupyter-Lab
-
-``` {.shell}
-pip install -r requirements.txt
-```
-
-pip may also be pip3 depending on your system.
-
-``` {.shell}
-export PYTHONPATH=src:src/website
-jupyter-lab &
-```
-
-Your browser will open, go to _experiments_ directory and click on _spinorama.ipynb_ and play around.
-
-## Windows (PowerShell)
-
-Install [Python 3.12](https://www.python.org/downloads/),
-[Node.js](https://nodejs.org/) and [git](https://git-scm.com/) manually, then
-run:
-
-``` {.powershell}
-.\scripts\setup.ps1
-```
-
-The script automatically sets the `PYTHONUTF8=1` environment variable so that Python reads files as UTF-8 by default (required on Windows).
-
-## How to develop the software?
-
-You are very welcome to submit pull requests. Note that the license is GPLv3.
-
-Start with launching the setup script: (maybe as root if you need to install some packages)
-
-```  {.shell}
+```{.shell}
+git clone https://github.com/pierreaubert/spinorama.git
+cd spinorama
 ./scripts/setup.sh
 ```
 
-If it doesn't work out of the box which is likely, please go step by step:
+On Linux the script uses `apt` for system packages; on macOS it uses Homebrew.
+It creates `.venv`, installs the Python requirement files, installs Node
+dependencies, downloads third-party assets, and builds the optional native
+extensions when their toolchains are available.
 
-```  {.shell}
-pip install -r requirements.txt
-pip install -r requirements-test.txt
-pip install -r requirements-dev.txt
-```
+Activate the environment in every new shell:
 
-For linting the python, html and javascript code or generating helpers:
-
-```  {.shell}
-npm install .
+```{.shell}
+source .venv/bin/activate
+export PYTHONPATH="$PWD/src:$PWD/src/website${PYTHONPATH:+:$PYTHONPATH}"
 ```
 
-Please add tests and run them.
-For Python files:
+The `PYTHONPATH` setting is needed because the repository uses a `src` layout
+and is normally run from a checkout rather than an installed wheel.
+
+### Windows
+
+Install [Python 3.12](https://www.python.org/downloads/),
+[Node.js](https://nodejs.org/), and [Git](https://git-scm.com/), then run:
+
+```powershell
+.\scripts\setup.ps1
 ```
-export PYTHONPATH=src
-LC_ALL=en_US.UTF-8 pytest tests
+
+Activate the environment and set the import path in each PowerShell session:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+$env:PYTHONPATH = "$PWD\src;$PWD\src\website"
 ```
-and for javascript files:
+
+The setup script also enables UTF-8 mode for Python on Windows.
+
+## Smaller Python setup
+
+If the system dependencies and the repository's Python environment already
+exist, install only the runtime and metadata dependencies:
+
+```{.shell}
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt -r requirements-meta.txt
+export PYTHONPATH="$PWD/src:$PWD/src/website"
 ```
+
+Install the test and development requirements when contributing code:
+
+```{.shell}
+python -m pip install -r requirements-test.txt -r requirements-dev.txt
+```
+
+## Run the applications
+
+Open the Qt metadata manager with:
+
+```{.shell}
+python -m metaedit.app
+```
+
+Use `python -m metaedit.app --speaker "Brand Model"` to open an existing
+speaker directly. See [Add speaker metadata](03_metadata.qmd) for the complete
+workflow and Git/PR requirements.
+
+Compute graphs and preference scores from a directory of measurements with:
+
+```{.shell}
+python scripts/compute_spin.py /path/to/measurement-data
+```
+
+The command auto-detects supported formats and writes PNG graphs and a
+`*_scores.json` file. See [Compute a spinorama](08_compute_spin.qmd) for the
+format layout and options.
+
+## Run tests and checks
+
+From the repository root, with the virtual environment active:
+
+```{.shell}
+PYTHONPATH=src pytest -q tests
 npx vitest
+./scripts/check_meta.py
 ```
 
-Before committing, please check that the various checks are fine:
+Useful formatting and lint checks are:
 
-1. `./scripts/check_html.sh` : check that HTML generated files are conforming.
-2. `./scripts/check_meta.py` : check that the metadata file looks sane.
-3. `ruff format .` will take care of formatting all the python files.
-4. `ruff check src tests` also need to pass.
-5. `prettier -w src/website/*.js` will format the javascript files.
+```{.shell}
+ruff format .
+ruff check src tests
+npx prettier --check src/website
+```
 
-Most of the checks are enforced in the pre-submit which means that
-you cannot commit new codes without passing tests and checks.
+Run `./scripts/check_html.sh` when checking generated HTML. The complete
+project setup and CI may run additional checks for native extensions and
+generated assets.
 
+## Build the documentation
 
+Install Quarto separately, then install the Python packages used by the
+documentation examples:
+
+```{.shell}
+python -m pip install -r manual/requirements-quarto.txt
+quarto render manual
+```
+
+The rendered site is written to `dist/docs`. Code examples in the manual are
+currently illustrative: execution is disabled in `manual/_quarto.yml`, so
+they are not run automatically during rendering.
 
 ## Docker
 
-Build and run the project using Docker. The setup mirrors `scripts/setup.sh` inside the images (Python venv, Node dependencies, third-party assets, Cython and Rust builds).
+The repository also contains `Dockerfile.base` and `Dockerfile` for a
+containerized build:
 
-### Build images
-
-1) Build the base image (installs system packages, Node 22.x, and a recent Rust toolchain):
-
-```bash
+```{.shell}
 docker build -f Dockerfile.base -t spin-base:latest .
-```
-
-2) Build the application image (installs Python/Node deps, compiles Cython/Rust, prefetches 3rd-party assets):
-
-```bash
 docker build -f Dockerfile -t spinorama:latest .
-```
-
-### Run tests (default CMD)
-
-The application image is configured to run Python unit tests and Vitest by default:
-
-```bash
 docker run --rm -it spinorama:latest
 ```
 
-### Interactive development shell
+For an interactive shell with the checkout mounted:
 
-Start a shell inside the container, mount your working directory, and expose common ports:
-
-```bash
-docker run --rm -it \
-  -p 5173:5173 \
-  -v "$(pwd)":/work \
-  spinorama:latest bash
+```{.shell}
+docker run --rm -it -p 5173:5173 -v "$PWD":/work spinorama:latest bash
 ```
 
-Inside the container:
-
-- Python venv is already on PATH. Run tests:
-
-```bash
-pytest -q tests
-```
-
-- Start the website dev server (Vite) and access it at http://localhost:5173/:
-
-```bash
-npx vite --host 0.0.0.0 --port 5173
-```
-
-- Build/update third-party assets (already done at image build time):
-
-```bash
-sh update_3rdparties.sh
-```
-
-- Build site assets (or use the existing scripts in `package.json`):
-
-```bash
-python generate_html.py --dev --sitedev=http://localhost:8888 --skip-speakers
-# or
-npm run build
-```
-
-### Notes
-
-- The first build may take a while (downloads Node 22.x and Rust toolchain, compiles dependencies).
-- If you change Python/Node dependencies, rebuild the application image.
-- The base image (`spin-base:latest`) is shared by the main `Dockerfile` to speed up rebuilds.
+Inside the container, `pytest -q tests` runs Python tests and
+`npx vite --host 0.0.0.0 --port 5173` starts the website development server.

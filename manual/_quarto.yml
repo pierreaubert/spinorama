@@ -40,14 +40,16 @@ website:
         href: 01_intro.qmd
       - text: "Software"
       - menu:
-        - text: "How to install the software"
+        - text: "Install Spinorama"
           href: 02_install.qmd
-        - text: "How to add new speakers?"
+        - text: "Add speaker metadata"
           href: 03_metadata.qmd
-        - text: "How to use the library"
+        - text: "Use the Python library"
           href: 04_library.qmd
-        - text: "How to compute a spinorama"
+        - text: "Compute a Spinorama"
           href: 08_compute_spin.qmd
+        - text: "Digitize a measurement"
+          href: 03_digitalisation.qmd
       - text: "API"
         href: 09_api.qmd
       - text: "FAQ"
@@ -66,13 +68,15 @@ website:
       contents:
         - section: "Help for Spinorama.org"
           href: 01_intro.qmd
-        - section: "How to install the software?"
+        - section: "Install Spinorama"
           href: 02_install.qmd
-        - section: "How to add a speaker?"
+        - section: "Add speaker metadata"
           href: 03_metadata.qmd
-        - section: "How to use the library?"
+        - section: "Digitize a measurement"
+          href: 03_digitalisation.qmd
+        - section: "Use the Python library"
           href: 04_library.qmd
-        - section: "Compute a spinorama"
+        - section: "Compute a Spinorama"
           href: 08_compute_spin.qmd
         - section: "API"
           href: 09_api.qmd

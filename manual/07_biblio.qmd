@@ -1,9 +1,11 @@
 ---
 title: "Bibliography"
+date: 2026-08-22
 ---
 
 - [Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms](https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false) By Floyd E. Toole
-- Standard Method of Measurement for In-Home Loudspeakers is available for free at [CTA](https://www.cta.tech)
+- Standard Method of Measurement for In-Home Loudspeakers is available from
+  the [Consumer Technology Association](https://www.cta.tech).
 
 - A Multiple Regression Model for Predicting Loudspeaker Preference Using Objective Measurements: Part II - Development of the Model by Sean E. Olive, AES Fellow. Convention paper 6190 from the [AES](https://www.aes.org).
 - Fast Template Matching. J.P.Lewis [pdf](http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf)
@@ -16,7 +18,7 @@ title: "Bibliography"
   - Publication: 140th Convention of the Audio Engineering Society (AES 140)
   - Date: May 26, 2016
 
-- A Database of Loudspeaker Polar Radiation Measurements ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html), )
+- A Database of Loudspeaker Polar Radiation Measurements ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html)).
 
 - On the Calculation of Full and Partial Directivity Indices ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_3D3A_DICalculation.html))
   - Authors: Tylka, J. G., Choueiri, E. Y.
@@ -30,4 +32,3 @@ Some papers related to finding the optimal IIR filters: I used a different algor
 - Vairetti, Giacomo & Sena, Enzo & Catrysse, Michael & Jensen, Søren & Moonen, Marc & Waterschoot, Toon. (2018). An Automatic Design Procedure for Low-order IIR Parametric Equalizers. Journal of the Audio Engineering Society. 66. 935-952. 10.17743/jaes.2018.0049.
 
 - Equalization of loudspeaker response using balanced model truncation, Xiansheng Li, Zhibo Cai, Chengshi Zheng, et al.
-

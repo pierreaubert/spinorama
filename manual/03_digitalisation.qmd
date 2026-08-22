@@ -1,61 +1,75 @@
-# Digitization
+---
+title: "Digitize a graph image"
+date: 2026-08-22
+abstract: >
+  Convert a published Spinorama image into numeric data with WebPlotDigitizer.
+---
 
-Digitization allows to convert an image of Spinorama meaurements into numeric data that can be used in any available analysis or visualization tools. That source Spinoramas can be found for example at a resource such as [https://speakerdata2034.blogspot.com](https://speakerdata2034.blogspot.com)
+Digitization converts a graph image into numeric data that Spinorama can load,
+plot, and score. Use it when the original measurement files are unavailable.
+If raw files are available, prefer the native Klippel, Princeton, GLL, REW, or
+text workflow because it preserves more information.
 
-When digitizing data it is important to follow the convention for
-naming the dataset (names of the 5 curves that you will digitize). The
-easiest way to do it and to also get many other settings already
-pre-set for you is to start from an existing "[template](data/template Spinorama.tar)" project.
+## Prepare a WebPlotDigitizer project
 
-## Prepare source data
+The repository includes a [Spinorama template](data/template%20Spinorama.tar)
+with the expected dataset names and basic settings. WebPlotDigitizer projects
+are TAR archives, so use an archive tool that can replace a file without
+repacking it into a different format.
 
-Because WebPlotDigitizer 4.2 does not allow to change the image without resetting the project, we start with a workaround by first modifying the template file to load:
+1. Make a copy of the template.
+2. Rename the source image to `image.png`. Use the original-resolution image
+   whenever possible; avoid screenshots that have been scaled or recompressed.
+3. Replace the template's `image.png` with the source image.
+4. Open the modified archive in WebPlotDigitizer 4.2 or newer with **Load
+   Project**.
 
-1. Open the "template Spinorama.tar" file with an archive editing program, such as 7-Zip. (you can also use any other .tar Spinorama project file as a template)
+## Calibrate the axes
 
-2. Get the Spinorama image that you want to digitize and rename it to "image.png" (make sure it is a .png file)
+1. Select the existing `XY` calibration and delete it, or choose **Tweak
+   Calibration** if it already matches the image.
+2. Choose **Add Calibration**, **2D (X-Y) Plot**, and **Align Axes**.
+3. Select two reliable points on each axis. Avoid using a label or gridline
+   that is obscured; 10 kHz is often easier to identify than 20 kHz.
+4. Check the calibration with the zoomed cursor. A point near 1 kHz and 80 dB
+   is a useful sanity check for a typical Spinorama plot.
 
-3. Replace the "image.png" file inside the archive with your new image. (drag & drop works great in 7-Zip)  Note, the best source file for digitization is usually the "raw" unedited image file, so try to avoid upscaled images when raw data is available.
+If WebPlotDigitizer reports an **Uncalibrated Dataset** warning after the old
+calibration is removed, select the new `XY` axes in the dataset settings.
 
-## Do the digization
+## Extract the five curves
 
-1. Open Your modified template "template Spinorama.tar" file by choosing "Load Project" in WebPlotDigitizer 4.2 or newer. (template must already contain the correct Spinorama that you will digitize)
+The template uses the conventional curve names expected by the importers:
 
-2. Re-define the axis by:
+- `On Axis`
+- `Listening Window`
+- `Early Reflections`
+- `Sound Power`
+- `Estimated In-Room Response`
 
-- Select "XY" under "Axes", then press
-- "Delete" (or "Tweak Calibration if you prefer to make adjustments")
-- "Add Calibration"
-- "2D (X-Y) Plot"
-- "Align Axes"
-- And proceed according to instructions to step 3.
+For each dataset:
 
-3. See the image for recommended settings. Try to pick robust reference points, for example 20000Hz is often poorly defined, so I usually use 10000Hz mark as a reference.
+1. Erase the old mask and use **Pen** to draw a mask around the new curve.
+2. Run automatic extraction and adjust the color, distance, and delta-X/Y
+   settings if the result is incomplete.
+3. Remove obviously incorrect points.
+4. Add points at every visible peak and dip, especially on `On Axis` and
+   `Listening Window`.
+5. Do not invent data outside the reliable plotted range.
 
-4. If you deleted old "XY" calibration, you will get "Uncalibrated Dataset" warning. This just means that you need to select your "XY" Axes in the Dataset options.
+Save the project as a `.tar` archive with a name such as
+`Brand Model source.tar`. Saving intermediate projects is encouraged.
 
-Calibration Quality check: Place cursor at 1000Hz and 80 dB point and check that the program shows correct value under the zoomed-in cursor view.
+## Use the result
 
-Now for each of the 5 Datasets:
+For a one-off calculation, pass the directory containing the `.tar` project to
+[`compute_spin.py`](08_compute_spin.qmd):
 
-5. Re-do the "Mask
+```{.shell}
+python scripts/compute_spin.py /path/to/Brand-Model --format webplotdigitizer
+```
 
-	- press "Erase" and "Erase All"
-	- draw new mask using "Pen" tool
-
-6. Do the Automatic Extraction point extraction:
-
-	- try pressing "Run" with existing settings for Automatic Extraction. In many cases it will give a good result right away,
-	- do tweak the settings and re-run the automatic detection several times to get the best starting point. Adjust "Color", "Distance" and deltaX - deltaY values. also adjusting Mask can improve things.
-
-7. After automatic extraction, use Manual editing to fix problems and add extra points:
-
-	- Remove obviously wrong points.
-	- Try to place a point on each peak! (if there is a wavy curve, each local wave extreme should get at least one point). This is especially crucial for On-Axis and Listening Window curves.
-	- Try to remove points where data is unreliable (do not digitize data where it is known to be poorly measured)
-
-8. When done, "Save Project" as ".tar" archive where Project name is the name of the Speaker + any important details.
-
-Note, you can always save work-in-progress project and continue working on it later.
-
-When you have your .tar file, it can be imported into for example: https://github.com/pierreaubert/spinorama/
+To add the result to the project database, place the source archive under
+`datas/measurements/<speaker>/<origin>/`, then add the matching measurement
+metadata with the [metadata manager](03_metadata.qmd). The metadata manager
+records the source and format; it does not perform the digitization itself.
