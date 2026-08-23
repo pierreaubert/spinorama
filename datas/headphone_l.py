@@ -4,19 +4,19 @@
 from . import HeadphoneDatabase
 
 headphones_info_l: HeadphoneDatabase = {
-    "LTS V3": {
-        "brand": "LTS",
-        "model": "V3",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "700.00",
+    'LTS V3': {
+        "brand": 'LTS',
+        "model": 'V3',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '700.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/lts-v3-modular-headphone-review.60855/",
-                "review_published": "20250217",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/lts-v3-modular-headphone-review.60855/',
+                'review_published': '20250217',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 130.0,
             },
         },

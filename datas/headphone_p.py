@@ -4,53 +4,53 @@
 from . import HeadphoneDatabase
 
 headphones_info_p: HeadphoneDatabase = {
-    "PSB M4U 1": {
-        "brand": "PSB",
-        "model": "M4U 1",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "230.00",
+    'PSB M4U 1': {
+        "brand": 'PSB',
+        "model": 'M4U 1',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '230.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-m4u-1-review-headphone.21399/",
-                "review_published": "20210316",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/psb-m4u-1-review-headphone.21399/',
+                'review_published': '20210316',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 59.0,
             },
         },
     },
-    "Panasonic RP-TCM125": {
-        "brand": "Panasonic",
-        "model": "RP-TCM125",
-        "shape": "in-ear",
-        "default_measurement": "asr",
-        "price": "20.00",
+    'Panasonic RP-TCM125': {
+        "brand": 'Panasonic',
+        "model": 'RP-TCM125',
+        "shape": 'in-ear',
+        "default_measurement": 'asr',
+        "price": '20.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/panasonic-rp-tcm125-review-budget-iem.22797/",
-                "review_published": "20210424",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/panasonic-rp-tcm125-review-budget-iem.22797/',
+                'review_published': '20210424',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 35.0,
             },
         },
     },
-    "Philips Fidelio X2HR": {
-        "brand": "Philips",
-        "model": "Fidelio X2HR",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "145.00",
+    'Philips Fidelio X2HR': {
+        "brand": 'Philips',
+        "model": 'Fidelio X2HR',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '145.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/philips-fidelio-x2hr-review-headphone.19250/",
-                "review_published": "20210109",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/philips-fidelio-x2hr-review-headphone.19250/',
+                'review_published': '20210109',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 148.0,
             },
         },

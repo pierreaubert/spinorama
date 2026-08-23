@@ -4,70 +4,70 @@
 from . import HeadphoneDatabase
 
 headphones_info_f: HeadphoneDatabase = {
-    "FiiO Electronics FT1": {
-        "brand": "FiiO Electronics",
-        "model": "FT1",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "165.00",
+    'FiiO Electronics FT1': {
+        "brand": 'FiiO Electronics',
+        "model": 'FT1',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '165.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/fiio-ft1-headphone-review.66662/",
-                "review_published": "20251014",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fiio-ft1-headphone-review.66662/',
+                'review_published': '20251014',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 96.0,
             },
         },
     },
-    "Focal Celestee": {
-        "brand": "Focal",
-        "model": "Celestee",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "990.00",
+    'Focal Celestee': {
+        "brand": 'Focal',
+        "model": 'Celestee',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '990.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-celestee-review-headphone.21917/",
-                "review_published": "20210329",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-celestee-review-headphone.21917/',
+                'review_published': '20210329',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 89.0,
             },
         },
     },
-    "Focal Stellia": {
-        "brand": "Focal",
-        "model": "Stellia",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "2990.00",
+    'Focal Stellia': {
+        "brand": 'Focal',
+        "model": 'Stellia',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '2990.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-stellia-review-closed-back-headphone.28146/",
-                "review_published": "20211116",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-stellia-review-closed-back-headphone.28146/',
+                'review_published': '20211116',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 96.0,
             },
         },
     },
-    "Focal Utopia": {
-        "brand": "Focal",
-        "model": "Utopia",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "4000.00",
+    'Focal Utopia': {
+        "brand": 'Focal',
+        "model": 'Utopia',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '4000.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-utopia-review-headphone.22103/",
-                "review_published": "20210403",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-utopia-review-headphone.22103/',
+                'review_published': '20210403',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 149.0,
             },
         },

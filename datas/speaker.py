@@ -117,7 +117,7 @@ origins_info = {
         "max dB": 10,
         "logo": "",
         "logo-small": "",
-        "url": "",
+        "url": "https://www.aforara.com",
     },
     "Vendors-Aalto Speakers": {
         "min hz": 20,
@@ -125,6 +125,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://aaltospeakers.fi",
+    },
+    "Vendors-A-for-Ara": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "",
     },
     "Vendors-AIA Cinema": {
         "min hz": 20,

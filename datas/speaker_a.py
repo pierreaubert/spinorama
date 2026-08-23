@@ -2,6 +2,29 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_a: SpeakerDatabase = {
+    "A-for-Ara FS1": {
+        "brand": "A-for-Ara",
+        "model": "FS1",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-A-for-Ara",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20260822",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 87.0,
+                    "size": {"height": 305, "width": 229, "depth": 241},
+                    "weight": 6.8,
+                },
+            },
+	},
+    },
     "ADS L520": {
         "brand": "ADS",
         "model": "L520",

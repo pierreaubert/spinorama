@@ -4,52 +4,52 @@
 from . import HeadphoneDatabase
 
 headphones_info_e: HeadphoneDatabase = {
-    "E-MU Teak": {
-        "brand": "E-MU",
-        "model": "Teak",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "500.00",
+    'E-MU Teak': {
+        "brand": 'E-MU',
+        "model": 'Teak',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '500.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/e-mu-teak-review-headphone.24824/",
-                "review_published": "20210708",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/e-mu-teak-review-headphone.24824/',
+                'review_published': '20210708',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 97.0,
             },
         },
     },
-    "Edifier W830NB": {
-        "brand": "Edifier",
-        "model": "W830NB",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "79.00",
+    'Edifier W830NB': {
+        "brand": 'Edifier',
+        "model": 'W830NB',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '79.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-w830nb-noise-cancelling-wireless-headphone-review.64340/",
-                "review_published": "20250723",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/edifier-w830nb-noise-cancelling-wireless-headphone-review.64340/',
+                'review_published': '20250723',
+                'recommendation': 'No',
             },
         },
     },
-    "Etymotic Research ER4XR": {
-        "brand": "Etymotic Research",
-        "model": "ER4XR",
-        "shape": "in-ear",
-        "default_measurement": "asr",
-        "price": "300.00",
+    'Etymotic Research ER4XR': {
+        "brand": 'Etymotic Research',
+        "model": 'ER4XR',
+        "shape": 'in-ear',
+        "default_measurement": 'asr',
+        "price": '300.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/etymotic-er4xr-iem-review.54791/",
-                "review_published": "20240530",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/etymotic-er4xr-iem-review.54791/',
+                'review_published': '20240530',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 84.0,
             },
         },

@@ -4,19 +4,19 @@
 from . import HeadphoneDatabase
 
 headphones_info_u: HeadphoneDatabase = {
-    "UGreen Max5c": {
-        "brand": "UGreen",
-        "model": "Max5c",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "25.47",
+    'UGreen Max5c': {
+        "brand": 'UGreen',
+        "model": 'Max5c',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '25.47',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/ugreen-max5c-25-nc-headphone-review.58627/",
-                "review_published": "20241119",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ugreen-max5c-25-nc-headphone-review.58627/',
+                'review_published': '20241119',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 0.0,
             },
         },

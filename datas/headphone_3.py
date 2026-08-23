@@ -3,4 +3,5 @@
 
 from . import HeadphoneDatabase
 
-headphones_info_3: HeadphoneDatabase = {}
+headphones_info_3: HeadphoneDatabase = {
+}

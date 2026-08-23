@@ -17,17 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""usage: check_meta.py [--help] [--version].
+"""Validate speaker metadata, optionally including measurement files."""
 
-Options:
-  --help            display usage()
-  --version         script version number
-"""
-
+import argparse
 import logging
 import sys
 from pathlib import Path
 from typing import cast, Dict, Any
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments before loading optional dependencies."""
+    parser = argparse.ArgumentParser(description="Validate speaker metadata.")
+    parser.add_argument(
+        "--check-files",
+        action="store_true",
+        help="also check that measurement files exist and can be loaded (slow)",
+    )
+    return parser.parse_args()
+
+
+args = parse_args() if __name__ == "__main__" else None
 
 from datas import speaker as metadata
 from datas.checks import VALID_FORMATS, ValidationResult, validate_speaker_database
@@ -124,7 +134,7 @@ def validate_measurement_files(
     return result
 
 
-def main() -> int:
+def main(check_files: bool = False) -> int:
     """Main function to validate all speaker metadata."""
     logging.info("Starting speaker metadata validation...")
 
@@ -133,9 +143,10 @@ def main() -> int:
 
     # Validate the entire speaker database
     result = validate_speaker_database(speakers_dict)
-    file_result = validate_measurement_files(speakers_dict)
-    result.valid = result.valid and file_result.valid
-    result.messages.extend(file_result.messages)
+    if check_files:
+        file_result = validate_measurement_files(speakers_dict)
+        result.valid = result.valid and file_result.valid
+        result.messages.extend(file_result.messages)
 
     # Log all validation messages
     for message in result.messages:
@@ -156,4 +167,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    assert args is not None
+    sys.exit(main(check_files=args.check_files))

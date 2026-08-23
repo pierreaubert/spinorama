@@ -88,3 +88,5 @@ cd "${ROOT_DIR}/src/spinorama/compute_scores_cython" && \
 # compile rust
 cd "${ROOT_DIR}" && \
     maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/compute_scores_rust/Cargo.toml"
+cd "${ROOT_DIR}" && \
+    maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/annotations_rust/Cargo.toml"

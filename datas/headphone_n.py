@@ -4,36 +4,36 @@
 from . import HeadphoneDatabase
 
 headphones_info_n: HeadphoneDatabase = {
-    "NICE HCK NX8": {
-        "brand": "NICE HCK",
-        "model": "NX8",
-        "shape": "in-ear",
-        "default_measurement": "asr",
-        "price": "199.00",
+    'NICE HCK NX8': {
+        "brand": 'NICE HCK',
+        "model": 'NX8',
+        "shape": 'in-ear',
+        "default_measurement": 'asr',
+        "price": '199.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/nice-hck-nx8-iem-review.69850/",
-                "review_published": "20260302",
-                "recommendation": "Yes",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nice-hck-nx8-iem-review.69850/',
+                'review_published': '20260302',
+                'recommendation': 'Yes',
                 "sensitivity_mV_94dB": 28.0,
             },
         },
     },
-    "Neumann NDH20": {
-        "brand": "Neumann",
-        "model": "NDH20",
-        "shape": "over-ear",
-        "default_measurement": "asr",
-        "price": "499.00",
+    'Neumann NDH20': {
+        "brand": 'Neumann',
+        "model": 'NDH20',
+        "shape": 'over-ear',
+        "default_measurement": 'asr',
+        "price": '499.00',
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "csv_freq_spl",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-ndh20-review-headphone.27234/",
-                "review_published": "20211010",
-                "recommendation": "No",
+            'asr': {
+                "origin": 'ASR',
+                "format": 'csv_freq_spl',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-ndh20-review-headphone.27234/',
+                'review_published': '20211010',
+                'recommendation': 'No',
                 "sensitivity_mV_94dB": 159.0,
             },
         },

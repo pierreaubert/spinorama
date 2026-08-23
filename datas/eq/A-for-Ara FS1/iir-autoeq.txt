@@ -1,0 +1,14 @@
+EQ for A-for-Ara FS1 computed from Vendors-A-for-Ara data
+Preference Score 6.64 with EQ 7.07
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-08-23-11:55:51
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc    30 Hz Gain +2.99 dB Q 0.85
+Filter  2: ON PK Fc    36 Hz Gain +2.99 dB Q 0.68
+Filter  3: ON PK Fc    40 Hz Gain -6.32 dB Q 1.25
+Filter  4: ON PK Fc   235 Hz Gain +0.80 dB Q 1.06
+Filter  5: ON PK Fc  1642 Hz Gain +0.95 dB Q 0.71
+Filter  6: ON PK Fc  2023 Hz Gain -0.94 dB Q 1.30
+Filter  7: ON PK Fc 13186 Hz Gain -1.63 dB Q 1.50

@@ -149,6 +149,12 @@ if (Get-Command "maturin" -ErrorAction SilentlyContinue) {
     } finally {
         Pop-Location
     }
+    Push-Location src\spinorama\annotations_rust
+    try {
+        maturin build --release
+    } finally {
+        Pop-Location
+    }
 } else {
     Write-Host "maturin not found, skipping Rust build. Install with: pip install maturin" -ForegroundColor Yellow
 }
