@@ -38,6 +38,7 @@ jobs:
       run: |
         pip install maturin
         cd src/spinorama/compute_scores_rust && maturin build --release && cd ../../../
+        cd src/spinorama/annotations_rust && maturin build --release && cd ../../../
     - name: Test with pytest
       run: |
         PYTHONPATH=.:./src:./src/spinorama:./src/website:./scripts pytest tests
