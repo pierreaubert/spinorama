@@ -15,6 +15,11 @@ from functools import cmp_to_key
 import math
 from typing import Iterable, Sequence
 
+try:
+    from spinorama.annotations_rust import c_place_annotations as _c_place_annotations
+except ImportError:
+    _c_place_annotations = None
+
 
 Rect = tuple[float, float, float, float]
 Point = tuple[float, float]
@@ -497,6 +502,76 @@ def place_annotations(
     labels readable while preserving the strongest annotations when space is
     scarce.
     """
+
+    # Keep the Python implementation as a source-compatible fallback for
+    # environments where Maturin's optional extension was not built.
+    trace_points = tuple(trace_points)
+    trace_segments = tuple(trace_segments)
+    if _c_place_annotations is not None:
+        raw_requests = [
+            (
+                request.key,
+                request.x,
+                request.y,
+                request.yref,
+                request.text,
+                request.priority,
+                list(request.preferred_lanes),
+                request.preferred_direction,
+            )
+            for request in requests
+        ]
+        margin = geometry.margin
+        raw_segments = [
+            (
+                start[0],
+                start[1],
+                end[0],
+                end[1],
+                yref,
+                key if len(segment) == 4 else None,
+            )
+            for segment in trace_segments
+            if len(segment) in (3, 4)
+            for start, end, yref, *key_values in [segment]
+            for key in [key_values[0] if key_values else None]
+        ]
+        placements = _c_place_annotations(
+            raw_requests,
+            geometry.width,
+            geometry.height,
+            (
+                margin.get("l", 0.0),
+                margin.get("r", 0.0),
+                margin.get("t", 0.0),
+                margin.get("b", 0.0),
+            ),
+            geometry.x_range,
+            [
+                (axis, value_range[0], value_range[1])
+                for axis, value_range in geometry.y_ranges.items()
+            ],
+            geometry.x_scale == "log",
+            geometry.font_size,
+            geometry.label_pad,
+            geometry.x_domain,
+            geometry.y_domain,
+            list(geometry.grid_x),
+            list((geometry.grid_y or {}).items()),
+            list(trace_points),
+            list(reserved_rects),
+            raw_segments,
+        )
+        return [
+            PlacedAnnotation(
+                request,
+                _anchor_pixel(request, geometry),
+                center,
+                estimate_annotation_size(request.text, geometry.font_size, geometry.label_pad),
+                hidden,
+            )
+            for request, (center, hidden) in zip(requests, placements, strict=True)
+        ]
 
     points_by_axis: dict[str, list[Point]] = {axis: [] for axis in geometry.y_ranges}
     segments_by_axis: dict[str, list[tuple[Point, Point]]] = {
