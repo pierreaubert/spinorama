@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import hashlib
 import os
 import pathlib
 
@@ -24,6 +25,62 @@ import pandas as pd
 import plotly.io
 
 from spinorama import logger
+
+
+def fingerprint_paths(
+    paths: list[str | os.PathLike[str]],
+    *,
+    version: str = "",
+    extra: str = "",
+) -> str:
+    """Return a cheap, deterministic fingerprint for a set of input paths.
+
+    The fingerprint deliberately uses file metadata rather than reading every
+    measurement file. The build already has to stat these files to discover
+    them, and the size/mtime pair avoids turning an incremental build into a
+    second full read of the measurement tree. Callers should include a
+    generator/schema version so algorithm changes invalidate old results.
+    """
+    digest = hashlib.sha256()
+    digest.update(version.encode("utf-8"))
+    digest.update(b"\0")
+    digest.update(extra.encode("utf-8"))
+    digest.update(b"\0")
+
+    entries: list[tuple[str, int, int]] = []
+    for raw_path in paths:
+        path = pathlib.Path(raw_path)
+        if path.is_dir():
+            children = sorted(
+                child
+                for child in path.rglob("*")
+                if child.is_file()
+                and "__pycache__" not in child.parts
+                and child.suffix != ".pyc"
+            )
+            if not children:
+                entries.append((str(path), 0, 0))
+            for child in children:
+                try:
+                    stats = child.stat()
+                except OSError:
+                    continue
+                entries.append((str(child), stats.st_size, stats.st_mtime_ns))
+        elif path.is_file():
+            try:
+                stats = path.stat()
+            except OSError:
+                continue
+            entries.append((str(path), stats.st_size, stats.st_mtime_ns))
+        else:
+            entries.append((str(path), -1, -1))
+
+    for name, size, mtime_ns in sorted(entries):
+        digest.update(name.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(f"{size}:{mtime_ns}".encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def graph_melt(df_in: pd.DataFrame) -> pd.DataFrame:
@@ -156,7 +213,7 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
     # if one of the dep is newer than file then True
     for dep in dependencies:
         dep_path = pathlib.Path(dep)
-        if not dep_path or dep_path.is_symlink():
+        if dep_path.is_symlink() or not dep_path.exists():
             continue
         dep_stats = dep_path.stat()
         if dep_stats.st_mtime > file_stats.st_mtime:

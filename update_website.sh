@@ -16,50 +16,92 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-echo "Update starts"
 mkdir -p .cache
 mkdir -p build/website
-export THEPYTHON=python3.12
+SECONDS=0
+LOCK_DIR=.cache/update_website.lock
+
+release_lock() {
+    rm -f "$LOCK_DIR/pid"
+    rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    lock_pid=""
+    if [ -f "$LOCK_DIR/pid" ]; then
+        lock_pid=$(cat "$LOCK_DIR/pid")
+    fi
+    case "$lock_pid" in
+        ''|*[!0-9]*) ;;
+        *)
+            if kill -0 "$lock_pid" 2>/dev/null; then
+                echo "Another update_website.sh run is active (PID $lock_pid); refusing to overlap it."
+                exit 1
+            fi
+            ;;
+    esac
+    if ! rmdir "$LOCK_DIR" 2>/dev/null || ! mkdir "$LOCK_DIR" 2>/dev/null; then
+        echo "Cannot acquire $LOCK_DIR; remove the stale lock only after confirming no update is running."
+        exit 1
+    fi
+fi
+printf '%s\n' "$$" > "$LOCK_DIR/pid"
+trap release_lock EXIT
+trap 'exit 130' HUP INT TERM
+
+elapsed_status() {
+    local elapsed=$SECONDS
+    printf '%02d:%02d %s\n' "$((elapsed / 60))" "$((elapsed % 60))" "$1"
+}
+
+elapsed_status "Update starts"
+
+if [ -x .venv312/bin/python ]; then
+    export THEPYTHON=.venv312/bin/python
+else
+    export THEPYTHON=python3.12
+fi
 export PYTHONPATH=src:src/website:src/spinorama:.
 
 # check meta
-command=$(${THEPYTHON} ./scripts/check_meta.py)
+${THEPYTHON} ./scripts/check_meta.py
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO checking metadata ($status)";
+    elapsed_status "KO checking metadata ($status)";
     exit 1;
 else
-    echo "OK checking metadata"
+    elapsed_status "OK checking metadata"
 fi
 
 # update logos and speakers picture
 ./scripts/update_pictures.sh
+status=$?
+if [ $status -ne 0 ]; then
+    elapsed_status "KO after updating pictures ($status)"
+    exit 1
+else
+    elapsed_status "OK after updating pictures"
+fi
 
 # generate all graphs if some are missing
-command=$(${THEPYTHON} ./scripts/generate_graphs.py --update-cache)
+${THEPYTHON} ./scripts/generate_graphs.py --update-cache
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate graph!"
+    elapsed_status "KO after generate graph!"
     exit 1;
 else
-    echo "OK after generate graph!"
+    elapsed_status "OK after generate graph!"
 fi
-
-# potential bug in generate_meta
-rm -f dist/json/*
 
 # recompute metadata for all speakers
-command=$(${THEPYTHON} ./scripts/generate_meta.py)
+${THEPYTHON} ./scripts/generate_meta.py
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate meta!"
+    elapsed_status "KO after generate meta!"
     exit 1;
 else
-    echo "OK after generate meta!"
+    elapsed_status "OK after generate meta!"
 fi
-
-# generate all jpg if some are missing
-./scripts/update_pictures.sh
 
 # fetch missing headphone pictures
 #command=$(${THEPYTHON} ./scripts/headphone_fetch_pictures.py 2>&1)
@@ -71,118 +113,108 @@ fi
 #fi
 
 # generate headphone graphs
-command=$(${THEPYTHON} ./scripts/generate_graphs.py --headphones)
+${THEPYTHON} ./scripts/generate_graphs.py --headphones
 status=$?
 if [ $status -ne 0 ]; then
-    echo "WARN: headphone graph generation had failures (non-fatal)"
+    elapsed_status "WARN: headphone graph generation had failures (non-fatal)"
 else
-    echo "OK after headphone graph generation!"
+    elapsed_status "OK after headphone graph generation!"
 fi
 
 # compute headphone EQs (requires autoeq binary)
 if command -v autoeq &> /dev/null; then
-    command=$(./scripts/headphone_eqs_compute.sh)
+    ./scripts/headphone_eqs_compute.sh
     status=$?
     if [ $status -ne 0 ]; then
-        echo "WARN: headphone EQ computation had failures (non-fatal)"
+        elapsed_status "WARN: headphone EQ computation had failures (non-fatal)"
     else
-        echo "OK after headphone EQ computation!"
+        elapsed_status "OK after headphone EQ computation!"
     fi
 else
-    echo "SKIP headphone EQ computation (autoeq binary not in PATH)"
+    elapsed_status "SKIP headphone EQ computation (autoeq binary not in PATH)"
 fi
 
 # generate eq filters
-command=$(${THEPYTHON} ./scripts/generate_peqs.py --generate-images-only)
+${THEPYTHON} ./scripts/generate_peqs.py --generate-images-only
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate eq filters!"
+    elapsed_status "KO after generate eq filters!"
     exit 1;
 else
-    echo "OK after generate eq filters!"
+    elapsed_status "OK after generate eq filters!"
 fi
 
 # generate radar
-command=$(${THEPYTHON} ./scripts/generate_radar.py)
+${THEPYTHON} ./scripts/generate_radar.py
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate radar!"
+    elapsed_status "KO after generate radar!"
     exit 1;
 else
-    echo "OK after generate radar!"
+    elapsed_status "OK after generate radar!"
 fi
 
 # generate eq_compare
-command=$(${THEPYTHON} ./scripts/generate_eq_compare.py)
+${THEPYTHON} ./scripts/generate_eq_compare.py
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate EQ compare!"
+    elapsed_status "KO after generate EQ compare!"
     exit 1;
 else
-    echo "OK after generate EQ compare!"
-fi
-
-# generate status
-command=$(${THEPYTHON} ./scripts/generate_stats.py)
-status=$?
-if [ $status -ne 0 ]; then
-    echo "KO after generate statistics!"
-    exit 1;
-else
-    echo "OK after generate statistics!"
+    elapsed_status "OK after generate EQ compare!"
 fi
 
 # generate status
 today="$(date "+%Y-%m-%d")"
-command=$(${THEPYTHON} ./scripts/generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
+${THEPYTHON} ./scripts/generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate statistics in csv!"
+    elapsed_status "KO after generate statistics in csv!"
     exit 1;
 else
-    echo "OK after generate statistics in csv!"
+    elapsed_status "OK after generate statistics in csv!"
 fi
 
 # generate list of svgs
-command=$(${THEPYTHON} ./scripts/svg2symbols.py > build/website/symbols.html)
+${THEPYTHON} ./scripts/svg2symbols.py > build/website/symbols.html
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after update symbols!"
+    elapsed_status "KO after update symbols!"
     rm -f build/website/symbols.html
     exit 1;
 else
-    echo "OK after update symbols"
+    elapsed_status "OK after update symbols"
 fi
 
 # generate list of brands
-command=$(./scripts/update_brands.sh)
+./scripts/update_brands.sh
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after update brands!"
+    elapsed_status "KO after update brands!"
     rm -f build/website/brands.html
     exit 1;
 else
-    echo "OK after update brands"
+    elapsed_status "OK after update brands"
 fi
 
 # generate list of reviewers
-command=$(./scripts/update_reviewers.sh)
+./scripts/update_reviewers.sh
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after update reviewers!"
+    elapsed_status "KO after update reviewers!"
     rm -f build/website/reviewers.html
     exit 1;
 else
-    echo "OK after update reviewers"
+    elapsed_status "OK after update reviewers"
 fi
 
-command=$(${THEPYTHON} ./scripts/generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
+${THEPYTHON} ./scripts/generate_html.py --dev --optim --sitedev=https://dev.spinorama.org
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after generate HTML!"
+    elapsed_status "KO after generate HTML!"
     exit 1;
 else
-    echo "OK after generate HTML!"
+    elapsed_status "OK after generate HTML!"
 fi
 
 #command=$(type -P quarto)
@@ -200,21 +232,23 @@ fi
 #    echo "Quarto is not available, skipping HTML manual!"
 #fi
 
-command=$(./scripts/check_html.sh)
+./scripts/check_html.sh
+status=$?
 if [ $status -ne 0 ]; then
-    echo "KO after checking HTML!"
+    elapsed_status "KO after checking HTML!"
     exit 1;
 else
-    echo "OK after checking HTML!"
+    elapsed_status "OK after checking HTML!"
 fi
 
 # copy
-command=$(./scripts/update_dev.sh)
+./scripts/update_dev.sh
 status=$?
 if [ $status -ne 0 ]; then
-    echo "KO Update $TARGET!"
+    elapsed_status "KO Update $TARGET!"
     exit 1;
 else
-    echo "OK Update $TARGET!"
+    elapsed_status "OK Update $TARGET!"
 fi
+elapsed_status "Update complete"
 exit 0;

@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
+from pathlib import Path
+import tempfile
 import unittest
 
 from mako.template import Template
@@ -27,6 +30,7 @@ from generate_html import (
     CACHE_VERSION,
     WEBSITE_JS_FILES,
     adapt_imports,
+    copy_if_different,
     get_files,
     get_versions,
 )
@@ -108,6 +112,26 @@ import {
 
     def test_annotation_layout_is_bundled(self):
         self.assertIn("annotation-layout", WEBSITE_JS_FILES)
+
+    def test_copy_if_different_preserves_mtime_for_identical_output(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            source = Path(temporary_dir) / "source.js"
+            destination = Path(temporary_dir) / "destination.js"
+            source.write_text("const value = 1;\n", encoding="utf-8")
+
+            self.assertTrue(copy_if_different(str(source), str(destination)))
+            stats = destination.stat()
+            os.utime(
+                destination,
+                ns=(stats.st_atime_ns, stats.st_mtime_ns + 1_000_000),
+            )
+            unchanged_mtime = destination.stat().st_mtime_ns
+
+            self.assertFalse(copy_if_different(str(source), str(destination)))
+            self.assertEqual(destination.stat().st_mtime_ns, unchanged_mtime)
+
+            source.write_text("const value = 2;\n", encoding="utf-8")
+            self.assertTrue(copy_if_different(str(source), str(destination)))
 
 
 if __name__ == "__main__":

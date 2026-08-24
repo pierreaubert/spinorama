@@ -33,7 +33,7 @@ for d in "${sourcedir}/pictures"; do
 	smaller=$targetdir${pict#$sourcedir}
         for t in "jpg" "webp"; do
 	    smallert=${smaller%.png}.${t}
-	    if ! test -f "$smallert"; then
+	    if ! test -f "$smallert" || test "$pict" -nt "$smallert"; then
 	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
@@ -42,17 +42,22 @@ for d in "${sourcedir}/pictures"; do
         smaller=$targetdir${pict#$sourcedir}
         for t in "jpg" ; do
 	    smallert=${smaller%.jpg}.${t}
-	    if ! test -f "$smallert"; then
+	    if ! test -f "$smallert" || test "$pict" -nt "$smallert"; then
 	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
         for t in "webp"; do
 	    smallerw=${smaller%.jpg}.${t}
-	    if ! test -f "$smallerw"; then
+	    if ! test -f "$smallerw" || test "$pict" -nt "$smallerw"; then
 	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
 	    fi
         done
     done
 done
 # copy logs
-cp datas/icons/* dist/pictures
+for icon in datas/icons/*; do
+    target="dist/pictures/$(basename "$icon")"
+    if test ! -f "$target" || ! cmp -s "$icon" "$target"; then
+        cp -p "$icon" "$target"
+    fi
+done

@@ -53,7 +53,7 @@ from spinorama.compute.scores import speaker_pref_rating as compute_speaker_pref
 from spinorama.filters.peq import peq_preamp_gain as filter_peq_preamp_gain
 from spinorama.loaders.rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
 from spinorama.measurements import Measurements
-from spinorama.misc import graph_melt, sanitize_filename
+from spinorama.misc import fingerprint_paths, graph_melt, sanitize_filename
 
 # Local application imports
 from datas import (
@@ -85,6 +85,70 @@ KEY_LENGTH = 5
 
 # size of years (2024 -> 4)
 YEAR_LENGTH = 4
+METADATA_CACHE_VERSION = "metadata-cache-v1"
+METADATA_CACHE_MANIFEST = Path(".cache/metadata-manifest.json")
+
+
+def metadata_input_fingerprint() -> str:
+    """Fingerprint inputs and code used to derive the metadata JSON files."""
+    return fingerprint_paths(
+        [
+            "datas/speaker.py",
+            *glob("datas/*.py"),
+            "datas/measurements",
+            "datas/eq",
+            "datas/headphones",
+            "datas/headphone_eq",
+            "scripts/generate_meta.py",
+            "src/spinorama",
+        ],
+        version=METADATA_CACHE_VERSION,
+    )
+
+
+def metadata_cache_is_valid() -> bool:
+    """Return whether a complete metadata build can be reused."""
+    try:
+        with METADATA_CACHE_MANIFEST.open("r", encoding="utf-8") as manifest_fd:
+            manifest = json.load(manifest_fd)
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return False
+    if manifest.get("fingerprint") != metadata_input_fingerprint():
+        return False
+    outputs = manifest.get("outputs", [])
+    return bool(outputs) and all(Path(filename).is_file() for filename in outputs)
+
+
+def save_metadata_cache_manifest() -> None:
+    """Record the metadata artifacts produced by a complete build."""
+    outputs = {
+        str(path)
+        for path in Path(cpaths.CPATH_DIST_JSON).glob("*.json*")
+        if path.is_file() or path.is_symlink()
+    }
+    outputs.update(
+        str(path)
+        for path in (
+            Path(cpaths.CPATH_DIST_HEADPHONE_METADATA_JSON),
+            Path(cpaths.CPATH_DIST_HEADPHONE_EQDATA_JSON),
+        )
+        if path.is_file() or path.is_symlink()
+    )
+    METADATA_CACHE_MANIFEST.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = METADATA_CACHE_MANIFEST.with_name(".metadata-manifest.json.tmp")
+    temporary_path.write_text(
+        json.dumps(
+            {
+                "version": METADATA_CACHE_VERSION,
+                "fingerprint": metadata_input_fingerprint(),
+                "outputs": sorted(outputs),
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    os.replace(temporary_path, METADATA_CACHE_MANIFEST)
 
 
 def percent(val: float, vmin: float, vmax: float) -> float:
@@ -689,6 +753,42 @@ def add_near(dataframe, parse_max: int, filters: dict):
         print("\n".join(ttable))
 
 
+def write_text_if_different(filename: str, content: str) -> bool:
+    """Write a text artifact only when its content changed."""
+    path = Path(filename)
+    if path.is_file():
+        try:
+            if path.read_text(encoding="utf-8") == content:
+                return False
+        except OSError:
+            pass
+    path.write_text(content, encoding="utf-8")
+    return True
+
+
+def cleanup_metadata_outputs(expected_files: set[str], base_files: list[str]) -> None:
+    """Remove stale metadata slices while leaving unrelated JSON untouched."""
+    expected = {str(Path(filename)) for filename in expected_files}
+    candidates: set[str] = set()
+    for base_file in base_files:
+        base_path = Path(base_file)
+        candidates.update(
+            {
+                str(base_path),
+                f"{base_path}.zip",
+                f"{base_path}.bz2",
+            }
+        )
+        candidates.update(glob(f"{base_path.with_suffix('')}-*.json*"))
+
+    for filename in candidates - expected:
+        try:
+            Path(filename).unlink()
+            logger.debug("Removed stale metadata output %s", filename)
+        except FileNotFoundError:
+            pass
+
+
 def dump_metadata(meta):
     metadir = cpaths.CPATH_DIST
     metafile = cpaths.CPATH_DIST_METADATA_JSON
@@ -704,12 +804,16 @@ def dump_metadata(meta):
             and "head" not in hashed_filename
             and cpaths.flags_ADD_HASH
         ):
+            link_path = Path(cpaths.CPATH_DIST_METADATA_JSON)
+            target_name = Path(hashed_filename).name
+            if link_path.is_symlink() and os.readlink(link_path) == target_name:
+                return
             try:
-                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
+                os.symlink(target_name, link_path)
             except OSError as e:
                 if e.errno == errno.EEXIST:
-                    os.remove(cpaths.CPATH_DIST_METADATA_JSON)
-                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
+                    link_path.unlink()
+                    os.symlink(target_name, link_path)
                 else:
                     print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
                     raise OSError from e
@@ -721,39 +825,31 @@ def dump_metadata(meta):
         if cpaths.flags_ADD_HASH:
             hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
 
-        # hash changed, remove old files
-        if cpaths.flags_ADD_HASH:
-            old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
-            old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
-            old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
-            for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
-                for old_filename in glob(pattern):
-                    logger.debug("remove old file %s", old_filename)
-                    # print("removed old file {}".format(old_filename))
-                    os.remove(old_filename)
-
-        # write the non zipped file
-        with open(hashed_filename, "w", encoding="utf-8") as f:
-            f.write(js)
-            f.close()
+        changed = write_text_if_different(hashed_filename, js)
+        if changed:
             logger.debug("generated %s", hashed_filename)
 
         # write the zip and bz2 files
+        generated_files = [str(Path(hashed_filename))]
         for ext, method in (
             ("zip", zipfile.ZIP_DEFLATED),
             ("bz2", zipfile.ZIP_BZIP2),
         ):
-            with zipfile.ZipFile(
-                "{}.{}".format(hashed_filename, ext),
-                "w",
-                compression=method,
-                allowZip64=True,
-            ) as current_compressed:
-                current_compressed.writestr(hashed_filename, js)
-                logger.debug("generated %s and %s version", hashed_filename, ext)
+            compressed_filename = "{}.{}".format(hashed_filename, ext)
+            if changed or not Path(compressed_filename).is_file():
+                with zipfile.ZipFile(
+                    compressed_filename,
+                    "w",
+                    compression=method,
+                    allowZip64=True,
+                ) as current_compressed:
+                    current_compressed.writestr(hashed_filename, js)
+                    logger.debug("generated %s and %s version", hashed_filename, ext)
+            generated_files.append(str(Path(compressed_filename)))
 
         if cpaths.flags_ADD_HASH:
             check_link(hashed_filename)
+        return generated_files
 
     # split eq data v.s. others as they are not required on the front page
     meta_full = {
@@ -770,8 +866,9 @@ def dump_metadata(meta):
     # first store a big file with all the data inside. It worked well up to 2023
     # when it became too large even compressed and slowed down the web frontend
     # too much
-    dict_to_json(metafile, meta_full)
-    dict_to_json(eqfile, eq_full)
+    expected_files: set[str] = set()
+    expected_files.update(dict_to_json(metafile, meta_full))
+    expected_files.update(dict_to_json(eqfile, eq_full))
 
     #    debugjs = find_metadata_file()
     #    debugmeta = None
@@ -795,7 +892,7 @@ def dump_metadata(meta):
     meta_sorted_date_tail = dict(meta_sorted_date[METADATA_HEAD_SIZE:])
 
     filename = metafile[:-KEY_LENGTH] + "-head.json"
-    dict_to_json(filename, meta_sorted_date_head)
+    expected_files.update(dict_to_json(filename, meta_sorted_date_head))
 
     def by_year(key):
         m = meta_sorted_date_tail[key]
@@ -809,7 +906,13 @@ def dump_metadata(meta):
     grouped_by_year = groupby(meta_sorted_date_tail, by_year)
     for year, group in grouped_by_year:
         filename = "{}-{:4d}.json".format(metafile[:-KEY_LENGTH], year)
-        dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
+        expected_files.update(
+            dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
+        )
+
+    if cpaths.flags_ADD_HASH:
+        expected_files.add(str(Path(cpaths.CPATH_DIST_METADATA_JSON)))
+    cleanup_metadata_outputs(expected_files, [metafile, eqfile])
 
 
 def add_headphone_eq(headphone_meta):
@@ -895,12 +998,22 @@ def dump_headphone_metadata(headphone_meta):
 
     for filename, data in ((hp_metafile, hp_meta_full), (hp_eqfile, hp_eq_full)):
         js = json.dumps(data)
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(js)
-        logger.info("Generated %s (%d entries)", filename, len(data))
+        if write_text_if_different(filename, js):
+            logger.info("Generated %s (%d entries)", filename, len(data))
 
 
 def main():
+    if (
+        args.speaker is None
+        and args.mversion is None
+        and args.morigin is None
+        and args.mformat is None
+        and args.smoke_test is None
+        and metadata_cache_is_valid()
+    ):
+        logger.info("Metadata cache is up to date")
+        return
+
     main_df = None
     speaker = args.speaker
     mversion = args.mversion
@@ -956,6 +1069,9 @@ def main():
         steps.append(("headphones", time.perf_counter()))
     except ImportError:
         logger.info("No headphone metadata found, skipping")
+
+    if not any((speaker, mversion, morigin, mformat)) and not args.smoke_test:
+        save_metadata_cache_manifest()
 
     logger.info("Bye")
 

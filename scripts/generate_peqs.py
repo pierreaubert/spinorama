@@ -20,6 +20,10 @@
 import multiprocessing
 import sys
 import argparse
+import json
+import os
+from glob import glob
+from pathlib import Path
 import pandas as pd
 
 from datas.speaker import speakers_info as metadata
@@ -30,10 +34,119 @@ from generate_common import (
     args2level,
     cache_load,
 )
-from autoeq.auto_save import optim_save_peq
+from autoeq.auto_save import eq_images_cached_outputs, eq_images_up_to_date, optim_save_peq
+from spinorama.misc import fingerprint_paths, sanitize_filename
 
 
 VERSION = "0.28"
+EQ_IMAGE_STAGE_CACHE_VERSION = "eq-image-stage-cache-v1"
+EQ_IMAGE_STAGE_CACHE_MANIFEST = Path(".cache/eq-image-stage-manifest.json")
+
+
+def eq_generator_fingerprint() -> str:
+    """Fingerprint shared EQ-generation code and metadata definitions."""
+    return fingerprint_paths(
+        [
+            "datas/speaker.py",
+            *glob("datas/*.py"),
+            "scripts/generate_peqs.py",
+            "src/autoeq",
+        ],
+        version=f"{VERSION}:eq-images-v1",
+    )
+
+
+def eq_input_fingerprint(speaker_name: str, generator_fingerprint: str | None = None) -> str:
+    """Fingerprint the measurement and EQ inputs for one speaker."""
+    sanitized_name = sanitize_filename(speaker_name)
+    if generator_fingerprint is None:
+        generator_fingerprint = eq_generator_fingerprint()
+    return fingerprint_paths(
+        [f"datas/measurements/{sanitized_name}", f"datas/eq/{sanitized_name}"],
+        version=generator_fingerprint,
+        extra=speaker_name,
+    )
+
+
+def eq_image_stage_fingerprint(optim_config: dict) -> str:
+    """Fingerprint all inputs for an unfiltered EQ-image build.
+
+    This is deliberately separate from per-speaker cache markers: it lets a
+    true no-op run avoid opening the complete graph cache merely to learn that
+    every worker would be skipped.
+    """
+    relevant_config = {
+        key: value
+        for key, value in optim_config.items()
+        if key not in {"verbose", "level", "force", "input_fingerprint"}
+    }
+    return fingerprint_paths(
+        [
+            "datas/speaker.py",
+            *glob("datas/*.py"),
+            "datas/measurements",
+            "datas/eq",
+            "scripts/generate_peqs.py",
+            "src/autoeq",
+            "src/spinorama",
+        ],
+        version=(
+            f"{EQ_IMAGE_STAGE_CACHE_VERSION}:"
+            f"{json.dumps(relevant_config, sort_keys=True, default=str)}"
+        ),
+    )
+
+
+def eq_image_stage_cache_is_valid(optim_config: dict) -> bool:
+    """Return true only when a complete image stage and its files remain valid."""
+    try:
+        with EQ_IMAGE_STAGE_CACHE_MANIFEST.open("r", encoding="utf-8") as cache_fd:
+            cached = json.load(cache_fd)
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return False
+    if cached.get("fingerprint") != eq_image_stage_fingerprint(optim_config):
+        return False
+    outputs = cached.get("outputs", [])
+    return bool(outputs) and all(
+        Path(filename).is_file() and Path(filename).stat().st_size > 0 for filename in outputs
+    )
+
+
+def save_eq_image_stage_cache(optim_config: dict) -> None:
+    """Record every validated per-speaker image output after a full build."""
+    generator_fingerprint = eq_generator_fingerprint()
+    outputs: set[str] = set()
+    for speaker_name, speaker_data in metadata.items():
+        default = speaker_data.get("default_measurement")
+        measurement = speaker_data.get("measurements", {}).get(default, {})
+        origin = measurement.get("origin")
+        if not default or not origin:
+            continue
+        speaker_config = optim_config.copy()
+        speaker_config["input_fingerprint"] = eq_input_fingerprint(
+            speaker_name, generator_fingerprint
+        )
+        outputs.update(eq_images_cached_outputs(speaker_name, origin, speaker_config))
+
+    if not outputs:
+        return
+    EQ_IMAGE_STAGE_CACHE_MANIFEST.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = EQ_IMAGE_STAGE_CACHE_MANIFEST.with_name(
+        f".{EQ_IMAGE_STAGE_CACHE_MANIFEST.name}.tmp"
+    )
+    temporary_path.write_text(
+        json.dumps(
+            {
+                "version": EQ_IMAGE_STAGE_CACHE_VERSION,
+                "fingerprint": eq_image_stage_fingerprint(optim_config),
+                "outputs": sorted(outputs),
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    os.replace(temporary_path, EQ_IMAGE_STAGE_CACHE_MANIFEST)
 
 
 def print_items(aggregated_results):
@@ -91,6 +204,7 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
         filters = {}
 
     tasks = []
+    generator_fingerprint = eq_generator_fingerprint()
     for current_speaker_name in df_all_speakers:
         # Skip if speaker_name is specified and doesn't match
         if speaker_name is not None and current_speaker_name != speaker_name:
@@ -149,6 +263,18 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
                 df_all_speakers[current_speaker_name][default_origin][default],
             )
 
+        speaker_config = optim_config.copy()
+        speaker_config["input_fingerprint"] = eq_input_fingerprint(
+            current_speaker_name, generator_fingerprint
+        )
+        if (
+            optim_config["generate_images_only"]
+            and not optim_config["force"]
+            and eq_images_up_to_date(current_speaker_name, default_origin, speaker_config)
+        ):
+            logger.debug("Skipping unchanged EQ images %s", current_speaker_name)
+            continue
+
         from spinorama.measurements import Measurements as _M
 
         raw = df_all_speakers[current_speaker_name][default_origin][default]
@@ -161,7 +287,7 @@ def compute_eqs(df_all_speakers, optim_config, speaker_name=None, filters=None):
             continue
 
         logger.debug("processing %s", current_speaker_name)
-        tasks.append((current_speaker_name, default_origin, m, optim_config))
+        tasks.append((current_speaker_name, default_origin, m, speaker_config))
 
     num_processes = max(1, multiprocessing.cpu_count() - 1)
     with multiprocessing.Pool(processes=num_processes) as pool:
@@ -760,16 +886,35 @@ def main():
     logger.debug("parameters:     mversion=%s", mversion)
     logger.debug("parameters:      mformat=%s", mformat)
 
-    # load data
+    # Add global parameters before checking the whole-stage cache.
+    current_optim_config["verbose"] = args.verbose
+    current_optim_config["smoke_test"] = args.smoke_test
+    current_optim_config["force"] = args.force
+    current_optim_config["version"] = VERSION
+    current_optim_config["level"] = level
+    current_optim_config["generate_images_only"] = args.generate_images_only
+    current_optim_config["output_dir"] = args.output_dir
+
+    do_filters = {
+        "speaker_name": speaker_name,
+        "format": mformat,
+        "origin": origin,
+        "version": mversion,
+    }
+    full_image_build = (
+        args.generate_images_only
+        and not args.force
+        and not args.smoke_test
+        and not any(do_filters.values())
+    )
+    if full_image_build and eq_image_stage_cache_is_valid(current_optim_config):
+        logger.info("EQ image stage cache is up to date")
+        return
+
+    # Load data only when at least one EQ image might need work.
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        do_filters = {
-            "speaker_name": speaker_name,
-            "format": mformat,
-            "origin": origin,
-            "version": mversion,
-        }
         df_all_speakers = cache_load(filters=do_filters, smoke_test=args.smoke_test, level=level)
         # print(df_all_speakers.keys())
         # print(df_all_speakers[speaker_name].keys())
@@ -785,17 +930,10 @@ def main():
             print(f"{v_e}")
         sys.exit(1)
 
-    # add global parameters into the config
-    current_optim_config["verbose"] = args.verbose
-    current_optim_config["smoke_test"] = args.smoke_test
-    current_optim_config["force"] = args.force
-    current_optim_config["version"] = VERSION
-    current_optim_config["level"] = level
-    current_optim_config["generate_images_only"] = args.generate_images_only
-    current_optim_config["output_dir"] = args.output_dir
-
     results = compute_eqs(df_all_speakers, current_optim_config, speaker_name)
     compute_stats(results)
+    if full_image_build:
+        save_eq_image_stage_cache(current_optim_config)
 
     sys.exit(0)
 

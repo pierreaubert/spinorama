@@ -19,6 +19,7 @@
 import contextlib
 from copy import deepcopy
 from datetime import datetime
+import hashlib
 import json
 import os
 import re
@@ -44,6 +45,97 @@ from spinorama.measurements import Measurements
 from autoeq.auto_target import get_freq, get_target
 from autoeq.auto_plot import graph_results as auto_graph_results
 from autoeq.auto_strategy import optim_strategy
+
+
+EQ_IMAGE_CACHE_VERSION = "eq-images-v1"
+
+
+def _eq_image_cache_key(
+    speaker_name: str, speaker_origin: str, optim_config: dict
+) -> str:
+    relevant_config = {
+        key: value
+        for key, value in optim_config.items()
+        if key not in {"verbose", "level", "input_fingerprint"}
+    }
+    payload = json.dumps(relevant_config, sort_keys=True, default=str)
+    return hashlib.sha256(
+        f"{EQ_IMAGE_CACHE_VERSION}:{speaker_name}:{speaker_origin}:{payload}".encode("utf-8")
+    ).hexdigest()
+
+
+def _eq_image_cache_path(
+    speaker_name: str, speaker_origin: str, optim_config: dict
+) -> pathlib.Path:
+    cache_key = _eq_image_cache_key(speaker_name, speaker_origin, optim_config)
+    return pathlib.Path("build/eq-image-cache") / f"{cache_key}.json"
+
+
+def _eq_images_up_to_date(
+    speaker_name: str, speaker_origin: str, optim_config: dict
+) -> bool:
+    input_fingerprint = optim_config.get("input_fingerprint")
+    if not input_fingerprint:
+        return False
+    cache_path = _eq_image_cache_path(speaker_name, speaker_origin, optim_config)
+    try:
+        with cache_path.open("r", encoding="utf-8") as cache_fd:
+            cached = json.load(cache_fd)
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return False
+    if cached.get("input_fingerprint") != input_fingerprint:
+        return False
+    outputs = cached.get("outputs", [])
+    if not outputs:
+        return False
+    return all(
+        pathlib.Path(filename).is_file() and pathlib.Path(filename).stat().st_size > 0
+        for filename in outputs
+    )
+
+
+def eq_images_up_to_date(
+    speaker_name: str, speaker_origin: str, optim_config: dict
+) -> bool:
+    """Public fast-path check for callers that can avoid loading measurements."""
+    return _eq_images_up_to_date(speaker_name, speaker_origin, optim_config)
+
+
+def eq_images_cached_outputs(
+    speaker_name: str, speaker_origin: str, optim_config: dict
+) -> list[str]:
+    """Return validated image outputs from one cache marker, if available."""
+    if not _eq_images_up_to_date(speaker_name, speaker_origin, optim_config):
+        return []
+    cache_path = _eq_image_cache_path(speaker_name, speaker_origin, optim_config)
+    try:
+        with cache_path.open("r", encoding="utf-8") as cache_fd:
+            return list(json.load(cache_fd)["outputs"])
+    except (FileNotFoundError, OSError, json.JSONDecodeError, KeyError, TypeError):
+        return []
+
+
+def _save_eq_image_cache(
+    speaker_name: str,
+    speaker_origin: str,
+    optim_config: dict,
+    outputs: list[str],
+) -> None:
+    input_fingerprint = optim_config.get("input_fingerprint")
+    if not input_fingerprint or not outputs:
+        return
+    cache_path = _eq_image_cache_path(speaker_name, speaker_origin, optim_config)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = cache_path.with_name(f".{cache_path.name}.tmp")
+    temporary_path.write_text(
+        json.dumps(
+            {"input_fingerprint": input_fingerprint, "outputs": sorted(set(outputs))},
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    os.replace(temporary_path, cache_path)
 
 
 def get_previous_score(eq_name: str) -> None | float:
@@ -111,11 +203,11 @@ def print_auto_graphs_seq(
     score: dict[str, float],
     auto_score: dict[str, float],
     optim_config: dict,
-) -> None:
+) -> list[str]:
     curves = optim_config["curve_names"]
     if auto_peq is None or len(auto_peq) == 0:
         logger.debug("skipping printing graphs")
-        return
+        return []
 
     data_frame, freq, auto_target = get_freq(m, optim_config)
     auto_target_interp = []
@@ -143,6 +235,7 @@ def print_auto_graphs_seq(
         # Collect images to write (png, jpg, webp) and batch write using plotly.io
         graphs_to_print: list = []
         filenames_to_print: list[str] = []
+        outputs_to_cache: list[str] = []
         widths_to_print: list[int] = []
         heights_to_print: list[int] = []
         img_width: int | None = None
@@ -172,6 +265,7 @@ def print_auto_graphs_seq(
 
             for ext in (".json", ".png", ".jpg", ".webp"):
                 filename = f"{base_filename}{ext}"
+                outputs_to_cache.append(filename)
                 # Ensure parent directory exists
                 pathlib.Path(filename).parent.mkdir(parents=True, exist_ok=True)
 
@@ -211,6 +305,8 @@ def print_auto_graphs_seq(
         #         )
         #     except RuntimeError as rt:
         #         logger.error("writing image(s) crashed! %s", rt)
+
+    return outputs_to_cache
 
 
 def print_small_summary(
@@ -267,6 +363,14 @@ def optim_save_peq(
 ) -> tuple[bool, tuple[str, OptimResult, list[float]]]:
     """Compute and then save PEQ for this speaker"""
     eq_dir, eq_name = build_eq_name(current_speaker_name, optim_config)
+
+    if (
+        optim_config["generate_images_only"]
+        and not optim_config["force"]
+        and _eq_images_up_to_date(current_speaker_name, current_speaker_origin, optim_config)
+    ):
+        logger.debug("Skipping unchanged EQ images for %s", current_speaker_name)
+        return False, ("", (0, 0, 0), [])
 
     if (
         not optim_config["force"]
@@ -393,7 +497,7 @@ def optim_save_peq(
         logger.error("Spin or PIR is none %s %s", current_speaker_name, current_speaker_origin)
     else:
         # print new best peq or re-print previous one
-        print_auto_graphs_seq(
+        image_outputs = print_auto_graphs_seq(
             current_speaker_name,
             current_speaker_origin,
             m,
@@ -404,6 +508,13 @@ def optim_save_peq(
             auto_score,
             optim_config,
         )
+        if optim_config["generate_images_only"]:
+            _save_eq_image_cache(
+                current_speaker_name,
+                current_speaker_origin,
+                optim_config,
+                image_outputs,
+            )
 
     if optim_config["verbose"]:
         print_small_summary(current_speaker_name, score, auto_score)

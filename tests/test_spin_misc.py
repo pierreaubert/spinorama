@@ -18,19 +18,43 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
+import os
+from pathlib import Path
+import tempfile
 import typing
 import unittest
 
 import numpy as np
 import pandas as pd
 
-from spinorama.misc import graph_melt, measurements_complete_freq, measurements_complete_spl
+from spinorama.misc import (
+    fingerprint_paths,
+    graph_melt,
+    measurements_complete_freq,
+    measurements_complete_spl,
+)
 
 from spinorama.compute.misc import unify_freq
 from spinorama.compute.misc import compute_slope_smoothness
 from spinorama.compute.scores import sm
 
 from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
+
+
+class FingerprintPathsTests(unittest.TestCase):
+    def test_fingerprint_is_stable_and_tracks_file_changes(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            input_path = Path(temporary_dir) / "measurement.txt"
+            input_path.write_text("one\n", encoding="utf-8")
+
+            first = fingerprint_paths([temporary_dir], version="test-v1")
+            self.assertEqual(first, fingerprint_paths([temporary_dir], version="test-v1"))
+
+            input_path.write_text("two\n", encoding="utf-8")
+            stats = input_path.stat()
+            os.utime(input_path, ns=(stats.st_atime_ns, stats.st_mtime_ns + 1_000_000))
+            self.assertNotEqual(first, fingerprint_paths([temporary_dir], version="test-v1"))
+            self.assertNotEqual(first, fingerprint_paths([temporary_dir], version="test-v2"))
 
 
 class SpinoramaUnifyFreqTests(unittest.TestCase):

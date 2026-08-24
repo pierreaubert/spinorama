@@ -22,6 +22,7 @@ from functools import partial
 from glob import glob
 from hashlib import md5
 import ipaddress
+import json
 import logging
 import multiprocessing
 import os
@@ -52,6 +53,7 @@ import spinorama.constant_paths as cpaths
 from spinorama.constant_paths import flags_ADD_HASH
 
 CACHE_DIR = ".cache"
+GRAPH_CACHE_MANIFEST = f"{CACHE_DIR}/manifest.json"
 
 
 def get_similar_names(speakername):
@@ -138,11 +140,35 @@ def cache_save_key(key: str, data):
         fl.save(path=cache_name, data=data)
 
 
-def cache_save(df_all: dict):
+def load_cache_manifest(path: str = GRAPH_CACHE_MANIFEST) -> dict:
+    """Load the incremental graph cache manifest, tolerating old/missing data."""
+    try:
+        with open(path, "r", encoding="utf-8") as manifest_fd:
+            manifest = json.load(manifest_fd)
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return {}
+    return manifest if isinstance(manifest, dict) else {}
+
+
+def save_cache_manifest(manifest: dict, path: str = GRAPH_CACHE_MANIFEST) -> None:
+    """Atomically save the incremental graph cache manifest."""
+    manifest_path = pathlib.Path(path)
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = manifest_path.with_name(f".{manifest_path.name}.tmp")
+    temporary_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+    os.replace(temporary_path, manifest_path)
+
+
+def cache_save(df_all: dict, prune: bool = False):
     pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
     for key, data in df_hashed.items():
         cache_save_key(key, data)
+    if prune:
+        expected = {f"{key}.h5" for key in df_hashed}
+        for cache_path in pathlib.Path(CACHE_DIR).glob("*.h5"):
+            if cache_path.name not in expected:
+                cache_path.unlink()
     print("(saved {} speakers)".format(len(df_all)))
 
 

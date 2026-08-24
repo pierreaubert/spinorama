@@ -20,6 +20,7 @@
 
 import argparse
 import glob
+import inspect
 import os
 import random
 import sys
@@ -31,21 +32,28 @@ from functools import partial
 from generate_common import (
     args2level,
     cache_save,
+    cache_load,
     cache_update,
     get_custom_logger,
+    load_cache_manifest,
+    save_cache_manifest,
 )
 from datas import speaker as metadata, Symmetry, Parameters
 from datas.helpers import measurement2distance
 from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker import print_graphs
 from spinorama.plot import plot_params_default
-from spinorama.misc import sanitize_filename
+from spinorama.misc import fingerprint_paths, sanitize_filename
 import spinorama.constant_paths as cpaths
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 from spinorama.filters.peq import peq_preamp_gain, peq_spl
 from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 VERSION = "2.07"  # Updated version
+GRAPH_CACHE_SCHEMA = "speaker-graph-cache-v3"
+# Bump this for a downstream rendering dependency that is not covered by the
+# focused rendering-function source below.
+GRAPH_OUTPUT_CACHE_VERSION = "graphs-v1"
 ACTIVATE_TRACING: bool = True
 
 # Set up logger
@@ -85,6 +93,78 @@ def find_original_speaker_name(sanitized_name: str) -> str | None:
         if sanitize_filename(speaker_name) == sanitized_name:
             return speaker_name
     return None
+
+
+def graph_generator_fingerprint(data_dir: str, width: int, height: int) -> str:
+    """Fingerprint graph-output settings shared by every speaker.
+
+    The whole script is intentionally not included here: it is also the cache
+    controller, so hashing it made a cache-only edit invalidate every graph.
+    The focused source below catches changes in the graph-rendering path,
+    while speaker metadata is included in each speaker fingerprint.
+    """
+    return fingerprint_paths(
+        [],
+        version=(
+            f"{GRAPH_CACHE_SCHEMA}:{GRAPH_OUTPUT_CACHE_VERSION}:"
+            f"{VERSION}:{width}x{height}"
+        ),
+        extra="\0".join(
+            (
+                repr(metadata.origins_info),
+                inspect.getsource(process_single_measurement),
+                inspect.getsource(parse_graphs_speaker),
+                inspect.getsource(parse_eq_speaker),
+                inspect.getsource(print_graphs),
+            )
+        ),
+    )
+
+
+def speaker_graph_fingerprint(
+    data_dir: str,
+    sanitized_name: str,
+    width: int,
+    height: int,
+    generator_fingerprint: str | None = None,
+) -> str:
+    """Fingerprint the inputs that can change one speaker's graph output."""
+    data_root = os.path.abspath(data_dir)
+    measurement_dir = os.path.join(data_root, "datas", "measurements", sanitized_name)
+    eq_dir = os.path.join(data_root, "datas", "eq", sanitized_name)
+    original_name = find_original_speaker_name(sanitized_name)
+    speaker_metadata = metadata.speakers_info.get(original_name, {})
+    if generator_fingerprint is None:
+        generator_fingerprint = graph_generator_fingerprint(data_dir, width, height)
+    return fingerprint_paths(
+        [measurement_dir, eq_dir],
+        version=generator_fingerprint,
+        extra=f"{sanitized_name}\0{repr(speaker_metadata)}",
+    )
+
+
+def graph_output_exists(sanitized_name: str) -> bool:
+    """Avoid reprocessing a valid cache when its generated graph tree is gone."""
+    output_dir = os.path.join(cpaths.CPATH_DIST_SPEAKERS, sanitized_name)
+    return os.path.isdir(output_dir) and any(
+        filename.endswith(".json")
+        for _, _, filenames in os.walk(output_dir)
+        for filename in filenames
+    )
+
+
+def speaker_cache_complete(speaker: str, cached_speaker: dict[str, Any]) -> bool:
+    """Check that every graph-cache measurement and its EQ variant exist."""
+    if not isinstance(cached_speaker, dict):
+        return False
+    for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
+        origin = measurement["origin"]
+        cached_origin = cached_speaker.get(origin, {})
+        if not isinstance(cached_origin, dict):
+            return False
+        if mversion not in cached_origin or f"{mversion}_eq" not in cached_origin:
+            return False
+    return True
 
 
 def process_single_measurement(
@@ -231,7 +311,7 @@ def process_measurements_parallel(
     success_count = 0
     error_count = 0
 
-    with Pool(processes=num_processes) as pool:
+    with Pool(processes=num_process) as pool:
         results = pool.imap_unordered(process_single_measurement, tasks, chunksize=1)
         for i, answer in enumerate(results):
             if answer is None:
@@ -306,18 +386,159 @@ def main(log_level, args):
         param_processes = int(args.processes)
     num_processes = max(1, min(param_processes, num_processes))
 
-    # Process measurements in parallel
-    df_new = process_measurements_parallel(
-        speakerlist, filters, log_level, num_processes, data_dir, force
-    )
+    # A full build reuses complete speaker entries whose inputs have not
+    # changed. Filtered and smoke-test builds retain the historical behavior:
+    # they only update the requested subset and never prune the full cache.
+    if not filters and args.smoke_test is None:
+        old_manifest = load_cache_manifest()
+        current_speakers: dict[str, str] = {}
+        for sanitized_name in speakerlist:
+            original_name = find_original_speaker_name(sanitized_name)
+            if original_name is not None:
+                current_speakers[original_name] = sanitized_name
 
-    # Update cache if needed
-    if not filters:
-        # No filters - save complete cache
-        cache_save(df_new)
+        manifest_speakers = old_manifest.get("speakers", {})
+        if not isinstance(manifest_speakers, dict):
+            manifest_speakers = {}
+        graph_generator = graph_generator_fingerprint(
+            data_dir,
+            int(plot_params_default["width"]),
+            int(plot_params_default["height"]),
+        )
+        fingerprints = {
+            speaker: speaker_graph_fingerprint(
+                data_dir,
+                sanitized_name,
+                int(plot_params_default["width"]),
+                int(plot_params_default["height"]),
+                graph_generator,
+            )
+            for speaker, sanitized_name in current_speakers.items()
+        }
+
+        # v2 included broad source-tree mtimes in every speaker fingerprint.
+        # A cache-only change therefore made a complete graph cache look cold.
+        # Adopt its output fingerprints, then verify the HDF5 entries once
+        # before allowing the v3 no-op fast path.
+        if (
+            not force
+            and old_manifest.get("schema") == "speaker-graph-cache-v2"
+            and all(
+                isinstance(manifest_speakers.get(speaker), dict)
+                and graph_output_exists(sanitized_name)
+                for speaker, sanitized_name in current_speakers.items()
+            )
+        ):
+            old_manifest = {
+                "schema": GRAPH_CACHE_SCHEMA,
+                "cache_verified": False,
+                "speakers": {
+                    speaker: {"fingerprint": fingerprints[speaker]}
+                    for speaker in current_speakers
+                },
+            }
+            manifest_speakers = old_manifest["speakers"]
+            logger.info("Migrating graph cache from v2 to v3 and verifying HDF5 entries")
+
+        to_process = set()
+        invalidations = {"missing_manifest": 0, "fingerprint": 0, "output": 0}
+        for speaker, sanitized_name in current_speakers.items():
+            manifest_entry = manifest_speakers.get(speaker, {})
+            if not isinstance(manifest_entry, dict):
+                manifest_entry = {}
+            fingerprint_changed = manifest_entry.get("fingerprint") != fingerprints[speaker]
+            output_missing = not graph_output_exists(sanitized_name)
+            if not manifest_entry:
+                invalidations["missing_manifest"] += 1
+            if fingerprint_changed:
+                invalidations["fingerprint"] += 1
+            if output_missing:
+                invalidations["output"] += 1
+            if force or fingerprint_changed or output_missing:
+                to_process.add(sanitized_name)
+
+        logger.info(
+            "Incremental graph cache: reusing %d speakers, processing %d "
+            "(manifest missing: %d, fingerprint changed: %d, output missing: %d)",
+            len(current_speakers) - len(to_process),
+            len(to_process),
+            invalidations["missing_manifest"],
+            invalidations["fingerprint"],
+            invalidations["output"],
+        )
+
+        if args.explain_cache:
+            return 0
+
+        # A v2 migration (or an interrupted earlier build) may have graph JSON
+        # files but incomplete HDF5 entries. Verify this once before trusting
+        # the manifest; future warm builds keep the zero-HDF5-load fast path.
+        existing_cache: dict[str, Any] | None = None
+        if not old_manifest.get("cache_verified", False):
+            existing_cache = cache_load(filters={}, smoke_test=False, level=log_level)
+            incomplete_speakers = {
+                sanitized_name
+                for speaker, sanitized_name in current_speakers.items()
+                if not speaker_cache_complete(speaker, existing_cache.get(speaker, {}))
+            }
+            to_process.update(incomplete_speakers)
+            logger.info(
+                "Graph cache verification: %d incomplete speakers",
+                len(incomplete_speakers),
+            )
+
+        # Do not deserialize every partition of the graph cache on a true
+        # no-op build. The cache is split into hundreds of HDF5 files, and
+        # loading all of them was the dominant cost of a second run even
+        # though no speaker needed regeneration.
+        if not to_process:
+            if existing_cache is not None:
+                save_cache_manifest(
+                    {
+                        "schema": GRAPH_CACHE_SCHEMA,
+                        "cache_verified": True,
+                        "speakers": {
+                            speaker: {"fingerprint": fingerprints[speaker]}
+                            for speaker in current_speakers
+                        },
+                    }
+                )
+            logger.info("Graph generation cache is up to date")
+            return 0
+
+        if existing_cache is None:
+            existing_cache = cache_load(filters={}, smoke_test=False, level=log_level)
+        df_new = process_measurements_parallel(
+            to_process, filters, log_level, num_processes, data_dir, force
+        )
+
+        merged_cache = {
+            speaker: existing_cache[speaker]
+            for speaker in current_speakers
+            if speaker in existing_cache
+        }
+        merged_cache.update(df_new)
+        cache_save(merged_cache, prune=True)
+
+        new_manifest = {"schema": GRAPH_CACHE_SCHEMA, "cache_verified": True, "speakers": {}}
+        for speaker in current_speakers:
+            processed = speaker in df_new
+            reused = speaker not in to_process and speaker in existing_cache
+            if processed or reused:
+                new_manifest["speakers"][speaker] = {"fingerprint": fingerprints[speaker]}
+        new_manifest["cache_verified"] = all(
+            speaker_cache_complete(speaker, merged_cache.get(speaker, {}))
+            for speaker in current_speakers
+        )
+        save_cache_manifest(new_manifest)
     else:
-        # Filters applied - update cache with new/changed measurements
-        cache_update(df_new, filters, log_level)
+        df_new = process_measurements_parallel(
+            speakerlist, filters, log_level, num_processes, data_dir, force
+        )
+        if not filters:
+            cache_save(df_new)
+        else:
+            cache_update(df_new, filters, log_level)
 
     logger.info("Graph generation completed successfully")
     return 0
@@ -676,7 +897,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data-dir", default=".", help="Directory where data is stored (default: .)"
     )
-    parser.add_argument("--update-cache", action="store_true", help="Force updating the cache")
+    parser.add_argument(
+        "--update-cache",
+        action="store_true",
+        help="Update the cache (full builds reuse unchanged speakers automatically)",
+    )
+    parser.add_argument(
+        "--explain-cache",
+        action="store_true",
+        help="Report full-build cache invalidations without generating graphs",
+    )
     parser.add_argument(
         "--processes", type=int, help="Number of processes to use (default: CPU count - 1)"
     )

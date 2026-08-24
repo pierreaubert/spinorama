@@ -36,12 +36,14 @@ from generate_common import (
 )
 
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.misc import sanitize_filename
+from spinorama.misc import fingerprint_paths, sanitize_filename
 from spinorama.filters.scores import scores_apply_filter, noscore_apply_filter
 from spinorama.measurements import Measurements
 from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
+RADAR_CACHE_VERSION = "radar-cache-v1"
+RADAR_CACHE_MANIFEST = pathlib.Path(".cache/radar-manifest.json")
 
 logger = logging.getLogger("spinorama")
 
@@ -124,9 +126,6 @@ def print_radar(meta_data, scale, speaker_data):
         sanitize_filename(meta_data["brand"]),
         sanitize_filename(meta_data["model"]),
     )
-    # TODO: to add check for dependancies
-    if pathlib.Path(filename).is_file():
-        return
     graph_data = []
     pref_rating = measurement["pref_rating"]
     # pprint(pref_rating)
@@ -212,14 +211,91 @@ def print_radar(meta_data, scale, speaker_data):
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
     fig.update_layout(layout)
-    if not os.path.exists(filename) or os.path.getsize(filename) == 0:
-        content = fig.to_json()
-        if os.path.exists(os.path.dirname(filename)):
-            with open(filename, "w", encoding="utf-8") as f_d:
-                f_d.write(content)
+    content = fig.to_json()
+    if os.path.exists(os.path.dirname(filename)):
+        with open(filename, "w", encoding="utf-8") as f_d:
+            f_d.write(content)
+
+
+def radar_cache_fingerprint(json_filename, eq_filename):
+    return fingerprint_paths(
+        [
+            json_filename,
+            eq_filename,
+            CPATH_DATAS_EQ,
+            __file__,
+            "src/spinorama/filters/scores.py",
+            "src/spinorama/measurements.py",
+        ],
+        version=RADAR_CACHE_VERSION,
+    )
+
+
+def radar_output_paths(jsmeta):
+    outputs = []
+    for meta_data in jsmeta.values():
+        measurement = meta_data.get("measurements", {}).get(
+            meta_data.get("default_measurement"), {}
+        )
+        if measurement.get("pref_rating") is None or measurement.get("estimates") is None:
+            continue
+        outputs.append(
+            "{}/{} {}/spider.json".format(
+                CPATH_DIST_SPEAKERS,
+                sanitize_filename(meta_data["brand"]),
+                sanitize_filename(meta_data["model"]),
+            )
+        )
+    return outputs
+
+
+def radar_cache_is_valid(json_filename, eq_filename, jsmeta):
+    try:
+        with RADAR_CACHE_MANIFEST.open("r", encoding="utf-8") as manifest_fd:
+            manifest = json.load(manifest_fd)
+    except (FileNotFoundError, OSError, json.JSONDecodeError):
+        return False
+    if manifest.get("fingerprint") != radar_cache_fingerprint(json_filename, eq_filename):
+        return False
+    outputs = manifest.get("outputs", radar_output_paths(jsmeta))
+    return bool(outputs) and all(pathlib.Path(filename).is_file() for filename in outputs)
+
+
+def save_radar_cache_manifest(json_filename, eq_filename, jsmeta):
+    RADAR_CACHE_MANIFEST.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = RADAR_CACHE_MANIFEST.with_name(".radar-manifest.json.tmp")
+    temporary_path.write_text(
+        json.dumps(
+            {
+                "version": RADAR_CACHE_VERSION,
+                "fingerprint": radar_cache_fingerprint(json_filename, eq_filename),
+                "outputs": radar_output_paths(jsmeta),
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    os.replace(temporary_path, RADAR_CACHE_MANIFEST)
 
 
 def main(args):
+    if args.speaker is None:
+        cached_json, cached_eq = find_metadata_file()
+        if cached_json is not None:
+            try:
+                with open(cached_json, "r") as metadata_fd:
+                    cached_meta = json.load(metadata_fd)
+            except (OSError, json.JSONDecodeError):
+                cached_meta = None
+            if (
+                cached_meta is not None
+                and cached_eq is not None
+                and radar_cache_is_valid(cached_json, cached_eq, cached_meta)
+            ):
+                logger.info("Radar cache is up to date")
+                return 0
+
     # load all speaker data
     filters = {}
     if args.speaker is not None:
@@ -264,6 +340,9 @@ def main(args):
     num_processes = max(1, multiprocessing.cpu_count() - 1)
     with multiprocessing.Pool(processes=num_processes) as pool:
         pool.starmap(print_radar, tasks)
+
+    if args.speaker is None:
+        save_radar_cache_manifest(json_filename, eq_filename, jsmeta)
 
     sys.exit(0)
 

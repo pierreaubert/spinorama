@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 # Regression tests for scripts/generate_meta.py
 
+import json
 import os
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -128,6 +130,48 @@ class TestAudioholicsMetadata(unittest.TestCase):
             [],
             f"Audioholics measurements missing min_valid_freq=200: {missing}",
         )
+
+
+class TestMetadataOutputCaching(unittest.TestCase):
+    def test_cleanup_removes_only_stale_metadata_slices(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            root = os.path.join(temporary_dir, "metadata.json")
+            stale = os.path.join(temporary_dir, "metadata-2020.json")
+            unrelated = os.path.join(temporary_dir, "headphone_metadata.json")
+            for filename in (root, stale, unrelated):
+                with open(filename, "w", encoding="utf-8") as output:
+                    output.write("{}")
+
+            generate_meta.cleanup_metadata_outputs({root}, [root])
+
+            self.assertTrue(os.path.exists(root))
+            self.assertFalse(os.path.exists(stale))
+            self.assertTrue(os.path.exists(unrelated))
+
+    def test_manifest_tracks_compressed_and_headphone_artifacts(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            root = os.path.join(temporary_dir, "json")
+            os.makedirs(root)
+            metadata = os.path.join(root, "metadata-abcde.json")
+            compressed = f"{metadata}.zip"
+            headphones = os.path.join(temporary_dir, "headphone_metadata.json")
+            headphone_eq = os.path.join(temporary_dir, "headphone_eqdata.json")
+            for filename in (metadata, compressed, headphones, headphone_eq):
+                with open(filename, "w", encoding="utf-8") as output:
+                    output.write("{}")
+
+            manifest = generate_meta.Path(temporary_dir) / "metadata-manifest.json"
+            with (
+                patch.object(generate_meta, "METADATA_CACHE_MANIFEST", manifest),
+                patch.object(generate_meta, "metadata_input_fingerprint", return_value="current"),
+                patch.object(generate_meta.cpaths, "CPATH_DIST_JSON", root),
+                patch.object(generate_meta.cpaths, "CPATH_DIST_HEADPHONE_METADATA_JSON", headphones),
+                patch.object(generate_meta.cpaths, "CPATH_DIST_HEADPHONE_EQDATA_JSON", headphone_eq),
+            ):
+                generate_meta.save_metadata_cache_manifest()
+
+            outputs = json.loads(manifest.read_text(encoding="utf-8"))["outputs"]
+            self.assertEqual(set(outputs), {metadata, compressed, headphones, headphone_eq})
 
 
 if __name__ == "__main__":

@@ -9,19 +9,25 @@ speakers_info_a: SpeakerDatabase = {
         "price": "",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20260824",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20260824": {
                 "origin": "Vendors-A-for-Ara",
                 "format": "spl_hv_txt",
                 "quality": "high",
-                "review_published": "20260822",
+                "review_published": "20260824",
                 "specifications": {
                     # "impedance": 8,
                     # "sensitivity": 87.0,
                     "size": {"height": 1371, "width": 635, "depth": 381},
                     # "weight": 6.8,
                 },
+            },
+            "vendor-v1-20260822": {
+                "origin": "Vendors-A-for-Ara",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20260822",
             },
 	},
     },
