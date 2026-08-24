@@ -18,7 +18,7 @@
 
 from spinorama.ltype import Vector, OptimResult
 from spinorama.measurements import Measurements
-from spinorama.filter_peq import Peq
+from spinorama.filters.peq import Peq
 from spinorama import logger
 from autoeq.auto_geq import optim_grapheq
 from autoeq.auto_greedy import optim_greedy

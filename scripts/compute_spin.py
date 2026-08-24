@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from spinorama import logger, setup_logger
 from spinorama.load import filter_graphs, filter_graphs_partial
-from spinorama.compute_scores import speaker_pref_rating
+from spinorama.compute.scores import speaker_pref_rating
 from spinorama.speaker import (
     display_spinorama,
     display_spinorama_normalized,
@@ -68,13 +68,13 @@ from spinorama.measurements import Measurements
 from spinorama.constant_paths import DEFAULT_FREQ_RANGE
 
 # Import format-specific loaders
-from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_princeton import parse_graphs_speaker_princeton
-from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
-from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
-from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
-from spinorama.compute_misc import unify_freq
+from spinorama.loaders.klippel import parse_graphs_speaker_klippel
+from spinorama.loaders.princeton import parse_graphs_speaker_princeton
+from spinorama.loaders.spl_hv_txt import parse_graphs_speaker_spl_hv_txt
+from spinorama.loaders.gll_hv_txt import parse_graphs_speaker_gll_hv_txt
+from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.loaders.webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.compute.misc import unify_freq
 from spinorama.misc import graph_melt
 
 

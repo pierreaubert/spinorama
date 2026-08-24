@@ -42,8 +42,8 @@ from spinorama.plot import plot_params_default
 from spinorama.misc import sanitize_filename
 import spinorama.constant_paths as cpaths
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
-from spinorama.filter_peq import peq_preamp_gain, peq_spl
-from spinorama.load_rew_eq import parse_eq_iir_rews
+from spinorama.filters.peq import peq_preamp_gain, peq_spl
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 VERSION = "2.07"  # Updated version
 ACTIVATE_TRACING: bool = True

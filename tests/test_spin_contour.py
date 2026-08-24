@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 from spinorama.misc import sort_angles
-from spinorama.compute_misc import compute_contour, reshape
+from spinorama.compute.misc import compute_contour, reshape
 
 
 class SpinoramaContourSizeTests(unittest.TestCase):

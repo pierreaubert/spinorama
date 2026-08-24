@@ -28,8 +28,8 @@ from spinorama import logger, setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, DEFAULT_FREQ_RANGE
 from spinorama.measurements import Measurements
 from spinorama.misc import measurements_valid_freq_range, sanitize_filename, write_multiformat
-from spinorama.filter_peq import Peq, peq_preamp_gain
-from spinorama.compute_misc import compute_minmax_slopes
+from spinorama.filters.peq import Peq, peq_preamp_gain
+from spinorama.compute.misc import compute_minmax_slopes
 from spinorama.plot import (
     plot_params_default,
     contour_params_default,

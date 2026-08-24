@@ -153,8 +153,10 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
 
     cdef double ss_xy = np.sum((x - x_mean) * (y - y_mean))
     cdef double slope = ss_xy / ss_xx
-    # Normalize to the reference -1 dB/decade slope, as in VituixCAD.
-    y = y + x * (-1.0 - slope)
+    # VituixCAD uses a -1 slope against ln(f). On this log10(f) axis,
+    # the equivalent reference slope is -ln(10) dB/decade.
+    cdef double reference_slope = -math.log(10.0)
+    y = y + x * (reference_slope - slope)
     y_mean = np.mean(y)
     ss_yy = np.sum((y - y_mean) ** 2)
     ss_xy = np.sum((x - x_mean) * (y - y_mean))

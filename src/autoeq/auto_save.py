@@ -34,9 +34,9 @@ from spinorama.misc import (
     measurements_complete_freq,
     sanitize_filename,
 )
-from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.filter_peq import peq_format_apo, Peq
-from spinorama.filter_scores import (
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
+from spinorama.filters.peq import peq_format_apo, Peq
+from spinorama.filters.scores import (
     scores_apply_filter,
     scores_print,
 )

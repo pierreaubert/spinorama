@@ -3,8 +3,9 @@
 
 The CSV contains one row per speaker's default measurement.  ``*_raw_r2`` is
 the unnormalized regression R², while ``*_normalized_r2`` is the current SM
-calculation after correcting the response to the reference slope of -1
-dB/decade.  The two score curves are exported because they are the SM values
+calculation after correcting the response to the reference slope of -1 against
+ln(f), equivalently -ln(10) dB/decade. The two score curves are exported because
+they are the SM values
 used by the preference-rating code: Sound Power and Estimated In-Room Response.
 
 Run from the repository root with::

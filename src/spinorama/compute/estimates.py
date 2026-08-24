@@ -26,7 +26,7 @@ from spinorama.constant_paths import (
     SENSITIVITY_MIN_FREQ,
     SENSITIVITY_MAX_FREQ,
 )
-from spinorama.compute_misc import compute_directivity_deg_v2, compute_slope_smoothness
+from spinorama.compute.misc import compute_directivity_deg_v2, compute_slope_smoothness
 
 pd.set_option("display.max_rows", 1000)
 

@@ -26,8 +26,8 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 
-# from spinorama.filter_peq import peq_print
-from spinorama.load_klippel import parse_graph_freq_klippel
+# from spinorama.filters.peq import peq_print
+from spinorama.loaders.klippel import parse_graph_freq_klippel
 from spinorama.measurements import Measurements
 from autoeq.auto_global import GlobalOptimizer, _resample
 

@@ -44,14 +44,14 @@ logger = logging.getLogger("spinorama")
 
 # Spinorama specific imports
 from generate_common import get_custom_logger, args2level, cache_load, sort_metadata_per_date
-from spinorama.compute_scores import speaker_pref_rating
+from spinorama.compute.scores import speaker_pref_rating
 import spinorama.constant_paths as cpaths
-from spinorama.compute_estimates import estimates
+from spinorama.compute.estimates import estimates
 
 # Aliased imports to avoid name collisions for specific usages
-from spinorama.compute_scores import speaker_pref_rating as compute_speaker_pref_rating
-from spinorama.filter_peq import peq_preamp_gain as filter_peq_preamp_gain
-from spinorama.load_rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
+from spinorama.compute.scores import speaker_pref_rating as compute_speaker_pref_rating
+from spinorama.filters.peq import peq_preamp_gain as filter_peq_preamp_gain
+from spinorama.loaders.rew_eq import parse_eq_iir_rews as load_parse_eq_iir_rews
 from spinorama.measurements import Measurements
 from spinorama.misc import graph_melt, sanitize_filename
 

@@ -21,7 +21,7 @@ import math
 import unittest
 import numpy as np
 import numpy.testing as npt
-from spinorama.compute_cea2034 import (
+from spinorama.compute.cea2034 import (
     compute_area_q,
     compute_weigths,
 )

@@ -19,7 +19,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import numpy as np
-from spinorama.filter_iir import Biquad
+from spinorama.filters.iir import Biquad
 
 
 def main():

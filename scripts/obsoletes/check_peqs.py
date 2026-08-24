@@ -39,8 +39,8 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_DIST_METADATA_JSON, CPATH_DATAS_EQ
-from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.filter_peq import peq_spl
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
+from spinorama.filters.peq import peq_spl
 from spinorama.misc import sanitize_filename
 
 

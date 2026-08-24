@@ -28,26 +28,26 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from spinorama.extract_plot_detect import PlotRegion, detect_plot_regions
-from spinorama.extract_axis_calibrate import (
+from spinorama.extract.plot_detect import PlotRegion, detect_plot_regions
+from spinorama.extract.axis_calibrate import (
     AxisCalibration,
     _parse_freq_label,
     _parse_db_label,
     _hardcoded_klippel_calibration,
     _validate_calibration,
 )
-from spinorama.extract_color_segment import (
+from spinorama.extract.color_segment import (
     CurveColorSpec,
     DEFAULT_CURVE_SPECS,
     segment_curves,
 )
-from spinorama.extract_curve_trace import (
+from spinorama.extract.curve_trace import (
     _find_clusters,
     _weighted_centroid,
     trace_single_curve,
     curves_to_wpd_json,
 )
-from spinorama.extract_distortion import ExtractionResult
+from spinorama.extract.distortion import ExtractionResult
 
 
 def _make_synthetic_plot(
@@ -307,7 +307,7 @@ class TestWpdJsonOutput(unittest.TestCase):
 
     def test_compatible_with_load_wpd(self):
         """Verify output can be parsed by parse_graph_freq_webplotdigitizer."""
-        from spinorama.load_webplotdigitizer import parse_graph_freq_webplotdigitizer
+        from spinorama.loaders.webplotdigitizer import parse_graph_freq_webplotdigitizer
 
         result = ExtractionResult(
             region=PlotRegion(x=0, y=0, w=800, h=600),

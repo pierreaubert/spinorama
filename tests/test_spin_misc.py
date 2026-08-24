@@ -26,11 +26,11 @@ import pandas as pd
 
 from spinorama.misc import graph_melt, measurements_complete_freq, measurements_complete_spl
 
-from spinorama.compute_misc import unify_freq
+from spinorama.compute.misc import unify_freq
 from spinorama.compute.misc import compute_slope_smoothness
 from spinorama.compute.scores import sm
 
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
 
 
 class SpinoramaUnifyFreqTests(unittest.TestCase):

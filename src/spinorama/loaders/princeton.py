@@ -25,7 +25,7 @@ from scipy.io import loadmat
 from spinorama import logger
 from spinorama.ltype import StatusOr
 from spinorama.misc import sort_angles
-from spinorama.compute_misc import resample
+from spinorama.compute.misc import resample
 
 
 def parse_graph_freq_princeton_mat(

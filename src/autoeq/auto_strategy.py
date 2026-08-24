@@ -24,10 +24,10 @@ from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.ltype import OptimResult
 from spinorama.misc import graph_unmelt
-from spinorama.filter_peq import Peq
-from spinorama.compute_misc import compute_statistics
-from spinorama.filter_peq import peq_print
-from spinorama.filter_scores import scores_apply_filter
+from spinorama.filters.peq import Peq
+from spinorama.compute.misc import compute_statistics
+from spinorama.filters.peq import peq_print
+from spinorama.filters.scores import scores_apply_filter
 from spinorama.measurements import Measurements
 from autoeq.auto_misc import get3db, have_full_measurements
 from autoeq.auto_target import get_freq, get_target

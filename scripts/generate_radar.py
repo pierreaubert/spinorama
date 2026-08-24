@@ -37,9 +37,9 @@ from generate_common import (
 
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.misc import sanitize_filename
-from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
+from spinorama.filters.scores import scores_apply_filter, noscore_apply_filter
 from spinorama.measurements import Measurements
-from spinorama.load_rew_eq import parse_eq_iir_rews
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
 

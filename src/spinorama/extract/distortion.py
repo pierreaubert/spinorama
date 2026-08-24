@@ -26,10 +26,10 @@ import numpy as np
 import numpy.typing as npt
 
 from spinorama import logger
-from spinorama.extract_plot_detect import PlotRegion, detect_plot_regions
-from spinorama.extract_axis_calibrate import AxisCalibration, calibrate_axes
-from spinorama.extract_color_segment import CurveColorSpec, DEFAULT_CURVE_SPECS, segment_curves
-from spinorama.extract_curve_trace import trace_curves, curves_to_wpd_json
+from spinorama.extract.plot_detect import PlotRegion, detect_plot_regions
+from spinorama.extract.axis_calibrate import AxisCalibration, calibrate_axes
+from spinorama.extract.color_segment import CurveColorSpec, DEFAULT_CURVE_SPECS, segment_curves
+from spinorama.extract.curve_trace import trace_curves, curves_to_wpd_json
 
 
 @dataclass

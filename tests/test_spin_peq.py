@@ -21,7 +21,7 @@ import unittest
 
 import numpy.testing as npt
 
-from spinorama.filter_peq import peq_butterworth_q, peq_linkwitzriley_q
+from spinorama.filters.peq import peq_butterworth_q, peq_linkwitzriley_q
 
 
 class SpinoramaFilterPeqTests(unittest.TestCase):

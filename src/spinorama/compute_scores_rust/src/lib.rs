@@ -144,8 +144,9 @@ fn r_squared(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
         // A perfectly flat response is perfectly smooth.
         return 1.0;
     }
-    // Normalize to the reference -1 dB/decade slope, as in VituixCAD.
-    let normalization = -1.0 - sxy / sxx;
+    // VituixCAD uses a -1 slope against ln(f). On this log10(f) axis,
+    // the equivalent reference slope is -ln(10) dB/decade.
+    let normalization = -std::f64::consts::LN_10 - sxy / sxx;
     let normalized_y = y + &(x * normalization);
     let my = normalized_y.mean().unwrap_or(0.0);
     let mut sxy = 0.0;

@@ -21,7 +21,7 @@
 import cv2
 import numpy as np
 
-from spinorama.extract_color_segment import CurveColorSpec
+from spinorama.extract.color_segment import CurveColorSpec
 
 
 def hex_to_hsv_range(

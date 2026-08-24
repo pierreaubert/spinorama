@@ -31,7 +31,7 @@ from spinorama.constant_paths import (
     DIRECTIVITY_MAX_FREQ,
 )
 from spinorama.misc import sort_angles
-from spinorama.compute_scores import octave
+from spinorama.compute.scores import octave
 from spinorama.compute.smoothness import compute_smoothness_regression
 
 # pd.set_option('display.max_rows', None)

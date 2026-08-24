@@ -21,7 +21,7 @@ import scipy.optimize as opt
 from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.measurements import Measurements
-from spinorama.filter_iir import Biquad
+from spinorama.filters.iir import Biquad
 from autoeq.auto_loss import loss
 
 POPSIZE = 15

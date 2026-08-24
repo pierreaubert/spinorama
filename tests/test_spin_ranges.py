@@ -22,8 +22,8 @@ import unittest
 import math
 import numpy as np
 
-from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_spl
+from spinorama.filters.iir import Biquad
+from spinorama.filters.peq import peq_spl
 from autoeq.auto_range import find_largest_area
 
 

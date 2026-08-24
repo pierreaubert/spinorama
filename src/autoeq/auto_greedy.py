@@ -22,8 +22,8 @@ import pandas as pd
 from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.measurements import Measurements
-from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import Peq
+from spinorama.filters.iir import Biquad
+from spinorama.filters.peq import Peq
 from autoeq.auto_loss import loss, score_loss
 from autoeq.auto_range import (
     propose_range_freq,

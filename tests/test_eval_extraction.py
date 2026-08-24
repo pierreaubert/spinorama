@@ -30,7 +30,7 @@ from graphextract.eval_extraction import (
     load_plotly_ground_truth,
     render_plotly_to_png,
 )
-from spinorama.extract_axis_calibrate import AxisCalibration, calibration_from_plotly_layout
+from spinorama.extract.axis_calibrate import AxisCalibration, calibration_from_plotly_layout
 from graphextract.extract_spinorama_colors import hex_to_hsv_range
 
 # A known CEA2034 file for real-data tests

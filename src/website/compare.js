@@ -20,7 +20,7 @@
 
 import Plotly from 'plotly.js-dist-min';
 
-import { urlSite, flags_Screen } from './meta.js';
+import { flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
@@ -82,7 +82,10 @@ function updateOriginAndVersion(metaSpeakers, speaker, originSelector, versionSe
 
 getMetadata()
     .then((metadata) => {
-        const urlCompare = urlSite + 'compare.html?';
+        // `pushState` only accepts a same-origin URL.  The configured site base
+        // is for fetching generated assets and may differ from the page's local
+        // development origin, so keep history entries relative to this page.
+        const urlCompare = window.location.pathname + '?';
         const nbSpeakers = 2;
 
         const queryString = window.location.search;

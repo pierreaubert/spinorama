@@ -4,9 +4,23 @@ from typing import List, Tuple
 import numpy as np
 import pytest
 
+from spinorama.compute.smoothness import compute_smoothness_regression
+
 # Skip tests if the Rust module isn't available yet
 spinorama_c = pytest.importorskip("spinorama.compute_scores_cython.compute_scores_cython")
 spinorama_rust = pytest.importorskip("compute_scores_rust")
+
+
+def test_c_sm_matches_natural_log_reference_slope() -> None:
+    freq = np.geomspace(20.0, 20000.0, 512).astype(np.float64)
+    spl = (85.0 - np.log(freq) + 0.25 * np.sin(np.linspace(0.0, 10.0 * np.pi, freq.size))).astype(
+        np.float64
+    )
+    selected = (freq > 100.0) & (freq < 16000.0)
+    expected = compute_smoothness_regression(freq[selected], spl[selected])[2]
+
+    assert spinorama_c.c_sm(freq, spl) == pytest.approx(expected, abs=1e-12)
+    assert spinorama_rust.c_sm(freq, spl) == pytest.approx(expected, abs=1e-12)
 
 
 def _make_intervals(freq: np.ndarray) -> List[Tuple[int, int]]:

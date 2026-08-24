@@ -4,14 +4,18 @@ import numpy as np
 import numpy.typing as npt
 
 
+REFERENCE_SLOPE_DB_PER_DECADE = -np.log(10.0)
+
+
 def compute_smoothness_regression(
     freq: npt.ArrayLike, spl: npt.ArrayLike
 ) -> tuple[float, float, float]:
     """Return fitted slope, intercept, and normalized smoothness.
 
     Smoothness is measured after normalizing the response to the reference
-    slope of -1 dB/decade, as in VituixCAD. The returned slope and intercept
-    describe the original, unnormalized response.
+    slope of -1 against ln(f), as in VituixCAD. Since the regression uses
+    log10(f), the equivalent reference slope is -ln(10) dB/decade. The
+    returned slope and intercept describe the original, unnormalized response.
     """
     x = np.log10(np.asarray(freq, dtype=float))
     y = np.asarray(spl, dtype=float)
@@ -32,8 +36,8 @@ def compute_smoothness_regression(
     slope = float(ss_xy / ss_xx)
     intercept = float(y_mean - slope * x_mean)
 
-    # Normalize to the reference -1 dB/decade slope before calculating R².
-    normalized_y = y + x * (-1.0 - slope)
+    # Preserve the VituixCAD -1 slope against ln(f) on this log10(f) axis.
+    normalized_y = y + x * (REFERENCE_SLOPE_DB_PER_DECADE - slope)
     normalized_y_mean = np.mean(normalized_y)
     normalized_ss_yy = np.sum((normalized_y - normalized_y_mean) ** 2)
     normalized_ss_xy = np.sum((x - x_mean) * (normalized_y - normalized_y_mean))

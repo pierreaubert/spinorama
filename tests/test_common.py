@@ -25,14 +25,14 @@ from spinorama.misc import (
     graph_unmelt,
     measurements_missing_angles,
 )
-from spinorama.compute_misc import unify_freq
+from spinorama.compute.misc import unify_freq
 
-from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_princeton import parse_graphs_speaker_princeton
-from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
-from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
-from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.loaders.klippel import parse_graphs_speaker_klippel
+from spinorama.loaders.princeton import parse_graphs_speaker_princeton
+from spinorama.loaders.spl_hv_txt import parse_graphs_speaker_spl_hv_txt
+from spinorama.loaders.gll_hv_txt import parse_graphs_speaker_gll_hv_txt
+from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.loaders.webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import (
     filter_graphs,
     filter_graphs_partial,

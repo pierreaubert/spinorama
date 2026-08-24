@@ -27,7 +27,7 @@ import numpy as np
 import numpy.typing as npt
 
 from spinorama import logger
-from spinorama.extract_plot_detect import PlotRegion
+from spinorama.extract.plot_detect import PlotRegion
 
 # Standard Klippel frequency tick values
 STANDARD_FREQ_TICKS = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]

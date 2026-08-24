@@ -29,8 +29,8 @@ from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
 from spinorama.ltype import Vector
 from spinorama.measurements import Measurements
-from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import Peq, peq_spl, peq_print
+from spinorama.filters.iir import Biquad
+from spinorama.filters.peq import Peq, peq_spl, peq_print
 from autoeq.auto_misc import get3db
 from autoeq.auto_loss import score_loss
 

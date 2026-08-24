@@ -40,11 +40,11 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from spinorama import logger, setup_logger
-from spinorama.extract_distortion import ExtractionResult, extract_curves
-from spinorama.extract_plot_detect import detect_plot_regions
-from spinorama.extract_axis_calibrate import calibrate_axes
-from spinorama.extract_color_segment import DEFAULT_CURVE_SPECS, segment_curves
-from spinorama.extract_curve_trace import trace_single_curve
+from spinorama.extract.distortion import ExtractionResult, extract_curves
+from spinorama.extract.plot_detect import detect_plot_regions
+from spinorama.extract.axis_calibrate import calibrate_axes
+from spinorama.extract.color_segment import DEFAULT_CURVE_SPECS, segment_curves
+from spinorama.extract.curve_trace import trace_single_curve
 
 
 # Klippel curve colors for the chart

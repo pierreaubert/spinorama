@@ -10,7 +10,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 from datas import Measurement
-from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.loaders.klippel import parse_graph_freq_klippel
 from spinorama.measurements import Measurements
 
 import generate_meta

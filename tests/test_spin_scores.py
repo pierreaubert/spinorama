@@ -21,7 +21,8 @@
 import unittest
 import numpy as np
 import pandas as pd
-from spinorama.compute_scores import octave, aad, sm
+from spinorama.compute.scores import octave, aad, sm
+from spinorama.compute.smoothness import compute_smoothness_regression
 
 
 pd.set_option("display.max_rows", 202)
@@ -58,6 +59,24 @@ class PrefRatingTests(unittest.TestCase):
         test_df = pd.DataFrame({"Freq": freq, "dB": db})
 
         self.assertGreater(sm(test_df), 0.99)
+
+    def test_sm_preserves_natural_log_reference_slope(self):
+        freq = np.geomspace(100.0, 16000.0, 200)
+        ripple = 0.25 * np.sin(np.linspace(0.0, 10.0 * np.pi, freq.size))
+        db = 85.0 - np.log(freq) + ripple
+
+        _, _, smoothness = compute_smoothness_regression(freq, db)
+
+        x = np.log(freq)
+        # Regressing the finite sampled ripple removes its small linear component.
+        fitted = np.polyval(np.polyfit(x, db, 1), x)
+        residual = db - fitted
+        normalized = residual - x
+        normalized_fitted = np.polyval(np.polyfit(x, normalized, 1), x)
+        expected = 1.0 - np.sum((normalized - normalized_fitted) ** 2) / np.sum(
+            (normalized - np.mean(normalized)) ** 2
+        )
+        self.assertAlmostEqual(smoothness, expected, places=12)
 
 
 if __name__ == "__main__":

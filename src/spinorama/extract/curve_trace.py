@@ -28,8 +28,8 @@ import numpy.typing as npt
 from spinorama import logger
 
 if TYPE_CHECKING:
-    from spinorama.extract_axis_calibrate import AxisCalibration
-    from spinorama.extract_distortion import ExtractionResult
+    from spinorama.extract.axis_calibrate import AxisCalibration
+    from spinorama.extract.distortion import ExtractionResult
 
 
 def _find_clusters(column: npt.NDArray, min_gap: int = 3) -> list[list[int]]:

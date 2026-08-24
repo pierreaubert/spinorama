@@ -25,8 +25,8 @@ import pandas as pd
 import scipy.io
 
 from spinorama.misc import graph_melt
-from spinorama.load_klippel import parse_graph_freq_klippel
-from spinorama.compute_cea2034 import (
+from spinorama.loaders.klippel import parse_graph_freq_klippel
+from spinorama.compute.cea2034 import (
     compute_cea2034,
     early_reflections,
     vertical_reflections,

@@ -23,14 +23,14 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from spinorama.compute_misc import unify_freq
-from spinorama.filter_iir import Biquad
-from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
+from spinorama.compute.misc import unify_freq
+from spinorama.filters.iir import Biquad
+from spinorama.filters.scores import scores_apply_filter, noscore_apply_filter
 from spinorama.measurements import Measurements
 from spinorama.misc import graph_melt, graph_unmelt
-from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
+from spinorama.loaders.klippel import parse_graphs_speaker_klippel
+from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.load import (
     filter_graphs,
     filter_graphs_partial,
@@ -93,8 +93,8 @@ class SpinoramaFilterScoresTests(unittest.TestCase):
         self.assertIsNotNone(score)
         if score is None:
             return
-        # Smoothness uses the VituixCAD -1 dB/decade slope normalization.
-        self.assertAlmostEqual(score["pref_score"], 5.7751321145979135, 5)
+        # Smoothness uses the VituixCAD -1 slope against ln(f).
+        self.assertAlmostEqual(score["pref_score"], 6.290998057772821, 5)
 
 
 class SpinoramaFilterNoScoresTests(unittest.TestCase):

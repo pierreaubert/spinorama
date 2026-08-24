@@ -31,7 +31,7 @@ from generate_common import get_custom_logger, args2level, find_metadata_file
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.misc import sanitize_filename
 from spinorama.plot import plot_eqs
-from spinorama.load_rew_eq import parse_eq_iir_rews
+from spinorama.loaders.rew_eq import parse_eq_iir_rews
 
 
 VERSION = 0.2

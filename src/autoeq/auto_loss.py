@@ -25,11 +25,11 @@ from scipy.stats import linregress
 from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.measurements import Measurements
-from spinorama.compute_cea2034 import sp_weigths, estimated_inroom_hv
-from spinorama.compute_scores import octave
-from spinorama.filter_peq import Peq, peq_spl
-from spinorama.filter_scores import scores_apply_filter
-from spinorama.filter_peq import peq_apply_measurements
+from spinorama.compute.cea2034 import sp_weigths, estimated_inroom_hv
+from spinorama.compute.scores import octave
+from spinorama.filters.peq import Peq, peq_spl
+from spinorama.filters.scores import scores_apply_filter
+from spinorama.filters.peq import peq_apply_measurements
 from spinorama.misc import graph_melt
 from autoeq.auto_misc import have_full_measurements
 

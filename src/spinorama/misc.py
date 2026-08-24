@@ -23,9 +23,6 @@ import numpy as np
 import pandas as pd
 import plotly.io
 
-from datas import Measurement
-from datas.speaker import speakers_info
-from datas.helpers import measurement_valid_freq
 from spinorama import logger
 
 
@@ -369,6 +366,10 @@ def measurements_valid_freq_range(
     h_spl: pd.DataFrame | None,
     v_spl: pd.DataFrame | None,
 ) -> tuple[float, float]:
+    from datas import Measurement  # noqa: PLC0415
+    from datas.helpers import measurement_valid_freq  # noqa: PLC0415
+    from datas.speaker import speakers_info  # noqa: PLC0415
+
     measurement: Measurement = speakers_info[speaker_name]["measurements"][version]
     min_valid_freq, max_valid_freq = measurement_valid_freq(speaker_name, measurement)
     if h_spl is not None and "Freq" in h_spl:

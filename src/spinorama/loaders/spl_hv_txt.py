@@ -20,7 +20,6 @@ import os
 import glob
 import pandas as pd
 
-from datas.incomplete import known_incomplete_measurements
 from spinorama import logger
 from spinorama.ltype import StatusOr
 from spinorama.misc import sort_angles, measurements_missing_angles
@@ -220,6 +219,8 @@ def parse_graphs_speaker_spl_hv_txt(
     symmetry: str | None = None,
 ) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
+    from datas.incomplete import known_incomplete_measurements  # noqa: PLC0415
+
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
     logger.debug("scanning path %s for speaker %s %s", dirname, speaker_brand, speaker_name)

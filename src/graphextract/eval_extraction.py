@@ -37,9 +37,9 @@ from scipy.interpolate import interp1d
 from scipy.stats import pearsonr
 
 from spinorama import logger
-from spinorama.extract_axis_calibrate import AxisCalibration, calibration_from_plotly_layout
-from spinorama.extract_color_segment import segment_curves
-from spinorama.extract_curve_trace import trace_single_curve
+from spinorama.extract.axis_calibrate import AxisCalibration, calibration_from_plotly_layout
+from spinorama.extract.color_segment import segment_curves
+from spinorama.extract.curve_trace import trace_single_curve
 from graphextract.extract_spinorama_colors import CURVE_HEX_COLORS, GRAPH_TYPE_SPECS
 
 # Trace names to skip when loading ground truth
@@ -351,10 +351,10 @@ def evaluate_single_graph(
             )
     else:
         # Auto: use the full extraction pipeline's calibration
-        from spinorama.extract_plot_detect import PlotRegion
+        from spinorama.extract.plot_detect import PlotRegion
 
         region = PlotRegion(x=0, y=0, w=render_width, h=render_height, title=graph_type)
-        from spinorama.extract_axis_calibrate import calibrate_axes
+        from spinorama.extract.axis_calibrate import calibrate_axes
 
         calibration = calibrate_axes(img, region)
         calibration_y2 = None

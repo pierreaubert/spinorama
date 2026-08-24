@@ -40,9 +40,12 @@ measurements = filter_graphs(
 )
 ```
 
-The compatibility modules `spinorama.load_spl_hv_txt` and
-`spinorama.compute_cea2034` remain available, but new code should prefer the
-grouped `loaders`, `compute`, and `plot` packages shown here.
+::: {.callout-warning title="Version 2.0 import paths"}
+Version 2.0 removes the legacy flat modules. Replace `spinorama.load_*` with
+`spinorama.loaders.*`, `spinorama.compute_*` with `spinorama.compute.*`,
+`spinorama.filter_*` with `spinorama.filters.*`, and `spinorama.extract_*`
+with `spinorama.extract.*`.
+:::
 
 ## Compute Spinorama curves
 

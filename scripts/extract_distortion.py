@@ -33,7 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from spinorama import logger, setup_logger
-from spinorama.extract_distortion import extract_curves
+from spinorama.extract.distortion import extract_curves
 
 
 def validate_results(wpd_json: dict) -> bool:

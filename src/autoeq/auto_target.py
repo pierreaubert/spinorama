@@ -25,8 +25,8 @@ from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.measurements import Measurements
 from spinorama.misc import graph_unmelt
-from spinorama.filter_peq import Peq, peq_spl
-from spinorama.compute_misc import savitzky_golay
+from spinorama.filters.peq import Peq, peq_spl
+from spinorama.compute.misc import savitzky_golay
 
 
 # ------------------------------------------------------------------------------

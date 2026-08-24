@@ -26,11 +26,11 @@ from datas import Parameters
 from spinorama import logger, setup_logger
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 
-from spinorama.filter_peq import Peq, peq_apply_measurements
-from spinorama.filter_scores import noscore_apply_filter
+from spinorama.filters.peq import Peq, peq_apply_measurements
+from spinorama.filters.scores import noscore_apply_filter
 
-from spinorama.compute_misc import unify_freq
-from spinorama.compute_estimates import compute_sensitivity, compute_sensitivity_details
+from spinorama.compute.misc import unify_freq
+from spinorama.compute.estimates import compute_sensitivity, compute_sensitivity_details
 
 from spinorama.measurements import Measurements, Sensitivity
 from spinorama.misc import (
@@ -53,7 +53,7 @@ from spinorama.constant_paths import (
     MIDRANGE_MIN_FREQ,
     MIDRANGE_MAX_FREQ,
 )
-from spinorama.compute_cea2034 import (
+from spinorama.compute.cea2034 import (
     early_reflections,
     vertical_reflections,
     horizontal_reflections,
