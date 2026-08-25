@@ -1,6 +1,11 @@
+#[cfg(not(target_arch = "wasm32"))]
 use pyo3::prelude::*;
+#[cfg(target_arch = "wasm32")]
+use serde::Deserialize;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::prelude::*;
 
 type Point = (f64, f64);
 type Rect = (f64, f64, f64, f64);
@@ -253,7 +258,7 @@ fn value_to_pixel(value: f64, range: Point, start: f64, end: f64) -> f64 {
     start + (value - range.0) / (range.1 - range.0) * (end - start)
 }
 
-fn curve_penalty(rect: Rect, points: &[Point], segments: &[Segment]) -> Option<f64> {
+fn curve_penalty(rect: Rect, points: &[Point], index: &SegmentIndex) -> Option<f64> {
     let clearance = expand_rect(rect, TRACE_CLEARANCE);
     let mut penalty = 0.0;
     for point in points {
@@ -265,7 +270,7 @@ fn curve_penalty(rect: Rect, points: &[Point], segments: &[Segment]) -> Option<f
             penalty += 20.0;
         }
     }
-    for segment in segments {
+    for segment in index.nearby(((rect.0, rect.1), (rect.2, rect.3))) {
         if segment_intersects_rect(segment.0, segment.1, rect) {
             return None;
         }
@@ -278,8 +283,8 @@ fn curve_penalty(rect: Rect, points: &[Point], segments: &[Segment]) -> Option<f
 
 fn direction_penalty(direction: &Option<String>, anchor: Point, center: Point) -> f64 {
     match direction.as_deref() {
-        Some("above") if center.1 > anchor.1 => 1000.0 + center.1 - anchor.1,
-        Some("below") if center.1 < anchor.1 => 1000.0 + anchor.1 - center.1,
+        Some("above") if center.1 >= anchor.1 => 1000.0 + center.1 - anchor.1,
+        Some("below") if center.1 <= anchor.1 => 1000.0 + anchor.1 - center.1,
         _ => 0.0,
     }
 }
@@ -407,9 +412,8 @@ fn candidates(
     result
 }
 
-#[pyfunction]
 #[allow(clippy::too_many_arguments, clippy::type_complexity)]
-fn c_place_annotations(
+fn place_annotations(
     raw_requests: Vec<(
         String,
         f64,
@@ -511,6 +515,11 @@ fn c_place_annotations(
             }
         }
     }
+    let all_points: Vec<Point> = points.values().flatten().copied().collect();
+    let axis_segment_indexes: HashMap<String, SegmentIndex> = axis_segments
+        .iter()
+        .map(|(axis, segments)| (axis.clone(), SegmentIndex::new(segments.clone())))
+        .collect();
     let all_segment_index = SegmentIndex::new(all_segments);
     let mut order: Vec<usize> = (0..requests.len()).collect();
     order.sort_by(|first, second| {
@@ -572,6 +581,7 @@ fn c_place_annotations(
                 // exact local offsets.  Treat the boundary consistently so
                 // native and fallback placement select the same candidate.
                 if distance <= MIN_LEADER_LENGTH
+                    || direction_penalty(&request.direction, anchor, *center) > 0.0
                     || rect.0 < plot.0
                     || rect.2 > plot.2
                     || rect.1 < plot.1
@@ -607,16 +617,24 @@ fn c_place_annotations(
                     }
                     leader_indexed_curve_penalty(anchor, *center, &all_segment_index)
                 };
-                let Some(curve) = curve_penalty(
-                    rect,
-                    points.get(&request.yref).map(Vec::as_slice).unwrap_or(&[]),
-                    axis,
-                ) else {
+                let cross_axis = request.yref == "y2";
+                let curve_points = if cross_axis {
+                    &all_points
+                } else {
+                    points.get(&request.yref).map(Vec::as_slice).unwrap_or(&[])
+                };
+                let curve_index = if cross_axis {
+                    &all_segment_index
+                } else {
+                    axis_segment_indexes
+                        .get(&request.yref)
+                        .unwrap_or(&all_segment_index)
+                };
+                let Some(curve) = curve_penalty(rect, curve_points, curve_index) else {
                     continue;
                 };
                 let score = distance
                     + *rank as f64 * 2.0
-                    + direction_penalty(&request.direction, anchor, *center)
                     + curve
                     + leader_score
                     + grid_alignment_penalty(
@@ -642,8 +660,126 @@ fn c_place_annotations(
     output
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+#[pyfunction]
+#[allow(clippy::too_many_arguments, clippy::type_complexity)]
+fn c_place_annotations(
+    raw_requests: Vec<(
+        String,
+        f64,
+        f64,
+        String,
+        String,
+        i64,
+        Vec<String>,
+        Option<String>,
+    )>,
+    width: f64,
+    height: f64,
+    margin: (f64, f64, f64, f64),
+    x_range: (f64, f64),
+    y_ranges: Vec<(String, f64, f64)>,
+    x_scale_log: bool,
+    font_size: f64,
+    label_pad: f64,
+    x_domain: (f64, f64),
+    y_domain: (f64, f64),
+    grid_x: Vec<f64>,
+    grid_y: Vec<(String, Vec<f64>)>,
+    trace_points: Vec<(f64, f64, String)>,
+    reserved: Vec<Rect>,
+    trace_segments: Vec<(f64, f64, f64, f64, String, Option<String>)>,
+) -> Vec<(Option<Point>, bool)> {
+    place_annotations(
+        raw_requests,
+        width,
+        height,
+        margin,
+        x_range,
+        y_ranges,
+        x_scale_log,
+        font_size,
+        label_pad,
+        x_domain,
+        y_domain,
+        grid_x,
+        grid_y,
+        trace_points,
+        reserved,
+        trace_segments,
+    )
+}
+
+#[cfg(target_arch = "wasm32")]
+#[derive(Deserialize)]
+struct WasmInput {
+    raw_requests: Vec<(
+        String,
+        f64,
+        f64,
+        String,
+        String,
+        i64,
+        Vec<String>,
+        Option<String>,
+    )>,
+    width: f64,
+    height: f64,
+    margin: (f64, f64, f64, f64),
+    x_range: (f64, f64),
+    y_ranges: Vec<(String, f64, f64)>,
+    x_scale_log: bool,
+    font_size: f64,
+    label_pad: f64,
+    x_domain: (f64, f64),
+    y_domain: (f64, f64),
+    grid_x: Vec<f64>,
+    grid_y: Vec<(String, Vec<f64>)>,
+    trace_points: Vec<(f64, f64, String)>,
+    reserved: Vec<Rect>,
+    trace_segments: Vec<(f64, f64, f64, f64, String, Option<String>)>,
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn solve_annotations(input: JsValue) -> Result<JsValue, JsValue> {
+    let input: WasmInput = serde_wasm_bindgen::from_value(input)
+        .map_err(|error| JsValue::from_str(&error.to_string()))?;
+    let output = place_annotations(
+        input.raw_requests,
+        input.width,
+        input.height,
+        input.margin,
+        input.x_range,
+        input.y_ranges,
+        input.x_scale_log,
+        input.font_size,
+        input.label_pad,
+        input.x_domain,
+        input.y_domain,
+        input.grid_x,
+        input.grid_y,
+        input.trace_points,
+        input.reserved,
+        input.trace_segments,
+    );
+    serde_wasm_bindgen::to_value(&output).map_err(|error| JsValue::from_str(&error.to_string()))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
 #[pymodule]
 fn annotations_rust(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(c_place_annotations, module)?)?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn curve_penalty_rejects_a_cross_axis_curve() {
+        let primary_axis = SegmentIndex::new(vec![((50.0, 212.0), (750.0, 212.0))]);
+        assert!(curve_penalty((300.0, 200.0, 500.0, 225.0), &[], &primary_axis).is_none());
+    }
 }

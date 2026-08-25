@@ -96,7 +96,8 @@ describe('layoutAnnotations', () => {
         expect(second.visible).toBe(true);
         expect(first.ay).toBeLessThan(0);
         expect(second.ay).toBeLessThan(0);
-        expect(Math.hypot(first.ax, first.ay)).toBeLessThan(120);
+        expect(Math.hypot(first.ax, first.ay)).toBeGreaterThanOrEqual(48);
+        expect(Math.hypot(first.ax, first.ay)).toBeLessThan(200);
         expect(first.ax !== second.ax || first.ay !== second.ay).toBe(true);
         expect(first.axref).toBe('pixel');
         expect(first.ayref).toBe('pixel');
@@ -128,6 +129,32 @@ describe('layoutAnnotations', () => {
             const rect = annotationRect(annotation, options);
             expect(rect[3]).toBeLessThan(anchor[1] - 10);
         }
+    });
+
+    it('keeps directivity labels above curves on the primary axis', () => {
+        const options = makeOptions(800, 500);
+        options.layout.xaxis = { type: 'linear', range: [0, 1] };
+        options.layout.yaxis = { range: [0, 1] };
+        options.layout.yaxis2 = { range: [0, 1] };
+        options.data = [{ x: [0, 1], y: [0.62, 0.62], type: 'scatter' }];
+        options.layout.annotations = [
+            {
+                name: 'spinorama:Sound Power DI',
+                x: 0.5,
+                y: 0.5,
+                yref: 'y2',
+                text: 'directivity label',
+                visible: true,
+            },
+        ];
+
+        layoutAnnotations(options);
+
+        const [annotation] = options.layout.annotations;
+        expect(annotation.visible).toBe(true);
+        // The primary-axis curve is at pixel y=212. The directivity label
+        // must use the open space above it rather than covering the curve.
+        expect(annotationRect(annotation, options)[3]).toBeLessThan(212);
     });
 
     it('solves compare annotations together while honoring speaker visibility', () => {

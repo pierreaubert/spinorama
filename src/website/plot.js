@@ -139,6 +139,11 @@ const graphMarginLeft = 30;
 const graphMarginRight = 30;
 const graphMarginTop = 70;
 const graphMarginBottom = 30;
+const graphTitleGap = 16;
+// Plotly anchors a multiline title close to its final text baseline rather
+// than its visual bounding box. Reserve enough space for descenders and the
+// line box below that baseline so the title cannot cover the top grid line.
+const graphMultilineTitleGap = 48;
 
 const graphMarginLeftSmall = 15;
 const graphMarginRightSmall = 5;
@@ -992,15 +997,12 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
                 xref: 'container',
                 xanchor: 'center',
                 x: 0.5,
-                // Anchor the BOTTOM of the title to the top of the plot area
-                // and let it extend upward into margin.t. This avoids the
-                // first line being clipped when the title wraps to 2 lines
-                // (which could happen with yref='container' y=0.99).
-                yref: 'paper',
+                // applyComputeLayout sets the final container-relative y once
+                // the plot height and top margin are known.
+                yref: 'container',
                 yanchor: 'bottom',
                 y: 1.0,
-                // Visual gap between the title's bottom and the plot-area top.
-                pad: { b: 16 },
+                pad: { b: 0 },
             };
         }
     }
@@ -1049,13 +1051,20 @@ export function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outp
             layout.height += extraTop;
         }
 
-        // Non-compact titles use pad.b=16 to leave a visual gap between the
-        // title and the plot area. Grow margin.t by the same amount so the
-        // gap is taken out of the margin, not the breathing room above the title.
+        // Reserve a visual gap between the title and the plot area, then place
+        // the bottom of the title at that exact pixel offset.
         if (!isCompact) {
-            const titleGap = 16;
+            const titleGap = titleInfo.lines > 1 ? graphMultilineTitleGap : graphTitleGap;
             layout.margin.t += titleGap;
             layout.height += titleGap;
+
+            // Position the title in container coordinates now that the final
+            // dimensions are known. Keep the title at the normal 16 px offset;
+            // the extra multiline margin above moves the plot down, preserving
+            // the title's spacing from controls above it.
+            layout.title.yref = 'container';
+            layout.title.yanchor = 'bottom';
+            layout.title.y = (layout.height - layout.margin.t + graphTitleGap) / layout.height;
         }
 
         if (result.legend.hidden) {

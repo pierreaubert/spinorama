@@ -53,6 +53,29 @@ def find_original_speaker_name(sanitized_name):
     return None
 
 
+def generate_annotations_wasm(logger):
+    """Build and publish the shared Rust annotation solver for browser modules."""
+    crate = "src/spinorama/annotations_rust"
+    package = os.path.abspath("{}/annotations-rust".format(cpaths.CPATH_BUILD_WEBSITE))
+    destination = "{}/annotations-rust".format(cpaths.CPATH_DIST_JS)
+    outputs = ["annotations_rust.js", "annotations_rust_bg.wasm"]
+    dependencies = [
+        "{}/Cargo.toml".format(crate),
+        "{}/Cargo.lock".format(crate),
+        *glob("{}/src/*.rs".format(crate)),
+    ]
+    if any(need_update("{}/{}".format(package, output), dependencies) for output in outputs):
+        os.makedirs(package, mode=0o755, exist_ok=True)
+        logger.info("Build annotation solver WebAssembly package")
+        subprocess.run(
+            ["wasm-pack", "build", crate, "--target", "web", "--release", "--out-dir", package],
+            check=True,
+        )
+    os.makedirs(destination, mode=0o755, exist_ok=True)
+    for output in outputs:
+        copy_if_different("{}/{}".format(package, output), "{}/{}".format(destination, output))
+
+
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
 CACHE_VERSION = "v5"
@@ -375,6 +398,8 @@ def main():
         cpaths.CPATH_DIST_CSS,
     ):
         os.makedirs(dir, mode=0o755, exist_ok=True)
+
+    generate_annotations_wasm(logger)
 
     # load all metadata from generated json file
     metadata_json_filename, eqdata_json_filename = find_metadata_file()

@@ -241,8 +241,8 @@ def plot_spinorama_annotation(
         (16000, "Listening Window", "y", 95, ("top", "upper", "middle"), "above"),
         (10000, "Early Reflections", "y", 80, ("middle", "upper", "lower")),
         (10000, "Sound Power", "y", 75, ("upper", "middle", "lower")),
-        (10000, "Early Reflections DI", "y2", 70, ("lower", "bottom", "middle")),
-        (10000, "Sound Power DI", "y2", 65, ("bottom", "lower", "middle")),
+        (10000, "Early Reflections DI", "y2", 70, ("upper", "top", "middle", "lower", "bottom"), "above"),
+        (10000, "Sound Power DI", "y2", 65, ("upper", "top", "middle", "lower", "bottom"), "above"),
     )
     requests = []
     for graph_param in graph_params:

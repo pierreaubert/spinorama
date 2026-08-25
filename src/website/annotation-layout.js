@@ -27,16 +27,19 @@ const ANNOTATION_LANES = {
     'Listening Window': ['top', 'upper', 'middle'],
     'Early Reflections': ['middle', 'upper', 'lower'],
     'Sound Power': ['upper', 'middle', 'lower'],
-    'Early Reflections DI': ['lower', 'bottom', 'middle'],
-    'Sound Power DI': ['bottom', 'lower', 'middle'],
+    'Early Reflections DI': ['upper', 'top', 'middle', 'lower', 'bottom'],
+    'Sound Power DI': ['upper', 'top', 'middle', 'lower', 'bottom'],
 };
 
 const ANNOTATION_DIRECTIONS = {
     'On Axis': 'above',
     'Listening Window': 'above',
+    'Early Reflections DI': 'above',
+    'Sound Power DI': 'above',
 };
 
 const TRACE_CLEARANCE = 14;
+const MIN_LEADER_LENGTH = 48;
 
 function finite(value) {
     return typeof value === 'number' && Number.isFinite(value);
@@ -181,22 +184,36 @@ function annotationAnchor(annotation, geometry) {
 }
 
 function tracePoints(options, geometry) {
-    const points = { y: [], y2: [] };
+    const points = { y: [], y2: [], all: [], segments: { y: [], y2: [], all: [] } };
     for (const trace of options.data || []) {
         if (trace.visible === false || trace.visible === 'legendonly' || !Array.isArray(trace.x) || !Array.isArray(trace.y)) {
             continue;
         }
         const yref = trace.yaxis === 'y2' ? 'y2' : 'y';
         const limit = Math.min(trace.x.length, trace.y.length);
+        let previous = null;
         for (let index = 0; index < limit; index++) {
             const rawX = Number(trace.x[index]);
             const y = Number(trace.y[index]);
-            if (!finite(rawX) || !finite(y) || (geometry.xLog && rawX <= 0)) continue;
+            if (!finite(rawX) || !finite(y) || (geometry.xLog && rawX <= 0)) {
+                previous = null;
+                continue;
+            }
             const x = geometry.xLog ? Math.log10(rawX) : rawX;
             const xPixel = valueToPixel(x, geometry.xRange, geometry.left, geometry.right);
             const yPixel = valueToPixel(y, geometry.yRanges[yref], geometry.bottom, geometry.top);
             if (xPixel >= geometry.left && xPixel <= geometry.right && yPixel >= geometry.top && yPixel <= geometry.bottom) {
-                points[yref].push([xPixel, yPixel]);
+                const point = [xPixel, yPixel];
+                points[yref].push(point);
+                points.all.push(point);
+                if (previous) {
+                    const segment = [previous, point];
+                    points.segments[yref].push(segment);
+                    points.segments.all.push(segment);
+                }
+                previous = point;
+            } else {
+                previous = null;
             }
         }
     }
@@ -262,29 +279,37 @@ function candidateCenters(annotation, key, anchor, size, geometry) {
         [96, -2 * verticalOffset],
         [-96, 2 * verticalOffset],
         [96, 2 * verticalOffset],
+        [-144, -2 * verticalOffset],
+        [144, -2 * verticalOffset],
+        [-192, -2 * verticalOffset],
+        [192, -2 * verticalOffset],
     ];
     localOffsets.forEach(([dx, dy], index) => add([anchor[0] + dx, anchor[1] + dy], laneNames.length + index));
 
     laneNames.forEach((lane, laneRank) => {
         const y = geometry.top + LANE_FRACTIONS[lane] * (geometry.bottom - geometry.top);
-        [0, -100, 100, -190, 190].forEach((dx) => add([anchor[0] + dx, y], laneRank));
+        [0, -100, 100, -190, 190, -280, 280, -360, 360].forEach((dx) => add([anchor[0] + dx, y], laneRank));
     });
     return candidates;
 }
 
 function directionPenalty(direction, anchor, center) {
-    if (direction === 'above') return center[1] > anchor[1] ? 1000 + center[1] - anchor[1] : 0;
-    if (direction === 'below') return center[1] < anchor[1] ? 1000 + anchor[1] - center[1] : 0;
+    if (direction === 'above') return center[1] >= anchor[1] ? 1000 + center[1] - anchor[1] : 0;
+    if (direction === 'below') return center[1] <= anchor[1] ? 1000 + anchor[1] - center[1] : 0;
     return 0;
 }
 
-function curvePenalty(rect, points) {
+function curvePenalty(rect, points, segments) {
     let penalty = 0;
     const clearanceRect = expandRect(rect, TRACE_CLEARANCE);
     for (const point of points) {
         const pointRect = rectFromCenter(point, [5, 5]);
         if (rectOverlap(rect, pointRect) > 0) return Infinity;
         if (rectOverlap(clearanceRect, pointRect) > 0) penalty += 20;
+    }
+    for (const [start, end] of segments) {
+        if (segmentCrossesRect(start, end, rect)) return Infinity;
+        if (segmentCrossesRect(start, end, clearanceRect)) penalty += 20;
     }
     return penalty;
 }
@@ -304,7 +329,7 @@ function metadata(annotation, index) {
  * The solver operates on one Plotly layout, so compare graphs naturally share
  * one collision set while hidden speaker A/B labels do not consume space.
  */
-export function layoutAnnotations(options) {
+function layoutAnnotationsFallback(options) {
     const layout = options?.layout;
     const annotations = layout?.annotations;
     if (!layout || !Array.isArray(annotations) || annotations.length === 0) return options;
@@ -361,18 +386,26 @@ export function layoutAnnotations(options) {
         let best = null;
         for (const candidate of candidateCenters(item.annotation, item.info.key, item.anchor, item.size, geometry)) {
             const rect = rectFromCenter(candidate.center, item.size);
+            if (Math.hypot(candidate.center[0] - item.anchor[0], candidate.center[1] - item.anchor[1]) <= MIN_LEADER_LENGTH) {
+                continue;
+            }
+            const direction = ANNOTATION_DIRECTIONS[item.info.key];
+            if (directionPenalty(direction, item.anchor, candidate.center) > 0) continue;
             if (occupied.some((other) => rectOverlap(rect, other) > 0)) continue;
             if (reserved.some((other) => rectOverlap(rect, other) > 0)) continue;
             if (arrows.some((arrow) => segmentsIntersect(item.anchor, candidate.center, arrow.start, arrow.end))) continue;
             if (occupied.some((other) => segmentCrossesRect(item.anchor, candidate.center, other))) continue;
             if (arrows.some((arrow) => segmentCrossesRect(arrow.start, arrow.end, rect))) continue;
 
-            const curveScore = curvePenalty(rect, curves[item.yref]);
+            const crossAxis = item.yref === 'y2';
+            const curveScore = curvePenalty(
+                rect,
+                crossAxis ? curves.all : curves[item.yref],
+                crossAxis ? curves.segments.all : curves.segments[item.yref]
+            );
             if (!Number.isFinite(curveScore)) continue;
             const distance = Math.hypot(candidate.center[0] - item.anchor[0], candidate.center[1] - item.anchor[1]);
-            const direction = ANNOTATION_DIRECTIONS[item.info.key];
-            const score =
-                distance + candidate.laneRank * 2 + directionPenalty(direction, item.anchor, candidate.center) + curveScore;
+            const score = distance + candidate.laneRank * 2 + curveScore;
             if (!best || score < best.score) best = { score, center: candidate.center, rect };
         }
 
@@ -393,4 +426,164 @@ export function layoutAnnotations(options) {
         item.annotation.ay = Math.round(best.center[1] - item.anchor[1]);
     }
     return options;
+}
+
+let wasmSolver = null;
+let wasmLoad = null;
+
+function loadWasmSolver() {
+    if (wasmSolver || wasmLoad) return wasmLoad;
+    if (typeof window === 'undefined' || !/^https?:$/.test(window.location?.protocol || '')) {
+        return Promise.resolve(null);
+    }
+    const wasmUrl = '/js/annotations-rust/annotations_rust.js';
+    wasmLoad = import(/* @vite-ignore */ wasmUrl)
+        .then(async (module) => {
+            await module.default();
+            wasmSolver = module;
+            return module;
+        })
+        .catch(() => {
+            // Keep the synchronous JavaScript solver as an offline/build fallback.
+            return null;
+        });
+    return wasmLoad;
+}
+
+function rustX(value, geometry) {
+    return geometry.xLog && value <= geometry.xRange[1] + 0.5 ? 10 ** value : value;
+}
+
+function wasmInput(options, layout, geometry, reserved) {
+    const rawRequests = [];
+    const outputAnnotations = [];
+    (layout.annotations || []).forEach((annotation, index) => {
+        if (annotation.visible === false || annotation.visible === 'legendonly') return;
+        const anchor = annotationAnchor(annotation, geometry);
+        if (!anchor) return;
+        const info = metadata(annotation, index);
+        rawRequests.push([
+            info.key,
+            rustX(Number(annotation.x), geometry),
+            Number(annotation.y),
+            anchor.yref,
+            String(annotation.text || ''),
+            info.priority,
+            ANNOTATION_LANES[info.key] || Object.keys(LANE_FRACTIONS),
+            ANNOTATION_DIRECTIONS[info.key] || null,
+        ]);
+        outputAnnotations.push({ annotation, anchor: anchor.point });
+    });
+
+    const tracePoints = [];
+    const traceSegments = [];
+    for (const trace of options.data || []) {
+        if (trace.visible === false || trace.visible === 'legendonly' || !Array.isArray(trace.x) || !Array.isArray(trace.y))
+            continue;
+        const yref = trace.yaxis === 'y2' ? 'y2' : 'y';
+        const key = typeof trace.name === 'string' ? trace.name : null;
+        let previous = null;
+        for (let index = 0; index < Math.min(trace.x.length, trace.y.length); index++) {
+            const x = Number(trace.x[index]);
+            const y = Number(trace.y[index]);
+            if (!finite(x) || !finite(y) || (geometry.xLog && x <= 0)) {
+                previous = null;
+                continue;
+            }
+            const dataX = rustX(x, geometry);
+            const point = [
+                valueToPixel(geometry.xLog ? Math.log10(dataX) : dataX, geometry.xRange, geometry.left, geometry.right),
+                valueToPixel(y, geometry.yRanges[yref], geometry.bottom, geometry.top),
+            ];
+            if (
+                point[0] < geometry.left ||
+                point[0] > geometry.right ||
+                point[1] < geometry.top ||
+                point[1] > geometry.bottom
+            ) {
+                previous = null;
+                continue;
+            }
+            tracePoints.push([dataX, y, yref]);
+            if (previous) traceSegments.push([previous[0], previous[1], point[0], point[1], yref, key]);
+            previous = point;
+        }
+    }
+
+    return {
+        raw_requests: rawRequests,
+        width: Number(layout.width || 1200),
+        height: Number(layout.height || 800),
+        margin: [
+            Number(layout.margin?.l || 0),
+            Number(layout.margin?.r || 0),
+            Number(layout.margin?.t || 0),
+            Number(layout.margin?.b || 0),
+        ],
+        x_range: geometry.xRange,
+        y_ranges: [
+            ['y', ...geometry.yRanges.y],
+            ['y2', ...geometry.yRanges.y2],
+        ],
+        x_scale_log: geometry.xLog,
+        font_size: Number(layout.font?.size || 10),
+        label_pad: 5,
+        x_domain: [0, 1],
+        y_domain: [0, 1],
+        grid_x: [],
+        grid_y: [],
+        trace_points: tracePoints,
+        reserved,
+        trace_segments: traceSegments,
+        outputAnnotations,
+    };
+}
+
+function layoutAnnotationsWasm(options) {
+    const layout = options?.layout;
+    const annotations = layout?.annotations;
+    if (!layout || !Array.isArray(annotations) || annotations.length === 0) return options;
+    const width = Number(layout.width || 1200);
+    const height = Number(layout.height || 800);
+    const margin = layout.margin || {};
+    const geometry = {
+        left: Number(margin.l || 0),
+        right: width - Number(margin.r || 0),
+        top: Number(margin.t || 0),
+        bottom: height - Number(margin.b || 0),
+        xRange: rangeFor(layout, 'xaxis'),
+        yRanges: { y: rangeFor(layout, 'yaxis'), y2: rangeFor(layout, 'yaxis2') },
+        xLog: layout.xaxis?.type === 'log',
+    };
+    if (geometry.right <= geometry.left || geometry.bottom <= geometry.top) return options;
+    const input = wasmInput(options, layout, geometry, reservedRects(layout, geometry));
+    const results = wasmSolver.solve_annotations(input);
+    for (let index = 0; index < results.length; index++) {
+        const [center, hidden] = results[index];
+        const item = input.outputAnnotations[index];
+        if (!item) continue;
+        if (hidden || !Array.isArray(center)) {
+            item.annotation.visible = false;
+            continue;
+        }
+        item.annotation.bgcolor = item.annotation.bgcolor || 'rgba(255, 255, 255, 0.86)';
+        item.annotation.borderpad = item.annotation.borderpad ?? 3;
+        item.annotation.borderwidth = item.annotation.borderwidth ?? 1;
+        item.annotation.xanchor = 'center';
+        item.annotation.yanchor = 'middle';
+        item.annotation.axref = 'pixel';
+        item.annotation.ayref = 'pixel';
+        item.annotation.ax = Math.round(center[0] - item.anchor[0]);
+        item.annotation.ay = Math.round(center[1] - item.anchor[1]);
+    }
+    return options;
+}
+
+// Graph modules wait for the small shared solver before their first Plotly
+// render.  This makes the browser use the Rust algorithm on initial load,
+// while file/offline deployments retain the synchronous JavaScript fallback.
+await loadWasmSolver();
+
+export function layoutAnnotations(options) {
+    return wasmSolver ? layoutAnnotationsWasm(options) : layoutAnnotationsFallback(options);
 }

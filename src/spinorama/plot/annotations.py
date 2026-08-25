@@ -437,9 +437,9 @@ def _candidate_centers(
 
 def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> float:
     if direction == "above":
-        return 1000.0 + center[1] - anchor[1] if center[1] > anchor[1] else 0.0
+        return 1000.0 + center[1] - anchor[1] if center[1] >= anchor[1] else 0.0
     if direction == "below":
-        return 1000.0 + anchor[1] - center[1] if center[1] < anchor[1] else 0.0
+        return 1000.0 + anchor[1] - center[1] if center[1] <= anchor[1] else 0.0
     return 0.0
 
 
@@ -605,6 +605,7 @@ def place_annotations(
             curve_key = trace_segment[3]
             segments_by_curve.setdefault((yref, curve_key), []).append((start, end))
 
+    all_points = tuple(point for axis_points in points_by_axis.values() for point in axis_points)
     reserved = tuple(reserved_rects)
     placed: list[PlacedAnnotation | None] = [None] * len(requests)
     occupied: list[Rect] = []
@@ -637,6 +638,8 @@ def place_annotations(
                 rect = _rect_from_center(center, size)
                 distance = math.dist(center, anchor)
                 if distance < _MIN_LEADER_LENGTH:
+                    continue
+                if _direction_penalty(request.preferred_direction, anchor, center) > 0:
                     continue
                 if not (
                     left <= rect[0]
@@ -672,17 +675,17 @@ def place_annotations(
                         anchor, center, all_trace_segments
                     )
 
+                cross_axis = request.yref == "y2"
                 curve_score = _curve_penalty(
                     rect,
-                    points_by_axis.get(request.yref, []),
-                    axis_segments,
+                    all_points if cross_axis else points_by_axis.get(request.yref, []),
+                    all_trace_segments if cross_axis else axis_segments,
                 )
                 if curve_score is None:
                     continue
                 score = (
                     distance
                     + lane_rank * 2.0
-                    + _direction_penalty(request.preferred_direction, anchor, center)
                     + curve_score
                     + leader_score
                     + _grid_alignment_penalty(
@@ -736,7 +739,6 @@ def annotation_dicts(
             align="center",
             showarrow=True,
             arrowhead=2,
-            standoff=_LEADER_START_CLEARANCE,
             arrowcolor=request.color,
             xanchor="center",
             yanchor="middle",

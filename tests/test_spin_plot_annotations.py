@@ -3,6 +3,7 @@
 import math
 import unittest
 from types import SimpleNamespace
+from unittest import mock
 
 import numpy as np
 import pandas as pd
@@ -20,6 +21,7 @@ from spinorama.plot.annotations import (
 )
 from spinorama.plot.spinorama import plot_spinorama
 from scripts.plot_cea2034_annotations import show_annotations
+from spinorama.plot import annotations as annotations_module
 
 
 class AnnotationLayoutTests(unittest.TestCase):
@@ -243,6 +245,35 @@ class AnnotationLayoutTests(unittest.TestCase):
 
         self.assertIsNone(_curve_penalty(rect, points, segments))
 
+    def test_directivity_label_avoids_a_curve_on_the_primary_axis(self):
+        request = AnnotationRequest(
+            key="Sound Power DI",
+            x=0.5,
+            y=0.5,
+            yref="y2",
+            text="directivity label",
+            color="grey",
+            preferred_lanes=("upper", "top", "middle"),
+            preferred_direction="above",
+        )
+        geometry = AnnotationGeometry(
+            width=800,
+            height=500,
+            margin={"l": 50, "r": 50, "t": 60, "b": 40},
+            x_range=(0, 1),
+            y_ranges={"y": (0, 1), "y2": (0, 1)},
+        )
+        primary_curve = (((50.0, 212.0), (750.0, 212.0), "y", "On Axis"),)
+
+        # Exercise the Python fallback directly; Rust has an equivalent unit
+        # test over its spatial segment index.
+        with mock.patch.object(annotations_module, "_c_place_annotations", None):
+            placement = place_annotations([request], geometry, trace_segments=primary_curve)[0]
+
+        self.assertFalse(placement.hidden)
+        rect = _rect_from_center(placement.center, placement.size)
+        self.assertLess(rect[3], 212.0)
+
     def test_rejects_leader_that_tracks_curve_after_anchor(self):
         anchor = (400.0, 260.0)
         curve = (((400.0, 260.0), (400.0, 100.0)),)
@@ -283,7 +314,7 @@ class AnnotationLayoutTests(unittest.TestCase):
         annotation = annotation_dicts(
             [placement], visible=True, geometry=geometry
         )[0]
-        self.assertEqual(annotation["standoff"], 12.0)
+        self.assertNotIn("standoff", annotation)
         self.assertEqual(annotation["axref"], "x")
         self.assertEqual(annotation["ayref"], "y")
         self.assertNotEqual(annotation["ay"], placement.request.y)
