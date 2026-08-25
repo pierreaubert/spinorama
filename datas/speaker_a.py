@@ -3,6 +3,7 @@ from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_a: SpeakerDatabase = {
     "A-for-Ara FS1": {
+        "skip": True,
         "brand": "A-for-Ara",
         "model": "FS1",
         "type": "passive",
