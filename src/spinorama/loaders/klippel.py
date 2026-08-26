@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import locale
 import os
 
 import pandas as pd
@@ -25,9 +24,12 @@ from spinorama import logger
 from spinorama.ltype import StatusOr
 from spinorama.misc import sort_angles
 
-locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-
 removequote = str.maketrans({'"': None, "\n": ""})
+
+
+def _parse_klippel_number(value: str) -> float:
+    """Parse Klippel's U.S.-formatted numeric fields without global locale state."""
+    return float(value.replace(",", ""))
 
 
 def parse_graph_freq_klippel(filename: str) -> StatusOr[tuple[str, pd.DataFrame]]:
@@ -60,7 +62,7 @@ def parse_graph_freq_klippel(filename: str) -> StatusOr[tuple[str, pd.DataFrame]
         filename, sep="\t", skiprows=2, usecols=usecols, names=columns, thousands=","
     ).drop(0)
     # convert to float (issues with , and . in numbers)
-    df_klippel = df_klippel.map(locale.atof)
+    df_klippel = df_klippel.map(_parse_klippel_number)
     # put it in order, not relevant for pandas but for np array
     if len(df_klippel.columns) > 2 and df_klippel.columns[2] == "10°":
         return True, (title, sort_angles(df_klippel))

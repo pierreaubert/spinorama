@@ -19,13 +19,16 @@
 """Tests for the evaluation framework."""
 
 import math
+import json
 from pathlib import Path
 
 import numpy as np
+import plotly.io as pio
 import pytest
 
 from graphextract.eval_extraction import (
     CurveMetrics,
+    _migrate_legacy_mapbox_schema,
     compare_curves,
     load_plotly_ground_truth,
     render_plotly_to_png,
@@ -172,6 +175,36 @@ def test_compare_curves_empty():
     metrics = compare_curves([], gt_freqs, gt_dbs)
     assert metrics.rms_error_db == float("inf")
     assert metrics.frequency_coverage == 0.0
+
+
+def test_migrate_legacy_mapbox_schema_for_plotly_7():
+    """Legacy exported templates should parse with Plotly 7."""
+    figure_json = {
+        "data": [
+            {
+                "type": "scattermapbox",
+                "subplot": "mapbox",
+                "lat": [46.95],
+                "lon": [7.44],
+            }
+        ],
+        "layout": {
+            "mapbox": {"style": "open-street-map"},
+            "template": {
+                "data": {"scattermapbox": [{"marker": {"colorbar": {"ticks": ""}}}]},
+                "layout": {"mapbox": {"style": "light"}},
+            },
+        },
+    }
+
+    _migrate_legacy_mapbox_schema(figure_json)
+    fig = pio.from_json(json.dumps(figure_json))
+
+    assert fig.data[0].type == "scattermap"
+    assert fig.data[0].subplot == "map"
+    assert fig.layout.map is not None
+    assert fig.layout.template.data.scattermap is not None
+    assert fig.layout.template.layout.map is not None
 
 
 # ── Real data tests (require sample data) ──────────────────────────

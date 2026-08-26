@@ -25,7 +25,7 @@ import pandas as pd
 import scipy.io
 
 from spinorama.misc import graph_melt
-from spinorama.loaders.klippel import parse_graph_freq_klippel
+from spinorama.loaders.klippel import _parse_klippel_number, parse_graph_freq_klippel
 from spinorama.compute.cea2034 import (
     compute_cea2034,
     early_reflections,
@@ -38,6 +38,11 @@ from spinorama.measurements import Measurements
 
 
 pd.set_option("display.max_rows", 202)
+
+
+def test_parse_klippel_number_is_locale_independent():
+    """Klippel exports use commas as thousands separators."""
+    assert _parse_klippel_number("1,000.49") == 1000.49
 
 
 class SpinoramaSpinoramaKlippelTests(unittest.TestCase):

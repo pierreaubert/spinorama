@@ -119,6 +119,40 @@ def _decode_trace_data(data: dict | list) -> npt.NDArray | None:
     return None
 
 
+def _migrate_legacy_mapbox_schema(value: object) -> None:
+    """Migrate Plotly's removed Mapbox schema in a deserialized figure.
+
+    Plotly 7 renamed the ``scattermapbox`` trace and ``layout.mapbox``
+    container to ``scattermap`` and ``layout.map``.  Published Spinorama
+    figures can still contain the old fields in their saved templates.
+    """
+    if isinstance(value, list):
+        for item in value:
+            _migrate_legacy_mapbox_schema(item)
+        return
+
+    if not isinstance(value, dict):
+        return
+
+    mapbox = value.pop("mapbox", None)
+    if mapbox is not None:
+        value.setdefault("map", mapbox)
+
+    scattermapbox = value.pop("scattermapbox", None)
+    if scattermapbox is not None:
+        value.setdefault("scattermap", scattermapbox)
+
+    if value.get("type") == "scattermapbox":
+        value["type"] = "scattermap"
+
+    subplot = value.get("subplot")
+    if isinstance(subplot, str) and subplot.startswith("mapbox"):
+        value["subplot"] = "map" + subplot.removeprefix("mapbox")
+
+    for item in value.values():
+        _migrate_legacy_mapbox_schema(item)
+
+
 def render_plotly_to_png(
     json_path: str | Path,
     width: int = 1200,
@@ -137,9 +171,10 @@ def render_plotly_to_png(
     import plotly.io as pio
 
     with open(json_path) as f:
-        raw_json = f.read()
+        figure_json = json.load(f)
 
-    fig = pio.from_json(raw_json)
+    _migrate_legacy_mapbox_schema(figure_json)
+    fig = pio.from_json(json.dumps(figure_json))
     # Disable autoexpand so rendered margins match the JSON-specified values exactly
     fig.update_layout(margin=dict(autoexpand=False))
     png_bytes = fig.to_image(format="png", width=width, height=height)
