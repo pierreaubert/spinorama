@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 # Resolve paths from this script's location so it can be invoked from anywhere.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
@@ -85,8 +87,18 @@ cd "${ROOT_DIR}/src/spinorama/compute_scores_cython" && \
     if [ -n "$SO_FILE" ]; then ln -s "$SO_FILE" compute_scores_cython.so; fi && \
     cd ../../..
 
-# compile rust
-cd "${ROOT_DIR}" && \
-    maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/compute_scores_rust/Cargo.toml"
-cd "${ROOT_DIR}" && \
-    maturin build --release --manifest-path "${ROOT_DIR}/src/spinorama/annotations_rust/Cargo.toml"
+# Compile and install Rust extensions into the active virtual environment.
+maturin develop --release \
+    --manifest-path "${ROOT_DIR}/src/spinorama/compute_scores_rust/Cargo.toml"
+maturin develop --release \
+    --manifest-path "${ROOT_DIR}/src/spinorama/annotations_rust/Cargo.toml"
+
+# Do not silently fall back to the Python implementations after setup.
+python - <<'PY'
+import annotations_rust
+import compute_scores_rust
+from spinorama.plot import annotations
+
+assert annotations._c_place_annotations is not None
+print("Rust extensions installed successfully")
+PY

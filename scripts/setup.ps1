@@ -140,23 +140,26 @@ try {
     $env:PYTHONPATH = ".\src;.\src\website"
 }
 
-# ------------ COMPILE RUST
-Write-Host "`n--- Building Rust extension ---"
-if (Get-Command "maturin" -ErrorAction SilentlyContinue) {
-    Push-Location src\spinorama\compute_scores_rust
-    try {
-        maturin build --release
-    } finally {
-        Pop-Location
-    }
-    Push-Location src\spinorama\annotations_rust
-    try {
-        maturin build --release
-    } finally {
-        Pop-Location
-    }
-} else {
-    Write-Host "maturin not found, skipping Rust build. Install with: pip install maturin" -ForegroundColor Yellow
+# ------------ COMPILE AND INSTALL RUST
+Write-Host "`n--- Building and installing Rust extensions ---"
+if (-not (Get-Command "maturin" -ErrorAction SilentlyContinue)) {
+    throw "maturin not found after dependency installation"
+}
+
+maturin develop --release --manifest-path "src\spinorama\compute_scores_rust\Cargo.toml"
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to install compute_scores_rust"
+}
+
+maturin develop --release --manifest-path "src\spinorama\annotations_rust\Cargo.toml"
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to install annotations_rust"
+}
+
+# Do not silently fall back to the Python implementations after setup.
+python -c "import annotations_rust, compute_scores_rust; from spinorama.plot import annotations; assert annotations._c_place_annotations is not None; print('Rust extensions installed successfully')"
+if ($LASTEXITCODE -ne 0) {
+    throw "Rust extension import verification failed"
 }
 
 Write-Host "`n--- Setup complete ---" -ForegroundColor Green

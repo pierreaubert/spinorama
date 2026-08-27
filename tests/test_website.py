@@ -6,6 +6,7 @@ import threading
 import http.server
 import socketserver
 import os
+import re
 import socket
 import sys
 import time
@@ -96,7 +97,41 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         # Change to dist directory for serving
         os.chdir(dist_dir)
 
-        Handler = http.server.SimpleHTTPRequestHandler
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            """Serve the checked-in site with metadata requests pinned to this server."""
+
+            def do_GET(self):
+                request_path = self.path.partition("?")[0]
+                basename = os.path.basename(request_path)
+                if basename.startswith("meta-") and basename.endswith(".min.js"):
+                    filename = self.translate_path(request_path)
+                    try:
+                        with open(filename, "rb") as meta_file:
+                            content = meta_file.read()
+                    except OSError:
+                        self.send_error(404, "File not found")
+                        return
+
+                    local_url = f'export const urlSite="{cls.DEV}"+"/";'.encode()
+                    content, replacements = re.subn(
+                        rb'export const urlSite="[^"]+"\+"/";',
+                        local_url,
+                        content,
+                        count=1,
+                    )
+                    if replacements != 1:
+                        self.send_error(500, "Could not configure local metadata URL")
+                        return
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/javascript; charset=utf-8")
+                    self.send_header("Content-Length", str(len(content)))
+                    self.send_header("Cache-Control", "no-store")
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+                super().do_GET()
 
         class ReuseAddrTCPServer(socketserver.TCPServer):
             allow_reuse_address = True

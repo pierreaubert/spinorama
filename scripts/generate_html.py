@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from glob import glob
-import filecmp
 import json
 import os
 import re
@@ -146,9 +145,20 @@ def get_versions(filename: str) -> dict[str, str]:
     return versions
 
 
+def files_are_equal(first: str, second: str, chunk_size: int = 1024 * 1024) -> bool:
+    """Compare file contents without relying on ``filecmp``'s stat cache."""
+    if os.path.getsize(first) != os.path.getsize(second):
+        return False
+    with open(first, "rb") as first_file, open(second, "rb") as second_file:
+        while first_chunk := first_file.read(chunk_size):
+            if first_chunk != second_file.read(chunk_size):
+                return False
+        return second_file.read(1) == b""
+
+
 def copy_if_different(source: str, destination: str) -> bool:
     """Copy a generated asset without changing its mtime when unchanged."""
-    if os.path.isfile(destination) and filecmp.cmp(source, destination, shallow=False):
+    if os.path.isfile(destination) and files_are_equal(source, destination):
         return False
     os.makedirs(os.path.dirname(destination), mode=0o755, exist_ok=True)
     shutil.copyfile(source, destination)
