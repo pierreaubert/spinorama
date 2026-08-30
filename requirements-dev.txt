@@ -5,4 +5,5 @@ jupyterlab
 pre-commit
 pyright
 python-lsp-server[pyright]
+ruff
 ruff-lsp
