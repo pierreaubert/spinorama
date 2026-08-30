@@ -238,6 +238,21 @@ def cache_load_seq(filters, smoke_test):
     return df_all
 
 
+def _quarantine_corrupt_cache(cachepath: str) -> pathlib.Path | None:
+    """Move an unreadable derived cache shard aside for later inspection."""
+    source = pathlib.Path(cachepath)
+    if not source.is_file():
+        return None
+
+    target = source.with_name(f"{source.name}.corrupt")
+    suffix = 1
+    while target.exists():
+        target = source.with_name(f"{source.name}.corrupt.{suffix}")
+        suffix += 1
+    source.replace(target)
+    return target
+
+
 def _cache_fetch_worker(args):
     """Worker function for loading cache files in parallel"""
     cachepath, level = args
@@ -246,7 +261,21 @@ def _cache_fetch_worker(args):
     logger.debug("Level of debug is %d", level)
     try:
         return fl.load(path=cachepath)
-    except Exception as e:
+    except (KeyError, ValueError, TypeError, EOFError, tables.HDF5ExtError) as error:
+        try:
+            quarantined = _quarantine_corrupt_cache(cachepath)
+        except OSError:
+            logger.exception("Invalid cache file %s could not be quarantined", cachepath)
+            return None
+        logger.warning(
+            "Ignoring invalid cache file %s (%s: %s); moved to %s",
+            cachepath,
+            type(error).__name__,
+            error,
+            quarantined,
+        )
+        return None
+    except Exception:
         logger.exception("Error loading cache file %s", cachepath)
         return None
 

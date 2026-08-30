@@ -29,6 +29,30 @@ from typing import Any, Optional
 from multiprocessing import Pool, cpu_count
 from functools import partial
 
+
+def _reexec_project_venv() -> None:
+    """Use the project virtualenv when this executable is run directly."""
+    if sys.prefix != getattr(sys, "base_prefix", sys.prefix):
+        return
+    if os.environ.get("SPINORAMA_VENV_REEXEC") == "1":
+        return
+
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    candidates = (
+        os.path.join(project_root, ".venv", "bin", "python3"),
+        os.path.join(project_root, ".venv", "Scripts", "python.exe"),
+    )
+    venv_python = next((path for path in candidates if os.path.isfile(path)), None)
+    if venv_python is None:
+        return
+
+    environment = os.environ.copy()
+    environment["SPINORAMA_VENV_REEXEC"] = "1"
+    os.execve(venv_python, [venv_python, os.path.abspath(__file__), *sys.argv[1:]], environment)
+
+
+_reexec_project_venv()
+
 from generate_common import (
     args2level,
     cache_save,

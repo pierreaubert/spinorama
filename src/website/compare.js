@@ -24,7 +24,7 @@ import { flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { getUrlParameter } from './misc.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
-import { layoutAnnotations } from './annotation-layout.js';
+import { annotationLayoutReady, layoutAnnotations } from './annotation-layout.js';
 import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 const flagGraphConfig = true;
@@ -143,7 +143,8 @@ getMetadata()
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
-            async function run() {
+    async function run() {
+        await annotationLayoutReady;
                 Promise.all(speakersGraph).then((graphs) => {
                     // Tag annotations with speaker index and merge them
                     const allAnnotations = [];

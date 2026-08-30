@@ -627,7 +627,7 @@ function layoutAnnotationsWasm(options) {
 // Graph modules wait for the small shared solver before their first Plotly
 // render.  This makes the browser use the Rust algorithm on initial load,
 // while file/offline deployments retain the synchronous JavaScript fallback.
-await loadWasmSolver();
+export const annotationLayoutReady = loadWasmSolver();
 
 export function layoutAnnotations(options) {
     const annotations = options?.layout?.annotations;

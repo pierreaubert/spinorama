@@ -805,7 +805,9 @@ def main():
 
             # compress files with terser
             if flag_optim:
-                terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
+                terser_command = "{0} --module {1}".format(
+                    "./node_modules/.bin/terser", item_post_import
+                )
                 # remove stale terser output before running
                 if os.path.exists(item_post_terser):
                     os.remove(item_post_terser)
