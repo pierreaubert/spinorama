@@ -161,6 +161,37 @@ function annotationKey(annotation) {
     return '';
 }
 
+function isStaticAnnotation(annotation) {
+    return typeof annotation.name === 'string' && annotation.name.startsWith('static:');
+}
+
+const STATIC_ANNOTATION_LAYOUT = {
+    'On Axis': [0, -20, 'right', 'bottom'],
+    'Listening Window': [0, -20, 'right', 'bottom'],
+    'Early Reflections': [0, 20, 'right', 'top'],
+    'Sound Power': [0, 20, 'right', 'top'],
+    'Early Reflections DI': [0, 20, 'right', 'top'],
+    'Sound Power DI': [0, -20, 'right', 'bottom'],
+};
+const MAX_DYNAMIC_LEADER_LENGTH = 260;
+
+function applyStaticAnnotationLayout(annotations) {
+    for (const annotation of annotations) {
+        const key = annotationKey(annotation);
+        const layout = STATIC_ANNOTATION_LAYOUT[key];
+        if (!layout) continue;
+        const [ax, ay, xanchor, yanchor] = layout;
+        annotation.visible = true;
+        annotation.ax = ax;
+        annotation.ay = ay;
+        annotation.axref = 'pixel';
+        annotation.ayref = 'pixel';
+        annotation.xanchor = xanchor;
+        annotation.yanchor = yanchor;
+        annotation.name = `static:${key}`;
+    }
+}
+
 function estimateSize(annotation, layout) {
     const fontSize = Number(annotation.font?.size || layout.font?.size || 10);
     const text = String(annotation.text || '');
@@ -356,6 +387,7 @@ function layoutAnnotationsFallback(options) {
 
     annotations.forEach((annotation, index) => {
         if (annotation.visible === false || annotation.visible === 'legendonly') return;
+        if (isStaticAnnotation(annotation)) return;
         const anchor = annotationAnchor(annotation, geometry);
         if (!anchor) return;
         const info = metadata(annotation, index);
@@ -459,6 +491,7 @@ function wasmInput(options, layout, geometry, reserved) {
     const outputAnnotations = [];
     (layout.annotations || []).forEach((annotation, index) => {
         if (annotation.visible === false || annotation.visible === 'legendonly') return;
+        if (isStaticAnnotation(annotation)) return;
         const anchor = annotationAnchor(annotation, geometry);
         if (!anchor) return;
         const info = metadata(annotation, index);
@@ -558,6 +591,18 @@ function layoutAnnotationsWasm(options) {
     if (geometry.right <= geometry.left || geometry.bottom <= geometry.top) return options;
     const input = wasmInput(options, layout, geometry, reservedRects(layout, geometry));
     const results = wasmSolver.solve_annotations(input);
+    const needsStaticFallback =
+        results.some(
+            ([center, hidden], index) =>
+                hidden ||
+                !Array.isArray(center) ||
+                Math.hypot(center[0] - input.outputAnnotations[index].anchor[0], center[1] - input.outputAnnotations[index].anchor[1]) >
+                    MAX_DYNAMIC_LEADER_LENGTH,
+        );
+    if (needsStaticFallback) {
+        applyStaticAnnotationLayout(annotations);
+        return options;
+    }
     for (let index = 0; index < results.length; index++) {
         const [center, hidden] = results[index];
         const item = input.outputAnnotations[index];
@@ -585,5 +630,15 @@ function layoutAnnotationsWasm(options) {
 await loadWasmSolver();
 
 export function layoutAnnotations(options) {
+    const annotations = options?.layout?.annotations;
+    if (
+        Array.isArray(annotations) &&
+        annotations.some(
+            (annotation) => typeof annotation.name === 'string' && annotation.name.startsWith('layout-hidden:'),
+        )
+    ) {
+        applyStaticAnnotationLayout(annotations);
+        return options;
+    }
     return wasmSolver ? layoutAnnotationsWasm(options) : layoutAnnotationsFallback(options);
 }

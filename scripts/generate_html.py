@@ -104,6 +104,7 @@ WEBSITE_JS_FILES = (
     "onload",
     "pagination",
     "plot",
+    "plot-labels",
     "plot-config",
     "scores",
     "search",

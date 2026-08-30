@@ -443,6 +443,22 @@ def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> f
     return 0.0
 
 
+def _leader_geometry_penalty(anchor: Point, center: Point) -> float:
+    """Prefer a label above-left of its curve anchor over vertical leaders."""
+
+    dx = center[0] - anchor[0]
+    dy = center[1] - anchor[1]
+    if abs(dx) < 12:
+        return 80.0
+    if dy < 0 and dx < 0:
+        return 0.0
+    if abs(dy) < 12:
+        return 12.0
+    if dy < 0:
+        return 25.0
+    return 35.0
+
+
 def _curve_penalty(
     rect: Rect,
     points: Sequence[Point],
@@ -507,6 +523,11 @@ def place_annotations(
     # environments where Maturin's optional extension was not built.
     trace_points = tuple(trace_points)
     trace_segments = tuple(trace_segments)
+    if _c_place_annotations is None:
+        raise RuntimeError(
+            "The Rust annotation solver is required; run scripts/setup.sh to install the Maturin extension."
+        )
+
     if _c_place_annotations is not None:
         raw_requests = [
             (
@@ -686,6 +707,7 @@ def place_annotations(
                 score = (
                     distance
                     + lane_rank * 2.0
+                    + _leader_geometry_penalty(anchor, center)
                     + curve_score
                     + leader_score
                     + _grid_alignment_penalty(

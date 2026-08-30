@@ -79,6 +79,8 @@ const TRACE_CLEARANCE: f64 = 14.0;
 const LEADER_START_CLEARANCE: f64 = 12.0;
 const LEADER_TRACE_CLEARANCE: f64 = 3.0;
 const MIN_LEADER_LENGTH: f64 = 48.0;
+const MAX_LEADER_LENGTH: f64 = 260.0;
+const MIN_HORIZONTAL_LEADER_OFFSET: f64 = 24.0;
 const GRID_ALIGNMENT_TOLERANCE: f64 = 8.0;
 const GRID_ALIGNMENT_WEIGHT: f64 = 0.35;
 
@@ -289,6 +291,53 @@ fn direction_penalty(direction: &Option<String>, anchor: Point, center: Point) -
     }
 }
 
+fn leader_geometry_penalty(anchor: Point, center: Point) -> f64 {
+    // Plotly draws from the label at `center` to the curve at `anchor`.
+    // Prefer the resulting down-right leader; horizontal remains acceptable.
+    let dx = center.0 - anchor.0;
+    let dy = center.1 - anchor.1;
+    if dx.abs() < 12.0 {
+        80.0
+    } else if dy < 0.0 && dx < 0.0 {
+        0.0
+    } else if dy.abs() < 12.0 {
+        12.0
+    } else if dy < 0.0 {
+        25.0
+    } else {
+        35.0
+    }
+}
+
+/// A leader that leaves the label vertically is visually ambiguous and is
+/// especially easy to mistake for a nearby curve.  Keep this separate from
+/// scoring: it is a placement constraint, not merely a preference.
+fn has_acceptable_leader_geometry(anchor: Point, center: Point) -> bool {
+    (center.0 - anchor.0).abs() >= MIN_HORIZONTAL_LEADER_OFFSET
+}
+
+fn pending_anchor_penalty(
+    center: Point,
+    anchors: &[Option<Point>],
+    placed: &[(Option<Point>, bool)],
+    requests: &[Request],
+    yref: &str,
+    index: usize,
+) -> f64 {
+    anchors
+        .iter()
+        .enumerate()
+        .filter_map(|(other_index, anchor)| {
+            if other_index == index || !placed[other_index].1 || requests[other_index].yref != yref
+            {
+                return None;
+            }
+            let anchor = (*anchor)?;
+            Some((180.0 - (center.0 - anchor.0).hypot(center.1 - anchor.1)).max(0.0) * 2.0)
+        })
+        .sum()
+}
+
 fn grid_alignment_penalty(rect: Rect, x_lines: &[f64], y_lines: &[f64]) -> f64 {
     fn axis_penalty(edges: [f64; 3], lines: &[f64]) -> f64 {
         if lines.is_empty() {
@@ -365,10 +414,54 @@ fn candidates(
         (96.0, -2.0 * offset),
         (-96.0, 2.0 * offset),
         (96.0, 2.0 * offset),
+        // Near a plot edge an "above" candidate can be unavailable.  A
+        // lateral leader is still much clearer than a vertical fallback.
+        (-72.0, -16.0),
+        (72.0, -16.0),
+        (-120.0, -16.0),
+        (120.0, -16.0),
+        (-120.0, 24.0),
+        (120.0, 24.0),
+        (-168.0, -48.0),
+        (168.0, -48.0),
+        (-168.0, -16.0),
+        (168.0, -16.0),
+        (-168.0, 48.0),
+        (168.0, 48.0),
+        // Intermediate radial ring for the bounded search. These positions
+        // let a previous label move around a blocked neighbour while keeping
+        // the leader below the accepted 260-pixel limit.
+        (-144.0, -96.0),
+        (144.0, -96.0),
+        (-144.0, 96.0),
+        (144.0, 96.0),
+        (-160.0, -64.0),
+        (160.0, -64.0),
+        (-160.0, 64.0),
+        (160.0, 64.0),
+        (-96.0, -144.0),
+        (96.0, -144.0),
+        (-96.0, 144.0),
+        (96.0, 144.0),
+        (-240.0, -72.0),
+        (240.0, -72.0),
+        (-240.0, -16.0),
+        (240.0, -16.0),
+        (-240.0, 72.0),
+        (240.0, 72.0),
     ]
     .iter()
     .enumerate()
     {
+        // Away from the top edge, retain strict "above" placement. The
+        // lateral escape set is only for labels which cannot fit above their
+        // anchor while remaining inside the frame.
+        if request.direction.as_deref() == Some("above")
+            && anchor.1 - y_min > offset
+            && *dy > -offset
+        {
+            continue;
+        }
         add(
             (anchor.0 + dx, anchor.1 + dy),
             lane_names.len() as i64 + index as i64,
@@ -532,10 +625,21 @@ fn place_annotations(
             _ => b.priority.cmp(&a.priority),
         }
     });
+    let mut output: Vec<(Option<Point>, bool)> = vec![(None, true); requests.len()];
+    let anchors: Vec<Option<Point>> = requests
+        .iter()
+        .map(|request| {
+            ranges.get(&request.yref).map(|range| {
+                (
+                    value_to_pixel(request.x, x_range, plot.0, plot.2),
+                    value_to_pixel(request.y, *range, plot.3, plot.1),
+                )
+            })
+        })
+        .collect();
     let mut occupied = Vec::new();
     let mut arrows: Vec<Segment> = Vec::new();
-    let mut output: Vec<(Option<Point>, bool)> = vec![(None, true); requests.len()];
-    for index in order {
+    for &index in &order {
         let request = &requests[index];
         let Some(y_range) = ranges.get(&request.yref) else {
             continue;
@@ -581,7 +685,11 @@ fn place_annotations(
                 // exact local offsets.  Treat the boundary consistently so
                 // native and fallback placement select the same candidate.
                 if distance <= MIN_LEADER_LENGTH
-                    || direction_penalty(&request.direction, anchor, *center) > 0.0
+                    || distance > MAX_LEADER_LENGTH
+                    || !has_acceptable_leader_geometry(anchor, *center)
+                    || (request.direction.as_deref() == Some("above")
+                        && anchor.1 - plot.1 > MIN_LEADER_LENGTH + size.1 / 2.0 + 5.0
+                        && direction_penalty(&request.direction, anchor, *center) > 0.0)
                     || rect.0 < plot.0
                     || rect.2 > plot.2
                     || rect.1 < plot.1
@@ -635,6 +743,18 @@ fn place_annotations(
                 };
                 let score = distance
                     + *rank as f64 * 2.0
+                    + leader_geometry_penalty(anchor, *center)
+                    + direction_penalty(&request.direction, anchor, *center)
+                    // Preserve space around annotations that have not been
+                    // placed yet, so the greedy pass has limited look-ahead.
+                    + pending_anchor_penalty(
+                        *center,
+                        &anchors,
+                        &output,
+                        &requests,
+                        &request.yref,
+                        index,
+                    )
                     + curve
                     + leader_score
                     + grid_alignment_penalty(
@@ -642,7 +762,7 @@ fn place_annotations(
                         &grid_x,
                         grid_y.get(&request.yref).map(Vec::as_slice).unwrap_or(&[]),
                     );
-                if phase.as_ref().map_or(true, |(old, _, _)| score < *old) {
+                if phase.as_ref().is_none_or(|(old, _, _)| score < *old) {
                     phase = Some((score, *center, rect));
                 }
             }
@@ -655,6 +775,204 @@ fn place_annotations(
             occupied.push(rect);
             arrows.push((anchor, center));
             output[index] = (Some(center), false);
+        }
+    }
+
+    // The greedy pass is intentionally cheap and is sufficient for almost
+    // every chart.  If it hides a label, retry with a bounded beam search so
+    // an early locally-good choice can be moved out of a later label's way.
+    if output.iter().any(|(_, hidden)| *hidden) {
+        const BEAM_WIDTH: usize = 128;
+        const CANDIDATES_PER_STATE: usize = 24;
+
+        #[derive(Clone)]
+        struct SearchState {
+            occupied: Vec<Rect>,
+            arrows: Vec<Segment>,
+            output: Vec<(Option<Point>, bool)>,
+            score: f64,
+            hidden_count: usize,
+        }
+
+        let mut states = vec![SearchState {
+            occupied: Vec::new(),
+            arrows: Vec::new(),
+            output: vec![(None, true); requests.len()],
+            score: 0.0,
+            hidden_count: 0,
+        }];
+
+        for &index in &order {
+            let request = &requests[index];
+            let Some(y_range) = ranges.get(&request.yref) else {
+                for state in &mut states {
+                    state.hidden_count += 1;
+                }
+                continue;
+            };
+            let anchor = (
+                value_to_pixel(request.x, x_range, plot.0, plot.2),
+                value_to_pixel(request.y, *y_range, plot.3, plot.1),
+            );
+            let line_count = request.text.split("<br>").count() as f64;
+            let longest_line = request
+                .text
+                .split("<br>")
+                .map(|line| line.chars().count())
+                .max()
+                .unwrap_or(1) as f64;
+            let size = (
+                longest_line * font_size * 0.62 + 2.0 * label_pad + 2.0,
+                line_count * font_size * 1.35 + 2.0 * label_pad + 2.0,
+            );
+            let request_candidates = candidates(
+                request,
+                anchor,
+                size,
+                plot,
+                &grid_x,
+                grid_y.get(&request.yref).map(Vec::as_slice).unwrap_or(&[]),
+            );
+            let axis = axis_segments
+                .get(&request.yref)
+                .map(Vec::as_slice)
+                .unwrap_or(&[]);
+            let own = curve_segments
+                .get(&(request.yref.clone(), request.key.clone()))
+                .map(Vec::as_slice)
+                .unwrap_or(axis);
+            let cross_axis = request.yref == "y2";
+            let curve_points = if cross_axis {
+                &all_points
+            } else {
+                points.get(&request.yref).map(Vec::as_slice).unwrap_or(&[])
+            };
+            let curve_index = if cross_axis {
+                &all_segment_index
+            } else {
+                axis_segment_indexes
+                    .get(&request.yref)
+                    .unwrap_or(&all_segment_index)
+            };
+            let mut next_states = Vec::new();
+
+            for state in &states {
+                let mut choices = Vec::new();
+                for global in [true, false] {
+                    let mut phase = Vec::new();
+                    for (center, rank) in &request_candidates {
+                        let rect = rect_from_center(*center, size);
+                        let distance = (center.0 - anchor.0).hypot(center.1 - anchor.1);
+                        if distance <= MIN_LEADER_LENGTH
+                            || distance > MAX_LEADER_LENGTH
+                            || !has_acceptable_leader_geometry(anchor, *center)
+                            || rect.0 < plot.0
+                            || rect.2 > plot.2
+                            || rect.1 < plot.1
+                            || rect.3 > plot.3
+                            || state
+                                .occupied
+                                .iter()
+                                .any(|other| rect_overlap(rect, *other) > 0.0)
+                            || reserved
+                                .iter()
+                                .any(|other| rect_overlap(rect, *other) > 0.0)
+                            || state
+                                .arrows
+                                .iter()
+                                .any(|arrow| segments_intersect(anchor, *center, arrow.0, arrow.1))
+                            || state.occupied.iter().any(|other| {
+                                !point_in_rect(anchor, *other)
+                                    && segment_intersects_rect(anchor, *center, *other)
+                            })
+                            || state.arrows.iter().any(|arrow| {
+                                !point_in_rect(arrow.0, rect)
+                                    && segment_intersects_rect(arrow.0, arrow.1, rect)
+                            })
+                        {
+                            continue;
+                        }
+                        let leader_score = if global {
+                            if leader_crosses_indexed_trace(anchor, *center, &all_segment_index) {
+                                continue;
+                            }
+                            0.0
+                        } else {
+                            if leader_crosses_trace(anchor, *center, own) {
+                                continue;
+                            }
+                            leader_indexed_curve_penalty(anchor, *center, &all_segment_index)
+                        };
+                        let Some(curve) = curve_penalty(rect, curve_points, curve_index) else {
+                            continue;
+                        };
+                        let score = distance
+                            + *rank as f64 * 2.0
+                            + leader_geometry_penalty(anchor, *center)
+                            // In recovery, direction is a strong preference
+                            // rather than a constraint that can force static
+                            // fallback for the entire annotation set.
+                            + direction_penalty(&request.direction, anchor, *center).min(250.0)
+                            + pending_anchor_penalty(
+                                *center,
+                                &anchors,
+                                &state.output,
+                                &requests,
+                                &request.yref,
+                                index,
+                            )
+                            + curve
+                            + leader_score
+                            + grid_alignment_penalty(
+                                rect,
+                                &grid_x,
+                                grid_y.get(&request.yref).map(Vec::as_slice).unwrap_or(&[]),
+                            );
+                        phase.push((score, *center, rect));
+                    }
+                    if !phase.is_empty() {
+                        choices = phase;
+                        break;
+                    }
+                }
+
+                choices.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(Ordering::Equal));
+                choices.truncate(CANDIDATES_PER_STATE);
+                for (choice_score, center, rect) in choices {
+                    let mut next = state.clone();
+                    next.occupied.push(rect);
+                    next.arrows.push((anchor, center));
+                    next.output[index] = (Some(center), false);
+                    next.score += choice_score;
+                    next_states.push(next);
+                }
+
+                // Keep a hidden branch so the search always has a result;
+                // hidden_count is compared before score, so it only wins when
+                // every placement branch is impossible later.
+                let mut hidden = state.clone();
+                hidden.hidden_count += 1;
+                next_states.push(hidden);
+            }
+
+            next_states.sort_by(|a, b| {
+                a.hidden_count
+                    .cmp(&b.hidden_count)
+                    .then_with(|| a.score.partial_cmp(&b.score).unwrap_or(Ordering::Equal))
+            });
+            next_states.truncate(BEAM_WIDTH);
+            states = next_states;
+        }
+
+        if let Some(best) = states.into_iter().min_by(|a, b| {
+            a.hidden_count
+                .cmp(&b.hidden_count)
+                .then_with(|| a.score.partial_cmp(&b.score).unwrap_or(Ordering::Equal))
+        }) {
+            let greedy_hidden = output.iter().filter(|(_, hidden)| *hidden).count();
+            if best.hidden_count < greedy_hidden {
+                output = best.output;
+            }
         }
     }
     output
@@ -776,6 +1094,88 @@ fn annotations_rust(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn rejects_vertical_leader_geometry() {
+        let anchor = (400.0, 300.0);
+
+        assert!(!has_acceptable_leader_geometry(anchor, (400.0, 240.0)));
+        assert!(!has_acceptable_leader_geometry(anchor, (423.9, 252.0)));
+        assert!(has_acceptable_leader_geometry(anchor, (352.0, 252.0)));
+    }
+
+    #[test]
+    fn solver_selects_an_above_left_leader_when_the_plot_is_clear() {
+        let output = place_annotations(
+            vec![(
+                "Listening Window".to_owned(),
+                50.0,
+                0.0,
+                "y".to_owned(),
+                "LW".to_owned(),
+                0,
+                vec![],
+                None,
+            )],
+            900.0,
+            600.0,
+            (80.0, 50.0, 50.0, 50.0),
+            (0.0, 100.0),
+            vec![("y".to_owned(), -10.0, 10.0)],
+            false,
+            10.0,
+            3.0,
+            (0.0, 1.0),
+            (0.0, 1.0),
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+        );
+        let center = output[0].0.expect("clear plot should place its label");
+        let anchor = (465.0, 300.0);
+
+        assert!(has_acceptable_leader_geometry(anchor, center));
+        assert!(center.0 < anchor.0 && center.1 < anchor.1);
+    }
+
+    #[test]
+    fn solver_keeps_an_edge_label_nonvertical_when_above_is_impossible() {
+        let output = place_annotations(
+            vec![(
+                "Listening Window".to_owned(),
+                50.0,
+                10.0,
+                "y".to_owned(),
+                "LW".to_owned(),
+                0,
+                vec!["top".to_owned()],
+                Some("above".to_owned()),
+            )],
+            900.0,
+            600.0,
+            (80.0, 50.0, 50.0, 50.0),
+            (0.0, 100.0),
+            vec![("y".to_owned(), -10.0, 10.0)],
+            false,
+            10.0,
+            3.0,
+            (0.0, 1.0),
+            (0.0, 1.0),
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+        );
+        let center = output[0]
+            .0
+            .expect("an edge label should use a lateral fallback");
+        let anchor = (465.0, 50.0);
+
+        assert!(has_acceptable_leader_geometry(anchor, center));
+    }
 
     #[test]
     fn curve_penalty_rejects_a_cross_axis_curve() {

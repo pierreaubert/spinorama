@@ -78,6 +78,64 @@ def _axis_tick_values(axis, value_range: tuple[float, float]) -> tuple[float, ..
     return tuple(first + index * dtick for index in range(max(0, count)))
 
 
+# The original CEA-2034 labels used these short, fixed pixel offsets. Keep
+# that layout as the dependable baseline when the collision solver cannot
+# produce a genuinely useful improvement.
+_STATIC_ANNOTATION_LAYOUT = {
+    "On Axis": (0, -20, "right", "bottom"),
+    "Listening Window": (0, -20, "right", "bottom"),
+    "Early Reflections": (0, 20, "right", "top"),
+    "Sound Power": (0, 20, "right", "top"),
+    "Early Reflections DI": (0, 20, "right", "top"),
+    "Sound Power DI": (0, -20, "right", "bottom"),
+}
+_MAX_DYNAMIC_LEADER_LENGTH = 260.0
+
+
+def _use_static_annotation_layout(placements) -> bool:
+    """Reject incomplete or needlessly distant dynamic placements.
+
+    A long leader is technically collision-free but less readable than the
+    historical fixed-offset label, particularly for the DI curves.
+    """
+
+    return any(
+        placement.hidden
+        or placement.center is None
+        or math.dist(placement.anchor, placement.center) > _MAX_DYNAMIC_LEADER_LENGTH
+        for placement in placements
+    )
+
+
+def _add_static_annotations(fig, requests: list[AnnotationRequest]) -> None:
+    """Add the pre-solver, fixed-offset Plotly annotations."""
+
+    for request in requests:
+        ax, ay, xanchor, yanchor = _STATIC_ANNOTATION_LAYOUT[request.key]
+        fig.add_annotation(
+            x=request.x,
+            y=request.y,
+            xref="x",
+            yref=request.yref,
+            text=request.text,
+            font=dict(size=10, color=request.color),
+            bordercolor=request.color,
+            borderwidth=1,
+            borderpad=3,
+            bgcolor="rgba(255, 255, 255, 0.86)",
+            arrowhead=2,
+            arrowcolor=request.color,
+            ax=ax,
+            ay=ay,
+            axref="pixel",
+            ayref="pixel",
+            xanchor=xanchor,
+            yanchor=yanchor,
+            visible=FLAG_FEATURE_VISIBLE,
+            name=f"static:{request.key}",
+        )
+
+
 def plot_spinorama_traces(
     spin: pd.DataFrame,
     params: dict,
@@ -354,6 +412,9 @@ def plot_spinorama_annotation(
         trace_points=trace_points,
         trace_segments=trace_segments,
     )
+    if _use_static_annotation_layout(placements):
+        _add_static_annotations(fig, requests)
+        return fig
     for annotation in annotation_dicts(
         placements,
         visible=FLAG_FEATURE_VISIBLE,

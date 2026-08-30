@@ -18,7 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-import { labelShort, labelLong } from './plot.js';
+import { labelShort, labelLong } from './plot-labels.js';
 
 // Color palettes for graphs
 export const colorPalettes = {
@@ -163,8 +163,11 @@ const trendNames = new Set([
     'Linear interpolation',
 ]);
 
-// Default delta configuration options for plots
-export const defaultConfig = {
+// Default delta configuration options for plots. Keep this as a function so
+// loadConfigFromStorage remains safe when Safari evaluates a cyclic module
+// graph before the exported defaultConfig binding has been initialized.
+export function createDefaultConfig() {
+    return {
     font: {
         family: 'default', // 'default' means keep original value
         size: 0, // 0 means no change to original size
@@ -220,7 +223,10 @@ export const defaultConfig = {
         showA: true, // Per-speaker A (compare mode)
         showB: true, // Per-speaker B (compare mode)
     },
-};
+    };
+}
+
+export const defaultConfig = createDefaultConfig();
 
 // Local storage key for configuration
 export const CONFIG_STORAGE_KEY = 'spinorama-plot-config';
@@ -236,23 +242,24 @@ export function saveConfigToStorage(config) {
 
 // Load configuration from local storage and apply to graph config
 export function loadConfigFromStorage(graphConfig) {
+    const defaults = createDefaultConfig();
     // If graphConfig is a primitive, start with defaultConfig as base
     let baseConfig =
-        typeof graphConfig === 'object' && graphConfig !== null && !Array.isArray(graphConfig) ? graphConfig : defaultConfig;
+        typeof graphConfig === 'object' && graphConfig !== null && !Array.isArray(graphConfig) ? graphConfig : defaults;
 
     try {
         const storedConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
         if (storedConfig) {
             const userConfig = JSON.parse(storedConfig);
             // First apply default deltas, then user deltas
-            return mergeConfigs(mergeConfigs(baseConfig, defaultConfig), userConfig);
+            return mergeConfigs(mergeConfigs(baseConfig, defaults), userConfig);
         }
     } catch (error) {
         console.warn('Error loading configuration from localStorage:', error);
     }
 
     // Apply just the default config as delta if storage access fails
-    return mergeConfigs(baseConfig, defaultConfig);
+    return mergeConfigs(baseConfig, defaults);
 }
 
 // Apply delta configuration to a base configuration

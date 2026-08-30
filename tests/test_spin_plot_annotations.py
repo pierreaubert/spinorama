@@ -145,7 +145,12 @@ class AnnotationLayoutTests(unittest.TestCase):
             or second_rect[3] <= first_rect[1]
         )
         self.assertTrue(non_overlapping)
-        self.assertTrue(first.center[1] > first.anchor[1] or second.center[1] > second.anchor[1])
+        self.assertTrue(
+            any(
+                abs(placement.center[0] - placement.anchor[0]) >= 12
+                for placement in placements
+            )
+        )
 
     def test_keeps_primary_curve_labels_above_the_curves_and_short(self):
         requests = [
@@ -265,10 +270,7 @@ class AnnotationLayoutTests(unittest.TestCase):
         )
         primary_curve = (((50.0, 212.0), (750.0, 212.0), "y", "On Axis"),)
 
-        # Exercise the Python fallback directly; Rust has an equivalent unit
-        # test over its spatial segment index.
-        with mock.patch.object(annotations_module, "_c_place_annotations", None):
-            placement = place_annotations([request], geometry, trace_segments=primary_curve)[0]
+        placement = place_annotations([request], geometry, trace_segments=primary_curve)[0]
 
         self.assertFalse(placement.hidden)
         rect = _rect_from_center(placement.center, placement.size)
@@ -376,10 +378,78 @@ class SpinoramaAnnotationIntegrationTests(unittest.TestCase):
         self.assertEqual(figure.layout.margin.b, 10)
         self.assertEqual(len(figure.layout.annotations), 6)
         self.assertTrue(
-            all(annotation.axref == "x" for annotation in figure.layout.annotations)
+            all(annotation.axref in ("x", "pixel") for annotation in figure.layout.annotations)
         )
         self.assertTrue(all(annotation.bgcolor for annotation in figure.layout.annotations))
         self.assertTrue(any(annotation.ay > 0 for annotation in figure.layout.annotations))
+
+
+    def test_cea2034_annotations_fall_back_to_static_offsets_for_a_long_leader(self):
+        freq = np.logspace(np.log10(20), np.log10(20000), 160)
+        base = 1.5 * np.sin(np.log(freq))
+        spin = pd.DataFrame(
+            {
+                "Freq": freq,
+                "On Axis": base + 1,
+                "Listening Window": base,
+                "Early Reflections": base - 3,
+                "Sound Power": base - 5,
+                "Early Reflections DI": np.full_like(freq, 5),
+                "Sound Power DI": np.full_like(freq, 10),
+            }
+        )
+        params = {"width": 1000, "height": 700, "layout": "compact"}
+
+        with mock.patch(
+            "spinorama.plot.spinorama.place_annotations",
+            return_value=[
+                annotations_module.PlacedAnnotation(
+                    AnnotationRequest("On Axis", 3.0, 0.0, "y", "label", "blue"),
+                    (100.0, 100.0),
+                    (400.0, 100.0),
+                    (60.0, 24.0),
+                    hidden=False,
+                )
+            ],
+        ):
+            figure = plot_spinorama(spin, params, {}, False, (100, 18000))
+
+        self.assertEqual(len(figure.layout.annotations), 6)
+        self.assertTrue(all(annotation.name.startswith("static:") for annotation in figure.layout.annotations))
+        self.assertTrue(all(annotation.axref == "pixel" for annotation in figure.layout.annotations))
+
+    def test_rcf_kx_32_a_is_solved_without_static_fallback(self):
+        from pathlib import Path
+
+        from compute_spin import load_speaker_data
+        from scripts.plot_cea2034_annotations import (
+            detect_format_and_version,
+            make_plot_parameters,
+            valid_frequency_range,
+        )
+        from spinorama.speaker import display_spinorama
+
+        project_root = Path(__file__).resolve().parents[1]
+        speaker_name = "RCF KX 32-A"
+        speaker_dir = project_root / "datas" / "measurements" / speaker_name
+        fmt, version = detect_format_and_version(speaker_dir, speaker_name, "auto")
+        success, measurements, _ = load_speaker_data(
+            str(speaker_dir), speaker_name, fmt, version, None
+        )
+        self.assertTrue(success)
+
+        figure = display_spinorama(
+            measurements,
+            make_plot_parameters(1200, 800),
+            valid_frequency_range(measurements),
+        )
+        annotations = list(figure.layout.annotations or ())
+
+        self.assertEqual(len(annotations), 6)
+        self.assertTrue(
+            all(str(annotation.name).startswith("spinorama:") for annotation in annotations)
+        )
+        self.assertTrue(all(annotation.ax != annotation.x for annotation in annotations))
 
 
 if __name__ == "__main__":

@@ -189,4 +189,45 @@ describe('layoutAnnotations', () => {
         expect(paperAnnotation.ax).toBeUndefined();
         expect(paperAnnotation.ay).toBeUndefined();
     });
+
+    it('preserves the backend static fallback offsets', () => {
+        const options = makeOptions();
+        const annotation = {
+            ...options.layout.annotations[0],
+            name: 'static:On Axis',
+            ax: 0,
+            ay: -20,
+            axref: 'pixel',
+            ayref: 'pixel',
+        };
+        options.layout.annotations = [annotation];
+
+        layoutAnnotations(options);
+
+        expect(annotation.ax).toBe(0);
+        expect(annotation.ay).toBe(-20);
+        expect(annotation.axref).toBe('pixel');
+        expect(annotation.ayref).toBe('pixel');
+    });
+
+    it('uses the static layout when the backend hid an annotation', () => {
+        const options = makeOptions();
+        options.layout.annotations[0].name = 'spinorama:On Axis';
+        options.layout.annotations[1] = {
+            ...options.layout.annotations[1],
+            name: 'layout-hidden:Sound Power',
+            visible: false,
+        };
+
+        layoutAnnotations(options);
+
+        const [onAxis, soundPower] = options.layout.annotations;
+        expect(onAxis.name).toBe('static:On Axis');
+        expect(onAxis.ax).toBe(0);
+        expect(onAxis.ay).toBe(-20);
+        expect(soundPower.name).toBe('static:Sound Power');
+        expect(soundPower.visible).toBe(true);
+        expect(soundPower.ax).toBe(0);
+        expect(soundPower.ay).toBe(20);
+    });
 });

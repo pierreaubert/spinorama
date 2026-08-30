@@ -25,6 +25,10 @@
 
 // const flags_Contour_Delta = false;
 
+import { labelLong, labelShort } from './plot-labels.js';
+
+export { labelLong, labelShort };
+
 // Measure title text width using canvas measureText and decide if it needs line-breaking.
 // Returns true when the plain text (HTML tags stripped) fits within maxWidth
 // at the given fontSize using Plotly's default font ("Open Sans", sans-serif).
@@ -87,44 +91,6 @@ const contourColorscale = [
     [0.9, 'rgb(222,74,0)'],
     [1, 'rgb(253,14,13)'],
 ];
-
-export const labelShort = {
-    // regression
-    'Linear Regression': 'Reg',
-    'Band ±1.5dB': '±1.5dB',
-    'Band ±3dB': '±3dB',
-    // PIR
-    'Estimated In-Room Response': 'PIR',
-    // spin
-    'On Axis': 'ON',
-    'Listening Window': 'LW',
-    'Early Reflections': 'ER',
-    'Sound Power': 'SP',
-    'Early Reflections DI': 'ERDI',
-    'Sound Power DI': 'SPDI',
-    // Bounce
-    'Ceiling Bounce': 'CB',
-    'Floor Bounce': 'FB',
-    'Front Wall Bounce': 'FWB',
-    'Rear Wall Bounce': 'RWB',
-    'Side Wall Bounce': 'SWB',
-    // Reflection
-    'Ceiling Reflection': 'CR',
-    'Floor Reflection': 'FR',
-    //
-    Front: 'F',
-    Rear: 'R',
-    Side: 'S',
-    //
-    'Total Early Reflection': 'TER',
-    'Total Horizontal Reflection': 'THR',
-    'Total Vertical Reflection': 'TVR',
-};
-
-export const labelLong = Object.entries(labelShort).reduce((obj, [k, v]) => {
-    obj[v] = k;
-    return obj;
-}, {});
 
 const graphSmall = 550;
 
