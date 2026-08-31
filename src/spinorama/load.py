@@ -222,7 +222,15 @@ def filter_graphs(
         )
 
     complete_spl = measurements_complete_spl(h_spl, v_spl)
-    complete = complete_spl and measurements_complete_freq(h_spl, v_spl)
+    complete_freq = measurements_complete_freq(h_spl, v_spl)
+    # Princeton 3D3A measurements are intentionally band-limited below
+    # roughly 500 Hz and some speakers contain only the measured front
+    # hemisphere. The CEA2034 computations average the available angles, so
+    # keep those useful band-limited curves. Preference scoring enforces full
+    # low-frequency coverage separately.
+    complete = (complete_spl and complete_freq) or (
+        mformat == "princeton" and sh_spl is not None and sv_spl is not None
+    )
     logger.info(
         "%s completeness %s SPL %s",
         speaker_name,

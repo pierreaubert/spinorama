@@ -229,6 +229,12 @@ def speaker_pref_rating(cea2034, pir, rounded) -> dict[str, float]:
         if pir is None or pir.shape[0] == 0:
             logger.info("PIR is empty")
             return {}
+        if cea2034.Freq.min() >= 40.0:
+            logger.info(
+                "CEA2034 starts at %.1f Hz; preference score requires low-frequency data",
+                cea2034.Freq.min(),
+            )
+            return {}
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
         df_listening_window = cea2034.loc[lambda df: df.Measurements == "Listening Window"]
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]

@@ -14,6 +14,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 from datas import Measurement
 from spinorama.loaders.klippel import parse_graph_freq_klippel
 from spinorama.measurements import Measurements
+from spinorama.compute.scores import speaker_pref_rating
+from spinorama.misc import graph_melt
 
 import generate_meta
 
@@ -93,6 +95,25 @@ class TestGenerateMetaAddMeasurement(unittest.TestCase):
             )
         self.assertIn("estimates", result)
         self.assertNotIn("pref_rating", result)
+
+    def test_princeton_measurement_keeps_estimates_skips_pref_rating(self):
+        speaker_info = self._speaker_info()
+        speaker_info["measurements"]["asr"]["origin"] = "Princeton"
+        speakers_info = {"Test Speaker Princeton": speaker_info}
+        with patch.object(generate_meta, "speakers_info", speakers_info):
+            result = generate_meta.add_measurement(
+                "Test Speaker Princeton", "Princeton", "asr", self._measurements
+            )
+        self.assertIn("estimates", result)
+        self.assertNotIn("pref_rating", result)
+
+    def test_band_limited_cea2034_cannot_be_scored(self):
+        cea2034 = graph_melt(self._measurements.cea2034)
+        eir = graph_melt(self._measurements.eir)
+        cea2034 = cea2034.loc[cea2034.Freq >= 500]
+        eir = eir.loc[eir.Freq >= 500]
+
+        self.assertEqual({}, speaker_pref_rating(cea2034, eir, rounded=True))
 
     def test_partial_eq_version_keeps_estimates_skips_pref_rating(self):
         """The _eq variant looks up the base measurement's data_acquisition."""

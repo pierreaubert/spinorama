@@ -130,7 +130,9 @@ def parse_full_each_format():
         "datas/measurements", "Genelec", speaker_name, speaker_version, "None"
     )
     h2, v2 = symmetrise_speaker_measurements(h, v, "horizontal")
-    full = measurements_complete_spl(h2, v2) and measurements_complete_freq(h2, v2)
+    # Princeton is complete for graph generation despite its intentional
+    # low-frequency truncation; preference-score completeness is separate.
+    full = measurements_complete_spl(h2, v2)
     dfs["princeton"] = {
         "speaker_name": speaker_name,
         "speaker_version": speaker_version,

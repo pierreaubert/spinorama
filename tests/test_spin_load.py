@@ -36,6 +36,7 @@ from spinorama.loaders.gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.loaders.rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.loaders.webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import (
+    filter_graphs,
     symmetrise_speaker_measurements,
 )
 from tests.test_common import (
@@ -137,6 +138,32 @@ class SpinoramaPrincetonLoadTests(unittest.TestCase):
         # horizontal symmetry
         self.assertEqual(self.h.shape, (208, 20))
         self.assertEqual(self.v.shape, (208, 37))
+
+    def test_band_limited_cea2034_is_generated(self):
+        h_spl, v_spl = symmetrise_speaker_measurements(self.h, self.v, "horizontal")
+        measurements = filter_graphs(
+            "Genelec 8351A", h_spl, v_spl, 500, 3000, "princeton", 1.0
+        )
+
+        self.assertIsNotNone(measurements.cea2034)
+        self.assertIsNotNone(measurements.eir)
+        self.assertGreaterEqual(measurements.cea2034.Freq.min(), 500)
+
+    def test_front_hemisphere_cea2034_is_generated(self):
+        status, (h_spl, v_spl) = parse_graphs_speaker_princeton(
+            "datas/measurements", "Spendor Audio", "Spendor Audio Systems SA1", "princeton", None
+        )
+        self.assertTrue(status)
+        h_spl, v_spl = symmetrise_speaker_measurements(h_spl, v_spl, "horizontal")
+        self.assertFalse(measurements_complete_spl(h_spl, v_spl))
+
+        measurements = filter_graphs(
+            "Spendor Audio Systems SA1", h_spl, v_spl, 500, 3000, "princeton", 1.0
+        )
+
+        self.assertIsNotNone(measurements.cea2034)
+        self.assertIsNotNone(measurements.eir)
+        self.assertFalse(measurements.cea2034.isna().to_numpy().any())
 
 
 # ----------------------------------------------------------------------------------------------------

@@ -272,6 +272,12 @@ def is_partial_measurement(speaker_name: str, version: str) -> bool:
     if measurement is None:
         return False
 
+    # Princeton 3D3A data is valid from roughly 500 Hz upward. Keep its
+    # band-limited CEA2034 and estimates, but never emit an Olive preference
+    # rating, which requires low-frequency extension.
+    if measurement.get("origin") == "Princeton":
+        return True
+
     data_acquisition = measurement.get("data_acquisition")
     if data_acquisition is None:
         return False
