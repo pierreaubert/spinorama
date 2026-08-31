@@ -37,6 +37,11 @@ from spinorama.misc import sanitize_filename
 from spinorama.plot import plot_params_default
 from spinorama.speaker import display_spinorama
 
+try:
+    from spinorama.annotations_rust import c_place_annotations as rust_place_annotations
+except ImportError:
+    rust_place_annotations = None
+
 
 FORMAT_CHOICES = (
     "auto",
@@ -47,6 +52,12 @@ FORMAT_CHOICES = (
     "rew_text_dump",
     "webplotdigitizer",
 )
+
+
+def require_rust_solver() -> None:
+    """Fail early unless the native Rust annotation solver is available."""
+    if not callable(rust_place_annotations):
+        raise RuntimeError("The native Rust annotation solver is required")
 
 
 def resolve_speaker(speaker: str, data_root: Path) -> tuple[Path, str]:
@@ -125,6 +136,7 @@ def render_speaker(
     force: bool,
 ) -> Path:
     """Load and render one speaker, returning the PNG path."""
+    require_rust_solver()
     speaker_dir, speaker_name = resolve_speaker(speaker, data_root)
     fmt, version = detect_format_and_version(speaker_dir, speaker_name, requested_format)
 

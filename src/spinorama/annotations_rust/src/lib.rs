@@ -10,6 +10,16 @@ use wasm_bindgen::prelude::*;
 type Point = (f64, f64);
 type Rect = (f64, f64, f64, f64);
 type Segment = (Point, Point);
+type RawRequest = (
+    String,
+    f64,
+    f64,
+    String,
+    String,
+    i64,
+    Vec<String>,
+    Option<String>,
+);
 
 /// Uniform spatial index for trace segments.  Candidate leaders only need to
 /// consider segments within their 20-pixel clearance envelope; indexing avoids
@@ -260,6 +270,18 @@ fn value_to_pixel(value: f64, range: Point, start: f64, end: f64) -> f64 {
     start + (value - range.0) / (range.1 - range.0) * (end - start)
 }
 
+#[cfg(any(test, target_arch = "wasm32"))]
+fn normalize_wasm_request_x(requests: &mut [RawRequest], logarithmic: bool) {
+    if !logarithmic {
+        return;
+    }
+    for request in requests {
+        if request.1 > 0.0 {
+            request.1 = request.1.log10();
+        }
+    }
+}
+
 fn curve_penalty(rect: Rect, points: &[Point], index: &SegmentIndex) -> Option<f64> {
     let clearance = expand_rect(rect, TRACE_CLEARANCE);
     let mut penalty = 0.0;
@@ -507,16 +529,7 @@ fn candidates(
 
 #[allow(clippy::too_many_arguments, clippy::type_complexity)]
 fn place_annotations(
-    raw_requests: Vec<(
-        String,
-        f64,
-        f64,
-        String,
-        String,
-        i64,
-        Vec<String>,
-        Option<String>,
-    )>,
+    raw_requests: Vec<RawRequest>,
     width: f64,
     height: f64,
     margin: (f64, f64, f64, f64),
@@ -982,16 +995,7 @@ fn place_annotations(
 #[pyfunction]
 #[allow(clippy::too_many_arguments, clippy::type_complexity)]
 fn c_place_annotations(
-    raw_requests: Vec<(
-        String,
-        f64,
-        f64,
-        String,
-        String,
-        i64,
-        Vec<String>,
-        Option<String>,
-    )>,
+    raw_requests: Vec<RawRequest>,
     width: f64,
     height: f64,
     margin: (f64, f64, f64, f64),
@@ -1031,16 +1035,7 @@ fn c_place_annotations(
 #[cfg(target_arch = "wasm32")]
 #[derive(Deserialize)]
 struct WasmInput {
-    raw_requests: Vec<(
-        String,
-        f64,
-        f64,
-        String,
-        String,
-        i64,
-        Vec<String>,
-        Option<String>,
-    )>,
+    raw_requests: Vec<RawRequest>,
     width: f64,
     height: f64,
     margin: (f64, f64, f64, f64),
@@ -1061,8 +1056,9 @@ struct WasmInput {
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn solve_annotations(input: JsValue) -> Result<JsValue, JsValue> {
-    let input: WasmInput = serde_wasm_bindgen::from_value(input)
+    let mut input: WasmInput = serde_wasm_bindgen::from_value(input)
         .map_err(|error| JsValue::from_str(&error.to_string()))?;
+    normalize_wasm_request_x(&mut input.raw_requests, input.x_scale_log);
     let output = place_annotations(
         input.raw_requests,
         input.width,
@@ -1181,5 +1177,136 @@ mod tests {
     fn curve_penalty_rejects_a_cross_axis_curve() {
         let primary_axis = SegmentIndex::new(vec![((50.0, 212.0), (750.0, 212.0))]);
         assert!(curve_penalty((300.0, 200.0, 500.0, 225.0), &[], &primary_axis).is_none());
+    }
+
+    #[test]
+    fn clarity_66_layout_keeps_all_six_labels_visible() {
+        let mut requests: Vec<RawRequest> = vec![
+            (
+                "On Axis",
+                2_380.0,
+                1.29,
+                "y",
+                "0.26 db/oct sm 0.76",
+                100,
+                vec!["top", "upper", "middle"],
+                Some("above"),
+            ),
+            (
+                "Listening Window",
+                8_280.0,
+                1.50,
+                "y",
+                "0.04 db/oct sm 0.80",
+                95,
+                vec!["top", "upper", "middle"],
+                Some("above"),
+            ),
+            (
+                "Early Reflections",
+                10_000.0,
+                -6.62,
+                "y",
+                "-0.76 db/oct sm 0.69",
+                80,
+                vec!["middle", "upper", "lower"],
+                None,
+            ),
+            (
+                "Sound Power",
+                10_000.0,
+                -10.97,
+                "y",
+                "-1.43 db/oct sm 0.62",
+                75,
+                vec!["upper", "middle", "lower"],
+                None,
+            ),
+            (
+                "Early Reflections DI",
+                10_000.0,
+                5.56,
+                "y2",
+                "0.79 db/oct sm 0.84",
+                70,
+                vec!["upper", "top", "middle", "lower", "bottom"],
+                Some("above"),
+            ),
+            (
+                "Sound Power DI",
+                10_000.0,
+                9.91,
+                "y2",
+                "1.46 db/oct sm 0.72",
+                65,
+                vec!["upper", "top", "middle", "lower", "bottom"],
+                Some("above"),
+            ),
+        ]
+        .into_iter()
+        .map(|(key, x, y, yref, text, priority, lanes, direction)| {
+            (
+                key.to_owned(),
+                x,
+                y,
+                yref.to_owned(),
+                text.to_owned(),
+                priority,
+                lanes.into_iter().map(str::to_owned).collect(),
+                direction.map(str::to_owned),
+            )
+        })
+        .collect();
+        normalize_wasm_request_x(&mut requests, true);
+        let plot = (30.0, 100.0, 1_581.0, 966.0);
+        let trace = |y: f64, range: Point, yref: &str, key: &str| {
+            let py = value_to_pixel(y, range, plot.3, plot.1);
+            (
+                plot.0,
+                py,
+                plot.2,
+                py,
+                yref.to_owned(),
+                Some(key.to_owned()),
+            )
+        };
+        let traces = vec![
+            trace(1.29, (-45.0, 5.0), "y", "On Axis"),
+            trace(1.50, (-45.0, 5.0), "y", "Listening Window"),
+            trace(-6.62, (-45.0, 5.0), "y", "Early Reflections"),
+            trace(-10.97, (-45.0, 5.0), "y", "Sound Power"),
+            trace(5.56, (-5.0, 45.0), "y2", "Early Reflections DI"),
+            trace(9.91, (-5.0, 45.0), "y2", "Sound Power DI"),
+        ];
+        let output = place_annotations(
+            requests,
+            1_636.0,
+            1_116.0,
+            (30.0, 55.0, 100.0, 150.0),
+            (20.0_f64.log10(), 20_000.0_f64.log10()),
+            vec![("y".to_owned(), -45.0, 5.0), ("y2".to_owned(), -5.0, 45.0)],
+            true,
+            10.0,
+            5.0,
+            (0.0, 1.0),
+            (0.0, 1.0),
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            traces,
+        );
+
+        assert!(output.iter().all(|(_, hidden)| !hidden));
+        let x_range = (20.0_f64.log10(), 20_000.0_f64.log10());
+        let sound_power_anchor = (
+            value_to_pixel(10_000.0_f64.log10(), x_range, plot.0, plot.2),
+            value_to_pixel(-10.97, (-45.0, 5.0), plot.3, plot.1),
+        );
+        let sound_power_center = output[3].0.expect("Sound Power needs a label box");
+        let sound_power_leader = (sound_power_center.0 - sound_power_anchor.0)
+            .hypot(sound_power_center.1 - sound_power_anchor.1);
+        assert!(sound_power_leader < 100.0);
+        assert!(output[5].0.is_some(), "Sound Power DI needs a label box");
     }
 }

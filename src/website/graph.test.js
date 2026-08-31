@@ -116,6 +116,15 @@ describe('Graph Display', () => {
 
         window.innerWidth = 1024;
         window.innerHeight = 768;
+        const target = document.getElementById('test-graph');
+        Object.defineProperty(target, 'offsetWidth', {
+            get: () => window.innerWidth,
+            configurable: true,
+        });
+        Object.defineProperty(target, 'offsetHeight', {
+            get: () => window.innerHeight,
+            configurable: true,
+        });
 
         // Reset mocks
         vi.clearAllMocks();
@@ -313,6 +322,24 @@ describe('Graph Display', () => {
 
         // Plotly.react should have been called for the re-render
         expect(Plotly.react).toHaveBeenCalled();
+    });
+
+    test('displayGraph skips resize rendering while the target is hidden', async () => {
+        const graphSpec = {
+            layout: { title: { text: 'Hidden Graph' } },
+            data: [{ x: [1, 2, 3], y: [1, 2, 3], type: 'scatter' }],
+        };
+
+        await displayGraph('On Axis', 'test.json', 'test-graph', graphSpec, true, 1);
+        Plotly.react.mockClear();
+
+        const target = document.getElementById('test-graph');
+        Object.defineProperty(target, 'offsetWidth', { value: 0, configurable: true });
+        Object.defineProperty(target, 'offsetHeight', { value: 0, configurable: true });
+        window.dispatchEvent(new window.Event('resize'));
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        expect(Plotly.react).not.toHaveBeenCalled();
     });
 
     test('displayGraph handles target element correctly', async () => {

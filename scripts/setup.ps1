@@ -57,7 +57,10 @@ python -m venv .venv
 
 # ------------ PIP PACKAGES
 Write-Host "`n--- Installing Python dependencies ---"
-pip install -U pip
+# setup.py is invoked directly below, so PEP 517 build-system requirements are
+# not installed in an isolated build environment for us. Python 3.12 venvs do
+# not include setuptools by default.
+python -m pip install -U pip setuptools wheel
 $reqFiles = @(
     "requirements.txt",
     "requirements-test.txt",

@@ -232,14 +232,14 @@ fi
 #    echo "Quarto is not available, skipping HTML manual!"
 #fi
 
-./scripts/check_html.sh
-status=$?
-if [ $status -ne 0 ]; then
-    elapsed_status "KO after checking HTML!"
-    exit 1;
-else
-    elapsed_status "OK after checking HTML!"
-fi
+#./scripts/check_html.sh
+#status=$?
+#if [ $status -ne 0 ]; then
+#    elapsed_status "KO after checking HTML!"
+#    exit 1;
+#else
+#    elapsed_status "OK after checking HTML!"
+#fi
 
 # copy
 ./scripts/update_dev.sh

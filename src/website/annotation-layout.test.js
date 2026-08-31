@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { layoutAnnotations } from './annotation-layout.js';
+import { layoutAnnotations, prepareAnnotationLayout } from './annotation-layout.js';
 
 function makeOptions(width = 900, height = 600) {
     return {
@@ -98,6 +98,8 @@ describe('layoutAnnotations', () => {
         expect(second.ay).toBeLessThan(0);
         expect(Math.hypot(first.ax, first.ay)).toBeGreaterThanOrEqual(48);
         expect(Math.hypot(first.ax, first.ay)).toBeLessThan(200);
+        expect(Math.abs(first.ax)).toBeGreaterThanOrEqual(24);
+        expect(Math.abs(second.ax)).toBeGreaterThanOrEqual(24);
         expect(first.ax !== second.ax || first.ay !== second.ay).toBe(true);
         expect(first.axref).toBe('pixel');
         expect(first.ayref).toBe('pixel');
@@ -210,24 +212,22 @@ describe('layoutAnnotations', () => {
         expect(annotation.ayref).toBe('pixel');
     });
 
-    it('uses the static layout when the backend hid an annotation', () => {
+    it('revives backend-hidden annotations for browser layout', () => {
         const options = makeOptions();
-        options.layout.annotations[0].name = 'spinorama:On Axis';
+        options.layout.annotations[0].name = 'static:On Axis';
+        options.layout.annotations[0].visible = false;
         options.layout.annotations[1] = {
             ...options.layout.annotations[1],
             name: 'layout-hidden:Sound Power',
             visible: false,
         };
 
-        layoutAnnotations(options);
+        prepareAnnotationLayout(options);
 
         const [onAxis, soundPower] = options.layout.annotations;
-        expect(onAxis.name).toBe('static:On Axis');
-        expect(onAxis.ax).toBe(0);
-        expect(onAxis.ay).toBe(-20);
-        expect(soundPower.name).toBe('static:Sound Power');
+        expect(onAxis.name).toBe('spinorama:On Axis');
+        expect(onAxis.visible).toBe(true);
+        expect(soundPower.name).toBe('spinorama:Sound Power');
         expect(soundPower.visible).toBe(true);
-        expect(soundPower.ax).toBe(0);
-        expect(soundPower.ay).toBe(20);
     });
 });

@@ -31,7 +31,7 @@
 OS=$(uname)
 status=0
 files=""
-LOCAL_VALIDATOR_URL=${LOCAL_VALIDATOR_URL:-http://127.0.0.1:8889/}
+LOCAL_VALIDATOR_URL=${LOCAL_VALIDATOR_URL:-http://127.0.0.1:18789/}
 W3C_VALIDATOR_URL=${W3C_VALIDATOR_URL:-$LOCAL_VALIDATOR_URL}
 W3C_DELAY_MS=${W3C_DELAY_MS:-0}
 
@@ -46,7 +46,7 @@ start_local_validator() {
     if ! docker container inspect --format '{{.State.Running}}' spinorama-nu-validator 2>/dev/null | grep -qx true; then
         docker rm -f spinorama-nu-validator >/dev/null 2>&1 || true
         if ! docker run -d --rm --name spinorama-nu-validator \
-            -p 127.0.0.1:8889:8888 validator/validator:latest >/dev/null; then
+            -p 127.0.0.1:18789:8888 ghcr.io/validator/validator:latest >/dev/null; then
             echo "Could not start the local Nu Validator container." >&2
             return 1
         fi

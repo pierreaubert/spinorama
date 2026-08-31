@@ -20,7 +20,7 @@
 
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
-import { annotationLayoutReady, layoutAnnotations } from './annotation-layout.js';
+import { annotationLayoutReady, layoutAnnotations, prepareAnnotationLayout } from './annotation-layout.js';
 import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 function detectTheme() {
@@ -53,7 +53,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         try {
             var cols = parseInt(document.documentElement.getAttribute('data-graph-cols') || '1');
             if (cols > 1) return cols;
-    } catch {}
+        } catch {}
         return 1;
     }
 
@@ -153,6 +153,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
 
     function applyConfigAndCompact(baseOptions, config) {
         const options = shallowCloneOptions(baseOptions);
+        prepareAnnotationLayout(options);
         applyConfig(options, config);
 
         if (!withConfig) {
@@ -204,6 +205,20 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         }
         await Plotly.newPlot(targetElement, options);
 
+        function targetIsRenderable() {
+            return targetElement.offsetWidth > 0 && targetElement.offsetHeight > 0;
+        }
+
+        let reactQueue = Promise.resolve();
+        function reactWhenRenderable(newOptions) {
+            if (!targetIsRenderable()) return reactQueue;
+            reactQueue = reactQueue
+                .catch(() => undefined)
+                .then(() => Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config))
+                .catch((error) => console.error('Plotly.react failed:', error));
+            return reactQueue;
+        }
+
         // Fast path: re-apply config without recomputing base options.
         // Debounced to batch rapid changes (e.g. multiple checkboxes).
         let configTimer = null;
@@ -213,7 +228,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
             configTimer = setTimeout(() => {
                 const newConfig = getConfig();
                 const newOptions = applyConfigAndCompact(cachedBaseOptions, newConfig);
-                Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
+                reactWhenRenderable(newOptions);
             }, 16); // ~1 frame
         });
 
@@ -226,7 +241,7 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
                 if (!cachedBaseOptions) return;
                 const newConfig = getConfig();
                 const newOptions = applyConfigAndCompact(cachedBaseOptions, newConfig);
-                Plotly.react(targetElement, newOptions.data, newOptions.layout, newOptions.config);
+                reactWhenRenderable(newOptions);
             }, 150);
         };
         window.addEventListener('resize', doResize);

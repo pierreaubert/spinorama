@@ -20,7 +20,7 @@ from spinorama.plot.annotations import (
     place_annotations,
 )
 from spinorama.plot.spinorama import plot_spinorama
-from scripts.plot_cea2034_annotations import show_annotations
+from scripts.plot_cea2034_annotations import require_rust_solver, show_annotations
 from spinorama.plot import annotations as annotations_module
 
 
@@ -352,6 +352,11 @@ class AnnotationLayoutTests(unittest.TestCase):
         self.assertEqual(show_annotations(figure), 1)
         self.assertTrue(visible.visible)
         self.assertFalse(hidden.visible)
+
+    def test_annotation_plot_script_requires_native_rust_solver(self):
+        with mock.patch("scripts.plot_cea2034_annotations.rust_place_annotations", None):
+            with self.assertRaisesRegex(RuntimeError, "native Rust annotation solver"):
+                require_rust_solver()
 
 
 class SpinoramaAnnotationIntegrationTests(unittest.TestCase):

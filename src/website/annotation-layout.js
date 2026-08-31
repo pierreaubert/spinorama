@@ -165,31 +165,23 @@ function isStaticAnnotation(annotation) {
     return typeof annotation.name === 'string' && annotation.name.startsWith('static:');
 }
 
-const STATIC_ANNOTATION_LAYOUT = {
-    'On Axis': [0, -20, 'right', 'bottom'],
-    'Listening Window': [0, -20, 'right', 'bottom'],
-    'Early Reflections': [0, 20, 'right', 'top'],
-    'Sound Power': [0, 20, 'right', 'top'],
-    'Early Reflections DI': [0, 20, 'right', 'top'],
-    'Sound Power DI': [0, -20, 'right', 'bottom'],
-};
 const MAX_DYNAMIC_LEADER_LENGTH = 260;
+const MIN_HORIZONTAL_LEADER_OFFSET = 24;
 
-function applyStaticAnnotationLayout(annotations) {
+export function prepareAnnotationLayout(options) {
+    const annotations = options?.layout?.annotations;
+    if (!Array.isArray(annotations)) return options;
     for (const annotation of annotations) {
-        const key = annotationKey(annotation);
-        const layout = STATIC_ANNOTATION_LAYOUT[key];
-        if (!layout) continue;
-        const [ax, ay, xanchor, yanchor] = layout;
-        annotation.visible = true;
-        annotation.ax = ax;
-        annotation.ay = ay;
-        annotation.axref = 'pixel';
-        annotation.ayref = 'pixel';
-        annotation.xanchor = xanchor;
-        annotation.yanchor = yanchor;
-        annotation.name = `static:${key}`;
+        if (typeof annotation.name !== 'string') continue;
+        if (annotation.name.startsWith('layout-hidden:')) {
+            annotation.name = `spinorama:${annotation.name.slice('layout-hidden:'.length)}`;
+            annotation.visible = true;
+        } else if (annotation.name.startsWith('static:')) {
+            annotation.name = `spinorama:${annotation.name.slice('static:'.length)}`;
+            annotation.visible = true;
+        }
     }
+    return options;
 }
 
 function estimateSize(annotation, layout) {
@@ -421,6 +413,7 @@ function layoutAnnotationsFallback(options) {
             if (Math.hypot(candidate.center[0] - item.anchor[0], candidate.center[1] - item.anchor[1]) <= MIN_LEADER_LENGTH) {
                 continue;
             }
+            if (Math.abs(candidate.center[0] - item.anchor[0]) < MIN_HORIZONTAL_LEADER_OFFSET) continue;
             const direction = ANNOTATION_DIRECTIONS[item.info.key];
             if (directionPenalty(direction, item.anchor, candidate.center) > 0) continue;
             if (occupied.some((other) => rectOverlap(rect, other) > 0)) continue;
@@ -475,8 +468,9 @@ function loadWasmSolver() {
             wasmSolver = module;
             return module;
         })
-        .catch(() => {
+        .catch((error) => {
             // Keep the synchronous JavaScript solver as an offline/build fallback.
+            console.warn('Rust annotation solver unavailable; using JavaScript fallback.', error);
             return null;
         });
     return wasmLoad;
@@ -591,18 +585,17 @@ function layoutAnnotationsWasm(options) {
     if (geometry.right <= geometry.left || geometry.bottom <= geometry.top) return options;
     const input = wasmInput(options, layout, geometry, reservedRects(layout, geometry));
     const results = wasmSolver.solve_annotations(input);
-    const needsStaticFallback =
-        results.some(
-            ([center, hidden], index) =>
-                hidden ||
-                !Array.isArray(center) ||
-                Math.hypot(center[0] - input.outputAnnotations[index].anchor[0], center[1] - input.outputAnnotations[index].anchor[1]) >
-                    MAX_DYNAMIC_LEADER_LENGTH,
-        );
-    if (needsStaticFallback) {
-        applyStaticAnnotationLayout(annotations);
-        return options;
-    }
+    const needsDynamicFallback = results.some(
+        ([center, hidden], index) =>
+            hidden ||
+            !Array.isArray(center) ||
+            !input.outputAnnotations[index] ||
+            Math.hypot(
+                center[0] - input.outputAnnotations[index].anchor[0],
+                center[1] - input.outputAnnotations[index].anchor[1]
+            ) > MAX_DYNAMIC_LEADER_LENGTH
+    );
+    if (needsDynamicFallback) return layoutAnnotationsFallback(options);
     for (let index = 0; index < results.length; index++) {
         const [center, hidden] = results[index];
         const item = input.outputAnnotations[index];
@@ -630,15 +623,5 @@ function layoutAnnotationsWasm(options) {
 export const annotationLayoutReady = loadWasmSolver();
 
 export function layoutAnnotations(options) {
-    const annotations = options?.layout?.annotations;
-    if (
-        Array.isArray(annotations) &&
-        annotations.some(
-            (annotation) => typeof annotation.name === 'string' && annotation.name.startsWith('layout-hidden:'),
-        )
-    ) {
-        applyStaticAnnotationLayout(annotations);
-        return options;
-    }
     return wasmSolver ? layoutAnnotationsWasm(options) : layoutAnnotationsFallback(options);
 }

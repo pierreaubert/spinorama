@@ -41,8 +41,11 @@ if test "$OS" = "Linux"; then
   fi
 elif test "$OS" = "Darwin"; then
     brew install npm hdf5 c-blosc2 lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
-    xattr -d com.apple.quarantine $(which chromedriver)
-    chmod 755 $(which chromedriver)
+    CHROMEDRIVER_PATH="$(command -v chromedriver)"
+    if xattr -p com.apple.quarantine "${CHROMEDRIVER_PATH}" >/dev/null 2>&1; then
+        xattr -d com.apple.quarantine "${CHROMEDRIVER_PATH}"
+    fi
+    chmod 755 "${CHROMEDRIVER_PATH}"
     export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
@@ -51,6 +54,11 @@ export PYTHONPATH="${ROOT_DIR}/src:${ROOT_DIR}/src/website"
 # python section
 python${PYVERSION} -m venv .venv
 source ./.venv/bin/activate
+
+# setup.py is invoked directly below, so PEP 517 build-system requirements are
+# not installed in an isolated build environment for us. Python 3.12 venvs do
+# not include setuptools by default.
+python -m pip install -U pip setuptools wheel
 
 ARCH=$(uname -a | awk '{print $NF}')
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
@@ -63,9 +71,6 @@ pip3 install -U -r requirements-dev.txt
 pip3 install -U -r requirements-api.txt
 pip3 install -U -r requirements-meta.txt
 pip3 install -U -r requirements-scrape.txt
-
-# update pip to prevent extra warning
-pip install -U pip
 
 # node section
 npm install .

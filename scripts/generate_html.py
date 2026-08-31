@@ -77,7 +77,7 @@ def generate_annotations_wasm(logger):
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-CACHE_VERSION = "v5"
+CACHE_VERSION = "v6"
 
 
 def get_files(dir: str, ext: str) -> list[str]:
