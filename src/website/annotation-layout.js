@@ -34,7 +34,9 @@ const ANNOTATION_LANES = {
 const ANNOTATION_DIRECTIONS = {
     'On Axis': 'above',
     'Listening Window': 'above',
-    'Early Reflections DI': 'above',
+    'Early Reflections': 'below',
+    'Sound Power': 'below',
+    'Early Reflections DI': 'below',
     'Sound Power DI': 'above',
 };
 
@@ -165,7 +167,6 @@ function isStaticAnnotation(annotation) {
     return typeof annotation.name === 'string' && annotation.name.startsWith('static:');
 }
 
-const MAX_DYNAMIC_LEADER_LENGTH = 260;
 const MIN_HORIZONTAL_LEADER_OFFSET = 24;
 
 export function prepareAnnotationLayout(options) {
@@ -585,17 +586,6 @@ function layoutAnnotationsWasm(options) {
     if (geometry.right <= geometry.left || geometry.bottom <= geometry.top) return options;
     const input = wasmInput(options, layout, geometry, reservedRects(layout, geometry));
     const results = wasmSolver.solve_annotations(input);
-    const needsDynamicFallback = results.some(
-        ([center, hidden], index) =>
-            hidden ||
-            !Array.isArray(center) ||
-            !input.outputAnnotations[index] ||
-            Math.hypot(
-                center[0] - input.outputAnnotations[index].anchor[0],
-                center[1] - input.outputAnnotations[index].anchor[1]
-            ) > MAX_DYNAMIC_LEADER_LENGTH
-    );
-    if (needsDynamicFallback) return layoutAnnotationsFallback(options);
     for (let index = 0; index < results.length; index++) {
         const [center, hidden] = results[index];
         const item = input.outputAnnotations[index];

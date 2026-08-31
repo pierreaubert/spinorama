@@ -88,8 +88,10 @@ impl SegmentIndex {
 const TRACE_CLEARANCE: f64 = 14.0;
 const LEADER_START_CLEARANCE: f64 = 12.0;
 const LEADER_TRACE_CLEARANCE: f64 = 3.0;
+const LEADER_COMFORT_CLEARANCE: f64 = 20.0;
+const LEADER_CROSSING_PENALTY: f64 = 10_000.0;
 const MIN_LEADER_LENGTH: f64 = 48.0;
-const MAX_LEADER_LENGTH: f64 = 260.0;
+const PREFERRED_MAX_LEADER_LENGTH: f64 = 260.0;
 const MIN_HORIZONTAL_LEADER_OFFSET: f64 = 24.0;
 const GRID_ALIGNMENT_TOLERANCE: f64 = 8.0;
 const GRID_ALIGNMENT_WEIGHT: f64 = 0.35;
@@ -253,9 +255,9 @@ fn leader_indexed_curve_penalty(anchor: Point, center: Point, index: &SegmentInd
         .map(|segment| {
             let distance = segment_distance(leader, **segment);
             if distance <= LEADER_TRACE_CLEARANCE {
-                100.0
-            } else if distance < 20.0 {
-                20.0 - distance
+                LEADER_CROSSING_PENALTY
+            } else if distance < LEADER_COMFORT_CLEARANCE {
+                (LEADER_COMFORT_CLEARANCE - distance) * 4.0
             } else {
                 0.0
             }
@@ -516,7 +518,9 @@ fn candidates(
     }
     for (rank, name) in lane_names.iter().enumerate() {
         if let Some((_, fraction)) = lanes().iter().find(|(lane, _)| lane == name) {
-            for dx in [0.0, -100.0, 100.0, -190.0, 190.0] {
+            for dx in [
+                0.0, -100.0, 100.0, -190.0, 190.0, -280.0, 280.0, -360.0, 360.0,
+            ] {
                 add(
                     (anchor.0 + dx, top + fraction * (bottom - top)),
                     rank as i64,
@@ -698,7 +702,7 @@ fn place_annotations(
                 // exact local offsets.  Treat the boundary consistently so
                 // native and fallback placement select the same candidate.
                 if distance <= MIN_LEADER_LENGTH
-                    || distance > MAX_LEADER_LENGTH
+                    || distance > PREFERRED_MAX_LEADER_LENGTH
                     || !has_acceptable_leader_geometry(anchor, *center)
                     || (request.direction.as_deref() == Some("above")
                         && anchor.1 - plot.1 > MIN_LEADER_LENGTH + size.1 / 2.0 + 5.0
@@ -731,7 +735,7 @@ fn place_annotations(
                     if leader_crosses_indexed_trace(anchor, *center, &all_segment_index) {
                         continue;
                     }
-                    0.0
+                    leader_indexed_curve_penalty(anchor, *center, &all_segment_index)
                 } else {
                     if leader_crosses_trace(anchor, *center, own) {
                         continue;
@@ -876,8 +880,12 @@ fn place_annotations(
                     for (center, rank) in &request_candidates {
                         let rect = rect_from_center(*center, size);
                         let distance = (center.0 - anchor.0).hypot(center.1 - anchor.1);
+                        // The greedy pass enforces the preferred 260-pixel
+                        // leader limit. Recovery owns the former JavaScript
+                        // fallback policy, so it may use any in-frame candidate
+                        // rather than hiding a label and solving everything a
+                        // second time in JavaScript.
                         if distance <= MIN_LEADER_LENGTH
-                            || distance > MAX_LEADER_LENGTH
                             || !has_acceptable_leader_geometry(anchor, *center)
                             || rect.0 < plot.0
                             || rect.2 > plot.2
@@ -909,7 +917,7 @@ fn place_annotations(
                             if leader_crosses_indexed_trace(anchor, *center, &all_segment_index) {
                                 continue;
                             }
-                            0.0
+                            leader_indexed_curve_penalty(anchor, *center, &all_segment_index)
                         } else {
                             if leader_crosses_trace(anchor, *center, own) {
                                 continue;
@@ -1174,6 +1182,105 @@ mod tests {
     }
 
     #[test]
+    fn solver_prefers_a_clear_leader_over_crossing_another_trace() {
+        let traces = vec![
+            (
+                0.0,
+                400.0,
+                1_200.0,
+                400.0,
+                "y".to_owned(),
+                Some("On Axis".to_owned()),
+            ),
+            (
+                620.0,
+                400.0,
+                620.0,
+                800.0,
+                "y".to_owned(),
+                Some("blocking".to_owned()),
+            ),
+        ];
+        let trace_index = SegmentIndex::new(
+            traces
+                .iter()
+                .map(|(x1, y1, x2, y2, _, _)| ((*x1, *y1), (*x2, *y2)))
+                .collect(),
+        );
+        let output = place_annotations(
+            vec![(
+                "On Axis".to_owned(),
+                50.0,
+                0.0,
+                "y".to_owned(),
+                "clear leader".to_owned(),
+                100,
+                vec!["middle".to_owned()],
+                Some("below".to_owned()),
+            )],
+            1_200.0,
+            800.0,
+            (0.0, 0.0, 0.0, 0.0),
+            (0.0, 100.0),
+            vec![("y".to_owned(), -10.0, 10.0)],
+            false,
+            10.0,
+            3.0,
+            (0.0, 1.0),
+            (0.0, 1.0),
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            traces,
+        );
+        let anchor = (600.0, 400.0);
+        let center = output[0].0.expect("a clear left-hand candidate exists");
+
+        assert!(center.0 < anchor.0);
+        assert!(center.1 > anchor.1);
+        assert!(!leader_crosses_indexed_trace(anchor, center, &trace_index));
+    }
+
+    #[test]
+    fn recovery_uses_a_long_in_frame_leader_before_hiding_a_label() {
+        let output = place_annotations(
+            vec![(
+                "On Axis".to_owned(),
+                50.0,
+                0.0,
+                "y".to_owned(),
+                "long recovery".to_owned(),
+                100,
+                vec!["middle".to_owned()],
+                None,
+            )],
+            1_200.0,
+            800.0,
+            (0.0, 0.0, 0.0, 0.0),
+            (0.0, 100.0),
+            vec![("y".to_owned(), -10.0, 10.0)],
+            false,
+            10.0,
+            3.0,
+            (0.0, 1.0),
+            (0.0, 1.0),
+            vec![],
+            vec![],
+            vec![],
+            vec![(330.0, 0.0, 870.0, 800.0)],
+            vec![],
+        );
+        let anchor = (600.0, 400.0);
+        let center = output[0]
+            .0
+            .expect("Rust recovery should use a longer candidate before hiding the label");
+
+        assert!(!output[0].1);
+        assert!((center.0 - anchor.0).hypot(center.1 - anchor.1) > PREFERRED_MAX_LEADER_LENGTH);
+    }
+
+    #[test]
     fn curve_penalty_rejects_a_cross_axis_curve() {
         let primary_axis = SegmentIndex::new(vec![((50.0, 212.0), (750.0, 212.0))]);
         assert!(curve_penalty((300.0, 200.0, 500.0, 225.0), &[], &primary_axis).is_none());
@@ -1210,7 +1317,7 @@ mod tests {
                 "-0.76 db/oct sm 0.69",
                 80,
                 vec!["middle", "upper", "lower"],
-                None,
+                Some("below"),
             ),
             (
                 "Sound Power",
@@ -1220,7 +1327,7 @@ mod tests {
                 "-1.43 db/oct sm 0.62",
                 75,
                 vec!["upper", "middle", "lower"],
-                None,
+                Some("below"),
             ),
             (
                 "Early Reflections DI",
@@ -1230,7 +1337,7 @@ mod tests {
                 "0.79 db/oct sm 0.84",
                 70,
                 vec!["upper", "top", "middle", "lower", "bottom"],
-                Some("above"),
+                Some("below"),
             ),
             (
                 "Sound Power DI",
@@ -1299,13 +1406,28 @@ mod tests {
 
         assert!(output.iter().all(|(_, hidden)| !hidden));
         let x_range = (20.0_f64.log10(), 20_000.0_f64.log10());
+        let early_reflections_anchor = (
+            value_to_pixel(10_000.0_f64.log10(), x_range, plot.0, plot.2),
+            value_to_pixel(-6.62, (-45.0, 5.0), plot.3, plot.1),
+        );
         let sound_power_anchor = (
             value_to_pixel(10_000.0_f64.log10(), x_range, plot.0, plot.2),
             value_to_pixel(-10.97, (-45.0, 5.0), plot.3, plot.1),
         );
+        let early_reflections_center = output[2].0.expect("Early Reflections needs a label box");
         let sound_power_center = output[3].0.expect("Sound Power needs a label box");
+        let early_reflections_di_anchor = (
+            value_to_pixel(10_000.0_f64.log10(), x_range, plot.0, plot.2),
+            value_to_pixel(5.56, (-5.0, 45.0), plot.3, plot.1),
+        );
+        let early_reflections_di_center =
+            output[4].0.expect("Early Reflections DI needs a label box");
         let sound_power_leader = (sound_power_center.0 - sound_power_anchor.0)
             .hypot(sound_power_center.1 - sound_power_anchor.1);
+
+        assert!(early_reflections_center.1 > early_reflections_anchor.1);
+        assert!(early_reflections_center.1 < sound_power_anchor.1);
+        assert!(early_reflections_di_center.1 > early_reflections_di_anchor.1);
         assert!(sound_power_leader < 100.0);
         assert!(output[5].0.is_some(), "Sound Power DI needs a label box");
     }
