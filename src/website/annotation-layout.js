@@ -167,6 +167,12 @@ function isStaticAnnotation(annotation) {
     return typeof annotation.name === 'string' && annotation.name.startsWith('static:');
 }
 
+function hasDynamicAnnotations(annotations) {
+    return annotations.some(
+        (annotation) => annotation.visible !== false && annotation.visible !== 'legendonly' && !isStaticAnnotation(annotation)
+    );
+}
+
 const MIN_HORIZONTAL_LEADER_OFFSET = 24;
 
 export function prepareAnnotationLayout(options) {
@@ -357,6 +363,7 @@ function layoutAnnotationsFallback(options) {
     const layout = options?.layout;
     const annotations = layout?.annotations;
     if (!layout || !Array.isArray(annotations) || annotations.length === 0) return options;
+    if (!hasDynamicAnnotations(annotations)) return options;
 
     const width = Number(layout.width || 1200);
     const height = Number(layout.height || 800);
@@ -571,6 +578,7 @@ function layoutAnnotationsWasm(options) {
     const layout = options?.layout;
     const annotations = layout?.annotations;
     if (!layout || !Array.isArray(annotations) || annotations.length === 0) return options;
+    if (!hasDynamicAnnotations(annotations)) return options;
     const width = Number(layout.width || 1200);
     const height = Number(layout.height || 800);
     const margin = layout.margin || {};

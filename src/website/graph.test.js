@@ -176,6 +176,34 @@ describe('Graph Display', () => {
         expect(callArgs[1]).toBeDefined();
     });
 
+    test('displayGraph preserves Python annotation placement', async () => {
+        const pythonAnnotation = {
+            name: 'spinorama:Early Reflections',
+            x: 10000,
+            y: -6.62,
+            ax: 6200,
+            ay: -9.1,
+            axref: 'x',
+            ayref: 'y',
+            visible: true,
+        };
+        setPlotForMeasurement.mockReturnValueOnce([
+            {
+                data: [{ x: [20, 1000, 20000], y: [0, -2, -8], type: 'scatter' }],
+                layout: {
+                    title: { text: 'Python annotations' },
+                    annotations: [pythonAnnotation],
+                },
+                config: {},
+            },
+        ]);
+
+        await displayGraph('CEA2034', 'CEA2034.json', 'test-graph', {}, true, 1);
+
+        const renderedAnnotation = Plotly.newPlot.mock.calls[0][1].layout.annotations[0];
+        expect(renderedAnnotation).toMatchObject(pythonAnnotation);
+    });
+
     test('3D plots have shapes removed', async () => {
         // Create a sample 3D graph spec
         const graphSpec = {

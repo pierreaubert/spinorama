@@ -20,7 +20,6 @@
 
 import Plotly from 'plotly.js-dist-min';
 import { setPlotForMeasurement } from './plot.js';
-import { annotationLayoutReady, layoutAnnotations, prepareAnnotationLayout } from './annotation-layout.js';
 import { loadConfigFromStorage, initGlobalConfigPanel, applyConfig } from './plot-config.js';
 
 function detectTheme() {
@@ -153,7 +152,6 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
 
     function applyConfigAndCompact(baseOptions, config) {
         const options = shallowCloneOptions(baseOptions);
-        prepareAnnotationLayout(options);
         applyConfig(options, config);
 
         if (!withConfig) {
@@ -181,12 +179,10 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec, with
         // Plotly's own responsive scaling — it conflicts with our layout recomputation
         // (e.g. scales vertical legends outside the visible area).
         options.config.responsive = false;
-        layoutAnnotations(options);
         return options;
     }
 
     async function run() {
-        await annotationLayoutReady;
         const config = getConfig();
         cachedBaseOptions = computeBaseOptions();
         if (!cachedBaseOptions) return;

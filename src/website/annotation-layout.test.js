@@ -203,8 +203,16 @@ describe('layoutAnnotations', () => {
             ayref: 'pixel',
         };
         options.layout.annotations = [annotation];
+        options.data = [
+            {
+                get x() {
+                    throw new Error('static annotations must not scan trace data');
+                },
+                y: [],
+            },
+        ];
 
-        layoutAnnotations(options);
+        expect(() => layoutAnnotations(options)).not.toThrow();
 
         expect(annotation.ax).toBe(0);
         expect(annotation.ay).toBe(-20);
