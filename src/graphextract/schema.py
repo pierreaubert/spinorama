@@ -21,6 +21,7 @@ class SegmentStatus(str, Enum):
 
     OBSERVED = "observed"
     INFERRED_OCCLUSION = "inferred_occlusion"
+    INTERPOLATED = "interpolated"
     INFERRED_DASH_GAP = "inferred_dash_gap"
     AMBIGUOUS = "ambiguous"
     MISSING = "missing"

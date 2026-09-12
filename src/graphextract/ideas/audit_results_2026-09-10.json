@@ -1,0 +1,298 @@
+{
+  "recorded_at_utc": "2026-09-10T09:29:27.219323+00:00",
+  "git_revision": "b38d2715441f134a63b737b2fd913d14058a2643",
+  "environment": {
+    "python": "3.12.14",
+    "opencv": "5.0.0",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pytesseract_available": false
+  },
+  "source_sha256": {
+    "graphextract/eval_extraction.py": "446b1a3bce8fc5e0706159d1adad73b6e5a05e235ee601f32153975dea207657",
+    "graphextract/extract_spinorama_colors.py": "7fcc67d0cfbc75d64db6503a0466b59a34cb23566af14792d9b1639531f749ea",
+    "spinorama/extract/__init__.py": "53a0c01595d9b4cdea68580672cc5a007578c14e66ddb43c71de6d0f814b1377",
+    "spinorama/extract/axis_calibrate.py": "60601166d4a1cfc08c2496d45c0fe2ec7eac2ef6374f3eab740de75f5f760502",
+    "spinorama/extract/color_segment.py": "66790c1e55709438893b49c1bb86bce7d94219122c05fbb4d769b604858303b3",
+    "spinorama/extract/curve_trace.py": "774b7cad0ec7d2043ace8671dc6aba1aa975a1d19d729afe7af0e14a811767ec",
+    "spinorama/extract/distortion.py": "27dcd108ca3d7515b2ed624ad6127e5929cb831050889c3baf0e9ff07cea60a9",
+    "spinorama/extract/plot_detect.py": "3861582e67273b0b1ec2ed04adbe5e8d0f4bc62542c70f9a1a4ccd7137779c9d"
+  },
+  "sample_images": [
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (1).png",
+      "sha256": "0403ce7cb276844847c9fc3c3ad9dad4acd791e222bd2ba797b748af285af3e8",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            0,
+            12,
+            956,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            980,
+            12,
+            1008,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (2).png",
+      "sha256": "0403ce7cb276844847c9fc3c3ad9dad4acd791e222bd2ba797b748af285af3e8",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            0,
+            12,
+            956,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            980,
+            12,
+            1008,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement (1).png",
+      "sha256": "77b3b414bf73233e7659c5ec1aff862d4214678ba3ca79900ba372669813de3c",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            52,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            1043,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement.png",
+      "sha256": "77b3b414bf73233e7659c5ec1aff862d4214678ba3ca79900ba372669813de3c",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            52,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            1043,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex frequency response driver measurement.png",
+      "sha256": "d794700f39db4b9e5b737d5d7695b9563cf6d2c3eb1feb2a3148a719767a25b8",
+      "width": 1000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            56,
+            63,
+            912,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "AsciLab C8C speakers active 3-way cardioid speaker hypex step response dsp measurement.png",
+      "sha256": "727f3555ff7a072f260fa38620ffedabc80ef1dabb21cc65e26fac3ad6a6d40c",
+      "width": 1000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            66,
+            63,
+            902,
+            495
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement (1).png",
+      "sha256": "c6ba11490d1c49e7263961641f682f80b9d9ac15e726c93ead2d6e79fbf783e3",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            0,
+            12,
+            956,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            980,
+            12,
+            1008,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement.png",
+      "sha256": "c6ba11490d1c49e7263961641f682f80b9d9ac15e726c93ead2d6e79fbf783e3",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            0,
+            12,
+            956,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            980,
+            12,
+            1008,
+            576
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement (1).png",
+      "sha256": "d4b89360c99c36725825052a83e0c7cd4ff83856ce25b487c93963ec9d2b5936",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            52,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            1052,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    },
+    {
+      "file": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement.png",
+      "sha256": "d4b89360c99c36725825052a83e0c7cd4ff83856ce25b487c93963ec9d2b5936",
+      "width": 2000,
+      "height": 600,
+      "regions": [
+        {
+          "bbox_xywh": [
+            52,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        },
+        {
+          "bbox_xywh": [
+            1052,
+            63,
+            916,
+            505
+          ],
+          "title": "",
+          "calibration_error": "TypeError: cannot unpack non-iterable numpy.int32 object"
+        }
+      ]
+    }
+  ],
+  "two_endpoints_only": {
+    "rms_error_db": 0.0,
+    "max_abs_error_db": 0.0,
+    "correlation": 1.0,
+    "frequency_coverage": 1.0
+  },
+  "one_pixel_line": {
+    "input_pixels": 180,
+    "output_pixels": 0
+  },
+  "smoothing_spike": {
+    "source_y_pixel": 45,
+    "output_y_pixel": 47.5714285714286,
+    "absolute_pixel_error": 2.571428571428598
+  }
+}

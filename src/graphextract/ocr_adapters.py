@@ -9,15 +9,16 @@ when absent the provider reports ``ocr_unavailable`` instead of failing.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import Protocol, Sequence
 
 import cv2
 import numpy.typing as npt
 
 from graphextract.calibration import ScaleType, detect_grid_lines, parse_tick_label
 from graphextract.pipeline import AxisAnchors
-from graphextract.schema import TickAnchor
+from graphextract.schema import PanelGeometry, TickAnchor
 
 
 @dataclass
@@ -92,6 +93,19 @@ class TickAssociation:
     unmatched: list[str] = field(default_factory=list)
 
 
+def _snap_y(word: OCRWord, value: float, grid_ys: list[int], img_w: int,
+              snap_px: int) -> TickAnchor | None:
+    """Y association for one word; None when it cannot be a y tick."""
+    cx, cy = word.x + word.w / 2.0, word.y + word.h / 2.0
+    if cx > 0.3 * img_w or not grid_ys:
+        return None
+    gy = min(grid_ys, key=lambda g: abs(g - cy))
+    if abs(gy - cy) > snap_px:
+        return None
+    conf = max(0.1, word.confidence * (1.0 - abs(gy - cy) / snap_px))
+    return TickAnchor(float(gy), value, conf, "ocr")
+
+
 def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int],
                     img_w: int, img_h: int, snap_px: int = 12) -> TickAssociation:
     """Snap parsed tick words to the nearest grid line; drop the rest honestly."""
@@ -108,6 +122,12 @@ def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int]
             if cy < 0.65 * img_h:
                 assoc.unmatched.append(f"{wd.text!r}: x-like label outside bottom strip")
                 continue
+            if kind == "linear" and cx <= 0.3 * img_w:
+                # The bottom y tick shares the bottom strip; its row decides.
+                hit = _snap_y(wd, value, grid_ys, img_w, snap_px)
+                if hit is not None:
+                    assoc.y_left.append(hit)
+                    continue
             if not grid_xs:
                 assoc.unmatched.append(f"{wd.text!r}: no vertical grid to snap to")
                 continue
@@ -120,20 +140,45 @@ def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int]
             assoc.x.append(TickAnchor(float(gx), value, conf, "ocr"))
         else:
             # Y-axis label: lives in the left strip, position from horizontal grid.
-            if cx > 0.3 * img_w:
-                assoc.unmatched.append(f"{wd.text!r}: y-like label outside left strip")
+            hit = _snap_y(wd, value, grid_ys, img_w, snap_px)
+            if hit is None:
+                if cx > 0.3 * img_w:
+                    assoc.unmatched.append(f"{wd.text!r}: y-like label outside left strip")
+                elif not grid_ys:
+                    assoc.unmatched.append(f"{wd.text!r}: no horizontal grid to snap to")
+                else:
+                    assoc.unmatched.append(f"{wd.text!r}: far from nearest grid line")
                 continue
-            if not grid_ys:
-                assoc.unmatched.append(f"{wd.text!r}: no horizontal grid to snap to")
-                continue
-            gy = min(grid_ys, key=lambda g: abs(g - cy))
-            dist = abs(gy - cy)
-            if dist > snap_px:
-                assoc.unmatched.append(f"{wd.text!r}: {dist:.0f}px from nearest grid line")
-                continue
-            conf = max(0.1, wd.confidence * (1.0 - dist / snap_px))
-            assoc.y_left.append(TickAnchor(float(gy), value, conf, "ocr"))
+            assoc.y_left.append(hit)
     return assoc
+
+
+_PAREN_UNIT = re.compile(r"\(\s*(khz|hz|ms|s|db|%)\s*\)", re.IGNORECASE)
+
+
+def _paren_spec(words: Sequence[OCRWord]) -> tuple[ScaleType | None, str, str]:
+    """Axis-title units like ``Frequency (Hz)``; empty when none observed.
+
+    Only fills sides the tick-label kinds left undecided: frequency/time
+    parentheticals speak for the x axis, dB/percent for y. Bare tick numbers
+    (``20`` … ``20000``) carry no kind, so this is what names the log axis.
+    """
+    x_scale: ScaleType | None = None
+    x_unit, y_unit = "", ""
+    for wd in words:
+        match = _PAREN_UNIT.search(wd.text)
+        if not match:
+            continue
+        token = match.group(1).lower()
+        if token in ("hz", "khz") and not x_unit:
+            x_scale, x_unit = ScaleType.LOG10, "Hz"
+        elif token in ("ms", "s") and not x_unit:
+            x_scale, x_unit = ScaleType.LINEAR, "s"
+        elif token == "db" and not y_unit:
+            y_unit = "dB"
+        elif token == "%" and not y_unit:
+            y_unit = "%"
+    return x_scale, x_unit, y_unit
 
 
 def infer_axis_spec(words: list[OCRWord]) -> tuple[ScaleType | None, str, str]:
@@ -144,7 +189,7 @@ def infer_axis_spec(words: list[OCRWord]) -> tuple[ScaleType | None, str, str]:
         if parsed is not None:
             kinds.append(parsed[1])
     if not kinds:
-        return None, "", ""
+        return _paren_spec(words)
     x_kinds = [k for k in kinds if k in ("freq", "time")]
     if x_kinds:
         top = max(set(x_kinds), key=x_kinds.count)
@@ -153,7 +198,7 @@ def infer_axis_spec(words: list[OCRWord]) -> tuple[ScaleType | None, str, str]:
     if y_kinds:
         top = max(set(y_kinds), key=y_kinds.count)
         return None, "", ("%" if top == "percent" else "dB")
-    return None, "", ""
+    return _paren_spec(words)
 
 
 def anchors_from_ocr(words: list[OCRWord], interior: npt.NDArray,
@@ -166,6 +211,36 @@ def anchors_from_ocr(words: list[OCRWord], interior: npt.NDArray,
     return (AxisAnchors(x=assoc.x, y_left=assoc.y_left, x_scale=x_scale,
                         x_unit=x_unit, y_unit=y_unit or "dB", source=source),
             assoc.unmatched)
+
+
+def panel_anchors_from_words(
+    words: Sequence[OCRWord],
+    panel: PanelGeometry,
+    interior: npt.NDArray,
+    source: str = "ocr_unverified",
+    margin_frac: float = 0.10,
+    margin_min_px: int = 60,
+) -> AxisAnchors:
+    """Tick anchors for one panel from full-image OCR words (image-global).
+
+    Tick labels live in the margins *outside* the plot frame, so an
+    interior-only read can never see them. Words near the panel envelope
+    (tick labels, axis titles) are shifted into interior-local coordinates
+    and run through the usual grid-snapping association; words from
+    neighbouring panels fall outside the margin and are ignored. Position
+    still comes from grid geometry, never from text-box centres.
+    """
+    ix, iy, _iw, _ih = panel.interior_xywh
+    ex, ey, ew, eh = panel.envelope_xywh
+    mx = max(margin_min_px, int(margin_frac * ew))
+    my = max(margin_min_px, int(margin_frac * eh))
+    local = []
+    for wd in words:
+        cx, cy = wd.x + wd.w / 2.0, wd.y + wd.h / 2.0
+        if ex - mx <= cx <= ex + ew + mx and ey - my <= cy <= ey + eh + my:
+            local.append(OCRWord(wd.text, wd.x - ix, wd.y - iy, wd.w, wd.h, wd.confidence))
+    anchors, _unmatched = anchors_from_ocr(local, interior, source)
+    return anchors
 
 
 def ocr_anchor_provider(ocr: OCRProvider, source: str = "ocr_unverified"):

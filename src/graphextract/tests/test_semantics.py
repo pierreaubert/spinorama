@@ -162,3 +162,41 @@ def test_styles_from_legend_gives_count_and_colors():
     bgrs = [tuple(s.bgr) for s in styles]
     assert any(b[2] > 200 and b[0] < 80 and b[1] < 80 for b in bgrs)  # red curve
     assert any(max(b) < 80 for b in bgrs)  # black curve
+
+
+def test_wide_label_words_join_beyond_window():
+    """Later words of wide high-resolution labels sit past the ±80px window
+    yet still belong to the key on their left (PMC10: 'On' + 'Axis')."""
+    img = np.full((60, 500, 3), 255, np.uint8)
+    cv2.line(img, (10, 20), (70, 20), (0, 0, 255), 3)
+    words = [OCRWord("Longword", 120, 13, 80, 13, 0.9),
+             OCRWord("Tail", 260, 13, 30, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert res.has_legend is True
+    assert len(res.entries) == 1
+    assert res.entries[0].text == "Longword Tail"
+
+
+def test_wide_highres_line_key_detected():
+    """Legend keys on high-resolution renders reach ~95px; the width cap
+    must not silently drop them (PMC10 found zero of seven keys)."""
+    img = np.full((60, 300, 3), 255, np.uint8)
+    cv2.line(img, (10, 20), (104, 20), (0, 0, 255), 4)
+    words = [OCRWord("Red", 115, 13, 35, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert res.has_legend is True
+    assert len(res.entries) == 1
+    assert res.entries[0].text == "Red"
+    assert res.entries[0].swatch_bgr is not None
+    assert abs(res.entries[0].swatch_bgr[2] - 255) < 60
+
+
+def test_tall_misread_box_dropped_by_sample_overlap():
+    """A tall OCR box blanketing its key ('——' with padded height) covers
+    little of its own area yet most of the key: still the key, not a label."""
+    img = np.full((60, 200, 3), 255, np.uint8)
+    cv2.line(img, (10, 20), (70, 20), (0, 0, 255), 3)
+    words = [OCRWord("eee", 8, 8, 64, 30, 0.5)]
+    res = detect_legend(img, words)
+    assert res.has_legend is False
+    assert res.entries == []

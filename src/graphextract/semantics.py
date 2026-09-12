@@ -96,7 +96,9 @@ def _line_samples(img: npt.NDArray, ink_thresh: float = 30.0) -> list[_Sample]:
     out = []
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
-        if not (12 <= w <= 90 and 1 <= h <= 12):
+        # Keys are short segments (high-resolution renders reach ~95px);
+        # frame/grid strokes span hundreds of pixels and stay excluded.
+        if not (12 <= w <= 120 and 1 <= h <= 12):
             continue
         if w / max(1, h) < 3 or cv2.contourArea(cnt) < 30:
             continue
@@ -161,11 +163,14 @@ def _swatch_candidates(img: npt.NDArray) -> list[_Sample]:
 
 
 def _word_hit_by_sample(wd, samples: list[_Sample]) -> bool:
-    """True when an OCR word mostly covers a colour key.
+    """True when an OCR word re-reads a colour key instead of labelling it.
 
     OCR frequently misreads a coloured line sample itself as short text
     (e.g. 'mum'/'eee' on a 57x5 segment). Such words are the key, not a
-    label, and must not become legend entries.
+    label, and must not become legend entries. Either overlap direction
+    counts: a tall misread box ('——' with padded height) covers little of
+    its own area yet blankets most of the key, while a tight box covers
+    most of itself. Real labels sit beside their key, overlapping neither.
     """
     wx, wy, ww, wh = wd.x, wd.y, wd.w, wd.h
     if ww <= 0 or wh <= 0:
@@ -174,7 +179,7 @@ def _word_hit_by_sample(wd, samples: list[_Sample]) -> bool:
         sx, sy, sw, sh = s.xywh
         inter = (max(0, min(wx + ww, sx + sw) - max(wx, sx))
                  * max(0, min(wy + wh, sy + sh) - max(wy, sy)))
-        if inter > 0.5 * ww * wh:
+        if inter > 0.5 * ww * wh or (sw > 0 and sh > 0 and inter > 0.5 * sw * sh):
             return True
     return False
 
@@ -186,6 +191,8 @@ def _nearest_sample(wd, samples: list[_Sample]) -> _Sample | None:
     nearest key on its left; only when no left key fits is a key on the
     right considered. This keeps the second word of a wide label ('2nd'
     + 'Harmonic') on its own key instead of drifting to the next item.
+    Words past the ±80px window (later words of wide high-resolution
+    labels) fall back to the nearest row-compatible key on their left.
     """
     cx, cy = wd.x + wd.w / 2.0, wd.y + wd.h / 2.0
     vgate = max(12.0, float(max(wd.h, 1)))
@@ -199,11 +206,18 @@ def _nearest_sample(wd, samples: list[_Sample]) -> _Sample | None:
         if dy > vgate:
             continue
         compat.append((abs(scx - cx) + 2.0 * dy, scx <= cx, s))
-    if not compat:
-        return None
-    left = [c for c in compat if c[1]]
-    pool = left if left else compat
-    return min(pool, key=lambda c: c[0])[2]
+    if compat:
+        left = [c for c in compat if c[1]]
+        pool = left if left else compat
+        return min(pool, key=lambda c: c[0])[2]
+    far = []
+    for s in samples:
+        sx, sy, sw, sh = s.xywh
+        scx, scy = sx + sw / 2.0, sy + sh / 2.0
+        if scx > cx or abs(scy - cy) > vgate:
+            continue
+        far.append((cx - scx, s))
+    return min(far)[1] if far else None
 
 
 def extract_legend_entries(img: npt.NDArray, words,

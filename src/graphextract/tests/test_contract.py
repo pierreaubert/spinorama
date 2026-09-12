@@ -20,7 +20,7 @@ from graphextract.pipeline import AxisAnchors, run_document, run_panel
 from graphextract.render import RenderPanel, RenderSeries, render_panel, verify_transforms
 from graphextract.schema import AxisRole, PanelOutcome, SegmentStatus, SeriesResult, SeriesSample
 
-from tests.helpers import log_sine_panel, renderer_anchors, styles_ab
+from helpers import log_sine_panel, renderer_anchors, styles_ab
 
 
 def _anchors(pixels, values, source="manual"):
@@ -194,6 +194,24 @@ def test_stacked_and_quad_layouts_detected():
     for (x, y) in ((20, 20), (310, 20), (20, 310), (310, 310)):
         cv2.rectangle(img4, (x, y), (x + 270, y + 270), (0, 0, 0), 2)
     assert len(detect_panels(img4, "quad")) == 4
+
+
+def test_faint_dashed_frame_keeps_full_interior_width():
+    """Dashed frame strokes fragment under Hough; the projection pass must
+    still recover the outer frame so the interior is not truncated onto an
+    interior decade line (PMC10 CTA-2034 kept only the 20-200Hz third)."""
+    img = np.full((400, 800, 3), 255, np.uint8)
+    img[20:23, 10:791] = (0, 0, 0)  # top frame
+    img[377:380, 10:791] = (0, 0, 0)  # bottom frame
+    img[20:380, 10:13] = (0, 0, 0)  # solid left frame
+    img[20:380, 300:303] = (0, 0, 0)  # solid interior decade line
+    for y in range(30, 370, 30):  # dashed right frame: 15px segments Hough cannot link
+        img[y:y + 15, 788:791] = (0, 0, 0)
+    panels = detect_panels(img, "dashed")
+    assert len(panels) == 1
+    x, _y, w, _h = panels[0].interior_xywh
+    assert w > 0.9 * panels[0].envelope_xywh[2]
+    assert x <= panels[0].envelope_xywh[0] + 5
 
 
 def test_panel_failure_isolation_in_document():

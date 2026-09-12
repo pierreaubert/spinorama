@@ -12,7 +12,7 @@ from graphextract.evaluate import score_series
 from graphextract.evidence import StyleSpec, segment_evidence
 from graphextract.tracking import TrackConfig, track_panel
 
-from tests.helpers import gray_of
+from helpers import gray_of
 
 
 def test_hough_unpack_accepts_both_opencv_layouts():

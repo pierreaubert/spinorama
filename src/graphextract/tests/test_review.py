@@ -15,7 +15,7 @@ from graphextract.review import (
 )
 from graphextract.schema import PanelOutcome, TickAnchor
 
-from tests.helpers import log_sine_panel, renderer_anchors, styles_ab
+from helpers import log_sine_panel, renderer_anchors, styles_ab
 
 
 def test_correction_rejects_unknown_target():

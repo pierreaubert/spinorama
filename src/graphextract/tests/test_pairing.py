@@ -127,7 +127,7 @@ def test_census_with_source_runs_verdict():
     from graphextract.ocr_adapters import OCRWord, StubOCR
     from graphextract.pairing import SourceTruth, census_image
 
-    from tests.helpers import log_sine_panel, styles_ab
+    from helpers import log_sine_panel, styles_ab
 
     img, panel, truth = log_sine_panel()
     x0, y0, w, h = panel.rect_xywh

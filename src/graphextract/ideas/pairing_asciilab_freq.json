@@ -1,0 +1,39 @@
+{
+  "image_id": "asCIlab-freq-driver",
+  "verdicts": {
+    "horizontal": {
+      "truth_sha256": "8de4743618c0241bcb63af508879d6827dc381a5657c1c1ca614dc25c2b591ea",
+      "grids_identical": true,
+      "series": {
+        "red": {
+          "best_candidate": "-60\u00b0",
+          "best_rms_db": 7.5210659333477725,
+          "overlap_hz": [
+            20.5078,
+            4805.888867911008
+          ],
+          "paired": false
+        },
+        "darkred": {
+          "best_candidate": "170\u00b0",
+          "best_rms_db": 8.033543586218924,
+          "overlap_hz": [
+            20.5078,
+            2820.2857841428427
+          ],
+          "paired": false
+        },
+        "olive": {
+          "best_candidate": "On Axis",
+          "best_rms_db": 3.0719573769373287,
+          "overlap_hz": [
+            501.84817712733553,
+            19999.5
+          ],
+          "paired": false
+        }
+      }
+    }
+  },
+  "threshold_db": 1.5
+}

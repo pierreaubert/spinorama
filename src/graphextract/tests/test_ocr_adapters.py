@@ -12,6 +12,7 @@ from graphextract.ocr_adapters import (
     anchors_from_ocr,
     infer_axis_spec,
     ocr_anchor_provider,
+    panel_anchors_from_words,
 )
 
 
@@ -84,3 +85,55 @@ def test_stub_provider_feeds_pipeline():
     anchors = ocr_anchor_provider(ocr)("p0", _grid_image())
     assert anchors.source == "ocr_unverified"
     assert len(anchors.x) == 1
+
+
+def _margin_frame_image():
+    """Plot frame with log-decade x grids, linear y grids, and margin labels."""
+    img = np.full((300, 500, 3), 255, np.uint8)
+    img[40:43, 60:441] = (0, 0, 0)
+    img[257:260, 60:441] = (0, 0, 0)
+    img[40:260, 60:63] = (0, 0, 0)
+    img[40:260, 438:441] = (0, 0, 0)
+    for gx in (60, 250, 440):
+        img[40:260, gx:gx + 2] = (180, 180, 180)
+    for gy in (40, 150, 259):
+        img[gy:gy + 2, 60:441] = (180, 180, 180)
+    return img
+
+
+def _margin_frame_words():
+    return [
+        OCRWord("20", 50, 265, 20, 14, 0.9),
+        OCRWord("200", 240, 265, 24, 14, 0.9),
+        OCRWord("2000", 425, 265, 30, 14, 0.9),
+        OCRWord("0", 44, 33, 14, 14, 0.9),
+        OCRWord("50", 28, 143, 18, 14, 0.9),
+        OCRWord("100", 24, 250, 26, 14, 0.9),
+    ]
+
+
+def test_panel_anchors_from_margin_words():
+    """Margin tick labels (outside the frame) snap to grid geometry in
+    interior-local coordinates; bare numbers leave the scale undecided."""
+    from graphextract.schema import PanelGeometry
+
+    img = _margin_frame_image()
+    panel = PanelGeometry("img#p0", (50, 30, 400, 240), (60, 40, 381, 220), 500, 300)
+    interior = img[40:260, 60:441]
+    anchors = panel_anchors_from_words(_margin_frame_words(), panel, interior)
+    assert [t.value for t in anchors.x] == [20.0, 200.0, 2000.0]
+    for tick, expected in zip(anchors.x, (0, 190, 380)):
+        assert abs(tick.pixel - expected) <= 2
+    assert [t.value for t in anchors.y_left] == [0.0, 50.0, 100.0]
+    for tick, expected in zip(anchors.y_left, (0, 110, 219)):
+        assert abs(tick.pixel - expected) <= 2
+    assert anchors.x_scale is None and anchors.x_unit == ""
+
+
+def test_paren_unit_names_axes():
+    """Axis titles like 'Frequency (Hz)' name units the bare tick numbers
+    cannot: the log axis becomes explicit instead of residual-competed."""
+    assert infer_axis_spec([OCRWord("(Hz)", 0, 0, 20, 10)]) == (ScaleType.LOG10, "Hz", "")
+    assert infer_axis_spec([OCRWord("Frequency (Hz)", 0, 0, 60, 10)])[1] == "Hz"
+    assert infer_axis_spec([OCRWord("(dB)", 0, 0, 20, 10)])[2] == "dB"
+    assert infer_axis_spec([]) == (None, "", "")

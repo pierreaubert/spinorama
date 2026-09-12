@@ -115,17 +115,32 @@ def segment_evidence(
     morphological open/close for display previews only; measurement masks
     always keep the raw match. Grid pixels are reported in their own layer,
     never subtracted from curve evidence.
+
+    Mixture-only pixels within a few pixels of the interior border are
+    dropped when achromatic: that band holds the frame/axis furniture
+    (greys) whose antialiased edges unmix into dark curve colours and would
+    otherwise hand every series a full-height hijack lane at the plot edge.
+    Core (box-test) pixels survive everywhere, as do chromatic endpoint
+    fringes, so true curve endpoints are preserved.
     """
     h, w = plot_img.shape[:2]
     bg = estimate_background(plot_img)
     grid = detect_grid_mask_thin(plot_img)
-    masks: dict[str, npt.NDArray] = {}
+    border = np.zeros((h, w), dtype=bool)
+    bw = min(4, h // 2, w // 2)
+    if bw > 0:
+        border[:bw, :] = True
+        border[-bw:, :] = True
+        border[:, :bw] = True
+        border[:, -bw:] = True
     px = plot_img.astype(np.int16)
+    achromatic = (np.max(px, axis=2) - np.min(px, axis=2)) < 25
+    masks: dict[str, npt.NDArray] = {}
     for spec in styles:
         ref = np.array(spec.bgr, dtype=np.int16).reshape(1, 1, 3)
         tol = np.array(spec.channel_tol, dtype=np.int16).reshape(1, 1, 3)
         box = np.all(np.abs(px - ref) <= tol, axis=2)
-        mixed = mixture_match(plot_img, bg, spec.bgr)
+        mixed = mixture_match(plot_img, bg, spec.bgr) & ~(border & achromatic)
         raw = ((box | mixed).astype(np.uint8)) * 255
         if cleanup and raw.any():
             k = np.ones((2, 2), np.uint8)

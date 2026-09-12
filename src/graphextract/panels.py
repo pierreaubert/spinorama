@@ -202,7 +202,15 @@ def _dedup(boxes: list[_Box], outer_filter: bool = True) -> list[_Box]:
 
 
 def _refine_interior(gray: npt.NDArray, box: _Box) -> tuple[_Box, str]:
-    """Shrink an envelope to the axis frame when long border lines are found."""
+    """Shrink an envelope to the axis frame when long border lines are found.
+
+    Each axis refines independently: an axis without spanning border evidence
+    keeps the envelope extent instead of collapsing onto an interior grid
+    line. Faint decade strokes that fragment under Hough are recovered
+    through the dark-projection pass in calibration.
+    """
+    from graphextract.calibration import _merge_positions, projection_lines
+
     h, w = gray.shape[:2]
     x1 = max(0, box.x)
     y1 = max(0, box.y)
@@ -216,25 +224,36 @@ def _refine_interior(gray: npt.NDArray, box: _Box) -> tuple[_Box, str]:
         edges, 1, np.pi / 180, threshold=60,
         minLineLength=int(0.5 * min(crop.shape[:2])), maxLineGap=5,
     )
-    if lines is None:
-        return box, "low"
     verts: list[int] = []
     horiz: list[int] = []
     ch, cw = crop.shape[:2]
-    for line in lines:
-        lx1, ly1, lx2, ly2 = (int(v) for v in np.asarray(line).reshape(-1))
-        if abs(lx2 - lx1) < 3 and abs(ly2 - ly1) > 0.5 * ch:
-            verts.append((lx1 + lx2) // 2)
-        elif abs(ly2 - ly1) < 3 and abs(lx2 - lx1) > 0.5 * cw:
-            horiz.append((ly1 + ly2) // 2)
-    if len(verts) >= 2 and len(horiz) >= 2:
-        ix = _Box(
-            x=x1 + min(verts), y=y1 + min(horiz),
-            w=max(verts) - min(verts), h=max(horiz) - min(horiz),
-        )
-        if ix.w > 0.3 * box.w and ix.h > 0.3 * box.h:
-            return ix, "refined"
-    return box, "low"
+    if lines is not None:
+        for line in lines:
+            lx1, ly1, lx2, ly2 = (int(v) for v in np.asarray(line).reshape(-1))
+            if abs(lx2 - lx1) < 3 and abs(ly2 - ly1) > 0.5 * ch:
+                verts.append((lx1 + lx2) // 2)
+            elif abs(ly2 - ly1) < 3 and abs(lx2 - lx1) > 0.5 * cw:
+                horiz.append((ly1 + ly2) // 2)
+    proj_x, proj_y = projection_lines(crop)
+    verts = _merge_positions(verts, proj_x)
+    horiz = _merge_positions(horiz, proj_y)
+    ix, refined_axes = _Box(x=x1, y=y1, w=x2 - x1, h=y2 - y1), 0
+    if len(verts) >= 2 and max(verts) - min(verts) >= 0.5 * (x2 - x1):
+        ix.x, ix.w = x1 + min(verts), max(verts) - min(verts)
+        refined_axes += 1
+    if len(horiz) >= 2 and max(horiz) - min(horiz) >= 0.5 * (y2 - y1):
+        ix.y, ix.h = y1 + min(horiz), max(horiz) - min(horiz)
+        refined_axes += 1
+    if refined_axes == 2 and ix.w > 0 and ix.h > 0:
+        # min/max land on stroke centres; pad by the stroke half-width so
+        # the outer frame/grid strokes themselves stay inside the interior.
+        # Without this, a 1-2px shave silently drops the outer decade lines
+        # and their tick labels can never anchor.
+        pad = 3
+        x0n, y0n = max(x1, ix.x - pad), max(y1, ix.y - pad)
+        x1n, y1n = min(x2, ix.x + ix.w + pad), min(y2, ix.y + ix.h + pad)
+        return _Box(x=x0n, y=y0n, w=x1n - x0n, h=y1n - y0n), "refined"
+    return ix, "low"
 
 
 def detect_panels(img: npt.NDArray, image_id: str = "img",

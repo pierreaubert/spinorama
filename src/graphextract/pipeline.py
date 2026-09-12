@@ -11,11 +11,14 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING, Callable, Sequence
 
 import cv2
 import numpy as np
 import numpy.typing as npt
+
+if TYPE_CHECKING:
+    from graphextract.ocr_adapters import OCRWord
 
 from graphextract.calibration import CalibrationUnresolved, ScaleType, fit_axis
 from graphextract.evidence import EvidenceLayers, StyleSpec, estimate_background, segment_evidence
@@ -28,7 +31,13 @@ from graphextract.schema import (
     PanelResult,
     TickAnchor,
 )
-from graphextract.tracking import TrackConfig, track_panel
+from graphextract.tracking import (
+    KNOWN_ASSUMPTIONS,
+    SeriesResult,
+    TrackConfig,
+    resolve_duplicate_claims,
+    track_panel,
+)
 
 PIPELINE_VERSION = "0.1.0"
 
@@ -78,6 +87,10 @@ def run_panel(
         image_height=img.shape[0],
     )
     result = PanelResult(panel=geometry, provenance={"pipeline": PIPELINE_VERSION})
+    if track_config is not None:
+        active = [n for n in KNOWN_ASSUMPTIONS if getattr(track_config, n, False)]
+        if active:
+            result.provenance["assumptions"] = active
     calibration_resolved = True
     try:
         axes: dict[str, AxisFit] = {
@@ -97,9 +110,23 @@ def run_panel(
 
     gray = cv2.cvtColor(interior, cv2.COLOR_BGR2GRAY) if interior.ndim == 3 else interior
     layers: EvidenceLayers = segment_evidence(interior, styles)
-    tracks = track_panel(gray, layers, [s.series_id for s in styles],
-                         float(np.median(gray)), track_config)
+    # Each series tracks against its own colour evidence independently:
+    # joint assignment cannot disambiguate converged same-plot curves any
+    # better than motion already does, while its ties resolve by set order
+    # (init lottery with permanent lock-in). track_panel keeps its joint
+    # form for direct multi-series callers.
+    tracks: dict[str, SeriesResult] = {}
+    for spec in styles:
+        tracks.update(track_panel(gray, layers, [spec.series_id],
+                                  float(np.median(gray)), track_config,
+                                  {spec.series_id: spec.bgr}, interior))
     ox, oy = interior_offset
+    if track_config is not None and track_config.no_jump:
+        dupes = resolve_duplicate_claims(tracks, track_config.max_jump_px)
+        for sid, idx in dupes.items():
+            if idx:
+                tracks[sid].review_reasons.append(
+                    f"duplicate_claim: {len(idx)} shared-ink samples demoted to missing")
     for sid, tr in tracks.items():
         tr.panel_id = panel_id
         style = next((x for x in styles if x.series_id == sid), None)
@@ -139,8 +166,18 @@ def run_document(
     styles: list[StyleSpec],
     anchor_provider: AnchorProvider | None = None,
     track_config: TrackConfig | None = None,
+    words: Sequence[OCRWord] | None = None,
 ) -> DocumentResult:
-    """End-to-end image-only extraction with per-panel failure isolation."""
+    """End-to-end image-only extraction with per-panel failure isolation.
+
+    ``words`` (optional full-image OCR words in image-global coordinates)
+    feeds tick-stack panel splits and, when a panel's provider yields no
+    anchors at all, margin-aware anchor recovery: tick labels live outside
+    the plot frame, so interior-only reads stay empty on real charts. An
+    explicit provider result always wins; words only fill a total void.
+    """
+    from graphextract.ocr_adapters import panel_anchors_from_words
+
     provider = anchor_provider or _empty_anchors
     sha = hashlib.sha256(np.ascontiguousarray(img).tobytes()).hexdigest()
     doc = DocumentResult(document_id=image_id, image_id=image_id,
@@ -149,7 +186,7 @@ def run_document(
                          provenance={"pipeline": PIPELINE_VERSION,
                                      "oracle_inputs_used": False})
     try:
-        panels = detect_panels(img, image_id)
+        panels = detect_panels(img, image_id, words=words)
     except Exception as exc:  # detection itself failed: single failed panel entry
         failed = PanelResult(
             panel=__import__("graphextract.schema", fromlist=["PanelGeometry"]).PanelGeometry(
@@ -165,6 +202,8 @@ def run_document(
         interior = _crop(img, pg.interior_xywh)
         try:
             anchors = provider(pg.panel_id, interior)
+            if words is not None and not anchors.x and not anchors.y_left and not anchors.y_right:
+                anchors = panel_anchors_from_words(words, pg, interior)
             res = run_panel(img, pg.panel_id, interior,
                             (pg.interior_xywh[0], pg.interior_xywh[1]),
                             anchors, styles, track_config)

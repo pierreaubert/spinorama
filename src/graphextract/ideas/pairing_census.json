@@ -1,0 +1,555 @@
+[
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (1)",
+  "width": 2000,
+  "height": 600,
+  "sha256": "57fb7eb6b711cf64507593e716f21c12a2de7134b366c8a999391df5b6a0baa3",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (1)#p0",
+    "envelope_xywh": [
+     56,
+     63,
+     967,
+     505
+    ],
+    "interior_xywh": [
+     64,
+     84,
+     904,
+     405
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   },
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (1)#p1",
+    "envelope_xywh": [
+     1023,
+     63,
+     959,
+     505
+    ],
+    "interior_xywh": [
+     1055,
+     63,
+     913,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   }
+  ],
+  "ocr": {
+   "n_words": 117,
+   "nx_anchors": 7,
+   "ny_anchors": 8,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 102,
+   "detection_method": "contours+tickstack"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (2)",
+  "width": 2000,
+  "height": 600,
+  "sha256": "57fb7eb6b711cf64507593e716f21c12a2de7134b366c8a999391df5b6a0baa3",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (2)#p0",
+    "envelope_xywh": [
+     56,
+     63,
+     967,
+     505
+    ],
+    "interior_xywh": [
+     64,
+     84,
+     904,
+     405
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   },
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion THD measurement (2)#p1",
+    "envelope_xywh": [
+     1023,
+     63,
+     959,
+     505
+    ],
+    "interior_xywh": [
+     1055,
+     63,
+     913,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   }
+  ],
+  "ocr": {
+   "n_words": 117,
+   "nx_anchors": 7,
+   "ny_anchors": 8,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 102,
+   "detection_method": "contours+tickstack"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement (1)",
+  "width": 2000,
+  "height": 600,
+  "sha256": "c3bf14e026aa2c7cf6b012fbc508d8a4cd8dec07d129f7cac1ca1f525fc57c60",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement (1)#p0",
+    "envelope_xywh": [
+     52,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     60,
+     63,
+     906,
+     481
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   },
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement (1)#p1",
+    "envelope_xywh": [
+     1043,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     1051,
+     63,
+     906,
+     433
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 88,
+   "nx_anchors": 5,
+   "ny_anchors": 7,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 76,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement",
+  "width": 2000,
+  "height": 600,
+  "sha256": "c3bf14e026aa2c7cf6b012fbc508d8a4cd8dec07d129f7cac1ca1f525fc57c60",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement#p0",
+    "envelope_xywh": [
+     52,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     60,
+     63,
+     906,
+     481
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   },
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement#p1",
+    "envelope_xywh": [
+     1043,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     1051,
+     63,
+     906,
+     433
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 88,
+   "nx_anchors": 5,
+   "ny_anchors": 7,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 76,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex frequency response driver measurement",
+  "width": 1000,
+  "height": 600,
+  "sha256": "4f242355a9e0f8febac412df2fdf10dae7eec07f9f3b3b93fac4c721d88fb3f6",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex frequency response driver measurement#p0",
+    "envelope_xywh": [
+     56,
+     63,
+     912,
+     505
+    ],
+    "interior_xywh": [
+     64,
+     63,
+     902,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 47,
+   "nx_anchors": 7,
+   "ny_anchors": 8,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 32,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "candidate",
+   "truth_sha256": "8de4743618c0241bcb63af508879d6827dc381a5657c1c1ca614dc25c2b591ea",
+   "outcome": "partial_review"
+  },
+  "verdict": {
+   "red": {
+    "best_candidate": "-60\u00b0",
+    "best_rms_db": 7.52,
+    "paired": false
+   },
+   "darkred": {
+    "best_candidate": "170\u00b0",
+    "best_rms_db": 8.03,
+    "paired": false
+   },
+   "olive": {
+    "best_candidate": "On Axis",
+    "best_rms_db": 3.07,
+    "paired": false
+   }
+  }
+ },
+ {
+  "image_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex step response dsp measurement",
+  "width": 1000,
+  "height": 600,
+  "sha256": "10099adbbbce930fe5f26c67e1b01f20c7badf4ae076a0cd9b48eb09a8ef7b0e",
+  "panels": [
+   {
+    "panel_id": "AsciLab C8C speakers active 3-way cardioid speaker hypex step response dsp measurement#p0",
+    "envelope_xywh": [
+     66,
+     63,
+     902,
+     495
+    ],
+    "interior_xywh": [
+     74,
+     63,
+     892,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 44,
+   "nx_anchors": 11,
+   "ny_anchors": 4,
+   "x_scale": null,
+   "x_unit": "",
+   "y_unit": "dB",
+   "unmatched": 29,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement (1)",
+  "width": 2000,
+  "height": 600,
+  "sha256": "5fb5476bfcea4fa7cec8f9ece8e389077588af871a654bac6b3810d5c84ec82b",
+  "panels": [
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement (1)#p0",
+    "envelope_xywh": [
+     56,
+     63,
+     980,
+     505
+    ],
+    "interior_xywh": [
+     64,
+     84,
+     904,
+     459
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   },
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement (1)#p1",
+    "envelope_xywh": [
+     1036,
+     63,
+     946,
+     505
+    ],
+    "interior_xywh": [
+     1055,
+     63,
+     913,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   }
+  ],
+  "ocr": {
+   "n_words": 103,
+   "nx_anchors": 7,
+   "ny_anchors": 4,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 92,
+   "detection_method": "contours+tickstack"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement",
+  "width": 2000,
+  "height": 600,
+  "sha256": "5fb5476bfcea4fa7cec8f9ece8e389077588af871a654bac6b3810d5c84ec82b",
+  "panels": [
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement#p0",
+    "envelope_xywh": [
+     56,
+     63,
+     980,
+     505
+    ],
+    "interior_xywh": [
+     64,
+     84,
+     904,
+     459
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   },
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion Measurement#p1",
+    "envelope_xywh": [
+     1036,
+     63,
+     946,
+     505
+    ],
+    "interior_xywh": [
+     1055,
+     63,
+     913,
+     482
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours+tickstack"
+   }
+  ],
+  "ocr": {
+   "n_words": 103,
+   "nx_anchors": 7,
+   "ny_anchors": 4,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 92,
+   "detection_method": "contours+tickstack"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement (1)",
+  "width": 2000,
+  "height": 600,
+  "sha256": "ce2df10356c3808247a5edaf802fd7d8804cf3413a9e090c533dc01d4981fb97",
+  "panels": [
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement (1)#p0",
+    "envelope_xywh": [
+     52,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     60,
+     63,
+     906,
+     431
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   },
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement (1)#p1",
+    "envelope_xywh": [
+     1052,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     1060,
+     63,
+     906,
+     337
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 73,
+   "nx_anchors": 5,
+   "ny_anchors": 7,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 61,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ },
+ {
+  "image_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement",
+  "width": 2000,
+  "height": 600,
+  "sha256": "ce2df10356c3808247a5edaf802fd7d8804cf3413a9e090c533dc01d4981fb97",
+  "panels": [
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement#p0",
+    "envelope_xywh": [
+     52,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     60,
+     63,
+     906,
+     431
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   },
+   {
+    "panel_id": "PSI Swiss Made Professional Pro Speaker Monitor THD distortion percent Measurement#p1",
+    "envelope_xywh": [
+     1052,
+     63,
+     916,
+     505
+    ],
+    "interior_xywh": [
+     1060,
+     63,
+     906,
+     337
+    ],
+    "interior_confidence": "refined",
+    "detection_method": "contours"
+   }
+  ],
+  "ocr": {
+   "n_words": 73,
+   "nx_anchors": 5,
+   "ny_anchors": 7,
+   "x_scale": "log10",
+   "x_unit": "Hz",
+   "y_unit": "dB",
+   "unmatched": 61,
+   "detection_method": "contours"
+  },
+  "source": {
+   "status": "no-source-export",
+   "reason": "no SPL export covers these curves"
+  },
+  "verdict": null
+ }
+]
