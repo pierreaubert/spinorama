@@ -78,12 +78,12 @@ let dom;
 
 function setupDOM() {
     dom = new JSDOM(NAV_HTML, { url: 'https://dev.spinorama.org/' });
-    global.document = dom.window.document;
-    global.window = dom.window;
-    global.localStorage = dom.window.localStorage;
-    global.CustomEvent = dom.window.CustomEvent;
-    global.Event = dom.window.Event;
-    global.HTMLElement = dom.window.HTMLElement;
+    vi.stubGlobal('document', dom.window.document);
+    vi.stubGlobal('window', dom.window);
+    vi.stubGlobal('localStorage', dom.window.localStorage);
+    vi.stubGlobal('CustomEvent', dom.window.CustomEvent);
+    vi.stubGlobal('Event', dom.window.Event);
+    vi.stubGlobal('HTMLElement', dom.window.HTMLElement);
     global.window.matchMedia = vi.fn().mockReturnValue({
         matches: false,
         addEventListener: vi.fn(),
@@ -91,12 +91,7 @@ function setupDOM() {
 }
 
 function teardownDOM() {
-    delete global.document;
-    delete global.window;
-    delete global.localStorage;
-    delete global.CustomEvent;
-    delete global.Event;
-    delete global.HTMLElement;
+    vi.unstubAllGlobals();
 }
 
 function loadThemeJS() {

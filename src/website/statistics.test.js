@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 
 // Global variables provided by vitest/jsdom - eslint understands these
 /* global global:readonly */
@@ -308,15 +308,13 @@ describe('getFilterFromURL', () => {
 
     beforeEach(() => {
         const dom = new JSDOM(`<!DOCTYPE html><body></body>`, { url: initialUrl });
-        global.document = dom.window.document;
-        global.window = dom.window;
-        global.URL = dom.window.URL;
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals();
     });
 
     function getFilterFromURL() {

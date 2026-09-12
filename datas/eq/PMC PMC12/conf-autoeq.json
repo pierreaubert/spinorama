@@ -1,5 +1,5 @@
 {
-    "loss": "flat_loss",
+    "loss": "score_loss",
     "loss_weigths": [
         100.0,
         1.0
@@ -13,7 +13,8 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Listening Window"
+        "Listening Window",
+        "Estimated In-Room Response"
     ],
     "target_min_freq": 60.0,
     "target_max_freq": 16000,
@@ -23,29 +24,30 @@
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 21,
+    "smooth_window_size": 11,
     "smooth_order": 3,
     "use_grapheq": false,
     "grapheq_name": null,
     "use_3dB_target": true,
-    "optimisation": "greedy",
-    "MAX_NUMBER_PEQ": 3,
+    "optimisation": "global",
+    "MAX_NUMBER_PEQ": 7,
     "MAX_STEPS_FREQ": 6,
     "MAX_STEPS_DBGAIN": 6,
     "MAX_STEPS_Q": 6,
-    "MAX_ITER": 400,
+    "MAX_ITER": 15000,
     "MIN_DBGAIN": 0.75,
     "MAX_DBGAIN": 3,
     "MIN_Q": 0.25,
     "MAX_Q": 3,
     "slope": -0.5,
     "slope_0_5": -0.5,
+    "smooth_window_order": 3,
     "verbose": true,
     "smoke_test": false,
     "force": true,
     "version": "0.28",
     "level": 20,
     "generate_images_only": false,
-    "output_dir": "/tmp/eqtest/probe",
-    "input_fingerprint": "28247091aaed575d1e3577fb5ef4e21a1ca2145ec423c4e5569937352c06f6dc"
+    "output_dir": "/Volumes/home_ext1/src_pierre/spinorama/build/eqs/PMC PMC12/Score-7-sw11o3-pk",
+    "input_fingerprint": "eb1d4c85c0dc99c7d1038a4093884e1fd1cc9bb065b46343ff555697f15d8100"
 }

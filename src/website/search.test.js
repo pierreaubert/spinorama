@@ -19,7 +19,7 @@
 /*eslint no-undef: "error"*/
 
 import { readFileSync } from 'fs';
-import { beforeAll, describe, expect, it, beforeEach, afterEach } from 'vitest'; // Added afterEach
+import { beforeAll, describe, expect, it, beforeEach, afterEach, vi } from 'vitest'; // Added afterEach
 
 import { getID } from './misc.js';
 // Import 'process' and 'setupEventListener' and alias the original 'search' to avoid naming conflicts with the mock
@@ -49,16 +49,14 @@ describe('urlParameters2Sort', () => {
             { url: initialUrl }
         );
 
-        global.document = dom.window.document;
-        global.window = dom.window;
-        global.URL = dom.window.URL;
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
         // Clean up JSDOM globals
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals(); // Restore the environment globals
     });
 
     it('test search', () => {
@@ -131,16 +129,14 @@ describe('test full text search and filtering', () => {
             { url: initialUrl }
         );
 
-        global.document = dom.window.document;
-        global.window = dom.window; // Required for URL processing within the functions
-        global.URL = dom.window.URL; // Make sure URL constructor is from JSDOM
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
         // Clean up JSDOM globals
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals(); // Restore the environment globals
     });
 
     it('sanity check', () => {
@@ -1057,16 +1053,14 @@ describe('non regression for bug discussions/279', () => {
             { url: initialUrl }
         );
 
-        global.document = dom.window.document;
-        global.window = dom.window;
-        global.URL = dom.window.URL;
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
         // Clean up JSDOM globals
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals(); // Restore the environment globals
     });
 
     it('search by brand KEF and check that we have the correct speakers', () => {
@@ -1129,16 +1123,14 @@ describe('non regression for bug discussions/288', () => {
             { url: initialUrl }
         );
 
-        global.document = dom.window.document;
-        global.window = dom.window;
-        global.URL = dom.window.URL;
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
         // Clean up JSDOM globals
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals(); // Restore the environment globals
     });
 
     it('search for JBL 306 and check that the results are sane', () => {
@@ -1197,16 +1189,14 @@ describe('non regression for bug discussions/343', () => {
             { url: initialUrl }
         );
 
-        global.document = dom.window.document;
-        global.window = dom.window;
-        global.URL = dom.window.URL;
+        vi.stubGlobal('document', dom.window.document);
+        vi.stubGlobal('window', dom.window);
+        vi.stubGlobal('URL', dom.window.URL);
     });
 
     afterEach(() => {
         // Clean up JSDOM globals
-        delete global.document;
-        delete global.window;
-        delete global.URL;
+        vi.unstubAllGlobals(); // Restore the environment globals
     });
 
     it('search for KEF R3 and check that the results are sane', () => {

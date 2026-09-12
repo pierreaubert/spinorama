@@ -99,13 +99,14 @@ describe('Graph Display', () => {
             };
         })();
 
-        // Mock window properties
-        global.window = window;
-        global.document = document;
-        global.HTMLElement = window.HTMLElement;
-        global.Element = window.Element;
-        global.Plotly = Plotly;
-        global.localStorage = localStorageMock;
+        // Mock window properties (stubGlobal: the jsdom environment backs
+        // window/document with getter-only accessors under Vitest 5)
+        vi.stubGlobal('window', window);
+        vi.stubGlobal('document', document);
+        vi.stubGlobal('HTMLElement', window.HTMLElement);
+        vi.stubGlobal('Element', window.Element);
+        vi.stubGlobal('Plotly', Plotly);
+        vi.stubGlobal('localStorage', localStorageMock);
 
         // Mock localStorage using Object.defineProperty since it's read-only
         Object.defineProperty(window, 'localStorage', {
@@ -131,13 +132,8 @@ describe('Graph Display', () => {
     });
 
     afterEach(() => {
-        // Clean up
-        delete global.window;
-        delete global.document;
-        delete global.HTMLElement;
-        delete global.Element;
-        delete global.Plotly;
-        delete global.localStorage;
+        // Restore the environment globals stubbed above
+        vi.unstubAllGlobals();
     });
 
     test('displayGraph calls setPlotForMeasurement with correct parameters', async () => {
