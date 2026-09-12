@@ -50,6 +50,24 @@ from spinorama.plot import (
 SPACING = 20
 LEGEND = 60
 
+# Override for the speaker graph output root. ``build_filename`` historically
+# used the cwd-relative ``CPATH_DIST_SPEAKERS``, so a build with ``--data-dir``
+# pointing elsewhere wrote its graphs somewhere the cache check never looked.
+# ``generate_graphs`` sets this to the data-directory-anchored location in
+# both the parent and the worker processes.
+_DIST_SPEAKERS_ROOT: str | None = None
+
+
+def set_dist_speakers_root(path: str | None) -> None:
+    """Direct graph JSON output to ``path`` (``None`` restores the default)."""
+    global _DIST_SPEAKERS_ROOT  # noqa: PLW0603 -- intentional process-wide output redirect
+    _DIST_SPEAKERS_ROOT = path
+
+
+def get_dist_speakers_root() -> str:
+    """Return the effective speaker graph output root."""
+    return _DIST_SPEAKERS_ROOT if _DIST_SPEAKERS_ROOT is not None else CPATH_DIST_SPEAKERS
+
 
 def scale_params(params, factor):
     new_params = copy.deepcopy(params)
@@ -380,7 +398,7 @@ def display_radar_vertical(
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
     filedir = (
-        CPATH_DIST_SPEAKERS
+        get_dist_speakers_root()
         + "/"
         + sanitize_filename(speaker)
         + "/"

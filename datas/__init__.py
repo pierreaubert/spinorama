@@ -157,20 +157,20 @@ SpeakerType = Literal["passive", "active"]
 
 
 SpeakerShape = Literal[
-    "floorstanders",
     "bookshelves",
-    "center",
-    "surround",
-    "omnidirectional",
-    "columns",
     "cbt",
+    "center",
+    "cinema",
+    "columns",
+    "floorstanders",
+    "inwall",
+    "liveportable",
+    "omnidirectional",
     "outdoor",
     "panel",
-    "inwall",
     "soundbar",
-    "liveportable",
+    "surround",
     "toursound",
-    "cinema",
 ]
 
 

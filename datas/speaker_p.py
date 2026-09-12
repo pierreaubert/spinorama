@@ -879,6 +879,150 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "PMC PMC10": {
+        "brand": "PMC",
+        "model": "PMC10",
+        "type": "active",
+        "price": "36000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-PMC",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "pmc": "https://pmc-speakers.com/studio/pmc-10-xbd/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-posted-spins.73289/#post-2678754",
+                },
+                "review_published": "20260911",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 90,
+                    },
+                    "SPL": {
+                        "continuous": 109,
+                        "peak": 123,
+                    },
+                    "size": {
+                        "height": 770,
+                        "width": 255,
+                        "depth": 420,
+                    },
+                    "weight": 52,
+                },
+            },
+        },
+    },
+    "PMC PMC10-4": {
+        "brand": "PMC",
+        "model": "PMC10-4",
+        "type": "active",
+        "price": "130000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-PMC",
+                "format": "rew_text_dump",
+                "reviews": {
+                    "pmc": "https://pmc-speakers.com/studio/pmc-10-4/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-posted-spins.73289/#post-2678754",
+                },
+                "review_published": "20260911",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 75,
+                    },
+                    "SPL": {
+                        "continuous": 116,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 820,
+                        "width": 1040,
+                        "depth": 523,
+                    },
+                    "weight": 140,
+                },
+            },
+        },
+    },
+    "PMC PMC12": {
+        "brand": "PMC",
+        "model": "PMC12",
+        "type": "active",
+        "price": "55000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-PMC",
+                "format": "rew_text_dump",
+                "reviews": {
+                    "pmc": "https://pmc-speakers.com/studio/pmc-12-xbd/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-posted-spins.73289/#post-2678754",
+                },
+                "review_published": "20260911",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 85,
+                    },
+                    "SPL": {
+                        "continuous": 110,
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 870,
+                        "width": 380,
+                        "depth": 535,
+                    },
+                    "weight": 62,
+                },
+            },
+        },
+    },
+    "PMC PMC15": {
+        "brand": "PMC",
+        "model": "PMC15",
+        "type": "active",
+        "price": "81000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-PMC",
+                "format": "rew_text_dump",
+                "reviews": {
+                    "pmc": "https://pmc-speakers.com/studio/pmc-15-xbd/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/pmc-posted-spins.73289/#post-2678754",
+                },
+                "review_published": "20260911",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "continuous": 113,
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 1040,
+                        "width": 432,
+                        "depth": 790,
+                    },
+                    "weight": 97,
+                },
+            },
+        },
+    },
     "PMC Result6": {
         "brand": "PMC",
         "model": "Result6",

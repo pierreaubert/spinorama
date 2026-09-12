@@ -19,6 +19,7 @@
 import hashlib
 import os
 import pathlib
+from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
@@ -27,19 +28,50 @@ import plotly.io
 from spinorama import logger
 
 
+def _hash_file_contents(path: pathlib.Path, digest: "hashlib._Hash") -> None:
+    """Feed the raw bytes of ``path`` into ``digest`` in bounded chunks."""
+    with open(path, "rb") as file_descriptor:
+        for chunk in iter(lambda: file_descriptor.read(1024 * 1024), b""):
+            digest.update(chunk)
+
+
+def _display_name(path: pathlib.Path, relative_to: str | os.PathLike[str] | None) -> str:
+    """Return the fingerprint identity of ``path``.
+
+    Absolute paths make the same tree hash differently depending on the
+    ``--data-dir`` spelling, the current working directory, or OS-specific
+    symlink prefixes (``/Volumes/...`` vs ``/Users/...`` on macOS), which
+    invalidates every cache entry for no reason. Hashing the path relative
+    to a stable root keeps identical trees identical.
+    """
+    if relative_to is not None:
+        try:
+            return os.path.relpath(path, relative_to)
+        except ValueError:
+            pass
+    return str(path)
+
+
 def fingerprint_paths(
-    paths: list[str | os.PathLike[str]],
+    paths: Sequence[str | os.PathLike[str]],
     *,
     version: str = "",
     extra: str = "",
+    relative_to: str | os.PathLike[str] | None = None,
+    hash_contents: bool = False,
 ) -> str:
-    """Return a cheap, deterministic fingerprint for a set of input paths.
+    """Return a deterministic fingerprint for a set of input paths.
 
-    The fingerprint deliberately uses file metadata rather than reading every
-    measurement file. The build already has to stat these files to discover
-    them, and the size/mtime pair avoids turning an incremental build into a
-    second full read of the measurement tree. Callers should include a
-    generator/schema version so algorithm changes invalidate old results.
+    By default (``hash_contents=False``) the fingerprint uses the
+    ``(name, size, mtime)`` triple, which is cheap but invalidates the entry
+    whenever a file is merely touched (fresh checkout, copy without ``-p``,
+    archive extraction). Pass ``hash_contents=True`` to hash file bytes
+    instead: slower on a cold page cache, but immune to mtime-only changes.
+
+    Pass ``relative_to`` so hashed names are relative to a stable root;
+    otherwise identical trees under different absolute prefixes fingerprint
+    differently. Callers should include a generator/schema version so
+    algorithm changes invalidate old results.
     """
     digest = hashlib.sha256()
     digest.update(version.encode("utf-8"))
@@ -47,9 +79,13 @@ def fingerprint_paths(
     digest.update(extra.encode("utf-8"))
     digest.update(b"\0")
 
-    entries: list[tuple[str, int, int]] = []
+    # (display name, size, mtime_ns, path or None). ``path`` is set when the
+    # entry needs a content hash; the raw ``Path`` is never hashed directly
+    # so collection order cannot leak into the digest.
+    entries: list[tuple[str, int, int, pathlib.Path | None]] = []
     for raw_path in paths:
         path = pathlib.Path(raw_path)
+        name = _display_name(path, relative_to)
         if path.is_dir():
             children = sorted(
                 child
@@ -59,26 +95,40 @@ def fingerprint_paths(
                 and child.suffix != ".pyc"
             )
             if not children:
-                entries.append((str(path), 0, 0))
+                entries.append((name, 0, 0, None))
             for child in children:
                 try:
                     stats = child.stat()
                 except OSError:
                     continue
-                entries.append((str(child), stats.st_size, stats.st_mtime_ns))
+                if hash_contents:
+                    entries.append((_display_name(child, relative_to), 0, 0, child))
+                else:
+                    entries.append(
+                        (_display_name(child, relative_to), stats.st_size, stats.st_mtime_ns, None)
+                    )
         elif path.is_file():
-            try:
-                stats = path.stat()
-            except OSError:
-                continue
-            entries.append((str(path), stats.st_size, stats.st_mtime_ns))
+            if hash_contents:
+                entries.append((name, 0, 0, path))
+            else:
+                try:
+                    stats = path.stat()
+                except OSError:
+                    continue
+                entries.append((name, stats.st_size, stats.st_mtime_ns, None))
         else:
-            entries.append((str(path), -1, -1))
+            entries.append((name, -1, -1, None))
 
-    for name, size, mtime_ns in sorted(entries):
+    for name, size, mtime_ns, content_path in sorted(entries, key=lambda entry: entry[0]):
         digest.update(name.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(f"{size}:{mtime_ns}".encode("ascii"))
+        if content_path is not None:
+            try:
+                _hash_file_contents(content_path, digest)
+            except OSError:
+                digest.update(b"missing")
+        else:
+            digest.update(f"{size}:{mtime_ns}".encode("ascii"))
         digest.update(b"\0")
     return digest.hexdigest()
 
