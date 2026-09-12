@@ -398,7 +398,10 @@ def add_measurement(speaker_name, origin, version, dfs):
 
     eir_melted = graph_melt(m.eir)
     pref_rating = compute_speaker_pref_rating(cea2034=cea2034_melted, pir=eir_melted, rounded=True)
-    if pref_rating is None:
+    # speaker_pref_rating returns {} (not None) when the curves cannot be
+    # scored, e.g. CEA2034 starting above 40 Hz without a declared
+    # min_valid_freq. Skip the rating the same way in both cases.
+    if not pref_rating:
         return result
 
     score_penalty = m._extras.get("extras", {}).get("score_penalty", 0.0) if m._extras else 0.0

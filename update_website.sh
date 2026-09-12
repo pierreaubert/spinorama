@@ -84,7 +84,7 @@ else
 fi
 
 # generate all graphs if some are missing
-${THEPYTHON} ./scripts/generate_graphs.py --update-cache
+${THEPYTHON} ./scripts/generate_graphs.py # --update-cache
 status=$?
 if [ $status -ne 0 ]; then
     elapsed_status "KO after generate graph!"

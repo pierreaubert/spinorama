@@ -62,7 +62,6 @@ from spinorama.plot import (
 class SpinoramaDisplayTests(unittest.TestCase):
     def setUp(self):
         self.dfs_full = {}
-        self.dfs_limited = {}
         self.dfs_partial = {}
         self.log_level = logging.INFO
 
@@ -109,7 +108,7 @@ class SpinoramaDisplayTests(unittest.TestCase):
             "distance": 1.0,
             "shape": "bookshelves",
         }
-        self.dfs_limited["princeton"] = parse_graphs_speaker(
+        self.dfs_full["princeton"] = parse_graphs_speaker(
             speaker_path="datas/measurements",
             speaker_brand="Genelec",
             speaker_name="Genelec 8351A",
@@ -210,13 +209,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
         display_contour_vertical_normalized_3d,
     )
     _RADAR_DISPLAYS = (display_radar_horizontal, display_radar_vertical)
-    _LIMITED_DISPLAYS = (
-        display_onaxis,
-        display_spl_horizontal,
-        display_spl_vertical,
-        display_spl_horizontal_normalized,
-        display_spl_vertical_normalized,
-    )
     _PARTIAL_DISPLAYS = (
         display_spinorama,
         display_spinorama_normalized,
@@ -230,17 +222,6 @@ class SpinoramaDisplayTests(unittest.TestCase):
             self.assertIsNotNone(m)
             self.assertEqual(_count_filled(m), 13)
             for op_call in self._FULL_DISPLAYS:
-                self.assertIsNotNone(op_call(m, plot_params_default))
-            for op_call in self._CONTOUR_DISPLAYS:
-                self.assertIsNotNone(op_call(m, contour_params_default))
-            for op_call in self._RADAR_DISPLAYS:
-                self.assertIsNotNone(op_call(m, radar_params_default))
-
-    def test_dfs_limited(self):
-        for m in self.dfs_limited.values():
-            self.assertIsNotNone(m)
-            self.assertEqual(_count_filled(m), 6)
-            for op_call in self._LIMITED_DISPLAYS:
                 self.assertIsNotNone(op_call(m, plot_params_default))
             for op_call in self._CONTOUR_DISPLAYS:
                 self.assertIsNotNone(op_call(m, contour_params_default))

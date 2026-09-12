@@ -125,6 +125,27 @@ class TestGenerateMetaAddMeasurement(unittest.TestCase):
         self.assertIn("estimates_eq", result)
         self.assertNotIn("pref_rating_eq", result)
 
+    def test_undeclared_band_limited_measurement_skips_pref_rating(self):
+        """Curves starting above 40 Hz without a declared min_valid_freq.
+
+        speaker_pref_rating answers {} (not None) for such input; the rating
+        must be skipped instead of raising KeyError: 'pref_score'.
+        """
+        frames = self._measurements
+        band_limited = Measurements(
+            cea2034=frames.cea2034.loc[frames.cea2034.Freq >= 48],
+            eir=frames.eir.loc[frames.eir.Freq >= 48],
+            h_spl=frames.h_spl,
+            v_spl=frames.v_spl,
+        )
+        speakers_info = {"Test Speaker BandLimited": self._speaker_info()}
+        with patch.object(generate_meta, "speakers_info", speakers_info):
+            result = generate_meta.add_measurement(
+                "Test Speaker BandLimited", "ASR", "asr", band_limited
+            )
+        self.assertNotIn("pref_rating", result)
+        self.assertNotIn("scaled_pref_rating", result)
+
 
 class TestAudioholicsMetadata(unittest.TestCase):
     """Regression test ensuring Audioholics measurements are flagged as partial."""

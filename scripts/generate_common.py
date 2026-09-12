@@ -34,8 +34,20 @@ from typing import Callable, Any
 import warnings
 
 import flammkuchen as fl
+import numpy as _np
 
 import tables
+
+
+# flammkuchen 1.0.3 references ``np.unicode_``/``np.string_``, removed in
+# NumPy 2.0 (``requirements.txt`` allows NumPy >1.26.4, so 2.x resolves).
+# Without these aliases every HDF5 cache write crashes and no build ever
+# persists its cache. They were exact aliases of ``np.str_``/``np.bytes_``,
+# so restoring them is behavior-preserving; only applied when missing.
+for _alias, _target in (("unicode_", "str_"), ("string_", "bytes_")):
+    if not hasattr(_np, _alias):
+        setattr(_np, _alias, getattr(_np, _target))
+del _alias, _target
 
 # Set file descriptor limit
 try:
@@ -131,11 +143,27 @@ def cache_hash(df_all: dict) -> dict:
     return df_hashed
 
 
-def cache_save_key(key: str, data):
+def _resolve_cache_dir(cache_dir: str | None) -> str:
+    """Return the HDF5 cache directory, anchored by the caller when given.
+
+    Historically every cache path was resolved against the current working
+    directory, so running the same build from another directory (or with a
+    ``--data-dir`` pointing elsewhere) silently used a different, cold cache.
+    Callers now pass the data-directory-anchored location explicitly.
+    """
+    return cache_dir if cache_dir is not None else CACHE_DIR
+
+
+def _shard_name(cache_path: str) -> str:
+    """Return the shard key (``<key>.h5`` basename without suffix)."""
+    return os.path.splitext(os.path.basename(cache_path))[0]
+
+
+def cache_save_key(key: str, data, cache_dir: str | None = None):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", tables.NaturalNameWarning)
         # print('{} {}'.format(key, data.keys()))
-        cache_name = "{}/{}.h5".format(CACHE_DIR, key)
+        cache_name = "{}/{}.h5".format(_resolve_cache_dir(cache_dir), key)
         # print(cache_name)
         fl.save(path=cache_name, data=data)
 
@@ -159,17 +187,111 @@ def save_cache_manifest(manifest: dict, path: str = GRAPH_CACHE_MANIFEST) -> Non
     os.replace(temporary_path, manifest_path)
 
 
-def cache_save(df_all: dict, prune: bool = False):
-    pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
+def cache_save(df_all: dict, prune: bool = False, cache_dir: str | None = None):
+    resolved = _resolve_cache_dir(cache_dir)
+    pathlib.Path(resolved).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
     for key, data in df_hashed.items():
-        cache_save_key(key, data)
+        cache_save_key(key, data, cache_dir=resolved)
     if prune:
         expected = {f"{key}.h5" for key in df_hashed}
-        for cache_path in pathlib.Path(CACHE_DIR).glob("*.h5"):
+        for cache_path in pathlib.Path(resolved).glob("*.h5"):
             if cache_path.name not in expected:
                 cache_path.unlink()
     print("(saved {} speakers)".format(len(df_all)))
+
+
+def _load_shard_file(cachepath: str):
+    """Load one HDF5 shard, quarantining it when it is unreadable."""
+    if not os.path.isfile(cachepath):
+        return None
+    try:
+        return fl.load(path=cachepath)
+    except (
+        FileNotFoundError,
+        KeyError,
+        ValueError,
+        TypeError,
+        EOFError,
+        tables.HDF5ExtError,
+    ) as error:
+        if isinstance(error, FileNotFoundError):
+            return None
+        logger = logging.getLogger("spinorama")
+        try:
+            quarantined = _quarantine_corrupt_cache(cachepath)
+        except OSError:
+            logger.exception("Invalid cache file %s could not be quarantined", cachepath)
+            return None
+        logger.warning(
+            "Ignoring invalid cache file %s (%s: %s); moved to %s",
+            cachepath,
+            type(error).__name__,
+            error,
+            quarantined,
+        )
+        return None
+    except Exception:
+        logger = logging.getLogger("spinorama")
+        logger.exception("Error loading cache file %s", cachepath)
+        return None
+
+
+def cache_save_incremental(
+    df_new: dict,
+    current_speakers: set[str],
+    removed_speakers: set[str],
+    cache_dir: str | None = None,
+    *,
+    prune: bool = False,
+) -> dict[str, int]:
+    """Persist only the HDF5 shards affected by this build.
+
+    A full build previously rewrote every ``*.h5`` shard even when a single
+    speaker changed. Here only shards holding new/updated speakers, or
+    speakers dropped from the metadata, are loaded, merged, and rewritten;
+    untouched shards are never read. With ``prune=True``, shard files that
+    hold no current speaker are deleted.
+    """
+    resolved = _resolve_cache_dir(cache_dir)
+    pathlib.Path(resolved).mkdir(parents=True, exist_ok=True)
+
+    new_by_shard: dict[str, dict] = {}
+    for speaker, data in df_new.items():
+        new_by_shard.setdefault(cache_key(speaker), {})[speaker] = data
+    removed_by_shard: dict[str, set[str]] = {}
+    for speaker in removed_speakers:
+        removed_by_shard.setdefault(cache_key(speaker), set()).add(speaker)
+
+    stats = {"shards_rewritten": 0, "shards_deleted": 0, "speakers_removed": 0}
+    for key in new_by_shard.keys() | removed_by_shard.keys():
+        shard_path = os.path.join(resolved, f"{key}.h5")
+        existing = _load_shard_file(shard_path)
+        if not isinstance(existing, dict):
+            existing = {}
+        for speaker in removed_by_shard.get(key, ()):
+            if existing.pop(speaker, None) is not None:
+                stats["speakers_removed"] += 1
+        existing.update(new_by_shard.get(key, {}))
+        if existing:
+            cache_save_key(key, existing, cache_dir=resolved)
+            stats["shards_rewritten"] += 1
+        elif os.path.isfile(shard_path):
+            os.unlink(shard_path)
+            stats["shards_deleted"] += 1
+
+    if prune:
+        live_keys = {cache_key(speaker) for speaker in current_speakers}
+        for cache_path in pathlib.Path(resolved).glob("*.h5"):
+            if _shard_name(str(cache_path)) not in live_keys:
+                cache_path.unlink()
+                stats["shards_deleted"] += 1
+    print(
+        "(incrementally saved {} speakers: {} shards rewritten, {} deleted)".format(
+            len(df_new), stats["shards_rewritten"], stats["shards_deleted"]
+        )
+    )
+    return stats
 
 
 def is_filtered(speaker: str, filters: dict):
@@ -201,9 +323,20 @@ def is_filtered(speaker: str, filters: dict):
     )
 
 
-def cache_load_seq(filters, smoke_test):
+def _select_cache_files(cache_dir: str, speakers: set[str] | None) -> list[str]:
+    """List shard files, restricted to the shards holding ``speakers`` when given."""
+    cache_files = glob(os.path.join(cache_dir, "*.h5"))
+    if speakers is None:
+        return sorted(cache_files)
+    wanted = {cache_key(speaker) for speaker in speakers}
+    return sorted(path for path in cache_files if _shard_name(path) in wanted)
+
+
+def cache_load_seq(filters, smoke_test, cache_dir: str | None = None, speakers=None):
     df_all = defaultdict()
-    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
+    resolved = _resolve_cache_dir(cache_dir)
+    wanted = set(speakers) if speakers is not None else None
+    cache_files = _select_cache_files(resolved, wanted)
     if len(cache_files) == 0:
         cache_files = glob("../{}/*.h5".format(CACHE_DIR))
     if len(cache_files) == 0:
@@ -214,7 +347,7 @@ def cache_load_seq(filters, smoke_test):
     logging.debug("found %d cache files", len(cache_files))
     for cache in cache_files:
         speaker_name = filters.get("speaker_name")
-        if speaker_name is not None and cache[-5:-3] != cache_key(speaker_name):
+        if speaker_name is not None and _shard_name(cache) != cache_key(speaker_name):
             logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
@@ -228,7 +361,7 @@ def cache_load_seq(filters, smoke_test):
             if is_filtered(speaker, filters):
                 # print('Skipping filtered {} {}'.format(speaker, speaker_name))
                 continue
-            print("Found data for {}".format(speaker_name))
+            print("Found data for {}".format(speaker))
             df_all[speaker] = data
             count += 1
         if smoke_test and count > 10:
@@ -280,9 +413,20 @@ def _cache_fetch_worker(args):
         return None
 
 
-def cache_load_distributed(filters, smoke_test, level):
-    """Load cache files in parallel using multiprocessing"""
-    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
+def cache_load_distributed(filters, smoke_test, level, cache_dir: str | None = None, speakers=None):
+    """Load cache files in parallel using multiprocessing.
+
+    Uses a single worker pool for the whole file list; previously a new pool
+    was created per 16-file chunk. When ``speakers`` is given, only the shards
+    that can hold those speakers are read, so a small incremental build no
+    longer deserializes the entire cache. When there are no more files than
+    workers, the files are read inline: spawning a full pool (each child
+    re-imports the scientific stack) to read a handful of shards is slower
+    than reading them directly.
+    """
+    resolved = _resolve_cache_dir(cache_dir)
+    wanted = set(speakers) if speakers is not None else None
+    cache_files = _select_cache_files(resolved, wanted)
 
     # Determine number of processes to use (leave one CPU free)
     num_processes = max(1, multiprocessing.cpu_count() - 1)
@@ -290,42 +434,36 @@ def cache_load_distributed(filters, smoke_test, level):
     # Filter cache files based on speaker_name if provided
     if filters.get("speaker_name") is not None:
         speaker_key = cache_key(filters.get("speaker_name"))
-        cache_files = [f for f in cache_files if f[-5:-3] == speaker_key]
+        cache_files = [f for f in cache_files if _shard_name(f) == speaker_key]
         num_processes = 1
-
-    print(f"(processing {len(cache_files)} files in parallel x{num_processes})")
 
     df_all = {}
     count = 0
 
-    # Process files in chunks
-    chunk_size = 16
-    for i in range(0, len(cache_files), chunk_size):
-        chunk = cache_files[i : i + chunk_size]
-
-        # Create a pool of workers
+    if len(cache_files) <= num_processes:
+        print(f"(processing {len(cache_files)} files sequentially)")
+        results = [_cache_fetch_worker((cache, level)) for cache in cache_files]
+    else:
+        print(f"(processing {len(cache_files)} files in parallel x{num_processes})")
+        # A single pool for all files; results stream back in file order.
         with multiprocessing.Pool(processes=num_processes) as pool:
-            # Map the worker function to the chunk of files
-            results = pool.map(_cache_fetch_worker, [(cache, level) for cache in chunk])
+            results = pool.map(_cache_fetch_worker, [(cache, level) for cache in cache_files])
 
-            # Process results
-            for df_read in results:
-                if df_read is None:
+    # Process results
+    for df_read in results:
+        if df_read is None:
+            continue
+
+        if isinstance(df_read, dict):
+            for speaker, data in df_read.items():
+                if is_filtered(speaker, filters):
                     continue
 
-                if isinstance(df_read, dict):
-                    for speaker, data in df_read.items():
-                        if is_filtered(speaker, filters):
-                            continue
+                if speaker in df_all:
+                    print(f"Warning: {speaker} already exists in cache, overwriting")
 
-                        if speaker in df_all:
-                            print(f"Warning: {speaker} already exists in cache, overwriting")
-
-                        df_all[speaker] = data
-                        count += 1
-
-                        if smoke_test and count > 10:
-                            break
+                df_all[speaker] = data
+                count += 1
 
                 if smoke_test and count > 10:
                     break
@@ -336,29 +474,92 @@ def cache_load_distributed(filters, smoke_test, level):
     return df_all
 
 
-def cache_load(filters, smoke_test, level):
+def cache_load(filters, smoke_test, level, cache_dir: str | None = None, speakers=None):
     """Load cache using parallel processing if no specific speaker is requested"""
     if filters.get("speaker_name") is None:
         try:
-            return cache_load_distributed(filters, smoke_test, level)
+            return cache_load_distributed(filters, smoke_test, level, cache_dir, speakers)
         except Exception as e:
             print(f"Parallel cache loading failed, falling back to sequential: {e}")
 
     # Fall back to sequential loading
-    return cache_load_seq(filters, smoke_test)
+    return cache_load_seq(filters, smoke_test, cache_dir, speakers)
 
 
-def cache_update(df_new, filters, level):
-    if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
+def cache_find_complete(
+    cache_dir: str | None, wanted: dict[str, dict[str, str]]
+) -> set[tuple[str, str]]:
+    """Return the ``(speaker, mversion)`` keys fully present in the HDF5 shards.
+
+    Streams one shard at a time instead of deserializing the whole cache, for
+    one-time verification of a previous build's output. ``wanted`` maps each
+    speaker to its ``{mversion: origin}`` versions; a version counts as
+    complete when both its plain and ``_eq`` entries exist under its origin,
+    mirroring ``speaker_cache_complete`` in ``generate_graphs``.
+    """
+    resolved = _resolve_cache_dir(cache_dir)
+    found: set[tuple[str, str]] = set()
+    if not wanted or not os.path.isdir(resolved):
+        return found
+    wanted_shards: dict[str, list[str]] = {}
+    for speaker in wanted:
+        wanted_shards.setdefault(cache_key(speaker), []).append(speaker)
+    for key, speakers in sorted(wanted_shards.items()):
+        shard_path = os.path.join(resolved, f"{key}.h5")
+        data = _load_shard_file(shard_path)
+        if not isinstance(data, dict):
+            continue
+        for speaker in speakers:
+            cached_speaker = data.get(speaker)
+            if not isinstance(cached_speaker, dict):
+                continue
+            for mversion, origin in wanted[speaker].items():
+                cached_origin = cached_speaker.get(origin)
+                if (
+                    isinstance(cached_origin, dict)
+                    and mversion in cached_origin
+                    and f"{mversion}_eq" in cached_origin
+                ):
+                    found.add((speaker, mversion))
+    return found
+
+
+def _speaker_matches_filter(new_speaker: str, filters: dict | None) -> bool:
+    """Check a cache speaker name against the ``--speaker`` filter, if any.
+
+    The filter value may be the original metadata name or its sanitized
+    filesystem form; previously any build filtered by origin/version/brand
+    compared against ``""`` and silently discarded every result.
+    """
+    if not filters or "speaker" not in filters or filters["speaker"] is None:
+        return True
+    wanted = filters["speaker"]
+    if new_speaker == wanted:
+        return True
+    try:
+        from spinorama.misc import sanitize_filename  # noqa: PLC0415
+    except ImportError:
+        return False
+    return sanitize_filename(wanted) == sanitize_filename(new_speaker)
+
+
+def cache_update(df_new, filters, level, cache_dir: str | None = None):
+    resolved = _resolve_cache_dir(cache_dir)
+    if not os.path.exists(resolved) or len(df_new) == 0:
         return
 
     logger = logging.getLogger("spinorama")
     print("Updating cache ", end=" ", flush=True)
     count = 0
     for new_speaker, new_datas in df_new.items():
-        if filters is not None and new_speaker != filters.get("speaker", ""):
+        if not _speaker_matches_filter(new_speaker, filters):
             continue
-        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False, level=level)
+        df_old = cache_load(
+            filters={"speaker_name": new_speaker},
+            smoke_test=False,
+            level=level,
+            cache_dir=resolved,
+        )
         for new_origin, new_measurements in new_datas.items():
             logger.debug(
                 "Updating %s %s %d measurements", new_speaker, new_origin, len(new_measurements)
@@ -383,7 +584,7 @@ def cache_update(df_new, filters, level):
                     )
                     df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
-        cache_save_key(cache_key(new_speaker), df_old)
+        cache_save_key(cache_key(new_speaker), df_old, cache_dir=resolved)
     print(f"(updated +{count}) ", end=" ", flush=True)
     print("(saved).")
 
