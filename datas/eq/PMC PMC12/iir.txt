@@ -1,1 +1,14 @@
-iir-autoeq.txt
+EQ for PMC PMC12 computed from Vendors-PMC data
+Preference Score 5.30 with EQ 7.10
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-09-12-20:13:35
+
+Preamp: -1.6 dB
+
+Filter  1: ON PK Fc    32 Hz Gain +1.71 dB Q 0.80
+Filter  2: ON PK Fc   134 Hz Gain -3.37 dB Q 1.84
+Filter  3: ON PK Fc   178 Hz Gain +2.69 dB Q 2.45
+Filter  4: ON PK Fc   522 Hz Gain -3.20 dB Q 1.02
+Filter  5: ON PK Fc  1532 Hz Gain -1.31 dB Q 2.92
+Filter  6: ON PK Fc  3177 Hz Gain +0.80 dB Q 0.36
+Filter  7: ON PK Fc 16239 Hz Gain -4.72 dB Q 0.32

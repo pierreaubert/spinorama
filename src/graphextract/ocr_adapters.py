@@ -90,14 +90,28 @@ class StubOCR:
 class TickAssociation:
     x: list[TickAnchor] = field(default_factory=list)
     y_left: list[TickAnchor] = field(default_factory=list)
+    y_right: list[TickAnchor] = field(default_factory=list)
     unmatched: list[str] = field(default_factory=list)
 
 
 def _snap_y(word: OCRWord, value: float, grid_ys: list[int], img_w: int,
-              snap_px: int) -> TickAnchor | None:
+            snap_px: int) -> TickAnchor | None:
     """Y association for one word; None when it cannot be a y tick."""
     cx, cy = word.x + word.w / 2.0, word.y + word.h / 2.0
     if cx > 0.3 * img_w or not grid_ys:
+        return None
+    gy = min(grid_ys, key=lambda g: abs(g - cy))
+    if abs(gy - cy) > snap_px:
+        return None
+    conf = max(0.1, word.confidence * (1.0 - abs(gy - cy) / snap_px))
+    return TickAnchor(float(gy), value, conf, "ocr")
+
+
+def _snap_y_right(word: OCRWord, value: float, grid_ys: list[int], img_w: int,
+                  snap_px: int) -> TickAnchor | None:
+    """Right-strip mirror of ``_snap_y`` for second-y-axis ticks."""
+    cx, cy = word.x + word.w / 2.0, word.y + word.h / 2.0
+    if cx < 0.7 * img_w or not grid_ys:
         return None
     gy = min(grid_ys, key=lambda g: abs(g - cy))
     if abs(gy - cy) > snap_px:
@@ -139,11 +153,22 @@ def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int]
             conf = max(0.1, wd.confidence * (1.0 - dist / snap_px))
             assoc.x.append(TickAnchor(float(gx), value, conf, "ocr"))
         else:
-            # Y-axis label: lives in the left strip, position from horizontal grid.
+            # Y-axis label: left strip feeds y_left, right strip y_right,
+            # position from horizontal grid in both cases.
+            if cx > 0.7 * img_w:
+                hit = _snap_y_right(wd, value, grid_ys, img_w, snap_px)
+                if hit is None:
+                    if not grid_ys:
+                        assoc.unmatched.append(f"{wd.text!r}: no horizontal grid to snap to")
+                    else:
+                        assoc.unmatched.append(f"{wd.text!r}: far from nearest grid line")
+                    continue
+                assoc.y_right.append(hit)
+                continue
             hit = _snap_y(wd, value, grid_ys, img_w, snap_px)
             if hit is None:
                 if cx > 0.3 * img_w:
-                    assoc.unmatched.append(f"{wd.text!r}: y-like label outside left strip")
+                    assoc.unmatched.append(f"{wd.text!r}: y-like label outside y strips")
                 elif not grid_ys:
                     assoc.unmatched.append(f"{wd.text!r}: no horizontal grid to snap to")
                 else:
@@ -208,7 +233,8 @@ def anchors_from_ocr(words: list[OCRWord], interior: npt.NDArray,
     grid_xs, grid_ys = detect_grid_lines(interior)
     assoc = associate_ticks(words, grid_xs, grid_ys, w, h)
     x_scale, x_unit, y_unit = infer_axis_spec(words)
-    return (AxisAnchors(x=assoc.x, y_left=assoc.y_left, x_scale=x_scale,
+    return (AxisAnchors(x=assoc.x, y_left=assoc.y_left, y_right=assoc.y_right,
+                        x_scale=x_scale,
                         x_unit=x_unit, y_unit=y_unit or "dB", source=source),
             assoc.unmatched)
 

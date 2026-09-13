@@ -192,7 +192,20 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
     else:
         log_x = x_fit.scale is ScaleType.LOG10
         x_lo, x_hi = _domain(x_fit, [v for v in obs_x if v])
-        y_lo, y_hi = _domain(y_fit, [v for v in obs_y if v])
+        # Twin y axes share one pixel geometry: a right-axis value reaches
+        # the figure through its own fit (value -> native pixel) composed
+        # with the left fit back to figure space, exactly like the source
+        # plot. Directivity series therefore hug the bottom band as drawn
+        # instead of stretching over the dB domain.
+        key_of = {}
+        for sr in series:
+            key_of[id(sr)] = sr.axis_id if sr.axis_id in panel.axes else "y_left"
+        has_right = any(k != "y_left" for k in key_of.values())
+        r_fit = panel.axes.get("y_right") if has_right else None
+        left_y = [s.value_y for sr in series if key_of[id(sr)] == "y_left"
+                  for s in sr.samples if _visible(s)]
+        y_lo, y_hi = _domain(y_fit, [v for v in left_y if v]
+                             or [v for v in obs_y if v])
         x_lo_t, x_hi_t = ((math.log10(x_lo), math.log10(x_hi)) if log_x
                           else (x_lo, x_hi))
         span_t = x_hi_t - x_lo_t or 1.0
@@ -221,6 +234,12 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
             if y_fit.reversed:
                 frac = 1.0 - frac
             return top_m + (1.0 - frac) * plot_h
+
+        def py_right(val: float, fit: AxisFit) -> float:
+            # Twin-axis composition: right value -> native pixel through
+            # the right fit, then native -> figure through the left fit.
+            t = math.log10(val) if fit.scale is ScaleType.LOG10 and val > 0 else val
+            return py(y_fit.invert(fit.a * t + fit.b))
 
         if log_x:
             for decade in range(int(math.floor(math.log10(x_lo))),
@@ -268,10 +287,16 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
 
         for index, sr in enumerate(series):
             colour = _series_colour(sr.series_id, sr.label, by_id, by_label, index)
+            right = r_fit is not None and key_of.get(id(sr)) != "y_left"
             for run in _drawable_runs(sr, draw_occlusion):
-                pts = np.array([(px(x), py(y)) for x, y in run
-                                if x is not None and y is not None
-                                and (not log_x or x > 0)], dtype=np.float32)
+                if right and r_fit is not None:
+                    pts = np.array([(px(x), py_right(y, r_fit)) for x, y in run
+                                    if x is not None and y is not None
+                                    and (not log_x or x > 0)], dtype=np.float32)
+                else:
+                    pts = np.array([(px(x), py(y)) for x, y in run
+                                    if x is not None and y is not None
+                                    and (not log_x or x > 0)], dtype=np.float32)
                 if len(pts) >= 2:
                     cv2.polylines(bottom, [pts.astype(np.int32)], False,
                                   colour, line_w, cv2.LINE_AA)
@@ -289,6 +314,25 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
                 cv2.putText(bottom, sr.label, (chip_x + int(34 * k), int(cy + 6 * k)),
                             _FONT, min(text_scale, row_h / 30.0), _INK,
                             tick_thick, cv2.LINE_AA)
+
+        if r_fit is not None:
+            # Right-axis ticks live inside the frame's right edge: the
+            # legend occupies the outside margin. Ticks span the right
+            # values visible over the shared pixel range.
+            nat_lo = y_fit.a * y_lo + y_fit.b
+            nat_hi = y_fit.a * y_hi + y_fit.b
+            r_vis = [r_fit.invert(n) for n in (nat_lo, nat_hi)]
+            for t in _nice_ticks(min(r_vis), max(r_vis)):
+                label = _tick_label(t)
+                (tw, th), _ = cv2.getTextSize(label, _FONT, tick_scale, tick_thick)
+                cv2.putText(bottom, label,
+                            (left + plot_w - tw - int(6 * k),
+                             round(py_right(t, r_fit) + th / 2)),
+                            _FONT, tick_scale, _INK, tick_thick, cv2.LINE_AA)
+            (tw, _), _ = cv2.getTextSize(r_fit.unit, _FONT, text_scale, text_thick)
+            cv2.putText(bottom, r_fit.unit, (left + plot_w - tw,
+                                             top_m - int(12 * k)),
+                        _FONT, text_scale, _INK, text_thick, cv2.LINE_AA)
 
     head_scale, head_thick = min(1.1 * k, 1.6), max(1, round(k))
     heads = []

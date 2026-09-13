@@ -31,6 +31,18 @@ def test_group_and_family_heuristics():
     assert family_for("w frequency response driver measurement.png") == "frequency_response"
 
 
+def test_inventory_skips_overlay_sidecars(tmp_path):
+    """Derived *.overlay.png visualisations are not corpus source images."""
+    import cv2
+    import numpy as np
+    img = np.full((40, 60, 3), 255, np.uint8)
+    img[10:30, 5:55] = (0, 0, 0)
+    assert cv2.imwrite(str(tmp_path / "a measurement.png"), img)
+    assert cv2.imwrite(str(tmp_path / "a measurement.overlay.png"), img)
+    items = build_inventory(tmp_path)
+    assert [it.path for it in items] == ["a measurement.png"]
+
+
 def test_inventory_finds_duplicates_and_groups():
     items = build_inventory(DATAS)
     assert len(items) == 10

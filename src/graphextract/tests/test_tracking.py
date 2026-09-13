@@ -14,7 +14,7 @@ import cv2
 import numpy as np
 import pytest
 
-from graphextract.evidence import StyleSpec, segment_evidence
+from graphextract.evidence import EvidenceLayers, StyleSpec, segment_evidence
 from graphextract.schema import SegmentStatus, SeriesResult, SeriesSample
 from graphextract.tracking import (
     KNOWN_ASSUMPTIONS,
@@ -23,6 +23,8 @@ from graphextract.tracking import (
     _bridge_occluded,
     _is_covered,
     _joint_assignment,
+    _live_obs,
+    _recover_rows,
     _remove_steps,
     resolve_duplicate_claims,
     track_panel,
@@ -106,6 +108,67 @@ def test_color_assignment_prefers_own_curve_over_grid():
     assert sum(errors) / len(errors) < 4.0
 
 
+def test_seed_waits_for_own_colour_evidence():
+    """Identity commits on colour evidence, not on the first owned column.
+
+    The series' own ink starts at x=20 while admitted foreign fringe spans
+    the full width (as navy fringe admitted to PMC12 On Axis). Latching
+    the fringe at column zero rides it forever — colour only mildly
+    penalises, motion keeps it — so commitment must wait for the
+    best-colour evidence inside the seed window.
+    """
+    teal = (125, 88, 36)  # BGR series colour
+    navy = (68, 53, 20)  # BGR foreign fringe, colour distance ~69
+    h, w = 120, 64
+    img = np.full((h, w, 3), 255, np.uint8)
+    cv2.line(img, (0, 80), (w - 1, 80), navy, 3)
+    cv2.line(img, (20, 50), (w - 1, 50), teal, 3)
+    mask = np.zeros((h, w), np.uint8)
+    mask[77:84, :] = 255  # admitted foreign fringe, full width
+    mask[47:54, 20:] = 255  # own ink from x=20
+    layers = EvidenceLayers(curve_masks={"t": mask},
+                            grid_mask=np.zeros((h, w), np.uint8),
+                            background_bgr=(255, 255, 255))
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    track = track_panel(gray, layers, ["t"], float(np.median(gray)),
+                        None, {"t": teal}, img)["t"]
+    observed = [s for s in track.samples if s.status is SegmentStatus.OBSERVED]
+    assert observed, "own ink never committed"
+    assert observed[0].u >= 20, observed[0]
+    assert all(abs(s.v - 50.0) < 4.0 for s in observed if s.u >= 20)
+
+
+def test_seed_prefers_early_good_match_over_later_best():
+    """Crowded edges must not defer commitment past real observations.
+
+    Own ink spans the full width but reads slightly mixed near the plot
+    edge (colour distance ~6) and exact later (~1), with foreign fringe
+    throughout. Commitment fires on the first excellent column instead of
+    waiting for the global best.
+    """
+    teal = (125, 88, 36)  # BGR series colour
+    edge = (128, 92, 40)  # BGR slightly mixed edge ink, distance ~6
+    navy = (68, 53, 20)  # BGR foreign fringe, colour distance ~69
+    h, w = 120, 64
+    img = np.full((h, w, 3), 255, np.uint8)
+    cv2.line(img, (0, 80), (w - 1, 80), navy, 3)
+    cv2.line(img, (0, 50), (11, 50), edge, 3)
+    cv2.line(img, (12, 50), (w - 1, 50), teal, 3)
+    mask = np.zeros((h, w), np.uint8)
+    mask[77:84, :] = 255
+    mask[47:54, :] = 255
+    layers = EvidenceLayers(curve_masks={"t": mask},
+                            grid_mask=np.zeros((h, w), np.uint8),
+                            background_bgr=(255, 255, 255))
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    track = track_panel(gray, layers, ["t"], float(np.median(gray)),
+                        None, {"t": teal}, img)["t"]
+    observed = [s for s in track.samples if s.status is SegmentStatus.OBSERVED]
+    assert observed, "own ink never committed"
+    assert observed[0].u <= 2, observed[0]
+    assert all(abs(s.v - 50.0) < 4.0 for s in observed)
+
+
 def test_tracking_without_colors_matches_legacy_motion():
     """Callers that pass no colours get pure-motion tracking (this also
     pins the legacy default for every existing direct caller)."""
@@ -146,6 +209,16 @@ def test_no_jump_demotes_vertical_spike_to_missing():
     errors = [abs(s.v - _diag_v(s.u)) for s in observed]
     assert sum(errors) / len(errors) < 4.0
     assert any("no_jump" in r for r in cleaned.review_reasons)
+
+
+def test_remove_jumps_demotes_isolated_spike():
+    """Hampel pass demotes an isolated observed spike to missing."""
+    from graphextract.tracking import _remove_jumps
+    seq = _obs_seq([100.0] * 10 + [130.0] + [100.0] * 10)
+    assert _remove_jumps(seq, 10.0) == 1
+    assert seq[10].status is SegmentStatus.MISSING
+    assert all(s.status is SegmentStatus.OBSERVED
+               for i, s in enumerate(seq) if i != 10)
 
 
 def _gapped_line_image():
@@ -264,6 +337,39 @@ def test_assume_overlap_backfill_stops_where_cover_ends():
     assert inner
     assert all(s.status is SegmentStatus.INFERRED_OCCLUSION for s in inner)
     assert all(s.status is SegmentStatus.MISSING for s in kept.samples if s.u < 38)
+
+
+def _stale_cover_image():
+    """Red ends at x=50; blue holds red's level to x=80, then dives away."""
+    img = np.full((240, 320, 3), 255, np.uint8)
+    cv2.line(img, (10, 100), (150, 100), BLUE, 3)
+    cv2.line(img, (80, 100), (110, 140), BLUE, 3)
+    cv2.line(img, (110, 140), (150, 140), BLUE, 3)
+    cv2.line(img, (10, 100), (49, 100), RED, 3)
+    return img
+
+
+def test_assume_overlap_stops_coasting_stale_predictions():
+    """Dead reckoning ends where freshness ends, not where cover ends.
+
+    Blue holds red's level long after red's ink ends, then dives away.
+    Coasting the frozen prediction under that foreign cover fabricates a
+    flat line (PMC10-4 Early Reflections drifted 25 dB off); past the
+    lost threshold the honest answer is missing.
+    """
+    styles = [StyleSpec("r", "R", RED), StyleSpec("b", "B", BLUE)]
+    kept = _track(_stale_cover_image(), styles, "r", {"r": RED},
+                  TrackConfig(assume_overlap=True))
+    assert any(s.status is SegmentStatus.OBSERVED for s in kept.samples if s.u < 50)
+    fresh = [s for s in kept.samples if 54 <= s.u <= 60]
+    assert fresh
+    assert all(s.status is SegmentStatus.INFERRED_OCCLUSION for s in fresh)
+    # Blue still covers the frozen level here: only the freshness gate
+    # keeps these missing instead of coasting.
+    stale = [s for s in kept.samples if 64 <= s.u <= 78]
+    assert stale
+    assert all(s.status is SegmentStatus.MISSING for s in stale)
+    assert any("assume_overlap" in r for r in kept.review_reasons)
 
 
 def test_is_covered_matches_forward_occlusion_rule():
@@ -395,6 +501,36 @@ def test_remove_steps_keeps_lone_pairs_and_respects_missing():
     assert _remove_steps(seq, 10.0) == (set(), 0)
 
 
+def test_remove_steps_exempts_colour_confirmed_pairs():
+    """A steep corner on confirmed own ink is a V bottom, not a hijack.
+
+    PMC15 Early Reflections: takes ride the true dip down and out, with a
+    refinement overshoot at the exit corner tripping the isolation test.
+    Demoting the shorter side would delete the whole dip bottom, so pairs
+    whose both takes are colour-confirmed survive. One unconfirmed side
+    still convicts, and far leaps stay exposed through the distance bound.
+    """
+    dip = [100.0] * 10 + [94.0, 88.0, 82.0, 76.0, 70.0, 70.0, 83.0] + [83.0] * 10
+    # The +13 exit corner (pair 15->16) trips the isolation test, so the
+    # shorter recovery side goes without an exemption.
+    seq = _obs_seq(dip)
+    idx, _ = _remove_steps(seq, 10.0)
+    assert idx == set(range(16, 27))
+    seq = _obs_seq(dip)
+    idx, _ = _remove_steps(seq, 10.0, frozenset({15, 16}))
+    assert idx == set()
+    assert all(s.status is SegmentStatus.OBSERVED for s in seq)
+    # Only one side confirmed: the cut still fires.
+    seq = _obs_seq(dip)
+    idx, _ = _remove_steps(seq, 10.0, frozenset({15}))
+    assert idx == set(range(16, 27))
+    # Far leap even when confirmed: Tier 2 (which has no exemption) still
+    # demotes the staircase foot neighbourhood.
+    seq = _obs_seq([730.0] * 30 + [951.0, 1044.0] + [1144.0] * 30)
+    idx, _ = _remove_steps(seq, 10.0, frozenset({30, 31, 32, 33}))
+    assert 30 in idx and 31 in idx
+
+
 def test_remove_steps_keeps_sustained_swap_for_review():
     # Long-vs-long single step: demoting either side could destroy true
     # data, so both survive and the block is counted as unresolved.
@@ -469,6 +605,37 @@ def test_duplicate_claim_keeps_genuine_merges():
     assert demoted == {"a": set(), "b": set()}
 
 
+def test_duplicate_claim_exempts_colour_confirmed_takes():
+    """Colour-confirmed coincidence is a genuine merge, not a hijack.
+
+    PMC10-4's crowded midrange coincides for hundreds of columns with
+    ripple cliffs on every side, so the cliff judge mass-demoted true
+    takes (597 Early Reflections samples). Takes unmixing within tolerance
+    of their own colour are on own ink by construction: both-confirmed
+    spans survive whole, and a confirmed owner keeps its ink while only
+    the unconfirmed intruder goes.
+    """
+    owner = [70.0] * 40
+    intruder = [100.0] * 10 + [70.0] * 20 + [100.0] * 10
+    both = {"o": set(range(40)), "x": set(range(40))}
+    demoted = resolve_duplicate_claims(_dup_tracks({"o": owner, "x": intruder}),
+                                       10.0, both)
+    assert demoted == {"o": set(), "x": set()}
+    # Confirmed owner, unconfirmed intruder: only the intruder goes.
+    demoted = resolve_duplicate_claims(_dup_tracks({"o": owner, "x": intruder}),
+                                       10.0, {"o": set(range(40)), "x": set()})
+    assert demoted["x"] == set(range(10, 30))
+    assert demoted["o"] == set()
+    # Both cliffed (mirrored swap), only one side confirmed: the
+    # unconfirmed side goes, the confirmed side stays.
+    c = [100.0] * 10 + [70.0] * 20 + [100.0] * 10
+    d = [50.0] * 10 + [70.0] * 20 + [50.0] * 10
+    demoted = resolve_duplicate_claims(_dup_tracks({"c": c, "d": d}),
+                                       10.0, {"c": set(), "d": set(range(40))})
+    assert demoted["c"] == set(range(10, 30))
+    assert demoted["d"] == set()
+
+
 def test_duplicate_claim_demotes_mirrored_swaps():
     # Both teleport onto the shared level and off again: both rode the
     # wrong ink through the middle, so both spans go.
@@ -523,6 +690,48 @@ def test_joint_assignment_prefers_stay_on_tied_far_jump():
     assert near == {"r": 0}
 
 
+def _colour_column(height, rows, bgr):
+    """Single image column: white background with ``rows`` painted ``bgr``."""
+    col = np.full((height, 3), 255, np.uint8)
+    col[rows] = bgr
+    return col
+
+
+def _take_with_colour(pred, centroid, rows, paint, template, **kwargs):
+    """One tied far jump with explicit column colour evidence."""
+    height = 240
+    masks = {"r": np.zeros(height, dtype=bool)}
+    masks["r"][rows] = True
+    bg_bgr = kwargs.pop("bg_bgr", (255, 255, 255))
+    return _joint_assignment(
+        [centroid], [list(rows)], {"r": pred}, {"r": {0}}, ["r"], 4, 12.0,
+        owned_masks=masks, color_col=_colour_column(height, rows, paint),
+        series_colors={"r": template}, prefer_stay_on_ties=True,
+        bg_bgr=bg_bgr, **kwargs)
+
+
+def test_joint_assignment_recovers_to_colour_confirmed_ink_on_ties():
+    """A tied far take still wins when the series' own colour confirms it.
+
+    Merged union clusters park their centroid between nearby strokes, so a
+    stale prediction can sit a full penalty past its own ink while the ink
+    itself is unambiguous (PMC15 On Axis dived past its teal dip and the
+    track never came back). Colour confirmation distinguishes recovery
+    from teleport: foreign hues, far leaps, and colour-blind callers keep
+    losing the tie and staying missing.
+    """
+    rows = list(range(98, 103))
+    # Own colour 40px away: capped motion ties occlusion, colour breaks it.
+    assert _take_with_colour(60.0, 100.0, rows, RED, RED) == {"r": 0}
+    # Same tie without unmixing confirmation stays missing.
+    assert _take_with_colour(60.0, 100.0, rows, RED, RED,
+                             bg_bgr=None) == {"r": None}
+    # Foreign hue at the same distance keeps losing the tie.
+    assert _take_with_colour(60.0, 100.0, rows, BLUE, RED) == {"r": None}
+    # Even confirmed ink stays missing past re-acquisition reach.
+    assert _take_with_colour(0.0, 100.0, rows, RED, RED) == {"r": None}
+
+
 def _hijack_image():
     """Red line, red decoy far below it, red resuming elsewhere.
 
@@ -552,7 +761,33 @@ def test_no_jump_reacquires_lost_track_after_hole():
     # carry the neighbouring levels) ...
     assert not any(s.status is SegmentStatus.OBSERVED and abs(s.v - 200.0) < 8.0
                    for s in kept.samples if 65 <= s.u <= 125)
-    # ... and the track resumes on the continuing line with a review note.
+    # ... and the track resumes on the continuing line. Recovery is direct
+    # (colour-confirmed ink inside re-acquisition reach wins its tie), so
+    # no hole and no re-acquisition note remain.
+    resumed = [s for s in kept.samples
+               if s.status is SegmentStatus.OBSERVED and s.u >= 115]
+    assert len(resumed) >= 40
+    assert all(abs(s.v - 140.0) < 6.0 for s in resumed)
+    assert any(s.status is SegmentStatus.OBSERVED and 110 <= s.u < 115
+               and abs(s.v - 140.0) < 6.0 for s in kept.samples)
+    assert not any("re-acquir" in r for r in kept.review_reasons)
+
+
+def test_no_jump_reacquires_lost_track_without_colour():
+    """Colour-blind callers still re-acquire lost tracks with a review note.
+
+    Without unmixing confirmation every far take keeps losing its tie, so
+    the track stays missing across the decoy and snaps back to the
+    resuming line through delayed re-acquisition instead of direct
+    recovery.
+    """
+    img = _hijack_image()
+    layers = segment_evidence(img, [StyleSpec("r", "R", RED)])
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    kept = track_panel(gray, layers, ["r"], float(np.median(gray)),
+                       TrackConfig(no_jump=True), None, None)["r"]
+    assert not any(s.status is SegmentStatus.OBSERVED and abs(s.v - 200.0) < 8.0
+                   for s in kept.samples if 65 <= s.u <= 125)
     resumed = [s for s in kept.samples
                if s.status is SegmentStatus.OBSERVED and s.u >= 115]
     assert len(resumed) >= 40
@@ -569,3 +804,204 @@ def test_no_jump_then_continuous_compose_on_spike():
     bridged = [by_u[u] for u in range(159, 162)]
     assert all(s.status is SegmentStatus.INTERPOLATED for s in bridged)
     assert all(abs(s.v - _diag_v(s.u)) < 3.0 for s in bridged)
+
+
+def _merged_distractor_image():
+    """Red line with a same-colour distractor joined by a foreign hairline.
+
+    A blue 1px vertical bar at x=100 merges the union cluster across the
+    red line (y=100) and a parallel red distractor (y=130), while only
+    red rows count as owned. The whole-cluster mean sits ~20px off the
+    live prediction; the prediction-nearest owned group holds the line.
+    """
+    img = np.full((240, 320, 3), 255, np.uint8)
+    cv2.line(img, (10, 100), (200, 100), RED, 3)
+    cv2.line(img, (100, 130), (140, 130), RED, 3)
+    cv2.line(img, (100, 99), (100, 131), BLUE, 1)
+    return img
+
+
+def test_no_jump_take_prefers_prediction_nearest_owned_group():
+    img = _merged_distractor_image()
+    styles = [StyleSpec("r", "R", RED), StyleSpec("b", "B", BLUE)]
+    tracked = _track(img, styles, "r", {"r": RED}, TrackConfig(no_jump=True))
+    by_u = {int(s.u): s for s in tracked.samples}
+    assert by_u[100].status is SegmentStatus.OBSERVED
+    assert abs(by_u[100].v - 100.0) < 6.0
+    near = [by_u[u] for u in range(95, 106)
+            if by_u[u].status is SegmentStatus.OBSERVED]
+    assert near
+    assert sum(abs(s.v - 100.0) for s in near) / len(near) < 4.0
+
+
+def _covered_distractor_image():
+    """Red gap under a blue cover, with a red distractor inside the gap.
+
+    Blue holds red's level across the whole gap, so the motion prediction
+    stays live under cover for the full 20 columns. The distractor must
+    stay refused past the usual lost threshold: freshness pauses while
+    merged ink covers the path, and the resuming line is still taken
+    promptly because the prediction never went stale.
+    """
+    img = np.full((240, 320, 3), 255, np.uint8)
+    cv2.line(img, (90, 100), (170, 100), BLUE, 3)
+    cv2.line(img, (10, 100), (99, 100), RED, 3)
+    cv2.line(img, (121, 100), (210, 100), RED, 3)
+    cv2.line(img, (105, 130), (118, 130), RED, 3)
+    return img
+
+
+def test_no_jump_refusal_survives_cover_paused_freshness():
+    img = _covered_distractor_image()
+    styles = [StyleSpec("r", "R", RED), StyleSpec("b", "B", BLUE)]
+    tracked = _track(img, styles, "r", {"r": RED},
+                     TrackConfig(no_jump=True, assume_overlap=True))
+    assert not any(s.status is SegmentStatus.OBSERVED and abs(s.v - 100.0) > 12.0
+                   for s in tracked.samples if 100 <= s.u <= 120)
+    coast = [s for s in tracked.samples if 105 <= s.u <= 111]
+    assert coast
+    assert any(s.status is SegmentStatus.INFERRED_OCCLUSION for s in coast)
+    resumed = [s for s in tracked.samples
+               if s.status is SegmentStatus.OBSERVED and 121 <= s.u <= 130]
+    assert len(resumed) >= 5
+    assert all(abs(s.v - 100.0) < 6.0 for s in resumed)
+
+
+def _confirmed_scores(rows, lo=0, span=200, good=0.0, bad=100.0):
+    """Fake unmixing scores: ``rows`` confirm, everything else refuses."""
+    scores = np.full(span, bad)
+    for r in rows:
+        scores[r - lo] = good
+    return scores
+
+
+def test_recover_rows_takes_confirmed_runahead():
+    scores = _confirmed_scores([50, 51, 52])
+    assert _recover_rows([50, 51, 52], 30.0, 3, scores, 0,
+                         2.0, 28.0, False) == [50, 51, 52]
+
+
+def test_recover_rows_takes_runahead_above():
+    scores = _confirmed_scores([10, 11])
+    assert _recover_rows([10, 11], 30.0, 3, scores, 0,
+                         -2.0, 32.0, False) == [10, 11]
+
+
+def test_recover_rows_prefers_nearest_group():
+    scores = _confirmed_scores([28, 29, 60, 61])
+    assert _recover_rows([28, 29, 60, 61], 30.0, 3, scores, 0,
+                         2.0, 22.0, False) == [28, 29]
+
+
+def test_recover_rows_refuses_live_coast_under_cover():
+    # Same-colour distractor under covering ink with the prediction intact
+    # (zero drift): coast even with live motion toward the ink, exactly as
+    # test_no_jump_refusal_survives_cover_paused_freshness.
+    scores = _confirmed_scores([128, 129, 130, 131, 132])
+    assert _recover_rows([128, 129, 130, 131, 132], 100.0, 3, scores, 0,
+                         2.0, 100.0, True) is None
+
+
+def test_recover_rows_refuses_static_prediction():
+    scores = _confirmed_scores([50, 51, 52])
+    assert _recover_rows([50, 51, 52], 30.0, 3, scores, 0,
+                         0.0, 30.0, False) is None
+
+
+def test_recover_rows_refuses_ink_behind_motion():
+    scores = _confirmed_scores([50, 51, 52])
+    assert _recover_rows([50, 51, 52], 30.0, 3, scores, 0,
+                         -2.0, 28.0, False) is None
+
+
+def test_recover_rows_refuses_unconfirmed_ink():
+    scores = _confirmed_scores([])
+    assert _recover_rows([50, 51, 52], 30.0, 3, scores, 0,
+                         2.0, 28.0, False) is None
+
+
+def test_recover_rows_refuses_out_of_reach_ink():
+    scores = _confirmed_scores([200, 201], span=300)
+    assert _recover_rows([200, 201], 30.0, 3, scores, 0,
+                         2.0, 28.0, False) is None
+
+
+def test_recover_rows_refuses_without_history():
+    scores = _confirmed_scores([50, 51, 52])
+    assert _recover_rows([50, 51, 52], 30.0, 3, scores, 0,
+                         2.0, None, False) is None
+    assert _recover_rows([], 30.0, 3, scores, 0, 2.0, 28.0, False) is None
+
+
+def _obs_seq(vals):
+    return [SeriesSample(u=float(i), v=float(v), status=SegmentStatus.OBSERVED)
+            for i, v in enumerate(vals)]
+
+
+def test_live_obs_returns_newest_first_with_limit():
+    seq = _obs_seq([10.0, 20.0, 30.0, 40.0, 50.0])
+    assert _live_obs(seq, -1, 4) == [50.0, 40.0, 30.0, 20.0]
+    assert _live_obs(seq, -1, 2) == [50.0, 40.0]
+
+
+def test_live_obs_truncates_at_motion_break():
+    seq = _obs_seq([10.0, 20.0, 100.0, 102.0])
+    assert _live_obs(seq, 1, 4) == [102.0, 100.0]
+    assert _live_obs(seq, 3, 4) == []
+
+
+def test_live_obs_skips_non_observed():
+    seq = _obs_seq([10.0, 20.0, 30.0])
+    seq[1] = SeriesSample(u=1.0, v=0.0, status=SegmentStatus.MISSING)
+    assert _live_obs(seq, -1, 4) == [30.0, 10.0]
+
+
+def _riser_wall_image():
+    """Gentle rise, one 16px riser across a small gap, gentle rise again.
+
+    The riser exceeds the motion gate from a live prediction, so refusal
+    logic sees it; it is confirmed same-colour ink ahead of live motion
+    with the prediction standing empty, so recovery must take it instead
+    of leaving a bridged hole.
+    """
+    img = np.full((240, 320, 3), 255, np.uint8)
+    cv2.line(img, (10, 100), (95, 117), RED, 2)
+    cv2.line(img, (101, 133), (101, 135), RED, 2)
+    cv2.line(img, (103, 136), (200, 155), RED, 2)
+    return img
+
+
+def test_no_jump_recovers_confirmed_riser_wall():
+    tracked = _track(_riser_wall_image(), [StyleSpec("r", "R", RED)], "r",
+                     {"r": RED}, TrackConfig(no_jump=True))
+    by_u = {int(s.u): s for s in tracked.samples}
+    assert by_u[101].status is SegmentStatus.OBSERVED
+    assert abs(by_u[101].v - 134.0) < 6.0
+    wall = [by_u[u] for u in range(101, 113)]
+    assert all(s.status is SegmentStatus.OBSERVED for s in wall)
+    assert any("recovery" in reason for reason in tracked.review_reasons)
+
+
+def _lure_resume_image():
+    """Flat line, clean gap, resumption with a parallel same-colour lure.
+
+    The stale whole-mean resumption take jumps 40px; without a motion
+    restart the jump seeds velocity and step gates and the track rides the
+    lure. With the restart the track resumes on its own ink and ignores it.
+    """
+    img = np.full((240, 320, 3), 255, np.uint8)
+    cv2.line(img, (10, 100), (60, 100), RED, 3)
+    cv2.line(img, (81, 140), (200, 140), RED, 3)
+    cv2.line(img, (81, 175), (200, 175), RED, 3)
+    return img
+
+
+def test_jump_resumption_restarts_motion_ignores_lure():
+    tracked = _track(_lure_resume_image(), [StyleSpec("r", "R", RED)], "r",
+                     {"r": RED}, TrackConfig(no_jump=True))
+    by_u = {int(s.u): s for s in tracked.samples}
+    resumed = [by_u[u] for u in range(85, 151)]
+    assert all(s.status is SegmentStatus.OBSERVED for s in resumed)
+    assert all(abs(s.v - 140.0) < 6.0 for s in resumed)
+    assert not any(s.status is SegmentStatus.OBSERVED and abs(s.v - 175.0) < 6.0
+                   for s in tracked.samples if 82 <= s.u <= 200)

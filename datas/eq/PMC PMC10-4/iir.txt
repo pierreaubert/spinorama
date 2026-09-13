@@ -1,0 +1,14 @@
+EQ for PMC PMC10-4 computed from Vendors-PMC data
+Preference Score 3.71 with EQ 5.66
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.28
+Dated: 2026-09-12-09:31:10
+
+Preamp: -0.3 dB
+
+Filter  1: ON PK Fc    37 Hz Gain -2.76 dB Q 1.33
+Filter  2: ON PK Fc   134 Hz Gain -3.59 dB Q 3.00
+Filter  3: ON PK Fc   227 Hz Gain -4.26 dB Q 2.96
+Filter  4: ON PK Fc   299 Hz Gain +3.00 dB Q 2.96
+Filter  5: ON PK Fc   382 Hz Gain -4.05 dB Q 2.99
+Filter  6: ON PK Fc  1244 Hz Gain -3.35 dB Q 1.61
+Filter  7: ON PK Fc 16239 Hz Gain -4.69 dB Q 0.33

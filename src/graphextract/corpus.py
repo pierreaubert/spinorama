@@ -139,10 +139,17 @@ def _hamming(a: int, b: int) -> int:
 
 
 def build_inventory(datas_dir: str | Path) -> list[CorpusItem]:
-    """Scan PNGs; assign duplicate groups (exact sha or ahash distance <= 5)."""
+    """Scan PNGs; assign duplicate groups (exact sha or ahash distance <= 5).
+
+    Derived ``*.overlay.png`` visualisations are skipped: they are
+    extraction products, not source images, and inventorying them would
+    corrupt duplicate groups and train/test splits.
+    """
     items: list[CorpusItem] = []
     hashes: list[int] = []
     for path in sorted(Path(datas_dir).glob("*.png")):
+        if path.name.endswith(".overlay.png"):
+            continue
         img = cv2.imread(str(path))
         if img is None:
             continue

@@ -46,6 +46,22 @@ def test_ticks_snap_to_grid_not_box_centers():
     assert len(unmatched) == 2
 
 
+def test_right_strip_ticks_associate_to_y_right():
+    """A second (right-hand) y axis calibrates from its margin ticks."""
+    img = _grid_image()
+    words = [
+        OCRWord("20", 2, 14, 16, 12, 0.9),      # left strip -> y_left
+        OCRWord("10", 272, 14, 16, 12, 0.9),    # right strip, near y=20
+        OCRWord("30", 272, 84, 16, 12, 0.9),    # near y=90
+        OCRWord("50", 272, 154, 16, 12, 0.9),   # near y=160
+    ]
+    anchors, unmatched = anchors_from_ocr(words, img)
+    assert [t.value for t in anchors.y_left] == [20.0]
+    assert [t.value for t in anchors.y_right] == [10.0, 30.0, 50.0]
+    assert [t.pixel for t in anchors.y_right] == [20, 90, 160]
+    assert unmatched == []
+
+
 def test_unit_inference_percent_and_time():
     assert infer_axis_spec([OCRWord("5%", 0, 0, 8, 8)])[2] == "%"
     scale, x_unit, _ = infer_axis_spec([OCRWord("10ms", 0, 0, 8, 8)])

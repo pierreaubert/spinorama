@@ -140,6 +140,11 @@ class SeriesResult:
     samples: list[SeriesSample] = field(default_factory=list)
     alternatives: list[list[SeriesSample]] = field(default_factory=list)
     review_reasons: list[str] = field(default_factory=list)
+    # Sample indices whose OBSERVED takes unmixed within _CONFIRM_TOL of the
+    # series colour (colour-confirmed own ink). Working state for
+    # cross-series disambiguation; deliberately excluded from to_dict so the
+    # canonical document stays measurement-only.
+    confirmed: set[int] = field(default_factory=set)
 
     def observed_support(self) -> int:
         return sum(1 for s in self.samples if s.status is SegmentStatus.OBSERVED)

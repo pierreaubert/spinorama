@@ -191,6 +191,31 @@ def test_wide_highres_line_key_detected():
     assert abs(res.entries[0].swatch_bgr[2] - 255) < 60
 
 
+def test_line_sample_resolves_core_colour_not_fringe_average():
+    """A thin anti-aliased key must resolve to its core ink colour.
+
+    High-resolution legend keys carry light anti-aliased skirts several
+    rows wide; the median over all ink pixels lands halfway to white
+    (PMC12 On Axis read #57839a for a #23577b stroke), so the tracker's
+    own-ink test then fails on the true stroke and the series rides a
+    neighbour's ink. The core quartile must stay near the true colour.
+    """
+    teal = (123, 87, 35)  # BGR #23577b
+    img = np.full((60, 200, 3), 255, np.uint8)
+    x0, x1 = 10, 70
+    core = np.array(teal, dtype=float)
+    mixes = {21: 0.25, 22: 0.55, 23: 1.0, 24: 1.0, 25: 1.0, 26: 0.55, 27: 0.25}
+    for y, alpha in mixes.items():
+        img[y, x0:x1] = tuple(int(255 - alpha * (255 - c)) for c in core)
+    words = [OCRWord("Teal", 80, 13, 40, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert res.has_legend is True
+    assert len(res.entries) == 1
+    swatch = res.entries[0].swatch_bgr
+    assert swatch is not None
+    assert all(abs(a - b) < 25 for a, b in zip(swatch, teal, strict=True)), swatch
+
+
 def test_tall_misread_box_dropped_by_sample_overlap():
     """A tall OCR box blanketing its key ('——' with padded height) covers
     little of its own area yet most of the key: still the key, not a label."""

@@ -111,7 +111,16 @@ def _line_samples(img: npt.NDArray, ink_thresh: float = 30.0) -> list[_Sample]:
         ink = region[ink_mask]
         if len(ink) == 0:
             continue
-        m = np.median(ink, axis=0)
+        # Core, not fringe average: thin high-resolution keys carry light
+        # anti-aliased skirts rows wide, and the median over all ink pixels
+        # lands halfway to white (PMC12 On Axis read #57839a for a #23577b
+        # stroke). The most saturated quartile is the stroke core; darkness
+        # breaks ties so unsaturated black/gray keys still resolve.
+        spread = ink.max(axis=1) - ink.min(axis=1)
+        dark = 765.0 - ink.sum(axis=1)
+        order = np.argsort(spread * 1024.0 + dark, kind="stable")
+        core = ink[order[max(0, len(order) * 3 // 4):]]
+        m = core.mean(axis=0)
         med = (int(m[0]), int(m[1]), int(m[2]))
         out.append(_Sample((x, y, w, h), med, "line"))
     return _merge_dash_fragments(out)

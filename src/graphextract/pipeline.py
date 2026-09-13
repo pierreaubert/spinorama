@@ -57,6 +57,23 @@ class AxisAnchors:
 AnchorProvider = Callable[[str, npt.NDArray], AxisAnchors]
 
 
+_DI_LABEL_TOKENS = frozenset({"directivity", "index", "di", "dl"})
+"""Label words marking a directivity curve (right-hand axis).
+
+``dl`` covers Tesseract's common misread of the ``DI`` suffix
+(``Reflections Dl``); whole-word matching keeps labels like
+``Estimated In-Room`` on the left axis.
+"""
+
+
+def _axis_for_label(label: str) -> str:
+    """Right-hand axis for directivity labels, left axis otherwise."""
+    tokens = label.lower().replace("-", " ").split()
+    if any(t in _DI_LABEL_TOKENS for t in tokens):
+        return "y_right"
+    return "y_left"
+
+
 def _empty_anchors(_panel_id: str, _img: npt.NDArray) -> AxisAnchors:
     return AxisAnchors()
 
@@ -98,15 +115,22 @@ def run_panel(
             "y_left": fit_axis(anchors.y_left, AxisRole.Y_LEFT, anchors.y_unit or "unknown",
                                ScaleType.LINEAR),
         }
-        if anchors.y_right:
-            axes["y_right"] = fit_axis(anchors.y_right, AxisRole.Y_RIGHT,
-                                       anchors.y_right_unit or "unknown", ScaleType.LINEAR)
     except CalibrationUnresolved as exc:
         calibration_resolved = False
         axes = {}
         result.outcome = PanelOutcome.PARTIAL_REVIEW
         result.review_reasons.append(f"calibration unresolved: {exc.reason}")
         result.review_reasons += [f"needed: {n}" for n in exc.needed]
+    if calibration_resolved and anchors.y_right:
+        # The second axis is decorative: a bad right fit must never take
+        # down the calibrated main axes (PMC12's right ticks contradict).
+        try:
+            axes["y_right"] = fit_axis(anchors.y_right, AxisRole.Y_RIGHT,
+                                       anchors.y_right_unit or "unknown",
+                                       ScaleType.LINEAR)
+        except CalibrationUnresolved as exc:
+            result.review_reasons.append(
+                f"right axis uncalibrated, directivity stays on dB: {exc.reason}")
 
     gray = cv2.cvtColor(interior, cv2.COLOR_BGR2GRAY) if interior.ndim == 3 else interior
     layers: EvidenceLayers = segment_evidence(interior, styles)
@@ -122,7 +146,9 @@ def run_panel(
                                   {spec.series_id: spec.bgr}, interior))
     ox, oy = interior_offset
     if track_config is not None and track_config.no_jump:
-        dupes = resolve_duplicate_claims(tracks, track_config.max_jump_px)
+        dupes = resolve_duplicate_claims(
+            tracks, track_config.max_jump_px,
+            {sid: tr.confirmed for sid, tr in tracks.items()})
         for sid, idx in dupes.items():
             if idx:
                 tracks[sid].review_reasons.append(
@@ -132,6 +158,8 @@ def run_panel(
         style = next((x for x in styles if x.series_id == sid), None)
         if style:
             tr.label = style.label
+        if "y_right" in axes:
+            tr.axis_id = _axis_for_label(tr.label)
         if calibration_resolved:
             xfit, yfit = axes["x"], axes.get(tr.axis_id, axes["y_left"])
         for s in tr.samples:

@@ -131,6 +131,50 @@ def test_document_words_yield_log_data_coordinates():
         assert abs(math.log10(sample.value_x) - expected) < 0.05
 
 
+def test_di_labels_assign_to_calibrated_right_axis():
+    """Directivity labels ride y_right once right ticks calibrate it."""
+    from graphextract.pipeline import _axis_for_label
+    for label in ("Directivity Index", "Reflections Dl", "Index",
+                  "Early Reflections DI", "Sound Power DI"):
+        assert _axis_for_label(label) == "y_right"
+    for label in ("On Axis", "Sound Power", "Listening Window",
+                  "Reflections", "Estimated In-Room"):
+        assert _axis_for_label(label) == "y_left"
+
+
+def test_right_axis_ticks_assign_di_series_to_y_right():
+    """End to end: right-margin ticks fit y_right and DI series use it."""
+    img = np.full((340, 500, 3), 255, np.uint8)
+    img[40:43, 60:441] = (0, 0, 0)
+    img[277:280, 60:441] = (0, 0, 0)
+    img[40:280, 60:63] = (0, 0, 0)
+    img[40:280, 438:441] = (0, 0, 0)
+    for gx in (60, 250, 440):
+        img[40:280, gx:gx + 2] = (180, 180, 180)
+    for gy in (40, 130, 220):
+        img[gy:gy + 2, 60:441] = (180, 180, 180)
+    words = [
+        OCRWord("20", 50, 290, 20, 14, 0.9),
+        OCRWord("200", 240, 290, 24, 14, 0.9),
+        OCRWord("2000", 425, 290, 30, 14, 0.9),
+        OCRWord("0", 44, 33, 14, 14, 0.9),
+        OCRWord("50", 40, 123, 18, 14, 0.9),
+        OCRWord("100", 36, 213, 26, 14, 0.9),
+        OCRWord("0", 452, 33, 14, 14, 0.9),
+        OCRWord("5", 454, 123, 14, 14, 0.9),
+        OCRWord("10", 450, 213, 18, 14, 0.9),
+    ]
+    styles = [StyleSpec("m", "On Axis", (0, 0, 255)),
+              StyleSpec("d", "Directivity Index", (0, 255, 0))]
+    doc = run_document(img, "img", styles, words=words)
+    assert len(doc.panels) == 1
+    panel = doc.panels[0]
+    assert "y_right" in panel.axes
+    by_label = {sr.label: sr for sr in panel.series}
+    assert by_label["On Axis"].axis_id == "y_left"
+    assert by_label["Directivity Index"].axis_id == "y_right"
+
+
 def test_manifest_lists_review_queue_and_provenance():
     res, _, _ = _run_verified(crossing=False)
     doc = res_panel_doc(res)
