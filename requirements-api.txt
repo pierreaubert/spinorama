@@ -1,5 +1,5 @@
 fastapi
 gunicorn
+pydantic
 pyyaml
 uvicorn
-pydantic

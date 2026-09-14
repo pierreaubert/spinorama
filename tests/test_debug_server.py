@@ -21,9 +21,7 @@ class DebugServerTests(unittest.TestCase):
 
         handler.send_response.assert_called_once_with(204)
         sent_headers = {call.args[0]: call.args[1] for call in handler.send_header.call_args_list}
-        self.assertEqual(
-            sent_headers["Access-Control-Allow-Origin"], "http://localhost:5173"
-        )
+        self.assertEqual(sent_headers["Access-Control-Allow-Origin"], "http://localhost:5173")
         self.assertIn("GET", sent_headers["Access-Control-Allow-Methods"])
         self.assertIn("OPTIONS", sent_headers["Access-Control-Allow-Methods"])
         self.assertEqual(sent_headers["Access-Control-Allow-Headers"], "content-type")

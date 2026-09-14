@@ -1,18 +1,18 @@
 SourceDesc=VACS_Data_Text
 Version='2.1.1 b18'
 Author='RDTeam: VACS'
- 
+
 StartString_Data=Data
 EndString_Data=Data_End
- 
- 
+
+
 Data_Format=LeveldB
 Data_Domain=Frequency
 Data_LevelType=Peak
 Data_AbscUnit=Hz
 Data_BaseUnit=Pa
 Data_Legend='Spinorama:: Offset for Directivity Indices'
- 
+
 Param_Coord_x1=1
 Param_Coord_x2=0
 Param_Coord_x3=0
@@ -21,7 +21,7 @@ Param_Param=0
 Param_Coord_Type=Spherical
 Param_Coord_AngularFormat=degree
 Param_DrvIsRms=true
- 
+
 Data
        345.2167	             26
        349.2208	             26
@@ -377,4 +377,3 @@ Data
        19770.68	             26
           20000	             26
 Data_End
- 

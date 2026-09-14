@@ -30,7 +30,9 @@ class TestEqCompareCaching(unittest.TestCase):
             speaker = {"brand": "Test", "model": "Speaker"}
             with (
                 patch.object(generate_eq_compare, "eq_compare_filename", return_value=str(output)),
-                patch.object(generate_eq_compare, "eq_compare_dependencies", return_value=[str(dependency)]),
+                patch.object(
+                    generate_eq_compare, "eq_compare_dependencies", return_value=[str(dependency)]
+                ),
                 patch.object(
                     generate_eq_compare,
                     "build_eq_figure_and_filename",

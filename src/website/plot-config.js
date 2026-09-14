@@ -168,61 +168,61 @@ const trendNames = new Set([
 // graph before the exported defaultConfig binding has been initialized.
 export function createDefaultConfig() {
     return {
-    font: {
-        family: 'default', // 'default' means keep original value
-        size: 0, // 0 means no change to original size
-        color: 'default', // 'default' means keep original color
-    },
-    colors: {
-        palette: 'default', // 'default' means keep original palette
-    },
-    contour: {
-        colorscale: 'default', // 'default' means keep original colorscale
-    },
-    grid: {
-        show: true, // Boolean overrides original value
-        color: 'default', // 'default' means keep original color
-    },
-    legend: {
-        show: true, // Boolean overrides original value
-        position: 'default', // 'default' means keep original position
-        xanchor: 'default', // 'default' means keep original xanchor
-        yanchor: 'default', // 'default' means keep original yanchor
-        xoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
-        yoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
-        label: 'default', // 'default' means keep original label style
-    },
-    margins: {
-        l: 0, // 0 means no change to original margin
-        r: 0, // 0 means no change to original margin
-        t: 0, // 0 means no change to original margin
-        b: 0, // 0 means no change to original margin
-        pad: 0, // 0 means no change to original padding
-    },
-    showAxisLabels: true, // Boolean overrides original value
-    layout: {
-        direction: 'default', // 'default' means keep original direction
-    },
-    colorbar: {
-        thickness: 0, // 0 means no change to original thickness
-        len: 0, // 0 means no change to original length
-        show: true, // Boolean overrides original value
-    },
-    annotations: {
-        show: true, // Boolean overrides original value
-        showA: true, // Per-speaker A (compare mode)
-        showB: true, // Per-speaker B (compare mode)
-    },
-    trendlines: {
-        show: true, // Boolean overrides original value
-        showA: true, // Per-speaker A (compare mode)
-        showB: true, // Per-speaker B (compare mode)
-    },
-    zones: {
-        show: true, // Boolean overrides original value
-        showA: true, // Per-speaker A (compare mode)
-        showB: true, // Per-speaker B (compare mode)
-    },
+        font: {
+            family: 'default', // 'default' means keep original value
+            size: 0, // 0 means no change to original size
+            color: 'default', // 'default' means keep original color
+        },
+        colors: {
+            palette: 'default', // 'default' means keep original palette
+        },
+        contour: {
+            colorscale: 'default', // 'default' means keep original colorscale
+        },
+        grid: {
+            show: true, // Boolean overrides original value
+            color: 'default', // 'default' means keep original color
+        },
+        legend: {
+            show: true, // Boolean overrides original value
+            position: 'default', // 'default' means keep original position
+            xanchor: 'default', // 'default' means keep original xanchor
+            yanchor: 'default', // 'default' means keep original yanchor
+            xoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
+            yoffset: 0, // 0 means no change to original offset (range: -1.0 to 1.0)
+            label: 'default', // 'default' means keep original label style
+        },
+        margins: {
+            l: 0, // 0 means no change to original margin
+            r: 0, // 0 means no change to original margin
+            t: 0, // 0 means no change to original margin
+            b: 0, // 0 means no change to original margin
+            pad: 0, // 0 means no change to original padding
+        },
+        showAxisLabels: true, // Boolean overrides original value
+        layout: {
+            direction: 'default', // 'default' means keep original direction
+        },
+        colorbar: {
+            thickness: 0, // 0 means no change to original thickness
+            len: 0, // 0 means no change to original length
+            show: true, // Boolean overrides original value
+        },
+        annotations: {
+            show: true, // Boolean overrides original value
+            showA: true, // Per-speaker A (compare mode)
+            showB: true, // Per-speaker B (compare mode)
+        },
+        trendlines: {
+            show: true, // Boolean overrides original value
+            showA: true, // Per-speaker A (compare mode)
+            showB: true, // Per-speaker B (compare mode)
+        },
+        zones: {
+            show: true, // Boolean overrides original value
+            showA: true, // Per-speaker A (compare mode)
+            showB: true, // Per-speaker B (compare mode)
+        },
     };
 }
 

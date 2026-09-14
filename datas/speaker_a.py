@@ -30,7 +30,7 @@ speakers_info_a: SpeakerDatabase = {
                 "quality": "high",
                 "review_published": "20260822",
             },
-	},
+        },
     },
     "ADS L520": {
         "brand": "ADS",

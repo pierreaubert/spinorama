@@ -186,8 +186,12 @@ class TestMetadataOutputCaching(unittest.TestCase):
                 patch.object(generate_meta, "METADATA_CACHE_MANIFEST", manifest),
                 patch.object(generate_meta, "metadata_input_fingerprint", return_value="current"),
                 patch.object(generate_meta.cpaths, "CPATH_DIST_JSON", root),
-                patch.object(generate_meta.cpaths, "CPATH_DIST_HEADPHONE_METADATA_JSON", headphones),
-                patch.object(generate_meta.cpaths, "CPATH_DIST_HEADPHONE_EQDATA_JSON", headphone_eq),
+                patch.object(
+                    generate_meta.cpaths, "CPATH_DIST_HEADPHONE_METADATA_JSON", headphones
+                ),
+                patch.object(
+                    generate_meta.cpaths, "CPATH_DIST_HEADPHONE_EQDATA_JSON", headphone_eq
+                ),
             ):
                 generate_meta.save_metadata_cache_manifest()
 

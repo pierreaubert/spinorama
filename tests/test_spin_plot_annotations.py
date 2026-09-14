@@ -49,9 +49,7 @@ class AnnotationLayoutTests(unittest.TestCase):
             y_ranges={"y": (0, 1)},
             x_scale="log",
         )
-        anchor = _anchor_pixel(
-            AnnotationRequest("log", 2.5, 0.5, "y", "label", "black"), geometry
-        )
+        anchor = _anchor_pixel(AnnotationRequest("log", 2.5, 0.5, "y", "label", "black"), geometry)
 
         self.assertAlmostEqual(anchor[0], 400.0)
 
@@ -146,10 +144,7 @@ class AnnotationLayoutTests(unittest.TestCase):
         )
         self.assertTrue(non_overlapping)
         self.assertTrue(
-            any(
-                abs(placement.center[0] - placement.anchor[0]) >= 12
-                for placement in placements
-            )
+            any(abs(placement.center[0] - placement.anchor[0]) >= 12 for placement in placements)
         )
 
     def test_keeps_primary_curve_labels_above_the_curves_and_short(self):
@@ -313,9 +308,7 @@ class AnnotationLayoutTests(unittest.TestCase):
         self.assertFalse(
             _leader_crosses_trace(placement.anchor, placement.center, ((anchor, (400.0, 60.0)),))
         )
-        annotation = annotation_dicts(
-            [placement], visible=True, geometry=geometry
-        )[0]
+        annotation = annotation_dicts([placement], visible=True, geometry=geometry)[0]
         self.assertNotIn("standoff", annotation)
         self.assertEqual(annotation["axref"], "x")
         self.assertEqual(annotation["ayref"], "y")
@@ -388,7 +381,6 @@ class SpinoramaAnnotationIntegrationTests(unittest.TestCase):
         self.assertTrue(all(annotation.bgcolor for annotation in figure.layout.annotations))
         self.assertTrue(any(annotation.ay > 0 for annotation in figure.layout.annotations))
 
-
     def test_cea2034_annotations_fall_back_to_static_offsets_for_a_long_leader(self):
         freq = np.logspace(np.log10(20), np.log10(20000), 160)
         base = 1.5 * np.sin(np.log(freq))
@@ -420,8 +412,12 @@ class SpinoramaAnnotationIntegrationTests(unittest.TestCase):
             figure = plot_spinorama(spin, params, {}, False, (100, 18000))
 
         self.assertEqual(len(figure.layout.annotations), 6)
-        self.assertTrue(all(annotation.name.startswith("static:") for annotation in figure.layout.annotations))
-        self.assertTrue(all(annotation.axref == "pixel" for annotation in figure.layout.annotations))
+        self.assertTrue(
+            all(annotation.name.startswith("static:") for annotation in figure.layout.annotations)
+        )
+        self.assertTrue(
+            all(annotation.axref == "pixel" for annotation in figure.layout.annotations)
+        )
 
     def test_rcf_kx_32_a_is_solved_without_static_fallback(self):
         from pathlib import Path

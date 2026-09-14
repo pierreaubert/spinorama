@@ -82,9 +82,7 @@ class AnnotationGeometry:
 
     def grid_x_pixels(self) -> tuple[float, ...]:
         left, _, right, _ = self.plot_rect
-        return tuple(
-            _value_to_pixel(value, self.x_range, left, right) for value in self.grid_x
-        )
+        return tuple(_value_to_pixel(value, self.x_range, left, right) for value in self.grid_x)
 
     def grid_y_pixels(self, yref: str) -> tuple[float, ...]:
         if self.grid_y is None:
@@ -167,14 +165,18 @@ def _points_equal(first: Point, second: Point) -> bool:
 
 
 def _cross(first: Point, second: Point, third: Point) -> float:
-    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (
+        third[0] - first[0]
+    )
 
 
 def _between(value: float, first: float, second: float) -> bool:
     return min(first, second) - 0.001 <= value <= max(first, second) + 0.001
 
 
-def _segments_intersect(first_start: Point, first_end: Point, second_start: Point, second_end: Point) -> bool:
+def _segments_intersect(
+    first_start: Point, first_end: Point, second_start: Point, second_end: Point
+) -> bool:
     """Return whether two arrow center-lines cross, ignoring shared anchors."""
 
     if any(
@@ -194,21 +196,26 @@ def _segments_intersect(first_start: Point, first_end: Point, second_start: Poin
         return True
 
     return (
-        abs(first_cross) < 0.001
-        and _between(second_start[0], first_start[0], first_end[0])
-        and _between(second_start[1], first_start[1], first_end[1])
-    ) or (
-        abs(second_cross) < 0.001
-        and _between(second_end[0], first_start[0], first_end[0])
-        and _between(second_end[1], first_start[1], first_end[1])
-    ) or (
-        abs(third_cross) < 0.001
-        and _between(first_start[0], second_start[0], second_end[0])
-        and _between(first_start[1], second_start[1], second_end[1])
-    ) or (
-        abs(fourth_cross) < 0.001
-        and _between(first_end[0], second_start[0], second_end[0])
-        and _between(first_end[1], second_start[1], second_end[1])
+        (
+            abs(first_cross) < 0.001
+            and _between(second_start[0], first_start[0], first_end[0])
+            and _between(second_start[1], first_start[1], first_end[1])
+        )
+        or (
+            abs(second_cross) < 0.001
+            and _between(second_end[0], first_start[0], first_end[0])
+            and _between(second_end[1], first_start[1], first_end[1])
+        )
+        or (
+            abs(third_cross) < 0.001
+            and _between(first_start[0], second_start[0], second_end[0])
+            and _between(first_start[1], second_start[1], second_end[1])
+        )
+        or (
+            abs(fourth_cross) < 0.001
+            and _between(first_end[0], second_start[0], second_end[0])
+            and _between(first_end[1], second_start[1], second_end[1])
+        )
     )
 
 
@@ -230,7 +237,9 @@ def _segment_intersects_rect(start: Point, end: Point, rect: Rect) -> bool:
         ((rect[2], rect[3]), (rect[0], rect[3])),
         ((rect[0], rect[3]), (rect[0], rect[1])),
     )
-    return any(_segments_intersect(start, end, edge_start, edge_end) for edge_start, edge_end in edges)
+    return any(
+        _segments_intersect(start, end, edge_start, edge_end) for edge_start, edge_end in edges
+    )
 
 
 def _point_to_segment_distance(point: Point, start: Point, end: Point) -> float:
@@ -284,8 +293,7 @@ def _leader_crosses_trace(
         anchor[1] + (center[1] - anchor[1]) * fraction,
     )
     return any(
-        _segment_distance(visible_start, center, trace_start, trace_end)
-        <= _LEADER_TRACE_CLEARANCE
+        _segment_distance(visible_start, center, trace_start, trace_end) <= _LEADER_TRACE_CLEARANCE
         for trace_start, trace_end in trace_segments
     )
 
@@ -401,9 +409,7 @@ def _candidate_centers(
         (96, 2 * vertical_offset),
     )
     for index, (dx, dy) in enumerate(local_offsets):
-        candidate = add_candidate(
-            (anchor[0] + dx, anchor[1] + dy), len(lane_names) + index
-        )
+        candidate = add_candidate((anchor[0] + dx, anchor[1] + dy), len(lane_names) + index)
         if candidate is not None:
             yield candidate
 
@@ -434,6 +440,7 @@ def _candidate_centers(
             candidate = add_candidate((anchor[0] + dx, lane_y), lane_rank)
             if candidate is not None:
                 yield candidate
+
 
 def _direction_penalty(direction: str | None, anchor: Point, center: Point) -> float:
     if direction == "above":
@@ -505,9 +512,7 @@ def place_annotations(
     geometry: AnnotationGeometry,
     trace_points: Iterable[tuple[float, float, str]] = (),
     reserved_rects: Iterable[Rect] = (),
-    trace_segments: Iterable[
-        tuple[Point, Point, str] | tuple[Point, Point, str, str]
-    ] = (),
+    trace_segments: Iterable[tuple[Point, Point, str] | tuple[Point, Point, str, str]] = (),
 ) -> list[PlacedAnnotation]:
     """Place annotations without overlapping labels, curves, or leaders.
 
@@ -632,7 +637,9 @@ def place_annotations(
     occupied: list[Rect] = []
     arrows: list[tuple[Point, Point]] = []
 
-    def compare_requests(first: tuple[int, AnnotationRequest], second: tuple[int, AnnotationRequest]) -> int:
+    def compare_requests(
+        first: tuple[int, AnnotationRequest], second: tuple[int, AnnotationRequest]
+    ) -> int:
         first_index, first_request = first
         second_index, second_request = second
         if (
@@ -663,10 +670,7 @@ def place_annotations(
                 if _direction_penalty(request.preferred_direction, anchor, center) > 0:
                     continue
                 if not (
-                    left <= rect[0]
-                    and rect[2] <= right
-                    and top <= rect[1]
-                    and rect[3] <= bottom
+                    left <= rect[0] and rect[2] <= right and top <= rect[1] and rect[3] <= bottom
                 ):
                     continue
                 if any(_rect_overlap(rect, other) > 0 for other in occupied):
@@ -692,9 +696,7 @@ def place_annotations(
                 else:
                     if _leader_crosses_trace(anchor, center, leader_segments):
                         continue
-                    leader_score = _leader_curve_penalty(
-                        anchor, center, all_trace_segments
-                    )
+                    leader_score = _leader_curve_penalty(anchor, center, all_trace_segments)
 
                 cross_axis = request.yref == "y2"
                 curve_score = _curve_penalty(

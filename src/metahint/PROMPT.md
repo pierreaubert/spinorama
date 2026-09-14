@@ -15,5 +15,3 @@ Instructions:
 - If you cannot find a data, then that's fine.
 - Do not add fields that are not on the above list.
 - Display the result in pretty json format.
-
-

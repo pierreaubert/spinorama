@@ -637,12 +637,8 @@ describe('Plot area ratio consistency across different legend sizes', () => {
 
     it('E10: wrapped compare title stays above the plot area', () => {
         const input = [
-            ...makeCEA2034Input(
-                'CEA2034 for Wharfedale EVO 4.1 measured by Audio Science Review (eq gain -2.9dB)'
-            ),
-            ...makeCEA2034Input(
-                'CEA2034 for Part Express DIY Copperhead measured by ErinsAudioCorner (eq gain -1.1dB)'
-            ),
+            ...makeCEA2034Input('CEA2034 for Wharfedale EVO 4.1 measured by Audio Science Review (eq gain -2.9dB)'),
+            ...makeCEA2034Input('CEA2034 for Part Express DIY Copperhead measured by ErinsAudioCorner (eq gain -1.1dB)'),
         ];
         const r = setGraphOptions(input, 1120, 2000, CEA2034_TYPE, 1);
 

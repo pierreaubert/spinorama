@@ -139,9 +139,7 @@ def build_eq_figure_and_filename(data):
 def _eq_compare_worker(speaker_data, force):
     """Worker: build EQ comparison figure and write to file if needed."""
     filename = eq_compare_filename(speaker_data)
-    needs_update = force or eq_compare_needs_update(
-        filename, eq_compare_dependencies(speaker_data)
-    )
+    needs_update = force or eq_compare_needs_update(filename, eq_compare_dependencies(speaker_data))
     if not needs_update:
         return
     fig, filename, deps = build_eq_figure_and_filename(speaker_data)
