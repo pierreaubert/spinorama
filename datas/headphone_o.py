@@ -4,19 +4,19 @@
 from . import HeadphoneDatabase
 
 headphones_info_o: HeadphoneDatabase = {
-    'Oppo Digital PM3': {
-        "brand": 'Oppo Digital',
-        "model": 'PM3',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '399.00',
+    "Oppo Digital PM3": {
+        "brand": "Oppo Digital",
+        "model": "PM3",
+        "shape": "over-ear",
+        "default_measurement": "asr",
+        "price": "399.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/oppo-pm3-review-closed-back-headphone.25357/',
-                'review_published': '20210730',
-                'recommendation': 'Yes',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/oppo-pm3-review-closed-back-headphone.25357/",
+                "review_published": "20210730",
+                "recommendation": "Yes",
                 "sensitivity_mV_94dB": 161.0,
             },
         },

@@ -3,7 +3,7 @@ import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
     test: {
-    /*
+        /*
         inspectBrk: true,
         fileParallelism: false,
 	browser: {

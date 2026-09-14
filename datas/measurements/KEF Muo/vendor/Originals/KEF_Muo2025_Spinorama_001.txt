@@ -1,18 +1,18 @@
 SourceDesc=VACS_Data_Text
 Version='2.1.1 b18'
 Author='RDTeam: VACS'
- 
+
 StartString_Data=Data
 EndString_Data=Data_End
- 
- 
+
+
 Data_Format=LeveldB
 Data_Domain=Frequency
 Data_LevelType=SoundPressure
 Data_AbscUnit=Hz
 Data_BaseUnit=Pa
 Data_Legend='Spinorama:: On Axis'
- 
+
 Param_Coord_x1=1
 Param_Coord_x2=0
 Param_Coord_x3=0
@@ -21,7 +21,7 @@ Param_Param=0
 Param_Coord_Type=Spherical
 Param_Coord_AngularFormat=degree
 Param_DrvIsRms=true
- 
+
 Data
              20	       45.43493
        20.23198	       45.78899
@@ -624,4 +624,3 @@ Data
        19770.68	       68.86961
           20000	       68.99848
 Data_End
- 

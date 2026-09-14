@@ -108,7 +108,7 @@ import {
         )
 
         self.assertIn("startsWith('$' + '{')", rendered)
-        self.assertIn('JSON.parse(metadataFilenameChunksValue)', rendered)
+        self.assertIn("JSON.parse(metadataFilenameChunksValue)", rendered)
 
     def test_annotation_layout_is_bundled(self):
         self.assertIn("annotation-layout", WEBSITE_JS_FILES)

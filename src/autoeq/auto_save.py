@@ -50,9 +50,7 @@ from autoeq.auto_strategy import optim_strategy
 EQ_IMAGE_CACHE_VERSION = "eq-images-v1"
 
 
-def _eq_image_cache_key(
-    speaker_name: str, speaker_origin: str, optim_config: dict
-) -> str:
+def _eq_image_cache_key(speaker_name: str, speaker_origin: str, optim_config: dict) -> str:
     relevant_config = {
         key: value
         for key, value in optim_config.items()
@@ -71,9 +69,7 @@ def _eq_image_cache_path(
     return pathlib.Path("build/eq-image-cache") / f"{cache_key}.json"
 
 
-def _eq_images_up_to_date(
-    speaker_name: str, speaker_origin: str, optim_config: dict
-) -> bool:
+def _eq_images_up_to_date(speaker_name: str, speaker_origin: str, optim_config: dict) -> bool:
     input_fingerprint = optim_config.get("input_fingerprint")
     if not input_fingerprint:
         return False
@@ -94,9 +90,7 @@ def _eq_images_up_to_date(
     )
 
 
-def eq_images_up_to_date(
-    speaker_name: str, speaker_origin: str, optim_config: dict
-) -> bool:
+def eq_images_up_to_date(speaker_name: str, speaker_origin: str, optim_config: dict) -> bool:
     """Public fast-path check for callers that can avoid loading measurements."""
     return _eq_images_up_to_date(speaker_name, speaker_origin, optim_config)
 

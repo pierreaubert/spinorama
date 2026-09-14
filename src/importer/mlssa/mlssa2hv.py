@@ -170,10 +170,10 @@ def parse_tim_header(path: Path) -> TimInfo:
     comment_offset = title_offset + TIM_TITLE_BYTES
     setup_offset = comment_offset + TIM_COMMENT_BYTES
     if len(data) < title_offset:
-        msg = f"{path} truncated: expected {title_offset} bytes through sample data, got {len(data)}"
-        raise ValueError(
-            msg
+        msg = (
+            f"{path} truncated: expected {title_offset} bytes through sample data, got {len(data)}"
         )
+        raise ValueError(msg)
 
     title = (
         _decode_c_string(data[title_offset:comment_offset]) if len(data) >= comment_offset else ""

@@ -2,6 +2,6 @@ ipython
 pylinkvalidator
 pytest>=8.3.4
 pytest-cov
+pytest-qt>=4.4.0
 selenium>=4.28.1
 yapf
-pytest-qt>=4.4.0

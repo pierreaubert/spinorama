@@ -4,36 +4,36 @@
 from . import HeadphoneDatabase
 
 headphones_info_y: HeadphoneDatabase = {
-    'Yamaha RH-5Ma': {
-        "brand": 'Yamaha',
-        "model": 'RH-5Ma',
-        "shape": 'on-ear',
-        "default_measurement": 'asr',
-        "price": '158.00',
+    "Yamaha RH-5Ma": {
+        "brand": "Yamaha",
+        "model": "RH-5Ma",
+        "shape": "on-ear",
+        "default_measurement": "asr",
+        "price": "158.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-rh-5ma-review-on-ear-headphone.24757/',
-                'review_published': '20210706',
-                'recommendation': 'Yes',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/yamaha-rh-5ma-review-on-ear-headphone.24757/",
+                "review_published": "20210706",
+                "recommendation": "Yes",
                 "sensitivity_mV_94dB": 96.0,
             },
         },
     },
-    'Yamaha YH-5000SE': {
-        "brand": 'Yamaha',
-        "model": 'YH-5000SE',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '5000.00',
+    "Yamaha YH-5000SE": {
+        "brand": "Yamaha",
+        "model": "YH-5000SE",
+        "shape": "over-ear",
+        "default_measurement": "asr",
+        "price": "5000.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-yh-5000se-flagship-headphone-review.56209/',
-                'review_published': '20240808',
-                'recommendation': 'No',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/yamaha-yh-5000se-flagship-headphone-review.56209/",
+                "review_published": "20240808",
+                "recommendation": "No",
                 "sensitivity_mV_94dB": 171.0,
             },
         },

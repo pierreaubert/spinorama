@@ -141,9 +141,7 @@ class SpinoramaPrincetonLoadTests(unittest.TestCase):
 
     def test_band_limited_cea2034_is_generated(self):
         h_spl, v_spl = symmetrise_speaker_measurements(self.h, self.v, "horizontal")
-        measurements = filter_graphs(
-            "Genelec 8351A", h_spl, v_spl, 500, 3000, "princeton", 1.0
-        )
+        measurements = filter_graphs("Genelec 8351A", h_spl, v_spl, 500, 3000, "princeton", 1.0)
 
         self.assertIsNotNone(measurements.cea2034)
         self.assertIsNotNone(measurements.eir)

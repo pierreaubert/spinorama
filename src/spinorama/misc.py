@@ -54,9 +54,7 @@ def fingerprint_paths(
             children = sorted(
                 child
                 for child in path.rglob("*")
-                if child.is_file()
-                and "__pycache__" not in child.parts
-                and child.suffix != ".pyc"
+                if child.is_file() and "__pycache__" not in child.parts and child.suffix != ".pyc"
             )
             if not children:
                 entries.append((str(path), 0, 0))

@@ -299,7 +299,14 @@ def plot_spinorama_annotation(
         (16000, "Listening Window", "y", 95, ("top", "upper", "middle"), "above"),
         (10000, "Early Reflections", "y", 80, ("middle", "upper", "lower"), "below"),
         (10000, "Sound Power", "y", 75, ("upper", "middle", "lower"), "below"),
-        (10000, "Early Reflections DI", "y2", 70, ("upper", "top", "middle", "lower", "bottom"), "below"),
+        (
+            10000,
+            "Early Reflections DI",
+            "y2",
+            70,
+            ("upper", "top", "middle", "lower", "bottom"),
+            "below",
+        ),
         (10000, "Sound Power DI", "y2", 65, ("upper", "top", "middle", "lower", "bottom"), "above"),
     )
     requests = []
@@ -376,8 +383,10 @@ def plot_spinorama_annotation(
             except (TypeError, ValueError):
                 previous_point = None
                 continue
-            if not math.isfinite(raw_x) or not math.isfinite(raw_y) or (
-                geometry.x_scale == "log" and raw_x <= 0
+            if (
+                not math.isfinite(raw_x)
+                or not math.isfinite(raw_y)
+                or (geometry.x_scale == "log" and raw_x <= 0)
             ):
                 previous_point = None
                 continue

@@ -129,10 +129,7 @@ def graph_generator_fingerprint(data_dir: str, width: int, height: int) -> str:
     """
     return fingerprint_paths(
         [],
-        version=(
-            f"{GRAPH_CACHE_SCHEMA}:{GRAPH_OUTPUT_CACHE_VERSION}:"
-            f"{VERSION}:{width}x{height}"
-        ),
+        version=(f"{GRAPH_CACHE_SCHEMA}:{GRAPH_OUTPUT_CACHE_VERSION}:{VERSION}:{width}x{height}"),
         extra="\0".join(
             (
                 repr(metadata.origins_info),
@@ -457,8 +454,7 @@ def main(log_level, args):
                 "schema": GRAPH_CACHE_SCHEMA,
                 "cache_verified": False,
                 "speakers": {
-                    speaker: {"fingerprint": fingerprints[speaker]}
-                    for speaker in current_speakers
+                    speaker: {"fingerprint": fingerprints[speaker]} for speaker in current_speakers
                 },
             }
             manifest_speakers = old_manifest["speakers"]

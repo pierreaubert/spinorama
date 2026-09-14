@@ -4,53 +4,53 @@
 from . import HeadphoneDatabase
 
 headphones_info_g: HeadphoneDatabase = {
-    'Gold Planar GL2000': {
-        "brand": 'Gold Planar',
-        "model": 'GL2000',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '600.00',
+    "Gold Planar GL2000": {
+        "brand": "Gold Planar",
+        "model": "GL2000",
+        "shape": "over-ear",
+        "default_measurement": "asr",
+        "price": "600.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/gold-planar-gl2000-headphone-review.40734/',
-                'review_published': '20230106',
-                'recommendation': 'No',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/gold-planar-gl2000-headphone-review.40734/",
+                "review_published": "20230106",
+                "recommendation": "No",
                 "sensitivity_mV_94dB": 159.0,
             },
         },
     },
-    'Grado Custom Grado Clone With Elleven Acoustica R1 Driver': {
-        "brand": 'Grado',
-        "model": 'Custom Grado Clone With Elleven Acoustica R1 Driver',
-        "shape": 'over-ear',
-        "default_measurement": 'asr',
-        "price": '0.00',
+    "Grado Custom Grado Clone With Elleven Acoustica R1 Driver": {
+        "brand": "Grado",
+        "model": "Custom Grado Clone With Elleven Acoustica R1 Driver",
+        "shape": "over-ear",
+        "default_measurement": "asr",
+        "price": "0.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/custom-grado-clone-with-elleven-acoustica-r1-driver-review.25048/',
-                'review_published': '20210718',
-                'recommendation': 'N/A',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/custom-grado-clone-with-elleven-acoustica-r1-driver-review.25048/",
+                "review_published": "20210718",
+                "recommendation": "N/A",
                 "sensitivity_mV_94dB": 17.0,
             },
         },
     },
-    'Grado SR60x': {
-        "brand": 'Grado',
-        "model": 'SR60x',
-        "shape": 'on-ear',
-        "default_measurement": 'asr',
-        "price": '99.00',
+    "Grado SR60x": {
+        "brand": "Grado",
+        "model": "SR60x",
+        "shape": "on-ear",
+        "default_measurement": "asr",
+        "price": "99.00",
         "measurements": {
-            'asr': {
-                "origin": 'ASR',
-                "format": 'csv_freq_spl',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/grado-sr60x-review-on-ear-headphone.28177/',
-                'review_published': '20211117',
-                'recommendation': 'No',
+            "asr": {
+                "origin": "ASR",
+                "format": "csv_freq_spl",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/grado-sr60x-review-on-ear-headphone.28177/",
+                "review_published": "20211117",
+                "recommendation": "No",
                 "sensitivity_mV_94dB": 123.0,
             },
         },
