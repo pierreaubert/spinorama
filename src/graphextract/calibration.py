@@ -33,11 +33,26 @@ class CalibrationUnresolved(Exception):
         self.needed = needed
 
 
+_SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+
 def parse_tick_label(text: str) -> tuple[float, str] | None:
     """Parse a tick label into (value, kind). Kind is freq/db/percent/time/linear."""
     t = text.strip().lower().replace(" ", "").replace(",", "")
+    # A trailing dash is a touching tick mark, not a minus: labels never
+    # end with a sign. Leading negatives ('-80') are preserved.
+    t = t.rstrip("-")
     if not t:
         return None
+    # Scientific power notation (``10²`` / ``10^2``): powers of ten label
+    # log-decade ticks. Only the explicit exponent form folds; plain digit
+    # strings (``102``) keep their face value and are disambiguated by fit
+    # consistency, never here.
+    t = re.sub(r"10([⁰¹²³⁴⁵⁶⁷⁸⁹]+)",
+               lambda m: "10^" + m.group(1).translate(_SUPERSCRIPT), t)
+    m = re.fullmatch(r"10\^(-?\d+)", t)
+    if m:
+        return 10.0 ** int(m.group(1)), "linear"
     m = re.fullmatch(r"(-?\d+\.?\d*)(ms|s|khz|hz|k|db|%)?", t)
     if not m:
         return None
@@ -55,6 +70,79 @@ def parse_tick_label(text: str) -> tuple[float, str] | None:
             val /= 1000.0
         return val, "time"
     return val, "linear"
+
+
+def detect_frame_ticks(
+    gray: npt.NDArray,
+    interior_xywh: tuple[int, int, int, int],
+    band: int = 28,
+    min_len: int = 9,
+    max_width: int = 8,
+    dark: int = 220,
+) -> tuple[list[int], list[int]]:
+    """Tick marks protruding from the frame edge (interior-local coords).
+
+    Gridless charts mark decades with short ticks between the frame and the
+    labels, where interior-only grid detection can never see them. A tick is
+    an ink run attached to the frame edge: long enough to clear frame-edge
+    smear, narrow enough to exclude the smear itself, short enough to
+    exclude through-running gridlines (those already report via grid
+    detection). Returns (tick_xs, tick_ys) for the vertical/horizontal
+    edges; empty when the interior touches the image border.
+    """
+    h, w = gray.shape[:2]
+    ix, iy, iw, ih = (int(v) for v in interior_xywh)
+    tick_xs: list[int] = []
+    tick_ys: list[int] = []
+
+    def _runs(edge: npt.NDArray) -> list[int]:
+        """Tick centres along one edge strip (frame at row 0 by flip).
+
+        Connected ink blobs starting at the frame edge: tall enough to
+        clear smear and dots, short enough to exclude through-running
+        gridlines, narrow enough to exclude the frame smear band itself.
+        Full-width rows are frame-edge smear the tick protrudes past, so
+        they are cleared first; otherwise smear and tick merge into one
+        unusable blob.
+        """
+        ink_frac = edge.sum(axis=1) / max(1, edge.shape[1])
+        edge = edge.copy()
+        edge[ink_frac > 0.5] = 0
+        ncc, _, stats, _ = cv2.connectedComponentsWithStats(edge, 8)
+        centres = []
+        for i in range(1, ncc):
+            x, y, w, h, area = (int(v) for v in stats[i])
+            if (min_len <= h <= band - 4 and w <= max_width and y <= 8
+                    and area >= 0.5 * w * h):
+                centres.append(x + w // 2)
+        return centres
+
+    def _band_img(y0: int, y1: int, x0: int, x1: int
+                  ) -> tuple[npt.NDArray, int, int] | None:
+        y0c, y1c, x0c, x1c = max(0, y0), min(h, y1), max(0, x0), min(w, x1)
+        if y1c - y0c < min_len or x1c - x0c < 1:
+            return None
+        return (gray[y0c:y1c, x0c:x1c] < dark).astype(np.uint8), x0c, y0c
+
+    bottom = _band_img(iy + ih, iy + ih + band, ix, ix + iw)
+    if bottom is not None:
+        img, ox, _ = bottom
+        tick_xs += [x + ox - ix for x in _runs(img)]
+    top = _band_img(iy - band, iy, ix, ix + iw)
+    if top is not None:
+        img, ox, _ = top
+        tick_xs += [x + ox - ix for x in _runs(np.flip(img, axis=0))]
+    left = _band_img(iy, iy + ih, ix - band, ix)
+    if left is not None:
+        img, _, oy = left
+        tick_ys += [y + oy - iy for y in _runs(np.flip(img, axis=1).transpose(1, 0))]
+    right = _band_img(iy, iy + ih, ix + iw, ix + iw + band)
+    if right is not None:
+        img, _, oy = right
+        tick_ys += [y + oy - iy for y in _runs(img.transpose(1, 0))]
+    tick_xs = sorted({x for x in tick_xs if 0 <= x <= iw})
+    tick_ys = sorted({y for y in tick_ys if 0 <= y <= ih})
+    return tick_xs, tick_ys
 
 
 def unpack_hough_lines(lines: npt.NDArray | None) -> list[tuple[int, int, int, int]]:
@@ -154,6 +242,10 @@ def _fit_from_anchors(
             return math.log10(v)
         return v
 
+    if scale is ScaleType.LOG10:
+        # Non-positive readings ('0' fragments) can never be log inliers;
+        # drop them so pairs among the positive majority still compete.
+        anchors = [a for a in anchors if a.value > 0]
     ts = [t_of(a.value) for a in anchors]
     px = [a.pixel for a in anchors]
     best: tuple[float, float, list[int]] | None = None
@@ -161,6 +253,9 @@ def _fit_from_anchors(
         if ts[j] == ts[i]:
             continue
         a = (px[j] - px[i]) / (ts[j] - ts[i])
+        if a == 0:
+            continue  # degenerate: a pile of conflicting reads on one
+            # grid line is not an axis, whatever its inlier count.
         b = px[i] - a * ts[i]
         inl = [k for k in range(len(anchors)) if abs((a * ts[k] + b) - px[k]) <= inlier_tol_px]
         if best is None or len(inl) > len(best[2]):
@@ -171,14 +266,17 @@ def _fit_from_anchors(
             ["two anchors with distinct axis values"],
         )
     a, b, inl = best
-    # Refit on inliers by least squares.
+    # Refit on inliers by confidence-weighted least squares: a shaky
+    # margin re-read that slips inside the inlier gate by a pixel must
+    # not drag the intercept with the same weight as solid ticks.
     t_arr = np.array([ts[k] for k in inl])
     p_arr = np.array([px[k] for k in inl])
+    w_arr = np.array([max(0.05, float(anchors[k].confidence)) for k in inl])
     if len(inl) == 2:
         a = float((p_arr[1] - p_arr[0]) / (t_arr[1] - t_arr[0]))
         b = float(p_arr[0] - a * t_arr[0])
     else:
-        a, b = (float(v) for v in np.polyfit(t_arr, p_arr, 1))
+        a, b = (float(v) for v in np.polyfit(t_arr, p_arr, 1, w=w_arr))
     resid = [abs((a * ts[k] + b) - px[k]) for k in inl]
     used = [anchors[k] for k in inl]
     return a, b, used, float(np.mean(resid)), float(max(resid))
@@ -200,8 +298,37 @@ def fit_axis(
     When ``scale`` is None, linear and log10 hypotheses compete on explained
     anchors first, residuals second: any two anchors fit a line exactly, so a
     bare residual comparison would always tie on log-spaced decades.
+
+    Gridline positions carry a few pixels of detection noise, so a strict
+    pass runs first and a single doubled-tolerance retry follows: passing
+    panels see byte-identical results while noisy grids still resolve. The
+    retry is marked in the fit method.
     """
-    if scale is ScaleType.LOG10 and any(a.value <= 0 for a in anchors):
+    try:
+        return _fit_axis_once(anchors, role, unit, scale, inlier_tol_px, min_anchors,
+                              4.0 * inlier_tol_px)
+    except CalibrationUnresolved as strict_exc:
+        try:
+            relaxed = _fit_axis_once(anchors, role, unit, scale,
+                                     2.0 * inlier_tol_px, min_anchors,
+                                     4.0 * inlier_tol_px)
+        except CalibrationUnresolved:
+            raise strict_exc from None
+        relaxed.method += "+retol"
+        return relaxed
+
+
+def _fit_axis_once(
+    anchors: list[TickAnchor],
+    role: AxisRole,
+    unit: str,
+    scale: ScaleType | None,
+    inlier_tol_px: float,
+    min_anchors: int,
+    support_tol_px: float,
+) -> AxisFit:
+    """Single-tolerance axis fit; see ``fit_axis`` for the contract."""
+    if scale is ScaleType.LOG10 and not any(a.value > 0 for a in anchors):
         raise CalibrationUnresolved(
             "Log axis requires positive tick values.", ["positive tick values for log axis"]
         )
@@ -242,10 +369,12 @@ def fit_axis(
     n = len(best.anchors_used)
     if n < min_anchors:
         # Two anchors define the affine map; demand independent corroboration.
+        # Support stays at strict tolerance even on the relaxed retry: a
+        # corroborating tick far off the line means the line is wrong.
         support = [a for a in anchors if a not in best.anchors_used]
         ok = any(
             abs(best.a * (math.log10(s.value) if best.scale is ScaleType.LOG10 else s.value)
-                + best.b - s.pixel) <= 4.0 * inlier_tol_px
+                + best.b - s.pixel) <= support_tol_px
             for s in support
         )
         if not ok:
@@ -267,6 +396,69 @@ def held_out_tick_error(fit: AxisFit, held_out: list[TickAnchor]) -> dict[str, f
         return {"n": 0, "max_px": float("nan"), "rms_px": float("nan")}
     arr = np.array(errs)
     return {"n": len(errs), "max_px": float(arr.max()), "rms_px": float(np.sqrt((arr**2).mean()))}
+
+
+_OFFSET_RE = re.compile(r"offset\s*:?\s*(-?\d+(?:\.\d+)?)\s*dB", re.IGNORECASE)
+
+
+def parse_di_offset(label: str) -> float | None:
+    """Explicit ``(Offset:45dB)`` annotation in a legend label.
+
+    Some vendors plot directivity curves shifted up by a fixed dB offset so
+    they share the panel, and print the shift in the label. The parenthesised
+    form is authoritative when present; None means unstated (the identity
+    search in ``solve_di_offset`` must recover it).
+    """
+    if not label:
+        return None
+    m = _OFFSET_RE.search(label)
+    return float(m.group(1)) if m else None
+
+
+def solve_di_offset(
+    di_pixels: dict[float, float],
+    refs: list[tuple[str, dict[float, float]]],
+    left_a: float,
+    left_b: float,
+    min_points: int = 10,
+    max_iqr_db: float = 0.75,
+) -> tuple[float, tuple[str, str], float, int] | None:
+    """Recover a directivity curve's plot offset from the DI identity.
+
+    A directivity curve is the difference of two measured dB curves, plotted
+    shifted by a fixed offset (``plotted = (A - B) + N``) through the shared
+    left-axis mapping (same panel, same pixels per dB). Inputs are OBSERVED
+    pixel columns (``{u: v}``); both sides are converted to plotted dB
+    through the left fit, so only measurements vote, never model fills. For
+    every ordered reference pair the offset residuals ``plotted - (A - B)``
+    are formed over common columns; the true pair's residuals collapse to a
+    constant (the offset) while wrong pairs vary with frequency. Returns
+    ``(offset, (label_a, label_b), iqr, n)`` for the tightest pair, or None
+    when no pair is tight enough: an unidentified offset stays uncalibrated
+    rather than guessed.
+    """
+    if left_a == 0 or len(di_pixels) < min_points or len(refs) < 2:
+        return None
+
+    def _db(pix: dict[float, float]) -> dict[float, float]:
+        return {u: (v - left_b) / left_a for u, v in pix.items()}
+
+    plotted = _db(di_pixels)
+    db_refs = [(label, _db(pix)) for label, pix in refs]
+    best: tuple[float, tuple[str, str], float, int] | None = None
+    for i, (la, da) in enumerate(db_refs):
+        for j, (lb, db) in enumerate(db_refs):
+            if i == j:
+                continue
+            common = [u for u in plotted if u in da and u in db]
+            if len(common) < min_points:
+                continue
+            resid = np.array([plotted[u] - (da[u] - db[u]) for u in common])
+            q75, q25 = float(np.percentile(resid, 75)), float(np.percentile(resid, 25))
+            iqr = q75 - q25
+            if iqr <= max_iqr_db and (best is None or iqr < best[2]):
+                best = (float(np.median(resid)), (la, lb), iqr, len(common))
+    return best
 
 
 def axis_from_exact_range(

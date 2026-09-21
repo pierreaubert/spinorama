@@ -73,6 +73,7 @@ def mixture_match(
     background_bgr: tuple[int, int, int],
     fg_bgr: tuple[int, int, int],
     alpha_min: float = 0.25,
+    alpha_max: float = 1.3,
     residual_tol: float = 30.0,
     spread_tol: float = 0.3,
 ) -> npt.NDArray:
@@ -81,9 +82,11 @@ def mixture_match(
     Anti-aliased thin strokes have no fully saturated interior pixel; their
     edge colours are foreground/background mixtures. A pixel matches when the
     per-channel implied coverages agree (spread), the coverage is substantial
-    (alpha floor rejects desaturated grid greys), and the reconstructed colour
-    fits on every channel (rejects black text/frames that mimic full coverage
-    on a subset of channels).
+    (alpha floor rejects desaturated grid greys) but not over-full (pixels
+    much darker than the template are a different ink: black cores unmix
+    cleanly against grey templates at alpha ~1.8), and the reconstructed
+    colour fits on every channel (rejects black text/frames that mimic full
+    coverage on a subset of channels).
     """
     px = plot_img.astype(np.float32)
     bg = np.array(background_bgr, dtype=np.float32).reshape(1, 1, 3)
@@ -100,7 +103,8 @@ def mixture_match(
         spread = np.nanmax(stack, axis=2) - np.nanmin(stack, axis=2)
     pred = alpha_hat[..., None] * fg + (1.0 - alpha_hat[..., None]) * bg
     residual = np.max(np.abs(px - pred), axis=2)
-    return (alpha_hat >= alpha_min) & (spread <= spread_tol) & (residual <= residual_tol)
+    return ((alpha_hat >= alpha_min) & (alpha_hat <= alpha_max)
+            & (spread <= spread_tol) & (residual <= residual_tol))
 
 
 def segment_evidence(

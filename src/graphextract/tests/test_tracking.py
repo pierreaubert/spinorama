@@ -1005,3 +1005,43 @@ def test_jump_resumption_restarts_motion_ignores_lure():
     assert all(abs(s.v - 140.0) < 6.0 for s in resumed)
     assert not any(s.status is SegmentStatus.OBSERVED and abs(s.v - 175.0) < 6.0
                    for s in tracked.samples if 82 <= s.u <= 200)
+
+
+def test_segment_scores_reject_darker_than_template():
+    """Take costs honour the same over-coverage bound as the evidence
+    mask: a black core scores near zero against a grey template at
+    coverage ~1.8, so without the cap every take and colour-confirmed
+    recovery prefers foreign dark ink (Devialet grey rode black)."""
+    from graphextract.tracking import _segment_scores
+
+    bg = np.array((255, 255, 255), float).reshape(1, 3)
+    gray = np.array((113, 113, 113), float)
+    scores, _ = _segment_scores(np.array([(0, 0, 0)], float), gray, bg)
+    assert not np.isfinite(scores[0])
+    scores, _ = _segment_scores(np.array([(140, 140, 140)], float), gray, bg)
+    assert scores[0] <= 15.0
+
+
+def test_seed_fallback_prefers_substantial_coverage():
+    """Without an excellent column the seed takes the best
+    substantial-coverage column, not a lone lucky fringe pixel: thin
+    soup unmixes near any template at coverage ~0.3 and outranks the
+    true thin stroke (~0.5) it should seed on (Devialet orange)."""
+    from graphextract.tracking import _seed_columns
+
+    teal = (125, 88, 36)
+    white = np.full((60, 64, 3), 255, np.uint8)
+    fringe = (0.3 * np.array(teal) + 0.7 * 255).astype(np.uint8)
+    core = (0.5 * np.array(teal) + 0.5 * 255).astype(np.uint8)
+    color = white.copy()
+    color[20, 5] = fringe
+    color[40, 10] = core
+    union = np.zeros((60, 64), bool)
+    union[20, 5] = True
+    union[40, 10] = True
+    owned = {"t": np.zeros((60, 64), bool)}
+    owned["t"][20, 5] = True
+    owned["t"][40, 10] = True
+    seeds = _seed_columns(union, owned, ["t"], {"t": teal}, color,
+                          (255, 255, 255), 3, 64)
+    assert seeds["t"] == 10

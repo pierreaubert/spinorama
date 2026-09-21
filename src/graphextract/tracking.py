@@ -156,6 +156,26 @@ all but motion-exact evidence. Measured margin on vendor plots: true
 ink 0-15, nearest impostor (navy fringe, grey grid) 34+.
 """
 
+_COVER_MAX = 1.3
+"""Largest implied ink fraction that still counts as the template's ink.
+
+Coverage is a fraction: pixels much darker than the template (black cores
+against a grey template score near zero at coverage ~1.8) are a different
+ink, mirroring ``mixture_match``. True strokes sit at or below 1.0;
+legend-core sampling keeps template error small.
+"""
+
+_SEED_COVER_FLOOR = 0.35
+"""Minimum coverage for the seed fallback's preferred candidate.
+
+Without an excellent column the fallback takes the best-scoring owned
+column, and a lone lucky fringe-soup pixel (coverage ~0.3) outranks the
+true thin stroke (coverage ~0.4+) it should have seeded on. Preferring
+substantial-coverage candidates commits identity on real ink; when no
+column qualifies the unconstrained best still applies, preserving the
+old behaviour for faint series.
+"""
+
 
 def _clusters(column: npt.NDArray, min_gap: int) -> list[list[int]]:
     on = np.nonzero(column)[0]
@@ -200,8 +220,9 @@ def _segment_scores(
     scores = resid + 100.0 * spread
     # A background pixel is a perfect 0%-coverage "match" for every
     # template; like ``mixture_match`` demand substantial coverage before
-    # a pixel counts as evidence at all.
-    scores = np.where(mid >= 0.2, scores, np.inf)
+    # a pixel counts as evidence at all. Coverage past ``_COVER_MAX`` is
+    # darker-than-template ink (a different colour), never the template.
+    scores = np.where((mid >= 0.2) & (mid <= _COVER_MAX), scores, np.inf)
     scores = np.where(np.isfinite(scores), scores, np.inf)
     return scores, np.where(np.isfinite(mid), mid, -1.0)
 
@@ -261,7 +282,8 @@ def _seed_columns(
     true fringe outranks vivid foreign fringe. The first column within
     ``_SEED_DIST_TOL`` of the template commits, so crowded edges do not
     defer past real observations; without an excellent column the window's
-    best column wins. Series with nothing owned in the window, or no
+    best substantial-coverage column wins (``_SEED_COVER_FLOOR``), else the
+    unconstrained best. Series with nothing owned in the window, or no
     colour information at all, keep column zero: late starters and
     colour-blind callers behave exactly as before.
     """
@@ -271,7 +293,8 @@ def _seed_columns(
     bg = np.array(bg_bgr, dtype=float).reshape(1, 3)
     wanted = {sid for sid in series_ids if series_colors.get(sid) is not None}
     first_good: dict[str, int] = {}
-    best: dict[str, tuple[float, int]] = {}
+    best_any: dict[str, tuple[float, int]] = {}
+    best_sub: dict[str, tuple[float, int]] = {}
     for x in range(min(_SEED_SCAN_COLS, width)):
         clusters = _clusters(union[:, x], min_gap_px)
         if not clusters:
@@ -291,7 +314,8 @@ def _seed_columns(
                 rows = [r for r in c if own_col[r]]
                 if not rows:
                     continue
-                dist = float(scores[rows].min())
+                col_scores = scores[rows]
+                dist = float(col_scores.min())
                 # Core-grade commitment only: low-coverage soup pixels can
                 # unmix near the segment by luck (PMC10-4 lead-in), so an
                 # excellent score also needs a solid ink fraction on the
@@ -301,15 +325,25 @@ def _seed_columns(
                         and any(scores[r] <= _SEED_DIST_TOL
                                 and 0.6 <= coverage[r] <= 1.15 for r in rows)):
                     first_good[sid] = x
-                if sid not in best or dist < best[sid][0]:
-                    best[sid] = (dist, x)
+                if sid not in best_any or dist < best_any[sid][0]:
+                    best_any[sid] = (dist, x)
+                # Fallback preference: a lone lucky fringe pixel (coverage
+                # ~0.3) otherwise outranks the true thin stroke (~0.4+).
+                # Columns without a substantial pixel keep the
+                # unconstrained best, so faint series behave as before.
+                cover = float(coverage[rows[int(np.argmin(col_scores))]])
+                if (cover >= _SEED_COVER_FLOOR
+                        and (sid not in best_sub or dist < best_sub[sid][0])):
+                    best_sub[sid] = (dist, x)
         if len(first_good) == len(wanted):
             break
     for sid in series_ids:
         if sid in first_good:
             seed[sid] = first_good[sid]
-        elif sid in best:
-            seed[sid] = best[sid][1]
+        elif sid in best_sub:
+            seed[sid] = best_sub[sid][1]
+        elif sid in best_any:
+            seed[sid] = best_any[sid][1]
     return seed
 
 

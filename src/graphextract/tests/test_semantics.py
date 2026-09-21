@@ -12,6 +12,8 @@ from graphextract.semantics import (
     associate_by_color,
     detect_legend,
     extract_legend_entries,
+    seed_fallback_styles,
+    snap_legend_seeds,
     styles_from_legend,
     validate_proposal,
 )
@@ -225,3 +227,160 @@ def test_tall_misread_box_dropped_by_sample_overlap():
     res = detect_legend(img, words)
     assert res.has_legend is False
     assert res.entries == []
+
+
+def test_dashed_key_fragments_merge_into_one_entry():
+    """One dashed legend key detected as per-dash fragments (boxes, a line
+    sample, or a mix) yields one entry, not one per dash: unmerged dashes
+    split one curve's label across several keys (Devialet green dashes cut
+    'Listening Window' into per-dash entries)."""
+    img = np.full((80, 500, 3), 255, np.uint8)
+    green = (29, 114, 58)
+    for x0 in (10, 38, 66):
+        cv2.rectangle(img, (x0, 20), (x0 + 16, 27), green, -1)
+    cv2.rectangle(img, (94, 20), (133, 27), green, -1)
+    words = [OCRWord("Listening", 150, 13, 80, 13, 0.9),
+             OCRWord("Window", 240, 13, 60, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert res.has_legend is True
+    assert len(res.entries) == 1
+    assert res.entries[0].text == "Listening Window"
+
+
+def test_later_label_words_stay_on_left_key():
+    """A later word nearer the next key still belongs to its own key on the
+    left: keys precede labels, so distance must never pull a word onto the
+    following entry (Devialet 'Power' drifted from orange onto blue)."""
+    img = np.full((80, 500, 3), 255, np.uint8)
+    cv2.line(img, (10, 20), (70, 20), (255, 0, 0), 3)
+    cv2.line(img, (330, 20), (390, 20), (0, 0, 255), 3)
+    words = [OCRWord("Alpha", 85, 13, 50, 13, 0.9),
+             OCRWord("Beta", 200, 13, 40, 13, 0.9),
+             OCRWord("Gamma", 405, 13, 55, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert {e.text for e in res.entries} == {"Alpha Beta", "Gamma"}
+
+
+def test_tick_labels_and_marks_are_not_legend_entries():
+    """Axis tick labels pair with nearby tick marks; both must be ignored,
+    never counted as curves (Devialet grew a phantom '65' curve from a y
+    tick label plus its tick mark)."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    cv2.line(img, (10, 20), (67, 20), (0, 0, 255), 3)
+    cv2.putText(img, "Woofer", (75, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+    cv2.line(img, (2, 150), (19, 150), (150, 150, 150), 3)
+    words = [OCRWord("Woofer", 75, 13, 60, 13, 0.95),
+             OCRWord("65", 2, 144, 16, 12, 0.9)]
+    res = detect_legend(img, words)
+    assert {e.text for e in res.entries} == {"Woofer"}
+
+
+def test_gray_dash_fragments_detected_and_merged():
+    """Unsaturated short dashes (~19x10, aspect ~1.9) are legend keys too:
+    the aspect gate missed them, so an unsaturated dashed curve lost its
+    key entirely (Devialet grey 'DI offset' key was invisible)."""
+    img = np.full((80, 500, 3), 255, np.uint8)
+    gray = (150, 150, 150)
+    for x0 in (10, 38, 66, 94):
+        cv2.rectangle(img, (x0, 20), (x0 + 18, 29), gray, -1)
+    words = [OCRWord("DI", 150, 13, 20, 13, 0.9),
+             OCRWord("offset", 180, 13, 45, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert len(res.entries) == 1
+    assert res.entries[0].text == "DI offset"
+
+
+def test_word_overlapping_next_key_stays_on_left_key():
+    """A label word printed over the next entry's key (crowded legend row)
+    belongs to the key on its left: a word never prints on top of its own
+    key, so overlap disqualifies the key (Devialet 'Dl' sat on the grey key
+    yet belongs to the blue 'Early Reflections DI' label)."""
+    img = np.full((80, 500, 3), 255, np.uint8)
+    cv2.line(img, (10, 30), (70, 30), (255, 0, 0), 3)
+    cv2.rectangle(img, (100, 30), (199, 37), (150, 150, 150), -1)
+    words = [OCRWord("Early", 80, 23, 50, 13, 0.9),
+             OCRWord("Dl", 150, 23, 21, 13, 0.9),
+             OCRWord("DI", 210, 23, 20, 13, 0.9),
+             OCRWord("offset", 235, 23, 45, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert {e.text for e in res.entries} == {"Early Dl", "DI offset"}
+
+
+def test_interword_dash_does_not_become_legend_entry():
+    """A dash between title words ('CEA2034 -- TOPPING') is punctuation,
+    not a legend key: its paired words span both its sides, while real
+    keys lead their labels on one side only."""
+    img = np.full((120, 500, 3), 255, np.uint8)
+    cv2.rectangle(img, (200, 20), (223, 24), (150, 150, 150), -1)  # title dash
+    cv2.line(img, (10, 60), (70, 60), (0, 0, 255), 3)  # real red key
+    words = [OCRWord("CEA2034", 100, 13, 80, 15, 0.9),
+             OCRWord("--", 200, 15, 22, 8, 0.9),
+             OCRWord("TOPPING", 230, 13, 90, 15, 0.9),
+             OCRWord("On", 80, 53, 25, 13, 0.9),
+             OCRWord("Axis", 110, 53, 40, 13, 0.9)]
+    res = detect_legend(img, words)
+    assert {e.text for e in res.entries} == {"On Axis"}
+
+
+def test_wide_solid_bar_keys_detected():
+    """Wide solid bars (~130x24, saturated or dark) key legend items: the
+    size caps admit them while frame strokes stay excluded."""
+    img = np.full((120, 500, 3), 255, np.uint8)
+    cv2.rectangle(img, (10, 10), (139, 33), (32, 47, 214), -1)  # red bar
+    cv2.rectangle(img, (10, 50), (139, 73), (20, 20, 20), -1)  # dark bar
+    words = [OCRWord("Early", 150, 12, 50, 16, 0.9),
+             OCRWord("On", 150, 52, 25, 16, 0.9),
+             OCRWord("Axis", 180, 52, 40, 16, 0.9)]
+    res = detect_legend(img, words)
+    assert res.has_legend
+    by_text = {e.text: e for e in res.entries}
+    assert by_text["Early"].swatch_bgr[2] > 150  # red bar kept
+    assert max(by_text["On Axis"].swatch_bgr) < 100  # dark bar kept
+
+
+def test_seed_fallback_styles_finds_dark_curve_not_grid_dots():
+    """Legend-free seeding recovers an unsaturated black sine curve while
+    refusing evenly scattered grey dotted-grid dots."""
+    img = np.full((300, 600, 3), 255, np.uint8)
+    for y in range(20, 300, 40):  # dotted grey grid
+        for x in range(10, 600, 25):
+            img[y, x] = (170, 170, 170)
+    xs = np.arange(10, 590)
+    for xx in xs[::3]:  # black sine curve, 2px
+        yy = int(150 + 80 * np.sin(xx / 40.0))
+        img[yy, xx] = (10, 10, 10)
+        img[yy + 1, xx] = (10, 10, 10)
+    for xx in xs[::3]:  # red sine curve, 2px
+        yy = int(150 + 80 * np.cos(xx / 40.0))
+        img[yy, xx] = (30, 30, 220)
+        img[yy + 1, xx] = (30, 30, 220)
+    seeds = seed_fallback_styles(img, [], limit=8)
+    assert seeds, "expected curve seeds on a legend-free plot"
+    assert all(s.series_id.startswith("curve_") for s in seeds)
+    assert any(max(s.bgr) < 90 for s in seeds), "black curve must seed"
+    assert any(s.bgr[2] > 150 for s in seeds), "red curve must seed"
+    assert not any(120 <= min(s.bgr) <= 200 and max(s.bgr) - min(s.bgr) < 40
+                   for s in seeds), "grey grid dots must not seed"
+
+
+def test_snap_legend_seeds_repoints_starved_only():
+    """A legend seed with no interior ink snaps to the vetted curve
+    colour; seeds with their own ink stay untouched."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    xs = np.arange(10, 390)
+    for xx in xs[::2]:  # dark-navy sine curve for a black key
+        yy = int(100 + 50 * np.sin(xx / 30.0))
+        img[yy, xx] = (90, 60, 30)
+        img[yy + 1, xx] = (90, 60, 30)
+    for xx in xs:  # green sine curve, already keyed correctly
+        yy = int(100 + 50 * np.cos(xx / 30.0))
+        img[yy, xx] = (30, 120, 60)
+        img[yy + 1, xx] = (30, 120, 60)
+        img[yy + 2, xx] = (30, 120, 60)
+    styles = [StyleSpec("legend_1", "On Axis", (0, 0, 0)),
+              StyleSpec("legend_2", "Listening Window", (30, 120, 60))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr != (0, 0, 0)  # starved: snapped to navy
+    assert by_id["legend_1"].label == "On Axis"
+    assert by_id["legend_2"].bgr == (30, 120, 60)  # own ink: untouched

@@ -154,7 +154,8 @@ def extract_image(
     provider = ocr_anchor_provider(ocr) if ocr is not None else None
     document = run_document(image, image_path.stem, selected,
                             anchor_provider=provider, track_config=track_config,
-                            words=words)
+                            words=words,
+                            supplement_discovery=not list(styles))
     output_json = Path(output_json)
     output_overlay = Path(output_overlay)
     output_json.parent.mkdir(parents=True, exist_ok=True)

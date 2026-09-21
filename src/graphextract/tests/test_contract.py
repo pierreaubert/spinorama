@@ -147,7 +147,7 @@ def test_mixture_match_sees_aa_edges_not_grid_or_text():
 
 def test_side_by_side_sample_finds_two_panels():
     datas = Path(__file__).resolve().parents[1] / "datas"
-    img_path = datas / "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement.png"
+    img_path = datas / "graph-distorsion" / "AsciLab C8C speakers active 3-way cardioid speaker hypex distortion measurement.png"
     import cv2
 
     img = cv2.imread(str(img_path))
@@ -228,3 +228,16 @@ def test_panel_failure_isolation_in_document():
     by_id = {p.panel.panel_id: p for p in doc.panels}
     assert by_id["img#p0"].outcome is PanelOutcome.FAILED
     assert "RuntimeError" in by_id["img#p0"].review_reasons[0]
+
+
+def test_mixture_match_rejects_over_coverage():
+    """Pixels darker than the template are a different ink: black cores
+    unmix cleanly against grey templates (implied coverage ~1.8) and must
+    not match, or a grey series owns every dark stroke (Devialet grey DI
+    offset rode the black On Axis ink)."""
+    from graphextract.evidence import mixture_match
+
+    bg = (255, 255, 255)
+    gray = (113, 113, 113)
+    assert mixture_match(np.full((1, 1, 3), (140, 140, 140), np.uint8), bg, gray)[0, 0]
+    assert not mixture_match(np.full((1, 1, 3), (0, 0, 0), np.uint8), bg, gray)[0, 0]

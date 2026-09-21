@@ -44,7 +44,7 @@ def test_inventory_skips_overlay_sidecars(tmp_path):
 
 
 def test_inventory_finds_duplicates_and_groups():
-    items = build_inventory(DATAS)
+    items = build_inventory(DATAS / "graph-distorsion")
     assert len(items) == 10
     groups = {it.source_group for it in items}
     assert groups == {"ascilab", "psi"}
@@ -53,7 +53,7 @@ def test_inventory_finds_duplicates_and_groups():
 
 
 def test_splits_keep_source_groups_together():
-    items = build_inventory(DATAS)
+    items = build_inventory(DATAS / "graph-distorsion")
     splits = assign_splits(items, seed=0)
     covered = sorted(p for paths in splits.values() for p in paths)
     assert covered == sorted(it.path for it in items)
