@@ -656,6 +656,38 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "Sovox MiniMax3": {
+        "brand": "Sovox",
+        "model": "MiniMax3",
+        "type": "active",
+        "price": "300",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Sovox",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_evolution_pinnacle/",
+                    "yt": "https://youtu.be/mpsg7coXals",
+                },
+                "review_published": "20260921",
+                "specifications": {
+                    "SPL": {
+                        "max": 97,
+                    },
+                    "size": {
+                        "height": 195,
+                        "width": 110,
+                        "depth": 200,
+                    },
+                    "weight": 4.0,
+                },
+            },
+        },
+    },
     "Speakercraft AIM8 One": {
         "brand": "Speakercraft",
         "model": "AIM8 One",

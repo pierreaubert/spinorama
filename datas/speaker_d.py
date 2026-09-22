@@ -2670,6 +2670,33 @@ speakers_info_d: SpeakerDatabase = {
             }
         },
     },
+    "Devialet Phantom Ultimate 108dB": {
+        "brand": "Devialet",
+        "model": "Phantom Ultimate 108dB",
+        "type": "active",
+        "price": "4000",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review_published": "20260921",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/devialet_phantom_ult_108db/",
+                    # "yt": "", didnt find it yet on YT
+                    "avn": "https://youtu.be/k3zUiWio-Cw?si=7sVqut5TMHu1LfCe",
+                },
+                "specifications": {
+                    "SPL": {"peak": 108},
+                    "size": {"height": 255, "width": 246, "depth": 342},
+                    "weight": 11.1,
+                },
+            }
+        },
+    },
     "Diapason Emera": {
         "brand": "Diapason",
         "model": "Emera",
