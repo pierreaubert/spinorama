@@ -49,6 +49,7 @@ class EvidenceLayers:
     # grid-coloured series can be covered by grid ink but never ride it.
     # None (hand-built layers) falls back to OR-ing the curve masks.
     union_mask: npt.NDArray | None = None
+    curve_probabilities: dict[str, npt.NDArray] = field(default_factory=dict)
 
 
 def estimate_background(plot_img: npt.NDArray) -> tuple[int, int, int]:

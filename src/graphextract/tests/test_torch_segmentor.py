@@ -53,3 +53,37 @@ def test_conv_masks_feed_tracker_without_crash():
     tracks = track_panel(gray, layers, ["s0", "s1"], float(np.median(gray)))
     assert set(tracks) == {"s0", "s1"}
     assert all(len(t.samples) == img.shape[1] for t in tracks.values())
+
+
+def test_multilabel_overlap_supervision_and_checkpoint(tmp_path):
+    from graphextract.torch_segmentor import (
+        MultiLabelConvSeg, multilabel_targets, predict_multilabel_probabilities,
+        segmentation_metrics, train_multilabel_segmentor,
+    )
+    masks = {"a":np.zeros((32,32),np.uint8), "b":np.zeros((32,32),np.uint8)}
+    masks["a"][14:17] = 255
+    masks["b"][:,14:17] = 255
+    target = multilabel_targets(masks,["a","b"])
+    assert (target[:,15,15] == 1).all()
+    image = np.full((32,32,3),255,np.uint8)
+    image[masks["a"]>0] = (0,0,220)
+    image[masks["b"]>0] = (220,0,0)
+    model,history = train_multilabel_segmentor([(image,masks)],["a","b"],epochs=8)
+    assert history["loss_end"] < history["loss_start"]
+    probabilities = predict_multilabel_probabilities(model,image)
+    assert all(p.shape==(32,32) and np.isfinite(p).all() for p in probabilities.values())
+    loaded = MultiLabelConvSeg.load(model.save(tmp_path/"multi.pt"))
+    assert np.array_equal(predict_multilabel_probabilities(loaded,image)["a"], probabilities["a"])
+    empty = {sid:np.zeros((32,32)) for sid in masks}
+    assert all(m["f1"]==0 for m in segmentation_metrics(empty,masks).values())
+
+
+def test_multilabel_heads_can_predict_shared_pixels():
+    from graphextract.torch_segmentor import MultiLabelConvSeg, predict_multilabel_probabilities
+    model = MultiLabelConvSeg(["a","b"])
+    with torch.no_grad():
+        for parameter in model.net.parameters():
+            parameter.zero_()
+        model.net[-1].bias.fill_(3.0)
+    probabilities = predict_multilabel_probabilities(model,np.zeros((8,8,3),np.uint8))
+    assert ((probabilities["a"]>0.9) & (probabilities["b"]>0.9)).all()

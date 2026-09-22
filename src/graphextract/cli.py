@@ -206,6 +206,8 @@ def extract_image(
     output_compare: str | Path | None = None,
     assumptions: Sequence[str] = (),
     output_csv_dir: str | Path | None = None,
+    tracker: str = "legacy",
+    segmentor_checkpoint: str | Path | None = None,
 ) -> DocumentResult:
     """Run the complete CLI workflow; exposed to make embedding straightforward."""
     image_path = Path(image_path)
@@ -213,7 +215,9 @@ def extract_image(
     if image is None:
         message = f"could not read image: {image_path}"
         raise ValueError(message)
-    track_config = TrackConfig.from_assumptions(assumptions)
+    track_config = TrackConfig.from_assumptions(assumptions, backend=tracker)
+    if tracker == "temporal" and track_config.active_assumptions():
+        raise ValueError("temporal backend does not implement legacy assumptions")
     ocr = TesseractOCR() if use_ocr else None
     words = _read_full_words(image, ocr) if ocr is not None else None
     if words is not None:
@@ -223,10 +227,18 @@ def extract_image(
         message = "no saturated curve colours found; pass --curve label=#RRGGBB"
         raise ValueError(message)
     provider = ocr_anchor_provider(ocr) if ocr is not None else None
+    segmentor = None
+    if segmentor_checkpoint is not None:
+        from graphextract.torch_segmentor import MultiLabelConvSeg
+        if tracker != "temporal":
+            raise ValueError("--segmentor requires --tracker temporal")
+        segmentor = MultiLabelConvSeg.load(segmentor_checkpoint)
+        if set(segmentor.series_ids) != {style.series_id for style in selected}:
+            raise ValueError("checkpoint series IDs differ from selected styles")
     document = run_document(image, image_path.stem, selected,
                             anchor_provider=provider, track_config=track_config,
                             words=words,
-                            supplement_discovery=not list(styles))
+                            supplement_discovery=not list(styles), segmentor=segmentor)
     output_json = Path(output_json)
     output_overlay = Path(output_overlay)
     output_json.parent.mkdir(parents=True, exist_ok=True)
@@ -257,6 +269,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--csv-dir", type=Path, default=None, help="directory receiving one freq/spl CSV per curve")
     parser.add_argument("--assumptions", action="append", default=[], metavar="NAME[,NAME...]",
                         help="tracking assumptions (comma-separated, repeatable): curve_continuous, no_jump, assume_overlap")
+    parser.add_argument("--segmentor", type=Path, help="experimental multilabel checkpoint; requires temporal and matching IDs")
+    parser.add_argument("--tracker", choices=("legacy", "temporal"), default="legacy")
+    parser.add_argument("--kind", choices=("curves", "filled-contour"), default="curves")
+    parser.add_argument("--calibration", type=Path, help="filled-contour calibration JSON")
     parser.add_argument("--no-ocr", action="store_true", help="skip OCR calibration attempt")
     return parser
 
@@ -270,12 +286,28 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error(str(exc))
     json_path = args.json or args.image.with_suffix(".json")
     overlay_path = args.overlay or args.image.with_name(f"{args.image.stem}.overlay.png")
+    if args.kind == "filled-contour":
+        import json
+        from graphextract.calibration import CalibrationUnresolved
+        from graphextract.contours import extract_field, write_field
+        if args.calibration is None:
+            parser.error("filled-contour requires --calibration (axes and band edges)")
+        try:
+            image = cv2.imread(str(args.image), cv2.IMREAD_COLOR)
+            if image is None:
+                raise ValueError(f"could not read {args.image}")
+            result = extract_field(image, json.loads(args.calibration.read_text()))
+            write_field(result, image, args.image, json_path, overlay_path)
+        except (ValueError, KeyError, OSError, CalibrationUnresolved) as exc:
+            parser.error(str(exc))
+        print(f"Scalar field: {json_path}; valid pixels: {result.valid.mean():.1%}")
+        return 0
     assumptions = [name.strip() for value in args.assumptions
                    for name in value.split(",") if name.strip()]
     try:
         result = extract_image(args.image, json_path, overlay_path, styles,
                                not args.no_ocr, args.compare, assumptions,
-                               args.csv_dir)
+                               args.csv_dir, args.tracker, args.segmentor)
     except ValueError as exc:
         build_parser().error(str(exc))
     print(f"wrote {json_path}")

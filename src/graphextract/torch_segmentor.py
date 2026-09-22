@@ -135,3 +135,100 @@ def conv_agreement(seg: TinyConvSeg,
         correct += int((union_pred == union_true).sum())
         total += union_true.size
     return correct / total
+
+
+class MultiLabelConvSeg:
+    """Multiscale independent series logits; overlapping memberships are allowed.
+
+    This is an experimental fixed-series model. Scores indicate geometric
+    hypotheses, not proof of visible ink. Use independent real-data validation
+    before deploying a checkpoint outside its training palette/style family.
+    """
+
+    def __init__(self, series_ids: list[str], width: int = 16):
+        torch = _torch()
+        if not series_ids or len(set(series_ids)) != len(series_ids):
+            raise ValueError("nonempty unique series IDs required")
+        self.series_ids, self.width = list(series_ids), width
+        self.net = torch.nn.Sequential(
+            torch.nn.Conv2d(3, width, 3, padding=1), torch.nn.ReLU(),
+            torch.nn.Conv2d(width, width, 3, dilation=2, padding=2), torch.nn.ReLU(),
+            torch.nn.Conv2d(width, width, 3, dilation=4, padding=4), torch.nn.ReLU(),
+            torch.nn.Conv2d(width, len(series_ids), 1))
+
+    def save(self, path):
+        path = Path(path)
+        _torch().save({"version": 1, "kind": "multilabel", "series": self.series_ids,
+                       "width": self.width, "state": self.net.state_dict()}, path)
+        return path
+
+    @staticmethod
+    def load(path):
+        blob = _torch().load(path, map_location="cpu", weights_only=True)
+        if blob.get("kind") != "multilabel" or blob.get("version") != 1:
+            raise ValueError("not a supported multilabel checkpoint")
+        model = MultiLabelConvSeg(blob["series"], blob["width"])
+        model.net.load_state_dict(blob["state"])
+        return model
+
+
+def multilabel_targets(masks, series_ids):
+    """Retain all labels at crossings instead of masking the hard examples."""
+    return np.stack([(np.asarray(masks[sid]) > 0).astype(np.float32) for sid in series_ids])
+
+
+def train_multilabel_segmentor(panels, series_ids, epochs=20, lr=0.003, seed=0):
+    torch = _torch()
+    if not panels or epochs < 1 or lr <= 0:
+        raise ValueError("positive training settings and nonempty panels required")
+    torch.manual_seed(seed)
+    model = MultiLabelConvSeg(series_ids)
+    images = torch.stack([_norm(torch.from_numpy(img.astype(np.float32)/255).permute(2,0,1))
+                          for img, _ in panels])
+    targets = torch.from_numpy(np.stack([multilabel_targets(masks, series_ids)
+                                        for _, masks in panels]))
+    positives = targets.sum(dim=(0,2,3))
+    if bool((positives == 0).any()):
+        raise ValueError("every requested series needs positive training evidence")
+    total = targets.shape[0]*targets.shape[2]*targets.shape[3]
+    weights = ((total-positives)/positives).clamp(1,100)[None,:,None,None]
+    optimizer = torch.optim.Adam(model.net.parameters(), lr=lr)
+
+    def loss():
+        return torch.nn.functional.binary_cross_entropy_with_logits(
+            model.net(images), targets, pos_weight=weights)
+
+    with torch.no_grad():
+        start = float(loss())
+    for _ in range(epochs):
+        optimizer.zero_grad()
+        loss().backward()
+        optimizer.step()
+    with torch.no_grad():
+        end = float(loss())
+    return model, {"loss_start": start, "loss_end": end, "epochs": epochs}
+
+
+def predict_multilabel_probabilities(model, image):
+    torch = _torch()
+    model.net.eval()
+    with torch.no_grad():
+        tensor = _norm(torch.from_numpy(image.astype(np.float32)/255).permute(2,0,1))[None]
+        probabilities = model.net(tensor).sigmoid()[0].numpy()
+    return {sid: probabilities[k] for k, sid in enumerate(model.series_ids)}
+
+
+def segmentation_metrics(probabilities, masks, threshold=0.5):
+    """Per-series foreground metrics; background agreement is not accuracy."""
+    if set(probabilities) != set(masks):
+        raise ValueError("prediction and reference series differ")
+    result = {}
+    for sid, p in probabilities.items():
+        pred, truth = np.asarray(p) >= threshold, np.asarray(masks[sid]) > 0
+        if pred.shape != truth.shape:
+            raise ValueError("prediction and reference shapes differ")
+        tp, fp, fn = (int((pred & truth).sum()), int((pred & ~truth).sum()),
+                      int((~pred & truth).sum()))
+        result[sid] = {"precision": tp/max(1,tp+fp), "recall": tp/max(1,tp+fn),
+                       "f1": 2*tp/max(1,2*tp+fp+fn), "iou": tp/max(1,tp+fp+fn)}
+    return result

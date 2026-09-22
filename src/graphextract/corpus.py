@@ -58,6 +58,7 @@ class TickAnnotation:
     value: float
     unit: str
     source: str = "manual"  # manual | ocr_verified | renderer
+    panel_id: str | None = None
 
 
 @dataclass

@@ -57,6 +57,8 @@ class AxisAnchors:
     y_unit: str = ""
     y_right_unit: str = ""
     source: str = "unknown"  # ocr_unverified | user_verified | renderer_verified_test | ...
+    y_scale: ScaleType | None = None
+    y_right_scale: ScaleType | None = None
 
 
 AnchorProvider = Callable[[str, npt.NDArray], AxisAnchors]
@@ -88,6 +90,8 @@ def _merge_anchors(first: AxisAnchors, second: AxisAnchors) -> AxisAnchors:
         y_left=_union(first.y_left, second.y_left),
         y_right=_union(first.y_right, second.y_right),
         x_scale=first.x_scale or second.x_scale,
+        y_scale=first.y_scale or second.y_scale,
+        y_right_scale=first.y_right_scale or second.y_right_scale,
         x_unit=first.x_unit or second.x_unit,
         y_unit=first.y_unit or second.y_unit,
         y_right_unit=first.y_right_unit or second.y_right_unit,
@@ -876,6 +880,7 @@ def run_panel(
     track_config: TrackConfig | None = None,
     supplement_discovery: bool = False,
     exclude_words: Sequence[tuple[int, int, int, int]] = (),
+    segmentor=None,
 ) -> PanelResult:
     """Run one panel; raises only on unexpected execution failure."""
     from graphextract.schema import PanelGeometry
@@ -898,7 +903,7 @@ def run_panel(
         axes: dict[str, AxisFit] = {
             "x": fit_axis(anchors.x, AxisRole.X, anchors.x_unit or "unknown", anchors.x_scale),
             "y_left": fit_axis(anchors.y_left, AxisRole.Y_LEFT, anchors.y_unit or "unknown",
-                               ScaleType.LINEAR),
+                               anchors.y_scale or ScaleType.LINEAR),
         }
     except CalibrationUnresolved as exc:
         calibration_resolved = False
@@ -912,7 +917,7 @@ def run_panel(
         try:
             axes["y_right"] = fit_axis(anchors.y_right, AxisRole.Y_RIGHT,
                                        anchors.y_right_unit or "unknown",
-                                       ScaleType.LINEAR)
+                                       anchors.y_right_scale or ScaleType.LINEAR)
         except CalibrationUnresolved as exc:
             result.review_reasons.append(
                 f"right axis uncalibrated, directivity stays on dB: {exc.reason}")
@@ -945,6 +950,16 @@ def run_panel(
     gray = cv2.cvtColor(interior, cv2.COLOR_BGR2GRAY) if interior.ndim == 3 else interior
     layers: EvidenceLayers = segment_evidence(interior, styles,
                                               exclude=exclude_words)
+    if segmentor is not None:
+        if track_config is None or track_config.backend != "temporal":
+            raise ValueError("multilabel segmentor requires temporal tracking")
+        if set(segmentor.series_ids) != {spec.series_id for spec in styles}:
+            raise ValueError("checkpoint series IDs differ from panel; explicit matching required")
+        from graphextract.torch_segmentor import predict_multilabel_probabilities
+        layers.curve_probabilities = predict_multilabel_probabilities(segmentor, interior)
+        result.provenance["segmentation"] = "multilabel_probabilities_gated_by_native_evidence"
+    result.provenance["tracker"] = track_config.backend if track_config else "legacy"
+
     # Each series tracks against its own colour evidence independently:
     # joint assignment cannot disambiguate converged same-plot curves any
     # better than motion already does, while its ties resolve by set order
@@ -1170,6 +1185,9 @@ def run_panel(
         # DI is a difference of dB curves, whatever the tick labels say.
         yr.unit = "dB"
         result.provenance["y_right_unit_inferred"] = "dB"
+    if track_config is not None and track_config.backend == "temporal":
+        from graphextract.temporal import mark_indistinguishable
+        mark_indistinguishable(tracks, {s.series_id: s.bgr for s in styles})
     for sid, tr in tracks.items():
         if _supplement and _prune_supplement_track(tr):
             result.review_reasons.append(
@@ -1180,12 +1198,13 @@ def run_panel(
             tr.axis_id = _axis_for_label(tr.label or "")
         if calibration_resolved:
             xfit, yfit = axes["x"], axes.get(tr.axis_id, axes["y_left"])
-        for s in tr.samples:
-            if calibration_resolved:
-                s.value_x = xfit.invert(s.u)
-                s.value_y = yfit.invert(s.v)
-            s.u += ox
-            s.v += oy
+        for sequence in [tr.samples, *tr.alternatives]:
+            for s in sequence:
+                if calibration_resolved:
+                    s.value_x = xfit.invert(s.u)
+                    s.value_y = yfit.invert(s.v)
+                s.u += ox
+                s.v += oy
         result.series.append(tr)
         if tr.review_reasons:
             result.review_reasons += [f"{sid}: {r}" for r in tr.review_reasons]
@@ -1214,6 +1233,7 @@ def run_document(
     track_config: TrackConfig | None = None,
     words: Sequence[OCRWord] | None = None,
     supplement_discovery: bool = False,
+    segmentor=None,
 ) -> DocumentResult:
     """End-to-end image-only extraction with per-panel failure isolation.
 
@@ -1277,7 +1297,7 @@ def run_document(
             res = run_panel(img, pg.panel_id, interior, (ox, oy),
                             anchors, styles, track_config,
                             supplement_discovery=supplement_discovery,
-                            exclude_words=local_words)
+                            exclude_words=local_words, segmentor=segmentor)
             res.panel = pg  # keep detector's envelope/interior + confidence
         except Exception as exc:
             res = PanelResult(panel=pg, outcome=PanelOutcome.FAILED,

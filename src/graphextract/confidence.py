@@ -20,11 +20,21 @@ from pathlib import Path
 import numpy as np
 import numpy.typing as npt
 from sklearn.linear_model import LogisticRegression
+from scipy.stats import beta
 
-from graphextract.schema import PanelOutcome, PanelResult
+from graphextract.schema import PanelOutcome, PanelResult, SegmentStatus
 
-FEATURES = ("support_frac", "calib_resid_px", "n_review", "min_anchor_conf",
-            "has_duplicates", "n_series")
+FEATURES = (
+    "support_frac",
+    "calib_resid_px",
+    "n_review",
+    "min_anchor_conf",
+    "has_duplicates",
+    "n_series",
+    "min_support_frac",
+    "max_missing_run_frac",
+    "alternative_frac",
+)
 
 
 def panel_features(panel: PanelResult) -> dict[str, float]:
@@ -36,11 +46,23 @@ def panel_features(panel: PanelResult) -> dict[str, float]:
         resid = 99.0  # uncalibrated: worst-case sentinel, never hidden
     confs = [t.confidence for f in panel.axes.values() for t in f.anchors_used]
     dup = any("duplicate" in r for s in panel.series for r in s.review_reasons)
+    longest = 0.0
+    for series in panel.series:
+        run = best = 0
+        for sample in series.samples:
+            run = run + 1 if sample.status is not SegmentStatus.OBSERVED else 0
+            best = max(best, run)
+        longest = max(longest, best / max(1, len(series.samples)))
     return {
+        "min_support_frac": min(supports, default=0.0),
+        "max_missing_run_frac": longest,
+        "alternative_frac": sum(bool(s.alternatives) for s in panel.series)
+        / max(1, len(panel.series)),
         "support_frac": support_frac,
         "calib_resid_px": float(resid),
-        "n_review": float(len(panel.review_reasons)
-                          + sum(len(s.review_reasons) for s in panel.series)),
+        "n_review": float(
+            len(panel.review_reasons) + sum(len(s.review_reasons) for s in panel.series)
+        ),
         "min_anchor_conf": float(min(confs)) if confs else 0.0,
         "has_duplicates": float(dup),
         "n_series": float(len(panel.series)),
@@ -82,16 +104,26 @@ class ConfidenceCalibrator:
         if not self._fit:
             raise ValueError("calibrator is not fit")
         p = Path(path)
-        np.savez(p, coef=self.model.coef_, intercept=self.model.intercept_,
-                 classes=self.model.classes_, features=np.array(FEATURES))
+        np.savez(
+            p,
+            coef=self.model.coef_,
+            intercept=self.model.intercept_,
+            classes=self.model.classes_,
+            features=np.array(FEATURES),
+        )
         return p
 
     @staticmethod
     def load(path: str | Path) -> ConfidenceCalibrator:
         z = np.load(path, allow_pickle=True)
+        if tuple(z["features"].tolist()) != FEATURES:
+            raise ValueError("confidence feature schema changed; refit the calibrator")
         cal = ConfidenceCalibrator()
         cal.model.coef_, cal.model.intercept_, cal.model.classes_ = (
-            z["coef"], z["intercept"], z["classes"])
+            z["coef"],
+            z["intercept"],
+            z["classes"],
+        )
         cal._fit = True
         return cal
 
@@ -102,38 +134,113 @@ class AcceptancePoint:
     precision: float
     coverage: float
     n_accepted: int
+    precision_lower_bound: float
+    confidence: float
+    stage: str
 
 
-def select_threshold(probas: npt.NDArray, labels: list[bool],
-                     target_precision: float = 0.995) -> AcceptancePoint:
-    """Highest-coverage threshold whose empirical precision meets the target.
+def _validation_arrays(probas, labels, target_precision, confidence, min_accepted):
+    p = np.asarray(probas, dtype=float)
+    y = np.asarray(labels, dtype=bool)
+    if p.ndim != 1 or y.shape != p.shape or not len(p):
+        raise ValueError("non-empty, equally sized 1D probabilities and labels required")
+    if not np.isfinite(p).all() or np.any((p < 0) | (p > 1)):
+        raise ValueError("probabilities must be finite and in [0, 1]")
+    if not 0 < target_precision <= 1 or not 0 < confidence < 1 or min_accepted < 1:
+        raise ValueError("invalid precision, confidence, or minimum support")
+    return p, y
 
-    Raises when no threshold on this calibration set substantiates the target —
-    a small pilot cannot license the production claim.
+
+def _acceptance_point(p, y, threshold, alpha, confidence, stage):
+    accepted = p >= threshold
+    n = int(accepted.sum())
+    k = int(y[accepted].sum())
+    lower = float(beta.ppf(alpha, k, n - k + 1)) if k else 0.0
+    return AcceptancePoint(
+        float(threshold), k / n if n else 0.0, n / len(y), n, lower, confidence, stage
+    )
+
+
+def select_threshold(
+    probas: npt.NDArray,
+    labels: list[bool],
+    target_precision: float = 0.995,
+    *,
+    confidence: float = 0.95,
+    min_accepted: int = 30,
+) -> AcceptancePoint:
+    """Select on calibration data; simultaneous one-sided exact binomial bounds.
+
+    Bonferroni correction accounts for searching several thresholds. Labels must
+    be independent cases, not pixels/crops from the same source. A selected
+    threshold still needs validate_threshold on a disjoint, untouched test set.
+    The classifier itself must be fit on a separate training set.
     """
-    y = np.array(labels, dtype=bool)
-    if len(y) == 0:
-        raise ValueError("empty calibration set")
-    best: AcceptancePoint | None = None
-    for thr in sorted(set(float(p) for p in probas)):
-        accepted = probas >= thr
-        n = int(accepted.sum())
-        if n == 0:
-            continue
-        prec = float(y[accepted].mean())
-        if prec >= target_precision and (best is None or n > best.n_accepted):
-            best = AcceptancePoint(thr, prec, n / len(y), n)
-    if best is None:
-        raise ValueError(
-            f"target precision {target_precision} not substantiated by "
-            f"{len(y)} calibration cases (best observed "
-            f"{max(float(y[probas >= t].mean()) for t in set(float(p) for p in probas) if (probas >= t).any()):.3f})")
-    return best
+    p, y = _validation_arrays(probas, labels, target_precision, confidence, min_accepted)
+    candidates = np.unique(p)
+    alpha = (1 - confidence) / len(candidates)
+    for threshold in candidates:  # ascending: maximum accepted coverage first
+        point = _acceptance_point(p, y, threshold, alpha, confidence, "calibration")
+        if point.n_accepted >= min_accepted and point.precision_lower_bound >= target_precision:
+            return point
+    raise ValueError(
+        f"target precision {target_precision} not substantiated by confidence "
+        f"bounds on {len(y)} calibration cases"
+    )
 
 
-def auto_acceptable(panel: PanelResult, calibrator: ConfidenceCalibrator,
-                    threshold: float) -> bool:
-    """Production gate: calibrated confidence only; review/failed never pass."""
-    if panel.outcome not in (PanelOutcome.COMPLETE, PanelOutcome.PARTIAL_REVIEW):
+def validate_threshold(
+    probas,
+    labels,
+    threshold: float,
+    target_precision: float = 0.995,
+    *,
+    confidence: float = 0.95,
+    min_accepted: int = 30,
+) -> AcceptancePoint:
+    """Validate a previously frozen threshold once on independent held-out cases."""
+    p, y = _validation_arrays(probas, labels, target_precision, confidence, min_accepted)
+    if not np.isfinite(threshold) or not 0 <= threshold <= 1:
+        raise ValueError("threshold must be finite and in [0, 1]")
+    point = _acceptance_point(p, y, threshold, 1 - confidence, confidence, "held_out")
+    if point.n_accepted < min_accepted or point.precision_lower_bound < target_precision:
+        raise ValueError("held-out cases do not substantiate the frozen acceptance threshold")
+    return point
+
+
+def auto_acceptable(
+    panel: PanelResult, calibrator: ConfidenceCalibrator, threshold: AcceptancePoint
+) -> bool:
+    """Conservative runtime gate requiring a held-out validation result.
+
+    A raw float or a threshold merely selected on calibration data is not an
+    acceptance certificate. Persist the validation result alongside the model.
+    """
+    if not isinstance(threshold, AcceptancePoint) or threshold.stage != "held_out":
         return False
-    return bool(calibrator.predict_proba([panel])[0] >= threshold)
+    if (
+        panel.outcome is not PanelOutcome.COMPLETE
+        or not panel.series
+        or panel.review_reasons
+        or "x" not in panel.axes
+    ):
+        return False
+    if not np.isfinite(threshold.threshold) or not 0 <= threshold.threshold <= 1:
+        return False
+    if any(
+        not np.isfinite([fit.a, fit.b, fit.residual_px_max]).all() or fit.a == 0
+        for fit in panel.axes.values()
+    ):
+        return False
+    for series in panel.series:
+        if (
+            series.axis_id not in panel.axes
+            or not series.samples
+            or series.review_reasons
+            or series.alternatives
+            or any(s.status is not SegmentStatus.OBSERVED for s in series.samples)
+        ):
+            return False
+        if any(not np.isfinite([s.u, s.v, s.half_width_px]).all() for s in series.samples):
+            return False
+    return bool(calibrator.predict_proba([panel])[0] >= threshold.threshold)

@@ -93,6 +93,9 @@ class TrackConfig:
     no_jump: bool = False
     max_jump_px: float = 10.0
     assume_overlap: bool = False
+    backend: str = "legacy"
+    temporal_beam_width: int = 16
+    temporal_ambiguity_cost: float = 0.5
 
     @classmethod
     def from_assumptions(cls, names: Iterable[str], **overrides) -> TrackConfig:
@@ -847,6 +850,17 @@ def track_panel(
     ``_maybe_reseed``).
     """
     cfg = config or TrackConfig()
+    if cfg.backend == "temporal":
+        if cfg.active_assumptions():
+            raise ValueError("temporal backend does not implement legacy assumptions")
+        if cfg.temporal_beam_width < 2 or cfg.temporal_ambiguity_cost < 0:
+            raise ValueError("invalid temporal search settings")
+        from graphextract.temporal import track_temporal
+        return track_temporal(gray, layers, series_ids, cfg, series_colors,
+                              color_img, foreign_avoid)
+    if cfg.backend != "legacy":
+        raise ValueError(f"unknown tracking backend: {cfg.backend}")
+
     h, w = gray.shape[:2]
     # Union mask clusters define candidate positions per column. The
     # inclusive union (gridlines included) keeps candidacy stable while
@@ -2040,6 +2054,9 @@ def track_sid_bidirectional(
     by status rank (see :func:`merge_track_directions`). Complete forward
     tracks skip the second pass entirely.
     """
+    if config is not None and config.backend == "temporal":
+        return track_panel(gray, layers, [sid], bg_value, config, series_colors,
+                           color_img, foreign_avoid)
     fwd = track_panel(gray, layers, [sid], bg_value, config, series_colors,
                       color_img, foreign_avoid)
     if sid not in fwd or not _needs_backward(fwd[sid]):

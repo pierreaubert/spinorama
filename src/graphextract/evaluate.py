@@ -59,33 +59,43 @@ def score_series(
     series_id: str,
 ) -> SeriesScore:
     """Score one predicted series against dense native-pixel reference."""
+    if not (len(pred_u) == len(pred_v) == len(pred_observed)):
+        raise ValueError("prediction arrays must have equal length")
+    ref_u, ref_v, ref_visible = (np.asarray(ref_u), np.asarray(ref_v),
+                               np.asarray(ref_visible, dtype=bool))
+    if (ref_u.ndim != 1 or ref_u.shape != ref_v.shape or ref_u.shape != ref_visible.shape
+            or not np.isfinite(ref_u).all() or not np.isfinite(ref_v).all()
+            or np.any(np.diff(ref_u) <= 0)):
+        raise ValueError("reference must be finite, ordered, unique, and equally sized")
     errs: list[float] = []
-    false = 0
-    n_obs = 0
+    claimed: set[int] = set()
+    false = n_obs = 0
     for u, v, obs in zip(pred_u, pred_v, pred_observed):
         if not obs:
             continue
         n_obs += 1
-        rv = _interp_ref(ref_u, ref_v, u)
-        if rv is None:
+        if not np.isfinite(u) or not np.isfinite(v) or not len(ref_u):
             false += 1
             continue
-        visible = bool(np.interp(u, ref_u, ref_visible.astype(float)) > 0.5)
-        if not visible:
+        j = int(np.searchsorted(ref_u, u))
+        candidates = [i for i in (j - 1, j) if 0 <= i < len(ref_u)]
+        j = min(candidates, key=lambda i: abs(float(ref_u[i]) - u))
+        if abs(float(ref_u[j]) - u) > 0.5 or not ref_visible[j] or j in claimed:
             false += 1
             continue
-        errs.append(abs(v - rv))  # ordinate error at the native column
+        claimed.add(j)
+        errs.append(max(abs(u - float(ref_u[j])), abs(v - float(ref_v[j]))))
     n_ref_visible = int(ref_visible.sum())
-    coverage = (len(errs) / n_ref_visible) if n_ref_visible else 0.0
-    false_support = (false / n_obs) if n_obs else 0.0
+    coverage = len(claimed) / n_ref_visible if n_ref_visible else 0.0
+    false_support = false / n_obs if n_obs else 0.0
     if not errs:
         return SeriesScore(series_id, False, float("inf"), float("inf"), float("inf"),
                            float("inf"), 0.0, false_support, n_ref_visible)
-    arr = np.array(sorted(errs))
-    q = lambda p: float(arr[min(len(arr) - 1, int(p * len(arr)))])
-    strict = bool(np.all(arr <= PIXEL_TOL) and coverage >= 0.999)
-    return SeriesScore(series_id, strict, q(0.50), q(0.95), q(0.99), float(arr[-1]),
-                       coverage, false_support, n_ref_visible)
+    arr = np.asarray(errs)
+    strict = bool(np.all(arr <= PIXEL_TOL) and coverage >= 0.999 and false == 0)
+    return SeriesScore(series_id, strict, float(np.quantile(arr, 0.50)),
+                       float(np.quantile(arr, 0.95)), float(np.quantile(arr, 0.99)),
+                       float(arr.max()), coverage, false_support, n_ref_visible)
 
 
 def score_panel_completeness(
@@ -97,6 +107,10 @@ def score_panel_completeness(
     missed = [s for s in expected_ids if s not in predicted_ids]
     extra = [s for s in predicted_ids if s not in expected_ids]
     queue: list[str] = []
+    if set(series_scores) != set(expected_ids):
+        queue.append("missing or unexpected series scores")
+    if len(predicted_ids) != len(set(predicted_ids)):
+        queue.append("duplicate predicted identities")
     queue += [f"missing series {s}" for s in missed]
     queue += [f"unexpected series {s}" for s in extra]
     for sid, sc in series_scores.items():
@@ -110,7 +124,8 @@ def score_panel_completeness(
         outcome = PanelOutcome.PARTIAL_REVIEW
     elif not series_scores:
         outcome = PanelOutcome.FAILED
-    elif all(s.strict_pass for s in series_scores.values()):
+    elif (expected_ids and not queue and set(series_scores) == set(expected_ids)
+          and all(s.strict_pass for s in series_scores.values())):
         outcome = PanelOutcome.COMPLETE
     else:
         outcome = PanelOutcome.PARTIAL_REVIEW
@@ -124,7 +139,7 @@ def production_summary(doc: DocumentResult, panel_scores: list[PanelScore]) -> d
     strict_series = sum(s.strict_pass for p in panel_scores for s in p.series.values())
     total_series = sum(len(p.series) for p in panel_scores)
     return {
-        "oracle_inputs_used": False,
+        "oracle_inputs_used": bool(doc.provenance.get("oracle_inputs_used", False)),
         "n_panels": n_panels,
         "n_complete_panels": n_complete,
         "panel_acceptance_rate": (n_complete / n_panels) if n_panels else 0.0,

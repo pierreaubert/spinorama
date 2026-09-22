@@ -9,6 +9,7 @@ from graphextract.confidence import (
     auto_acceptable,
     panel_features,
     select_threshold,
+    validate_threshold,
 )
 from graphextract.pipeline import AxisAnchors, run_panel
 from graphextract.schema import PanelOutcome, PanelResult
@@ -61,15 +62,22 @@ def test_threshold_selection_and_gates():
     cal = ConfidenceCalibrator()
     cal.fit(panels, labels)
     proba = cal.predict_proba(panels)
-    point = select_threshold(proba, labels, target_precision=0.9)
+    point = select_threshold(np.r_[np.full(100, 0.9), np.full(100, 0.1)],
+                             [True]*100+[False]*100, target_precision=0.9)
     assert point.precision >= 0.9 and point.coverage > 0
     with pytest.raises(ValueError):
         select_threshold(proba, labels, target_precision=1.0001)
     with pytest.raises(ValueError):
         ConfidenceCalibrator().fit(panels[:2], labels[:2])
     pos = next(p for p, lab in zip(panels, labels) if lab)
-    assert auto_acceptable(pos, cal, point.threshold)
+    # The runtime gate is stricter than probability alone.
+    certificate = validate_threshold(np.full(100, 0.9), [True]*100, 0.5, target_precision=0.9)
+    assert auto_acceptable(pos, cal, certificate)
+    assert not auto_acceptable(pos, cal, point)
+    assert not auto_acceptable(pos, cal, 0.0)
     failed = PanelResult(panel=pos.panel, outcome=PanelOutcome.FAILED)
-    assert not auto_acceptable(failed, cal, 0.0)
+    assert not auto_acceptable(failed, cal, certificate)
+    pos.outcome = PanelOutcome.PARTIAL_REVIEW
+    assert not auto_acceptable(pos, cal, certificate)
     feats = panel_features(panels[0])
     assert feats["support_frac"] > 0.9 and feats["n_review"] == 0
