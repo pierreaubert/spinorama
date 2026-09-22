@@ -109,16 +109,29 @@ def _snap_y(word: OCRWord, value: float, grid_ys: list[int], img_w: int,
 
 
 def _snap_y_right(word: OCRWord, value: float, grid_ys: list[int], img_w: int,
-                  snap_px: int) -> TickAnchor | None:
-    """Right-strip mirror of ``_snap_y`` for second-y-axis ticks."""
+                  snap_px: int) -> list[TickAnchor]:
+    """Right-strip ticks propose every gridline within a wide window.
+
+    In-plot right labels sit amid curve ink, so their OCR centres drift
+    several pixels, and minor gridlines pack 11px apart: nearest-only
+    snapping latches whichever line (major or minor) happens closest,
+    even across the label's true line. Every candidate within the window
+    becomes an anchor; RANSAC then seats each label on the consensus
+    line, and the confidence tie-break prefers near snaps over far ones.
+    The window stays far below adjacent-tick spacing, so candidates
+    never reach a neighbouring tick's line.
+    """
     cx, cy = word.x + word.w / 2.0, word.y + word.h / 2.0
     if cx < 0.7 * img_w or not grid_ys:
-        return None
-    gy = min(grid_ys, key=lambda g: abs(g - cy))
-    if abs(gy - cy) > snap_px:
-        return None
-    conf = max(0.1, word.confidence * (1.0 - abs(gy - cy) / snap_px))
-    return TickAnchor(float(gy), value, conf, "ocr")
+        return []
+    wide = max(snap_px, 30)
+    out = []
+    for gy in sorted(grid_ys, key=lambda g: abs(g - cy)):
+        if abs(gy - cy) > wide:
+            continue
+        conf = max(0.1, word.confidence * (1.0 - abs(gy - cy) / wide))
+        out.append(TickAnchor(float(gy), value, conf, "ocr"))
+    return out
 
 
 def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int],
@@ -141,13 +154,24 @@ def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int]
             continue
         value, kind = parsed
         cx, cy = wd.x + wd.w / 2.0, wd.y + wd.h / 2.0
-        if kind in ("freq", "time") or (kind == "linear" and cy > 0.8 * img_h):
+        deep = (4 <= cx <= img_w - 4 and 4 <= cy <= img_h - 4
+                and min(cx, img_w - cx, cy, img_h - cy) > 100)
+        if deep and not (kind == "linear" and cx > 0.7 * img_w):
+            # Deep-interior digits route to the right axis only: in-plot
+            # right ticks live here, while left/x fits must never see a
+            # legend fragment or curve label as a phantom anchor.
+            assoc.unmatched.append(f"{wd.text!r}: deep-interior digit off the right strip")
+            continue
+        if not deep and (kind in ("freq", "time") or (kind == "linear" and cy > 0.8 * img_h)):
             # X-axis label: lives in the bottom strip, position from vertical grid.
             if cy < 0.65 * img_h:
                 assoc.unmatched.append(f"{wd.text!r}: x-like label outside bottom strip")
                 continue
-            if kind == "linear" and cx <= 0.3 * img_w:
-                # The bottom y tick shares the bottom strip; its row decides.
+            if kind == "linear" and cx <= max(60.0, 0.05 * img_w):
+                # The bottom y tick shares the bottom strip but hugs the
+                # y axis; its row decides. Bottom x labels under interior
+                # decades (inside-frame ticks) must not be stolen here:
+                # the corner claim only reaches axis-hugging words.
                 hit = _snap_y(wd, value, grid_ys, img_w, snap_px)
                 if hit is not None:
                     assoc.y_left.append(hit)
@@ -172,14 +196,14 @@ def associate_ticks(words: list[OCRWord], grid_xs: list[int], grid_ys: list[int]
                 assoc.unmatched.append(f"{wd.text!r}: y-like label outside plot vertical span")
                 continue
             if cx > 0.7 * img_w:
-                hit = _snap_y_right(wd, value, grid_ys, img_w, snap_px)
-                if hit is None:
+                hits = _snap_y_right(wd, value, grid_ys, img_w, snap_px)
+                if not hits:
                     if not grid_ys:
                         assoc.unmatched.append(f"{wd.text!r}: no horizontal grid to snap to")
                     else:
                         assoc.unmatched.append(f"{wd.text!r}: far from nearest grid line")
                     continue
-                assoc.y_right.append(hit)
+                assoc.y_right.extend(hits)
                 continue
             hit = _snap_y(wd, value, grid_ys, img_w, snap_px)
             if hit is None:
@@ -345,6 +369,24 @@ def anchors_from_ocr(words: list[OCRWord], interior: npt.NDArray,
     grid_xs, grid_ys = detect_grid_lines(interior)
     grid_xs = _union_lines(grid_xs, extra_xs)
     grid_ys = _union_lines(grid_ys, extra_ys)
+    # Minor grid rows (1dB subdivisions the projection pass clusters
+    # away): right-axis ticks sit on these far more often than on
+    # majors, since the two axes' slopes align only at crossings.
+    # Curves never hold one row for half the panel (DI flats span a
+    # quarter; wiggly strokes drift across rows), so long runs are grid.
+    from graphextract.evidence import detect_grid_mask_thin
+    mask = detect_grid_mask_thin(interior)
+    minors = []
+    for yy in range(h):
+        xs = np.flatnonzero(mask[yy])
+        if len(xs) > 0.5 * w:
+            run, best = 1, 1
+            for i in range(1, len(xs)):
+                run = run + 1 if xs[i] == xs[i - 1] + 1 else 1
+                best = max(best, run)
+            if best > 0.5 * w:
+                minors.append(yy)
+    grid_ys = _union_lines(grid_ys, minors)
     snap_x = max(12, round(0.03 * w))
     assoc = associate_ticks(words, grid_xs, grid_ys, w, h, snap_x_px=snap_x)
     # Identical (pixel, value) anchors are one tick read twice (raw plus
@@ -375,10 +417,14 @@ def _localize_words(
     """Full-image words near the panel, shifted to interior-local coords.
 
     Tick labels live in the margins *outside* the plot frame; words from
-    neighbouring panels fall outside the margin and are ignored. A digit
-    word centred inside the plot is a legend fragment or curve label
-    ('7', '20'), never a tick, and is excluded before it can snap to a
-    gridline as a phantom anchor.
+    neighbouring panels fall outside the margin and are ignored. Labels
+    in a band just within the frame (some vendors print ticks inside the
+    axes) are kept: a real tick label stands off the frame with room for
+    tick marks, while a curve label can sit almost on top of it (those
+    frame-huggers are dropped). Deep-interior words stay admitted for
+    the right-axis-only routing downstream: in-plot right ticks sit
+    hundreds of pixels inside. Grid-snapping and the robust fit still
+    gate whatever is kept.
     """
     ix, iy, iw, ih = panel.interior_xywh
     ex, ey, ew, eh = panel.envelope_xywh
@@ -388,8 +434,14 @@ def _localize_words(
     for wd in words:
         cx, cy = wd.x + wd.w / 2.0, wd.y + wd.h / 2.0
         if ex - mx <= cx <= ex + ew + mx and ey - my <= cy <= ey + eh + my:
-            if ix + 4 <= cx <= ix + iw - 4 and iy + 4 <= cy <= iy + ih - 4:
+            edge = min(cx - ix, ix + iw - cx, cy - iy, iy + ih - cy)
+            if (ix + 4 <= cx <= ix + iw - 4 and iy + 4 <= cy <= iy + ih - 4
+                    and edge < 25):
                 continue
+            # Deep-interior words stay admitted: in-plot right-axis ticks
+            # sit hundreds of pixels inside (left of an interior legend),
+            # and association routes deep digits to the right axis only,
+            # never to the left or x fits they could phantom.
             local.append(OCRWord(wd.text, wd.x - ix, wd.y - iy, wd.w, wd.h, wd.confidence))
     return local
 
@@ -423,14 +475,31 @@ def _offset_words(words: list[OCRWord], ox: int, oy: int) -> list[OCRWord]:
     return [OCRWord(w.text, w.x + ox, w.y + oy, w.w, w.h, w.confidence) for w in words]
 
 
+def _box_iou(a: OCRWord, b: OCRWord) -> float:
+    ix0, iy0 = max(a.x, b.x), max(a.y, b.y)
+    ix1, iy1 = min(a.x + a.w, b.x + b.w), min(a.y + b.h, b.y + b.h)
+    iw, ih = ix1 - ix0, iy1 - iy0
+    if iw <= 0 or ih <= 0:
+        return 0.0
+    inter = iw * ih
+    union = a.w * a.h + b.w * b.h - inter
+    return inter / union if union > 0 else 0.0
+
+
 def _dedup_words(words: list[OCRWord], tol: int = 10) -> list[OCRWord]:
     """Collapse repeated reads of one label, keeping higher confidence.
 
-    Same text at the same spot dedups exactly; several readings of one
-    decade label (``104``, ``10``, ``10+``) collapse by prefix, keeping the
-    longest, so a bare ``10`` duplicate cannot wedge between folded
-    decades and break pitch-even triples downstream. Prefix collapse only
-    applies within ``10``-family texts, never to genuine labels.
+    Same text at the same spot dedups exactly; near-identical boxes
+    dedup regardless of text (multi-scale and threshold-variant reads
+    of one glyph stock disagree by a letter or a glued dash: 'Early'
+    vs 'Earty', '--On-axis' vs 'On-axis'), keeping the higher
+    confidence read. Neighbouring words never share that much box, so
+    only true double-reads collapse. The box rule exempts 10-family
+    pairs: several readings of one decade label (``104``, ``10``,
+    ``10+``) collapse by prefix below, keeping the longest, so a bare
+    ``10`` duplicate cannot wedge between folded decades and break
+    pitch-even triples downstream. Prefix collapse only applies within
+    ``10``-family texts, never to genuine labels.
     """
     kept: list[OCRWord] = []
     for wd in sorted(words, key=lambda w: -w.confidence):
@@ -438,6 +507,11 @@ def _dedup_words(words: list[OCRWord], tol: int = 10) -> list[OCRWord]:
         if any(k.text == wd.text
                and abs(k.x + k.w / 2.0 - cx) <= tol
                and abs(k.y + k.h / 2.0 - cy) <= tol for k in kept):
+            continue
+        if any(_box_iou(k, wd) >= 0.7
+               and not (k.text.strip().startswith("10")
+                        and wd.text.strip().startswith("10"))
+               for k in kept):
             continue
         kept.append(wd)
     out: list[OCRWord] = []
@@ -467,14 +541,16 @@ def _dedup_words(words: list[OCRWord], tol: int = 10) -> list[OCRWord]:
     return out
 
 
-def read_margin_ticks(strip_gray: npt.NDArray) -> list[OCRWord]:
+def read_margin_ticks(strip_gray: npt.NDArray, psm: int = 6) -> list[OCRWord]:
     """Digit-focused re-read of one axis-margin strip (strip-local coords).
 
     Full-image OCR misses small faint tick labels; an upscaled
     digit-whitelist read recovers them. Both the raw strip and a hard
     thresholded variant are read (faint grey digits vanish under
     Tesseract's internal binarisation), wide strips are tiled, and
-    overlapping reads deduped. Empty when Tesseract is unavailable.
+    overlapping reads deduped. Single-label cells pass ``psm=8`` (one
+    uniform block); multi-label strips keep the default 6. Empty when
+    Tesseract is unavailable.
     """
     try:
         import pytesseract
@@ -498,7 +574,7 @@ def read_margin_ticks(strip_gray: npt.NDArray) -> list[OCRWord]:
                              interpolation=cv2.INTER_CUBIC)
             try:
                 data = pytesseract.image_to_data(
-                    big, config="--psm 6 -c tessedit_char_whitelist="
+                    big, config=f"--psm {psm} -c tessedit_char_whitelist="
                                + _TICK_WHITELIST,
                     output_type=pytesseract.Output.DICT)
             except Exception:
@@ -515,6 +591,54 @@ def read_margin_ticks(strip_gray: npt.NDArray) -> list[OCRWord]:
                     t, x0 + int(data["left"][i]) // 3, int(data["top"][i]) // 3,
                     max(1, int(data["width"][i]) // 3),
                     max(1, int(data["height"][i]) // 3), conf))
+    return _dedup_words(out)
+
+
+def read_text_zone(zone_gray: npt.NDArray, psm: int = 11,
+                   scale: float = 3.0) -> list[OCRWord]:
+    """Full-alphabet re-read of one text zone (zone-local coords).
+
+    Full-page segmentation (PSM 3) drops trailing legend rows once a
+    stack grows past its layout model; a sparse-text read (PSM 11) of
+    the tight zone recovers them. Both the raw zone and a hard
+    thresholded variant are read (faint grey type vanishes under
+    Tesseract's internal binarisation) and the overlapping reads
+    deduped. Empty when Tesseract is unavailable.
+    """
+    try:
+        import pytesseract
+    except ImportError:
+        return []
+    img = np.asarray(zone_gray)
+    if img.ndim == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h, w = img.shape[:2]
+    if h < 8 or w < 8:
+        return []
+    variants = [img, ((img < 180).astype(np.uint8) * 255).astype(np.uint8)]
+    out: list[OCRWord] = []
+    for variant in variants:
+        big = cv2.resize(variant, None, fx=scale, fy=scale,
+                         interpolation=cv2.INTER_CUBIC)
+        try:
+            data = pytesseract.image_to_data(
+                big, config=f"--psm {psm}",
+                output_type=pytesseract.Output.DICT)
+        except Exception:
+            continue
+        for i, text in enumerate(data["text"]):
+            t = (text or "").strip()
+            if not t:
+                continue
+            try:
+                conf = max(0.0, min(1.0, float(data["conf"][i]) / 100.0))
+            except (ValueError, TypeError):
+                conf = 0.0
+            out.append(OCRWord(
+                t, int(int(data["left"][i]) / scale),
+                int(int(data["top"][i]) / scale),
+                max(1, int(int(data["width"][i]) / scale)),
+                max(1, int(int(data["height"][i]) / scale)), conf))
     return _dedup_words(out)
 
 
@@ -778,7 +902,7 @@ def recover_margin_anchors(
     h, w = gray.shape[:2]
     words2 = resolve_superscripts(gray, words, h)
     ix, iy, iw, ih = (int(v) for v in panel.interior_xywh)
-    from graphextract.calibration import detect_frame_ticks
+    from graphextract.calibration import detect_frame_ticks, detect_grid_lines
     tick_xs, tick_ys = detect_frame_ticks(gray, panel.interior_xywh)
     # Bottom strip: whole read plus one targeted cell per frame tick. A
     # tick implies its label above it, and the small cell read succeeds
@@ -786,25 +910,51 @@ def recover_margin_anchors(
     y1 = min(h, iy + ih + max(80, round(0.15 * ih)))
     x0 = max(0, ix - 40)
     x1 = min(w, ix + iw + 40)
-    bottom = gray[iy + ih:y1, x0:x1]
-    extra = _offset_words(read_margin_ticks(bottom), x0, iy + ih)
+    # Tick labels hug the frame from either side: some vendors print
+    # them just inside the axes, where an outside-only strip never
+    # looks. The whole-strip read covers both sides at once.
+    y0b = max(0, iy + ih - 100)
+    bottom = gray[y0b:y1, x0:x1]
+    extra = _offset_words(read_margin_ticks(bottom), x0, y0b)
     bh, bw = bottom.shape[:2]
     for tx in tick_xs:
         cx = tx + ix - x0
         c0, c1 = max(0, cx - 55), min(bw, cx + 55)
         if c1 - c0 < 20:
             continue
-        # Top 60 rows only: labels hug the frame while titles sit deeper,
-        # and title words in the same cell steal the segmentation.
+        # Straddling the frame line: labels hug the frame on either
+        # side while titles sit deeper, and title words in the same cell
+        # steal the segmentation.
+        fline = iy + ih - y0b
+        r0, r1 = max(0, fline - 60), min(bh, fline + 60)
         extra += _offset_words(
-            read_margin_ticks(bottom[0:min(bh, 60), c0:c1]), x0 + c0, iy + ih)
+            read_margin_ticks(bottom[r0:r1, c0:c1]), x0 + c0, y0b + r0)
+    # Gridline-targeted x cells: a vertical gridline implies its label
+    # beneath it, and frame ticks are undetectable on thin/faint frames
+    # (no per-tick cells run at all then). Each cell holds one label and
+    # reads in single-block mode; rows hug the frame from the inside
+    # where these labels sit, clear of the frame line and the title row
+    # below. The whole-strip read covers labels sitting lower.
+    grid_xs, _grid_ys = detect_grid_lines(interior)
+    y0c, y1c = max(0, iy + ih - 110), max(0, iy + ih - 30)
+    for gx in grid_xs:
+        if y1c - y0c < 20:
+            break
+        cx = ix + gx
+        c0, c1 = max(0, cx - 55), min(w, cx + 55)
+        if c1 - c0 < 20:
+            continue
+        extra += _offset_words(
+            read_margin_ticks(gray[y0c:y1c, c0:c1], psm=8), c0, y0c)
     # Left strip, then right strip (evidence for a second axis; empty on
     # single-y plots). Strips always run: they only add evidence, and the
-    # robust fit keeps the consistent majority.
+    # robust fit keeps the consistent majority. The left strip reaches
+    # inside the frame for vendors printing ticks just within the axes.
     lx0 = max(0, ix - max(80, round(0.06 * iw)))
+    lx1 = min(w, ix + 80)
     ly0 = max(0, iy - 20)
     extra += _offset_words(
-        read_margin_ticks(gray[ly0:min(h, iy + ih + 20), lx0:ix]), lx0, ly0)
+        read_margin_ticks(gray[ly0:min(h, iy + ih + 20), lx0:lx1]), lx0, ly0)
     rx1 = min(w, ix + iw + max(80, round(0.06 * iw)))
     extra += _offset_words(
         read_margin_ticks(gray[ly0:min(h, iy + ih + 20), ix + iw:rx1]), ix + iw, ly0)

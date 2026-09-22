@@ -110,9 +110,9 @@ def test_document_words_yield_log_data_coordinates():
         OCRWord("20", 50, 265, 20, 14, 0.9),
         OCRWord("200", 240, 265, 24, 14, 0.9),
         OCRWord("2000", 425, 265, 30, 14, 0.9),
-        OCRWord("0", 44, 33, 14, 14, 0.9),
+        OCRWord("100", 44, 33, 26, 14, 0.9),
         OCRWord("50", 28, 143, 18, 14, 0.9),
-        OCRWord("100", 24, 250, 26, 14, 0.9),
+        OCRWord("0", 24, 250, 14, 14, 0.9),
     ]
     doc = run_document(img, "img", [StyleSpec("s", "S", (0, 0, 255))], words=words)
     assert len(doc.panels) == 1
@@ -135,10 +135,12 @@ def test_di_labels_assign_to_calibrated_right_axis():
     """Directivity labels ride y_right once right ticks calibrate it."""
     from graphextract.pipeline import _axis_for_label
     for label in ("Directivity Index", "Reflections Dl", "Index",
-                  "Early Reflections DI", "Sound Power DI"):
+                  "Early Reflections DI", "Sound Power DI",
+                  "377: Total Sound Power O1", "First Reflections Ol",
+                  "Sound Power 0l"):
         assert _axis_for_label(label) == "y_right"
     for label in ("On Axis", "Sound Power", "Listening Window",
-                  "Reflections", "Estimated In-Room"):
+                  "Reflections", "Estimated In-Room", "Ol", "Color"):
         assert _axis_for_label(label) == "y_left"
 
 
@@ -157,12 +159,12 @@ def test_right_axis_ticks_assign_di_series_to_y_right():
         OCRWord("20", 50, 290, 20, 14, 0.9),
         OCRWord("200", 240, 290, 24, 14, 0.9),
         OCRWord("2000", 425, 290, 30, 14, 0.9),
-        OCRWord("0", 44, 33, 14, 14, 0.9),
+        OCRWord("100", 44, 33, 26, 14, 0.9),
         OCRWord("50", 40, 123, 18, 14, 0.9),
-        OCRWord("100", 36, 213, 26, 14, 0.9),
-        OCRWord("0", 452, 33, 14, 14, 0.9),
+        OCRWord("0", 36, 213, 14, 14, 0.9),
+        OCRWord("10", 452, 33, 18, 14, 0.9),
         OCRWord("5", 454, 123, 14, 14, 0.9),
-        OCRWord("10", 450, 213, 18, 14, 0.9),
+        OCRWord("0", 450, 213, 14, 14, 0.9),
     ]
     styles = [StyleSpec("m", "On Axis", (0, 0, 255)),
               StyleSpec("d", "Directivity Index", (0, 255, 0))]
@@ -271,6 +273,109 @@ def test_claimed_mask_covers_observed_not_filler():
     assert full[20, 10] > 0 and full[60, 11] > 0 and full[80, 12] == 0
 
 
+def _split_case(db_rows, di_rows, below_is_db, dots=False):
+    """Synthetic band-split case: dB strokes at ``db_rows``, DI ink at
+    ``di_rows``; below-gap ink is dB-hued when ``below_is_db``; with
+    ``dots`` the DI rows are twin-leak dots (half the columns)."""
+    import numpy as np
+    h, w = 400, 40
+    interior = np.full((h, w, 3), 255, np.uint8)
+    db = np.zeros((h, w), np.uint8)
+    di = np.zeros((h, w), np.uint8)
+    for r in db_rows:
+        db[r, :] = 255
+        interior[r, :] = (32, 47, 215)
+    for r in di_rows:
+        cols = slice(0, w, 2) if dots else slice(0, w)
+        di[r, cols] = 255
+        db[r, cols] = 255  # twin leak into the measured mask
+        interior[r, :] = ((32, 47, 215) if below_is_db else (35, 73, 216))
+    return db, di, interior
+
+
+def test_band_split_row_splits_di_hued_gap():
+    """A measured-ink gap with directivity-hued ink below splits at
+    the pack bottom; the modest hue gap between twins still decides
+    directivity-ward, and twin-leak dots below never veto the split."""
+    from graphextract.pipeline import _band_split_row
+    db, di, interior = _split_case([10, 11, 30, 31], [300, 301], False,
+                                   dots=True)
+    assert _band_split_row([db], [di], interior,
+                           [(32, 47, 215)], [(35, 73, 216)]) == 31
+
+
+def test_band_split_row_rejects_db_hued_gap():
+    """A gap with measured-hued ink below is an inter-stroke gap, not
+    a band split: overlay plots return None and steer nothing."""
+    from graphextract.pipeline import _band_split_row
+    db, di, interior = _split_case([10, 11, 30, 31], [300, 301], True)
+    assert _band_split_row([db], [di], interior,
+                           [(32, 47, 215)], [(35, 73, 216)]) is None
+
+
+def _recover_tracks():
+    """Synthetic panel: two family DI curves at offset 40.5 plus a
+    family-less marker line solving a stray offset."""
+    from types import SimpleNamespace
+
+    from graphextract.schema import (AxisFit, AxisRole, ScaleType,
+                                     SegmentStatus, SeriesResult,
+                                     SeriesSample)
+    left_a, left_b = -12.0, 1170.0
+    us = np.arange(200, dtype=float)
+    on = 85.0 + 2.0 * us / 200.0
+    sp = 80.0 + 4.0 * us / 200.0
+    er = 78.0 + 3.0 * np.sin(us / 25.0)
+
+    def px(d):
+        return {float(u): left_a * v + left_b for u, v in zip(us, d)}
+
+    def tr(sid, label, d):
+        return SeriesResult(
+            series_id=sid, panel_id="p", label=label, axis_id="y_left",
+            samples=[SeriesSample(float(u), left_a * v + left_b,
+                                  status=SegmentStatus.OBSERVED)
+                     for u, v in zip(us, d)])
+    di_sp = (on - sp) + 40.5
+    di_er = (on - er) + 40.5
+    marker = (on - sp) + 71.6
+    tracks = {
+        "on": tr("on", "On Axis", on),
+        "sp": tr("sp", "Sound Power", sp),
+        "er": tr("er", "Early Reflections", er),
+        "spdi": tr("spdi", "Sound Power DI", di_sp),
+        "erdi": tr("erdi", "Early Reflections DI", di_er),
+        "mark": tr("mark", "DI offset", marker),
+    }
+    axes = {"y_left": AxisFit(role=AxisRole.Y_LEFT, scale=ScaleType.LINEAR,
+                              unit="dB", a=left_a, b=left_b)}
+    result = SimpleNamespace(review_reasons=[], provenance={})
+    return result, axes, tracks
+
+
+def test_recover_pool_ignores_family_less_markers():
+    """A family-less marker solving a stray offset must not veto two
+    agreeing family curves: the shared axis proves at 40.5dB."""
+    from graphextract.pipeline import _recover_di_right_axis
+    result, axes, tracks = _recover_tracks()
+    _recover_di_right_axis(result, axes, tracks)
+    assert "y_right" in axes
+    assert abs(result.provenance["di_offset_db"] - 40.5) < 0.1
+    assert tracks["spdi"].axis_id == "y_right"
+    assert tracks["erdi"].axis_id == "y_right"
+    assert tracks["mark"].axis_id == "y_left"
+
+
+def test_band_split_row_empty_is_none():
+    from graphextract.pipeline import _band_split_row
+    import numpy as np
+    interior = np.full((400, 40, 3), 255, np.uint8)
+    assert _band_split_row([], [], interior, [(0, 0, 0)],
+                           [(0, 0, 255)]) is None
+    assert _band_split_row([np.zeros((400, 40), np.uint8)], [],
+                           interior, [(0, 0, 0)], [(0, 0, 255)]) is None
+
+
 def test_prune_supplement_track_drops_phantoms():
     """Legend-free seeds with no support, or pixel-flat gridline latches,
     are pruned; real wiggly tracks survive."""
@@ -284,6 +389,23 @@ def test_prune_supplement_track_drops_phantoms():
     good = _track("c3", [(float(u), 50.0 + 10 * math.sin(u / 9.0))
                          for u in range(200)])
     assert not _prune_supplement_track(good)
+    # Churn survivors: re-seed hops same-hue fragments into 8% wiggly
+    # support that is still phantom; a 20% partial real track survives.
+    from graphextract.schema import SeriesResult, SeriesSample
+    frag = SeriesResult(
+        series_id="c4", panel_id="p", label="c4", axis_id="y_left",
+        samples=[SeriesSample(float(u), 50.0 + 10 * math.sin(u / 9.0),
+                              status=(SegmentStatus.OBSERVED if u % 12 == 0
+                                      else SegmentStatus.MISSING))
+                 for u in range(200)])
+    assert _prune_supplement_track(frag)
+    partial = SeriesResult(
+        series_id="c5", panel_id="p", label="c5", axis_id="y_left",
+        samples=[SeriesSample(float(u), 50.0 + 10 * math.sin(u / 9.0),
+                              status=(SegmentStatus.OBSERVED if u % 5 == 0
+                                      else SegmentStatus.MISSING))
+                 for u in range(200)])
+    assert not _prune_supplement_track(partial)
 
 
 def test_demoted_di_duplicates_and_out_of_bounds():
@@ -306,3 +428,175 @@ def test_demoted_di_duplicates_and_out_of_bounds():
     tracks = {"db": db, "di2": di_other}
     _demote_di_duplicates(tracks, {"di2"}, interior, {"di2": (200, 30, 30)})
     assert all(s.status is SegmentStatus.OBSERVED for s in di_other.samples)
+
+
+def _band_tracks(db_v, di_v, anchor_vs=(170.0, 180.0)):
+    def wiggle(v0):
+        return [(float(u), v0 + ((u % 4) - 1.5) * 4.0) for u in range(20)]
+    tracks = {
+        "a1": _track("a1", wiggle(anchor_vs[0])),
+        "a2": _track("a2", wiggle(anchor_vs[1])),
+        "db": _track("db", wiggle(db_v)),
+        "di": _track("di", wiggle(di_v)),
+    }
+    colors = {"a1": (53, 24, 48), "a2": (126, 124, 91),
+              "db": (36, 46, 182), "di": (36, 46, 182)}
+    return tracks, colors
+
+
+def _median_v(tr):
+    vv = sorted(s.v for s in tr.samples)
+    return vv[len(vv) // 2]
+
+
+def test_swap_crossed_bands_exchanges_labels():
+    """A same-paint dB track latched on DI ink swaps samples with its DI
+    sibling sitting in the measured band; labels stay put."""
+    from graphextract.pipeline import _swap_crossed_bands
+    tracks, colors = _band_tracks(940.0, 200.0)
+    before_db, before_di = _median_v(tracks["db"]), _median_v(tracks["di"])
+    _swap_crossed_bands(tracks, {"di"}, colors, 22.0)
+    assert _median_v(tracks["db"]) == before_di
+    assert _median_v(tracks["di"]) == before_db
+    assert any("band swap" in r for r in tracks["db"].review_reasons)
+    assert any("band swap" in r for r in tracks["di"].review_reasons)
+    assert tracks["a1"].review_reasons == []
+    assert tracks["a2"].review_reasons == []
+
+
+def test_swap_crossed_bands_keeps_correct_assignment():
+    """A dB track already in the measured band with its DI sibling a
+    separated band away keeps both tracks untouched."""
+    from graphextract.pipeline import _swap_crossed_bands
+    tracks, colors = _band_tracks(200.0, 940.0)
+    before_db, before_di = _median_v(tracks["db"]), _median_v(tracks["di"])
+    _swap_crossed_bands(tracks, {"di"}, colors, 22.0)
+    assert _median_v(tracks["db"]) == before_db
+    assert _median_v(tracks["di"]) == before_di
+    assert tracks["db"].review_reasons == []
+    assert tracks["di"].review_reasons == []
+
+
+def test_swap_crossed_bands_keeps_overlap_and_loose_consensus():
+    """Overlapping bands, a split measured band, and missing anchors all
+    refuse the swap: only a judged crossing exchanges samples."""
+    from graphextract.pipeline import _swap_crossed_bands
+    tracks, colors = _band_tracks(300.0, 200.0)  # 4.5dB apart: overlap
+    before = _median_v(tracks["db"])
+    _swap_crossed_bands(tracks, {"di"}, colors, 22.0)
+    assert _median_v(tracks["db"]) == before
+    tracks, colors = _band_tracks(940.0, 200.0, anchor_vs=(170.0, 400.0))
+    before = _median_v(tracks["db"])
+    _swap_crossed_bands(tracks, {"di"}, colors, 22.0)
+    assert _median_v(tracks["db"]) == before  # split consensus: no judge
+    lone = {"db": _track("db", [(float(u), 940.0) for u in range(20)]),
+            "di": _track("di", [(float(u), 200.0) for u in range(20)])}
+    _swap_crossed_bands(lone, {"di"},
+                        {"db": (36, 46, 182), "di": (36, 46, 182)}, 22.0)
+    assert _median_v(lone["db"]) == 940.0  # no anchors: untouched
+    # A pixel-flat frame ride cannot anchor: the good anchor judges alone.
+    tracks, colors = _band_tracks(940.0, 200.0, anchor_vs=(170.0, 2.0))
+    flat = tracks["a2"].samples
+    for s in flat:
+        s.v = 2.0
+    before_db, before_di = _median_v(tracks["db"]), _median_v(tracks["di"])
+    _swap_crossed_bands(tracks, {"di"}, colors, 22.0)
+    assert _median_v(tracks["db"]) == before_di
+    assert _median_v(tracks["di"]) == before_db
+
+
+def test_demote_thin_di_samples_go_missing():
+    """A directivity track too thin to calibrate goes missing honestly
+    (the series stays for review); supported and stated-offset tracks
+    keep their samples."""
+    from graphextract.pipeline import _demote_thin_di_samples
+    from graphextract.schema import SegmentStatus
+
+    thin = _track("di1", [(float(u), 900.0) for u in range(5)])
+    thick = _track("di2", [(float(u), 900.0) for u in range(50)])
+    stated = _track("di3", [(float(u), 900.0) for u in range(5)])
+    stated.label = "Sound Power DI (Offset:45dB)"
+    tracks = {"di1": thin, "di2": thick, "di3": stated}
+    _demote_thin_di_samples(tracks, {"di1", "di2", "di3"})
+    assert "di1" in tracks  # series stays for review ...
+    assert tracks["di1"].observed_support() == 0  # ... but honest
+    assert all(s.status is SegmentStatus.MISSING
+               for s in tracks["di1"].samples)
+    assert tracks["di2"].observed_support() == 50  # supported: kept
+    assert tracks["di3"].observed_support() == 5  # stated: kept
+    assert any("demoted to missing" in r
+               for r in tracks["di1"].review_reasons)
+
+
+def test_enforce_db_split_retracks_home():
+    """A measured track sitting fully past the band split re-tracks
+    fenced into its home band when a same-paint twin holds the far
+    band; the re-track lands on the upper dashes."""
+    from graphextract.evidence import segment_evidence
+    from graphextract.pipeline import _enforce_db_split
+    from graphextract.schema import SeriesResult, SeriesSample
+
+    h, w = 400, 400
+    red = (32, 47, 215)
+    interior = np.full((h, w, 3), 255, np.uint8)
+    for x in range(20, 380, 12):  # red dashes, measured band
+        interior[60:65, x:x + 7] = red
+    interior[260:265, 20:380] = red  # red solid, directivity band
+
+    def latched(sid, label):
+        return SeriesResult(
+            series_id=sid, panel_id="p", label=label, axis_id="y_left",
+            samples=[SeriesSample(float(u), 262.0)
+                     for u in range(20, 380, 2)])
+
+    styles = [StyleSpec("db", "Sound Power", red),
+              StyleSpec("di", "Sound Power DI", red)]
+    layers = segment_evidence(interior, styles)
+    gray = cv2.cvtColor(interior, cv2.COLOR_BGR2GRAY)
+    tracks = {"db": latched("db", "Sound Power"),
+              "di": latched("di", "Sound Power DI")}
+    colors = {"db": red, "di": red}
+    _enforce_db_split(tracks, {"di"}, colors, 150, gray, layers,
+                      interior, None)
+    assert _median_v(tracks["db"]) < 150
+    assert tracks["db"].label == "Sound Power"
+    assert any("split enforcement" in r
+               for r in tracks["db"].review_reasons)
+
+
+
+
+def test_enforce_di_split_retracks_home():
+    """A directivity track sitting mostly above the split re-tracks
+    fenced into its home band when a same-paint measured twin holds
+    it; the re-track lands on the lower solid line."""
+    from graphextract.evidence import segment_evidence
+    from graphextract.pipeline import _enforce_di_split
+    from graphextract.schema import SeriesResult, SeriesSample
+
+    h, w = 400, 400
+    red = (32, 47, 215)
+    interior = np.full((h, w, 3), 255, np.uint8)
+    for x in range(20, 380, 12):  # red dashes, measured band
+        interior[60:65, x:x + 7] = red
+    interior[260:265, 20:380] = red  # red solid, directivity band
+
+    def latched(sid, label, v):
+        return SeriesResult(
+            series_id=sid, panel_id="p", label=label, axis_id="y_left",
+            samples=[SeriesSample(float(u), float(v))
+                     for u in range(20, 380, 2)])
+
+    styles = [StyleSpec("db", "Sound Power", red),
+              StyleSpec("di", "Sound Power DI", red)]
+    layers = segment_evidence(interior, styles)
+    gray = cv2.cvtColor(interior, cv2.COLOR_BGR2GRAY)
+    tracks = {"db": latched("db", "Sound Power", 62.0),
+              "di": latched("di", "Sound Power DI", 62.0)}
+    colors = {"db": red, "di": red}
+    _enforce_di_split(tracks, {"di"}, colors, 150, gray, layers,
+                      interior, None)
+    assert _median_v(tracks["di"]) > 150
+    assert tracks["di"].label == "Sound Power DI"
+    assert any("split enforcement" in r
+               for r in tracks["di"].review_reasons)

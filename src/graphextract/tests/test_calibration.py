@@ -2,9 +2,11 @@
 """Tests for calibration.py: tick parsing, axis fits, DI offset recovery."""
 
 import numpy as np
+import pytest
 
 from graphextract.calibration import (
     AxisRole,
+    CalibrationUnresolved,
     ScaleType,
     fit_axis,
     parse_di_offset,
@@ -134,3 +136,84 @@ def test_solve_di_offset_needs_points_and_refs():
                            [("A", pix(a)), ("B", pix(b))],
                            left_a, left_b) is None
     assert solve_di_offset(di, [("A", pix(a))], left_a, left_b) is None
+
+
+def test_consensus_di_offset_proves_through_contamination():
+    from graphextract.calibration import _consensus_di_offset
+    # Ascilab-SPDI shape: a quarter of the samples ride the true
+    # curve (tight peak at the offset), the rest hop on twin ink.
+    # Strict IQR spreads; consensus proves from the peak.
+    us, a, b, c = _ramps()
+    left_a, left_b = -12.0, 1170.0
+    pix = lambda d: {float(u): left_a * v + left_b for u, v in zip(us, d)}
+    di = {}
+    for i, (u, av, bv) in enumerate(zip(us, a, b)):
+        if i % 4 == 0:
+            di[float(u)] = left_a * ((av - bv) + 45.0) + left_b
+        else:
+            di[float(u)] = (left_a * ((av - bv) + 48.0 + 8.0 * u / 200.0)
+                            + left_b)
+    refs = [("A", pix(a)), ("B", pix(b)), ("C", pix(c))]
+    assert solve_di_offset(di, refs, left_a, left_b) is None
+    hit = _consensus_di_offset(di, refs, left_a, left_b)
+    assert hit is not None
+    off, (la, lb), frac, n = hit
+    assert (la, lb) == ("A", "B")
+    assert abs(off - 45.0) < 0.4
+    assert frac >= 0.2 and n >= 40
+
+
+def test_consensus_di_offset_rejects_self_explaining_pair():
+    from graphextract.calibration import _consensus_di_offset
+    # A latched measured curve explains itself through a flat
+    # reference at that reference's level; its pixels coincide with
+    # the pair's, so consensus rejects it.
+    us, a, b, _c = _ramps()
+    left_a, left_b = -12.0, 1170.0
+    pix = lambda d: {float(u): left_a * v + left_b for u, v in zip(us, d)}
+    flat = 85.0 + 0.2 * np.sin(us / 20.0)
+    latched = {float(u): left_a * v + left_b for u, v in zip(us, a)}
+    refs = [("A", pix(a)), ("Flat", pix(flat))]
+    assert _consensus_di_offset(latched, refs, left_a, left_b) is None
+
+
+def test_consensus_di_offset_rejects_spread():
+    from graphextract.calibration import _consensus_di_offset
+    # No tight peak anywhere: unproven, never guessed.
+    us, a, b, _c = _ramps()
+    left_a, left_b = -12.0, 1170.0
+    pix = lambda d: {float(u): left_a * v + left_b for u, v in zip(us, d)}
+    di = {float(u): left_a * ((av - bv) + 37.0 + 16.0 * u / 200.0)
+          + left_b for u, av, bv in zip(us, a, b)}
+    assert _consensus_di_offset(di, [("A", pix(a)), ("B", pix(b))],
+                                left_a, left_b) is None
+
+
+def test_log_support_skips_nonpositive_values():
+    # Neumann shape: a best log pair plus '0'/sign-fragment support reads.
+    # Non-positive values can never corroborate a log axis; support
+    # validation skips them (unresolved fit), never crashes on log10.
+    anchors = [TickAnchor(473.0, 100.0), TickAnchor(1832.0, 10000.0),
+               TickAnchor(1477.0, -47.0), TickAnchor(1002.0, 0.0)]
+    with pytest.raises(CalibrationUnresolved):
+        fit_axis(anchors, AxisRole.X, "Hz", ScaleType.LOG10)
+
+
+def test_y_axis_rejects_inverted_slope():
+    # Harman-BW shape: a misread '30' for '90' inverts the y fit. Pixel
+    # rows grow downward while values grow upward, so the positive-slope
+    # pair is refused and the relaxed retry seats the true consensus.
+    anchors = [TickAnchor(230.0, 30.0), TickAnchor(673.0, 70.0),
+               TickAnchor(3.0, 100.0), TickAnchor(454.0, 80.0),
+               TickAnchor(1124.0, 50.0)]
+    fit = fit_axis(anchors, AxisRole.Y_LEFT, "dB", ScaleType.LINEAR)
+    assert fit.a < 0
+    assert len(fit.anchors_used) >= 3
+    assert 30.0 not in [a.value for a in fit.anchors_used]
+
+
+def test_y_axis_inverted_pair_without_support_stays_unresolved():
+    # A lone inverted pair is a misread, never an axis.
+    anchors = [TickAnchor(230.0, 30.0), TickAnchor(673.0, 70.0)]
+    with pytest.raises(CalibrationUnresolved):
+        fit_axis(anchors, AxisRole.Y_LEFT, "dB", ScaleType.LINEAR)

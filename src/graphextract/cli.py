@@ -19,7 +19,7 @@ import numpy.typing as npt
 
 from graphextract.evidence import StyleSpec
 from graphextract.exports import write_canonical, write_comparison_figure, write_curve_csvs
-from graphextract.ocr_adapters import TesseractOCR, ocr_anchor_provider
+from graphextract.ocr_adapters import TesseractOCR, _box_iou, _dedup_words, _offset_words, ocr_anchor_provider, read_text_zone
 from graphextract.pipeline import run_document
 from graphextract.schema import DocumentResult, SegmentStatus
 from graphextract.semantics import detect_legend, styles_from_legend
@@ -117,15 +117,84 @@ def select_styles(
     return discover_styles(image)
 
 
-def _read_full_words(image: npt.NDArray, ocr: TesseractOCR) -> Sequence | None:
-    """Full-image OCR words (image-global); None when OCR cannot deliver."""
+def _read_full_words(image: npt.NDArray, ocr: TesseractOCR,
+                     sparse_min_words: int = 15) -> Sequence | None:
+    """Full-image OCR words (image-global); None when OCR cannot deliver.
+
+    Tesseract's page segmentation drops small type on sparse layouts, so
+    a near-empty native read retries at 2x with coordinates scaled back;
+    the merged set keeps whatever each scale saw. Runs only when the
+    native read is sparse, so dense charts pay nothing.
+    """
     if not ocr.available:
         return None
     full_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if image.ndim == 3 else image
     try:
-        return ocr.read_words(full_gray)
+        words = ocr.read_words(full_gray)
     except Exception:  # external OCR binary: degrade to the legacy path
         return None
+    if len(words) >= sparse_min_words:
+        return words
+    try:
+        big = cv2.resize(full_gray, None, fx=2.0, fy=2.0,
+                         interpolation=cv2.INTER_CUBIC)
+        words2 = ocr.read_words(big)
+    except Exception:
+        return words
+    if len(words2) <= len(words):
+        return words
+    from graphextract.ocr_adapters import OCRWord
+    scaled = [OCRWord(w.text, w.x // 2, w.y // 2, max(1, w.w // 2),
+                      max(1, w.h // 2), w.confidence) for w in words2]
+    return _dedup_words(list(words) + scaled)
+
+
+def _complete_legend_words(image: npt.NDArray, words: Sequence,
+                           max_passes: int = 2) -> Sequence:
+    """Re-read the legend zone so trailing rows join the word pool.
+
+    Full-page OCR drops the tail of long legend stacks; the rows it
+    did read locate a tight zone (entry band, extended along the row
+    pitch) whose sparse-text re-read recovers the missing labels (and
+    any tick digits sharing the band). Iterates until the word pool
+    stops growing: each pass can only extend the zone past newly
+    found rows. Needs at least two keyed entries to estimate pitch.
+    """
+    words = list(words)
+    h, w = image.shape[:2]
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if image.ndim == 3 else image
+    for _ in range(max_passes):
+        legend = detect_legend(image, words)
+        if not legend.has_legend or len(legend.entries) < 2:
+            return words
+        cys = sorted(e.word_xywh[1] + e.word_xywh[3] / 2.0
+                     for e in legend.entries)
+        gaps = [b - a for a, b in zip(cys, cys[1:]) if b - a > 1.0]
+        if not gaps:
+            return words
+        pitch = float(min(max(float(np.median(gaps)), 10.0), 100.0))
+        lx, ly, lw, lh = legend.bbox_xywh or (0, 0, w, h)
+        mx = int(pitch)
+        my = int(4 * pitch)
+        x0, y0 = max(0, lx - mx), max(0, ly - my)
+        x1, y1 = min(w, lx + lw + mx), min(h, ly + lh + my)
+        if x1 - x0 < 8 or y1 - y0 < 8:
+            return words
+        extra = read_text_zone(gray[y0:y1, x0:x1])
+        if not extra:
+            return words
+        # Gap fill only: the zone re-read recovers missing rows, never
+        # replaces words the full read already has (its errors would
+        # otherwise evict correct labels on confidence).
+        fresh = [wd for wd in _offset_words(extra, x0, y0)
+                 if not any(_box_iou(wd, old) >= 0.5 for old in words)]
+        if not fresh:
+            return words
+        merged = _dedup_words(words + fresh)
+        if len(merged) <= len(words):
+            return words
+        words = merged
+    return words
 
 
 def extract_image(
@@ -147,6 +216,8 @@ def extract_image(
     track_config = TrackConfig.from_assumptions(assumptions)
     ocr = TesseractOCR() if use_ocr else None
     words = _read_full_words(image, ocr) if ocr is not None else None
+    if words is not None:
+        words = _complete_legend_words(image, words)
     selected = select_styles(image, words, styles)
     if not selected:
         message = "no saturated curve colours found; pass --curve label=#RRGGBB"

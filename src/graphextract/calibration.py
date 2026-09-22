@@ -248,7 +248,15 @@ def _fit_from_anchors(
         anchors = [a for a in anchors if a.value > 0]
     ts = [t_of(a.value) for a in anchors]
     px = [a.pixel for a in anchors]
+
+    def _support(idxs: list[int]) -> int:
+        # One vote per pixel row: several conflicting reads of one tick
+        # label share a pixel, and counting them separately lets a
+        # misread plus its twins outvote the true consensus.
+        return len({round(px[k]) for k in idxs})
+
     best: tuple[float, float, list[int]] | None = None
+    best_conf = 0.0
     for i, j in itertools.combinations(range(len(anchors)), 2):
         if ts[j] == ts[i]:
             continue
@@ -258,9 +266,17 @@ def _fit_from_anchors(
             # grid line is not an axis, whatever its inlier count.
         b = px[i] - a * ts[i]
         inl = [k for k in range(len(anchors)) if abs((a * ts[k] + b) - px[k]) <= inlier_tol_px]
-        if best is None or len(inl) > len(best[2]):
+        # Equal-support ties prefer the higher-confidence consensus: with
+        # multi-candidate snapping, every word proposes neighbouring
+        # gridlines too, and the systematically shifted ghost line ties the
+        # true line on support while losing on snap distance. Without the
+        # tie-break, input order would pick true-or-ghost arbitrarily.
+        conf = sum(float(anchors[k].confidence) for k in inl)
+        if best is None or _support(inl) > _support(best[2]) or (
+                _support(inl) == _support(best[2]) and conf > best_conf):
             best = (a, b, inl)
-    if best is None or len(best[2]) < 2:
+            best_conf = conf
+    if best is None or _support(best[2]) < 2:
         raise CalibrationUnresolved(
             "Anchors are degenerate (coincident transform values).",
             ["two anchors with distinct axis values"],
@@ -343,6 +359,10 @@ def _fit_axis_once(
             continue
         if role is AxisRole.X and cand is ScaleType.LOG10 and a <= 0:
             continue
+        if role in (AxisRole.Y_LEFT, AxisRole.Y_RIGHT) and a >= 0:
+            continue  # pixel rows grow downward while axis values grow
+            # upward in every chart: a non-negative y slope is a misread
+            # value ('90' as '30'), never an axis.
         fits.append((mx, AxisFit(role=role, scale=cand, unit=unit, a=a, b=b,
                                  anchors_used=used, residual_px_rms=rms,
                                  residual_px_max=mx, method="ransac_pairs")))
@@ -366,12 +386,19 @@ def _fit_axis_once(
                 "Linear and logarithmic hypotheses fit equally well.",
                 ["explicit axis scale selection (linear vs log)"],
             )
-    n = len(best.anchors_used)
+    # Support counts distinct pixel rows (see _fit_from_anchors): twin
+    # reads of one label corroborate nothing.
+    n = len({round(a.pixel) for a in best.anchors_used})
     if n < min_anchors:
         # Two anchors define the affine map; demand independent corroboration.
         # Support stays at strict tolerance even on the relaxed retry: a
         # corroborating tick far off the line means the line is wrong.
+        # Non-positive values can never corroborate a log axis ('0' and
+        # sign-fragment misreads); attempting log10 on them crashes the
+        # whole panel instead of merely failing the fit.
         support = [a for a in anchors if a not in best.anchors_used]
+        if best.scale is ScaleType.LOG10:
+            support = [a for a in support if a.value > 0]
         ok = any(
             abs(best.a * (math.log10(s.value) if best.scale is ScaleType.LOG10 else s.value)
                 + best.b - s.pixel) <= support_tol_px
@@ -458,6 +485,75 @@ def solve_di_offset(
             iqr = q75 - q25
             if iqr <= max_iqr_db and (best is None or iqr < best[2]):
                 best = (float(np.median(resid)), (la, lb), iqr, len(common))
+    return best
+
+
+_OFFSET_CONSENSUS_BIN = 0.75
+"""Residual window (dB) for the consensus offset peak."""
+_OFFSET_CONSENSUS_FRAC = 0.15
+"""Minimum share of residuals inside the peak window."""
+_OFFSET_SELF_OVERLAP = 0.5
+"""Maximum pixel overlap with the pair for a valid consensus.
+
+A latched measured curve explains itself through a flat reference at
+that reference's level; its pixels coincide with the pair's, while a
+true directivity track inks its own rows.
+"""
+
+
+def _consensus_di_offset(
+    di_pixels: dict[float, float],
+    refs: list[tuple[str, dict[float, float]]],
+    left_a: float,
+    left_b: float,
+    min_points: int = 10,
+) -> tuple[float, tuple[str, str], float, int] | None:
+    """Offset from the tightest residual consensus, for mixed tracks.
+
+    Strict ``solve_di_offset`` needs the whole track on one curve; a
+    track hopping between twin directivity ink (Ascilab SPDI rides
+    blue dashes and orange solid) spreads globally but keeps a tight
+    peak at the true offset. Per pair this takes the fullest sliding
+    ``_OFFSET_CONSENSUS_BIN`` window, requires ``_OFFSET_CONSENSUS_FRAC``
+    of residuals inside, and rejects self-explaining pairs (pixel
+    overlap with the pair at ``_OFFSET_SELF_OVERLAP``). Returns
+    ``(offset, (label_a, label_b), peak_frac, n_peak)`` for the
+    fullest valid peak, else None.
+    """
+    if left_a == 0 or len(di_pixels) < min_points or len(refs) < 2:
+        return None
+
+    def _db(pix: dict[float, float]) -> dict[float, float]:
+        return {u: (v - left_b) / left_a for u, v in pix.items()}
+
+    plotted = _db(di_pixels)
+    best: tuple[float, tuple[str, str], float, int] | None = None
+    for i, (la, da0) in enumerate(refs):
+        for j, (lb, dbb0) in enumerate(refs):
+            if i == j:
+                continue
+            da, dbb = _db(da0), _db(dbb0)
+            common = [u for u in plotted if u in da and u in dbb]
+            if len(common) < min_points:
+                continue
+            resid = sorted(plotted[u] - (da[u] - dbb[u]) for u in common)
+            n = len(resid)
+            peak_n, peak_med, k = 0, 0.0, 0
+            for left_i in range(n):
+                while k < n and resid[k] - resid[left_i] <= _OFFSET_CONSENSUS_BIN:
+                    k += 1
+                if k - left_i > peak_n:
+                    peak_n = k - left_i
+                    peak_med = float(np.median(resid[left_i:k]))
+            if peak_n < min_points or peak_n / n < _OFFSET_CONSENSUS_FRAC:
+                continue
+            di_px = {(u, round(di_pixels[u])) for u in common}
+            ab_px = {(u, round(da0[u])) for u in common}
+            ab_px |= {(u, round(dbb0[u])) for u in common}
+            if len(di_px & ab_px) / len(di_px) >= _OFFSET_SELF_OVERLAP:
+                continue
+            if best is None or peak_n > best[3]:
+                best = (peak_med, (la, lb), peak_n / n, peak_n)
     return best
 
 

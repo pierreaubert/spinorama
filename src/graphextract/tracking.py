@@ -34,10 +34,14 @@ evidence-only contract for callers who know more about their charts:
   ``_REACQUIRE_AFTER`` consecutive uncovered columns is re-acquired to
   the nearest owned cluster within ``_REACQUIRE_MAX_PX`` (hole plus
   review note, never a drawn cliff), so temporary loss stays a short gap
-  instead of a stuck track. Step-demoted spans are never interpolated,
-  and ``curve_continuous`` additionally refuses bridges
-  steeper than the flank-supported slope, so a dropout re-emerging on
-  another curve stays a hole instead of becoming a drawn cliff.
+  instead of a stuck track. Past ``_RESEED_AFTER`` lost columns the
+  stale prediction is abandoned and the track re-seeds on its best
+  colour-confirmed owned cluster at any distance, so stranding past a
+  steep bundle recovers in the clean stretch beyond it. Step-demoted spans are never interpolated,
+  and ``curve_continuous`` additionally refuses bridges steeper than
+  the flank-supported slope, longer than ``_FILL_MAX_GAP``, and sloped
+  over empty space, so a dropout re-emerging on another curve stays a
+  hole instead of becoming a drawn cliff.
 - ``assume_overlap``: when curves merge, hidden members are assumed present
   underneath: a series with a live motion prediction keeps an
   INFERRED_OCCLUSION track through columns whose merged ink covers the
@@ -74,6 +78,12 @@ KNOWN_ASSUMPTIONS = ("curve_continuous", "no_jump", "assume_overlap")
 class TrackConfig:
     min_gap_px: int = 3
     beam_width: int = 4
+    # Re-seed colour gate. Strict (core-grade) by default: near-hue
+    # impostor edges score 14-28 while true cores score 0-15, so the
+    # loose identity tolerance would re-seed onto foreign ink. Passes
+    # that fence the impostor band (dB re-track behind DI-claimed ink)
+    # loosen it to admit washed truth the fence verified as in-band.
+    reseed_tol: float = 15.0
     # Owned evidence is tracked as observed unless the frame-to-frame jump is
     # larger than this: abrupt jumps become occlusion/missing candidates for
     # review instead of being silently dropped or smoothed over.
@@ -107,6 +117,27 @@ _REACQUIRE_AFTER = 12
 
 _REACQUIRE_MAX_PX = 64.0
 """Widest snap a re-acquiring track may take to the nearest owned cluster."""
+
+_RESEED_EDGE_PX = 4
+"""Interior margin re-seed targets must clear.
+
+Frame furniture lives in the outer band and matches grey templates
+through the box test; a re-seed there rides the frame to the panel
+edge. True curve endpoints touch the frame only briefly, so vetoing
+the band merely delays their re-seed by a few columns.
+"""
+
+_RESEED_AFTER = 200
+"""Lost columns before a stranded track re-seeds on confirmed ink.
+
+Re-acquire (``_REACQUIRE_MAX_PX``) only rescues locally stranded tracks;
+a track whose prediction froze hundreds of pixels from its curve (past
+a steep bundle its own pixels barely survive) never comes back. After
+this many consecutive lost columns the stale prediction carries no
+information, so the track re-seeds on its best colour-confirmed owned
+cluster at any distance and restarts fresh. Transient holes never reach
+the wait, and sibling latches stay demotable downstream.
+"""
 
 _CONFIRM_TOL = 25.0
 """Unmixing score within which a take counts as colour-confirmed identity.
@@ -156,6 +187,20 @@ all but motion-exact evidence. Measured margin on vendor plots: true
 ink 0-15, nearest impostor (navy fringe, grey grid) 34+.
 """
 
+_TAINT_PENALTY = 6.0
+"""Extra take cost for foreign-tainted candidates at identity commitment.
+
+With no motion history every candidate ties at zero motion and colour
+decides; shared-hue impostor fringe unmixes core-grade (Ascilab SPDI
+re-seeded onto dB ink at score 7.9), so colour ties and set order picks
+the band. Candidates touching foreign claims pay this penalty, but only
+while a clean candidate shares the column, so overlay plots whose every
+candidate is tainted behave exactly as before. It applies at identity
+commitment only (first take, or re-seed after a long loss whose stale
+prediction is meaningless), so crossings and gap re-acquisition keep
+today's motion-led behaviour.
+"""
+
 _COVER_MAX = 1.3
 """Largest implied ink fraction that still counts as the template's ink.
 
@@ -175,6 +220,54 @@ substantial-coverage candidates commits identity on real ink; when no
 column qualifies the unconstrained best still applies, preserving the
 old behaviour for faint series.
 """
+
+_SEED_MIN_RUN = 3
+"""Consecutive owned columns that count as substantial seed ink.
+
+A track seeds where its curve starts, not on the first blip: isolated
+1-2 column owned fragments (unread glyph fringe, JPEG speckle) must
+never commit an identity, or the track strands on a frozen prediction
+far from its curve with no recovery in reach.
+"""
+
+
+def _frame_rows(union: npt.NDArray, height: int) -> set[int]:
+    """Interior rows belonging to the top/bottom plot frame.
+
+    The interior often starts a few pixels above the frame (detection
+    slack), so a fixed edge band misses it while a wide one eats
+    curves. Frame rows instead are measured: panel-spanning ink runs
+    (90%+ of columns) in the top/bottom twentieth of the panel,
+    dilated past antialiased skirts. Images without a detectable frame
+    fall back to the fixed re-seed edge band.
+    """
+    rows: set[int] = set()
+    w = union.shape[1]
+    zone = max(8, height // 20)
+    with np.errstate(all="ignore"):
+        frac = (union > 0).sum(axis=1) / max(1, w)
+    for r in list(range(0, zone)) + list(range(height - zone, height)):
+        if 0 <= r < height and frac[r] >= 0.9:
+            rows.update(range(max(0, r - 3), min(height, r + 4)))
+    if not rows:
+        rows.update(range(0, _RESEED_EDGE_PX))
+        rows.update(range(max(0, height - _RESEED_EDGE_PX), height))
+    return rows
+
+
+def _seed_run_columns(mask: npt.NDArray, width: int) -> set[int]:
+    """Columns belonging to an owned run of ``_SEED_MIN_RUN`` or more."""
+    cols = [x for x in range(width) if (mask[:, x] > 0).any()]
+    runs: set[int] = set()
+    i = 0
+    while i < len(cols):
+        j = i
+        while j + 1 < len(cols) and cols[j + 1] == cols[j] + 1:
+            j += 1
+        if j - i + 1 >= _SEED_MIN_RUN:
+            runs.update(cols[i:j + 1])
+        i = j + 1
+    return runs
 
 
 def _clusters(column: npt.NDArray, min_gap: int) -> list[list[int]]:
@@ -258,6 +351,92 @@ def _colour_best_dists(
     return best_dist
 
 
+_CLEAN_RUN_MIN = 5
+"""Minimum consecutive flagged columns that count as committable ink.
+
+Deferral waits for clean ink runs (dash strokes span dozens of
+columns); isolated clean pixels are hue noise, and waiting for them
+would strand overlay plots — whose truth is tainted throughout — on
+leaks instead of their own ink.
+"""
+
+
+def _run_gate(flags: npt.NDArray, min_run: int) -> npt.NDArray:
+    """Keep only flags belonging to runs of ``min_run`` or more."""
+    flags = np.asarray(flags).reshape(-1)
+    out = np.zeros(len(flags), dtype=bool)
+    i = 0
+    while i < len(flags):
+        if not flags[i]:
+            i += 1
+            continue
+        j = i
+        while j + 1 < len(flags) and flags[j + 1]:
+            j += 1
+        if j - i + 1 >= min_run:
+            out[i:j + 1] = True
+        i = j + 1
+    return out
+
+
+def _clean_commit_flags(
+    union: npt.NDArray,
+    owned_mask: npt.NDArray,
+    color_img: npt.NDArray,
+    ref_bgr: tuple[int, int, int],
+    bg_bgr: tuple[int, int, int],
+    avoid_mask: npt.NDArray,
+    min_gap_px: int,
+    reseed_tol: float,
+) -> tuple[npt.NDArray, npt.NDArray]:
+    """Per-column clean-commitment flags for steered identity commitment.
+
+    Returns ``(excellent, qualifying)`` boolean vectors over columns: a
+    column is flagged when an owned cluster clear of foreign claims
+    carries a pixel passing the seed-excellence gate (``_SEED_DIST_TOL``
+    plus the core-coverage band, mirroring ``_seed_columns``) or the
+    re-seed gate (``reseed_tol``, mirroring ``_maybe_reseed``).
+    Frame-touching clusters never flag (frame furniture unmixes
+    core-grade on dark templates), and neither do the edge strips
+    ``_maybe_reseed`` cannot commit on. Flags keep only runs of
+    ``_CLEAN_RUN_MIN`` or more: deferral waits for ink runs, never
+    for isolated noise pixels. Columns are independent: the caller
+    derives first-clean seeds and clean-ahead re-seed waits.
+    """
+    h, w = int(np.asarray(union).shape[0]), int(np.asarray(union).shape[1])
+    exc = np.zeros(w, dtype=bool)
+    qual = np.zeros(w, dtype=bool)
+    frame = _frame_rows(union, h)
+    own = np.asarray(owned_mask) > 0
+    av = np.asarray(avoid_mask) > 0
+    ref_arr = np.array(ref_bgr, dtype=float)
+    bg = np.array(bg_bgr, dtype=float).reshape(1, 3)
+    for x in range(_RESEED_EDGE_PX, w - _RESEED_EDGE_PX):
+        if not (own[:, x] & ~av[:, x]).any():
+            continue
+        clusters = _clusters(np.asarray(union)[:, x], min_gap_px)
+        if not clusters:
+            continue
+        col_pixels = np.asarray(color_img)[:, x].reshape(-1, 3).astype(float)
+        scores, coverage = _segment_scores(col_pixels, ref_arr, bg)
+        own_col = own[:, x]
+        av_col = av[:, x]
+        for c in clusters:
+            if any(r in frame for r in c):
+                continue
+            rows = [r for r in c if own_col[r]]
+            if not rows or any(av_col[r] for r in rows):
+                continue
+            if float(scores[rows].min()) <= reseed_tol:
+                qual[x] = True
+            if any(scores[r] <= _SEED_DIST_TOL
+                   and 0.6 <= coverage[r] <= 1.15 for r in rows):
+                exc[x] = True
+            if exc[x] and qual[x]:
+                break
+    return _run_gate(exc, _CLEAN_RUN_MIN), _run_gate(qual, _CLEAN_RUN_MIN)
+
+
 def _seed_columns(
     union: npt.NDArray,
     owned: dict[str, npt.NDArray],
@@ -267,6 +446,7 @@ def _seed_columns(
     bg_bgr: tuple[int, int, int] | None,
     min_gap_px: int,
     width: int,
+    clean_seed: dict[str, int] | None = None,
 ) -> dict[str, int]:
     """First column where each series should commit to its identity.
 
@@ -283,15 +463,31 @@ def _seed_columns(
     ``_SEED_DIST_TOL`` of the template commits, so crowded edges do not
     defer past real observations; without an excellent column the window's
     best substantial-coverage column wins (``_SEED_COVER_FLOOR``), else the
-    unconstrained best. Series with nothing owned in the window, or no
-    colour information at all, keep column zero: late starters and
-    colour-blind callers behave exactly as before.
+    unconstrained best. Series with nothing owned in the window seed on
+    the first substantial owned run (``_SEED_MIN_RUN``) past it instead
+    of column zero: committing on the first blip wherever it appears
+    strands the track on a frozen prediction far from its curve (a
+    backward pass behind an excluded legend strip seeds glyph fringe
+    and never reaches the curve end). Series with no run anywhere, or
+    no colour information at all, keep column zero and behave exactly
+    as before. ``clean_seed`` optionally pins a series to its first
+    clean-excellent column (see ``_clean_commit_flags``), deferring
+    past tainted-only impostor ink; unpinned series behave exactly as
+    without it.
     """
     seed = {sid: 0 for sid in series_ids}
+    pinned = clean_seed or {}
     if series_colors is None or color_img is None or bg_bgr is None:
+        for sid, col in pinned.items():
+            if sid in seed:
+                seed[sid] = col
         return seed
     bg = np.array(bg_bgr, dtype=float).reshape(1, 3)
-    wanted = {sid for sid in series_ids if series_colors.get(sid) is not None}
+    height = int(np.asarray(color_img).shape[0])
+    frame = _frame_rows(union, height)
+    wanted = {sid for sid in series_ids
+              if series_colors.get(sid) is not None and sid not in pinned}
+    run_cols = {sid: _seed_run_columns(owned[sid], width) for sid in series_ids}
     first_good: dict[str, int] = {}
     best_any: dict[str, tuple[float, int]] = {}
     best_sub: dict[str, tuple[float, int]] = {}
@@ -302,6 +498,8 @@ def _seed_columns(
         owned_masks = {sid: owned[sid][:, x] > 0 for sid in series_ids}
         col_pixels = np.asarray(color_img)[:, x].reshape(-1, 3).astype(float)
         for sid in series_ids:
+            if sid in pinned:
+                continue
             ref = series_colors.get(sid)
             if ref is None:
                 continue
@@ -311,6 +509,11 @@ def _seed_columns(
             scores, coverage = _segment_scores(
                 col_pixels, np.array(ref, dtype=float), bg)
             for c in clusters:
+                if any(r in frame for r in c):
+                    # Frame furniture scores perfectly on dark templates
+                    # and would hand identity to a frame ride; the
+                    # re-seed veto applies to seeding too.
+                    continue
                 rows = [r for r in c if own_col[r]]
                 if not rows:
                     continue
@@ -338,12 +541,16 @@ def _seed_columns(
         if len(first_good) == len(wanted):
             break
     for sid in series_ids:
-        if sid in first_good:
+        if sid in pinned:
+            seed[sid] = pinned[sid]
+        elif sid in first_good:
             seed[sid] = first_good[sid]
         elif sid in best_sub:
             seed[sid] = best_sub[sid][1]
         elif sid in best_any:
             seed[sid] = best_any[sid][1]
+        elif run_cols[sid]:
+            seed[sid] = min(run_cols[sid])
     return seed
 
 
@@ -363,6 +570,7 @@ def _joint_assignment(
     *,
     prefer_stay_on_ties: bool = False,
     bg_bgr: tuple[int, int, int] | None = None,
+    avoid_cols: dict[str, npt.NDArray] | None = None,
 ) -> dict[str, int | None]:
     """Assign clusters to series minimising motion + colour + occlusion cost.
 
@@ -381,6 +589,10 @@ def _joint_assignment(
     any mixture level. Without colour information the cost reduces
     exactly to the legacy motion + occlusion; with colours but no
     background the legacy Euclidean term applies instead.
+    ``avoid_cols`` optionally maps a series to its foreign-claim column
+    vector: prediction-less takes (identity commitment) on tainted
+    clusters pay ``_TAINT_PENALTY`` while a clean cluster shares the
+    column, so shared-hue impostor fringe loses to the series' own ink.
     """
     series_colors = series_colors or {}
     use_color = (owned_masks is not None and color_col is not None
@@ -406,6 +618,29 @@ def _joint_assignment(
                 if rows:
                     resid_best[(sid, c)] = float(scores[rows].min())
 
+    tainted: set[tuple[str, int]] = set()
+    clean_exists: dict[str, bool] = {}
+    if avoid_cols is not None:
+        for sid in series_ids:
+            av = avoid_cols.get(sid)
+            if av is None:
+                continue
+            av_col = np.asarray(av).reshape(-1) > 0
+            own_col = (owned_masks.get(sid)
+                       if owned_masks is not None else None)
+            any_clean = False
+            for c in owned.get(sid, set()):
+                rows = [r for r in clusters[c]
+                        if (own_col is None or own_col[r])
+                        and 0 <= r < len(av_col)]
+                if not rows:
+                    continue
+                if any(av_col[r] for r in rows):
+                    tainted.add((sid, c))
+                else:
+                    any_clean = True
+            clean_exists[sid] = any_clean
+
     def single_cost(sid: str, c: int | None) -> float:
         if c is None:
             return occlusion_penalty
@@ -417,6 +652,9 @@ def _joint_assignment(
         elif use_color:
             dist = best_dist.get((sid, c), float("inf"))
             total += color_weight * max(0.0, dist - color_tol)
+        if (pred is None and clean_exists.get(sid)
+                and (sid, c) in tainted):
+            total += _TAINT_PENALTY
         return total
 
     options: list[dict[str, int | None]] = [{}]
@@ -594,31 +832,65 @@ def track_panel(
     config: TrackConfig | None = None,
     series_colors: dict[str, tuple[int, int, int]] | None = None,
     color_img: npt.NDArray | None = None,
+    foreign_avoid: dict[str, npt.NDArray] | None = None,
 ) -> dict[str, SeriesResult]:
     """Track every series over integer columns; see module docstring for states.
 
     ``series_colors`` with a BGR ``color_img`` enables colour-aware
     assignment (initial commitment and stale-track recovery follow evidence
     that looks like the series); without them tracking is pure motion,
-    exactly as before.
+    exactly as before. ``foreign_avoid`` optionally maps a series to
+    foreign-claim rows (same shape as its owned mask): identity
+    commitment prefers clean candidates over tainted ones and defers
+    tainted-only commitments while clean ink is coming (see
+    ``_clean_commit_flags``, ``_joint_assignment`` and
+    ``_maybe_reseed``).
     """
     cfg = config or TrackConfig()
     h, w = gray.shape[:2]
-    # Union mask clusters define candidate positions per column.
-    union = np.zeros((h, w), dtype=np.uint8)
-    for m in layers.curve_masks.values():
-        union = np.bitwise_or(union, m)
+    # Union mask clusters define candidate positions per column. The
+    # inclusive union (gridlines included) keeps candidacy stable while
+    # ownership stays grid-subtracted, so grid-coloured series observe
+    # coverage and occlusion honestly but never ride grid ink.
+    if layers.union_mask is not None:
+        union = layers.union_mask
+    else:
+        union = np.zeros((h, w), dtype=np.uint8)
+        for m in layers.curve_masks.values():
+            union = np.bitwise_or(union, m)
     owned: dict[str, npt.NDArray] = {
         sid: layers.curve_masks.get(sid, np.zeros((h, w), np.uint8)) for sid in series_ids
     }
     use_color = (series_colors is not None and color_img is not None
                  and color_img.ndim == 3
                  and color_img.shape[0] == h and color_img.shape[1] == w)
+    frame_rows = _frame_rows(union, h)
+    clean_seed: dict[str, int] | None = None
+    clean_ahead: dict[str, npt.NDArray] = {}
+    if (foreign_avoid is not None and use_color and series_colors
+            and layers.background_bgr is not None):
+        assert color_img is not None  # narrowed by use_color above
+        for sid in series_ids:
+            av = foreign_avoid.get(sid)
+            ref = series_colors.get(sid)
+            if av is None or ref is None:
+                continue
+            exc, qual = _clean_commit_flags(
+                union, owned[sid], color_img, ref,
+                layers.background_bgr, av, cfg.min_gap_px, cfg.reseed_tol)
+            if exc.any():
+                if clean_seed is None:
+                    clean_seed = {}
+                clean_seed[sid] = int(np.nonzero(exc)[0][0])
+            rev = np.logical_or.accumulate(qual[::-1])[::-1]
+            ahead = np.zeros(w, dtype=bool)
+            ahead[:-1] = rev[1:]
+            clean_ahead[sid] = ahead
 
     seed_cols = _seed_columns(union, owned, series_ids, series_colors,
                               color_img if use_color else None,
                               layers.background_bgr if use_color else None,
-                              cfg.min_gap_px, w)
+                              cfg.min_gap_px, w, clean_seed)
     confirmed: dict[str, set[int]] = {sid: set() for sid in series_ids}
     last_y: dict[str, float | None] = {sid: None for sid in series_ids}
     last_v: dict[str, float | None] = {sid: None for sid in series_ids}
@@ -660,12 +932,27 @@ def track_panel(
                 # foreign fringe from becoming a permanent seed (see
                 # _seed_columns). Flows through the normal missing path.
                 owned_idx[sid] = set()
+            elif last_y[sid] is None:
+                # Uncommitted takes skip frame clusters: frame furniture
+                # scores perfectly on dark templates and would hand
+                # identity to a frame ride. Committed tracks keep frame
+                # access for genuine endpoints at the plot edge.
+                owned_idx[sid] = {
+                    i for i in owned_idx[sid]
+                    if not any(r in frame_rows for r in clusters[i])}
         owned_masks: dict[str, npt.NDArray] | None = None
         color_col: npt.NDArray | None = None
         if use_color:
             assert color_img is not None  # narrowed by use_color above
             owned_masks = {sid: owned[sid][:, x] > 0 for sid in series_ids}
             color_col = np.asarray(color_img)[:, x].reshape(-1, 3)
+        avoid_cols: dict[str, npt.NDArray] | None = None
+        if foreign_avoid is not None:
+            avoid_cols = {
+                sid: np.asarray(foreign_avoid[sid])[:, x] > 0
+                for sid in series_ids
+                if sid in foreign_avoid and foreign_avoid[sid] is not None
+            }
         # Effective prediction: after an empty gap the velocity memory is
         # gone but the last observed level persists. Costing motion from
         # the frozen level (instead of zero) keeps post-gap capture honest:
@@ -687,10 +974,26 @@ def track_panel(
             series_colors,
             prefer_stay_on_ties=cfg.no_jump,
             bg_bgr=layers.background_bgr if use_color else None,
+            avoid_cols=avoid_cols,
         )
         for sid in series_ids:
             c = assignment[sid]
             pred = last_v[sid] if last_v[sid] is not None else last_y[sid]
+            if (c is not None and pred is None and sid in clean_ahead
+                    and bool(clean_ahead[sid][x])
+                    and avoid_cols is not None
+                    and sid in avoid_cols):
+                # Uncommitted take on tainted ink while clean ink runs
+                # are coming: wait for the clean commitment instead of
+                # latching impostor fringe and drifting onto it (the
+                # re-seed deferral covers stale tracks; committed
+                # tracks never wait, so crossings are unaffected).
+                av_col = np.asarray(avoid_cols[sid]).reshape(-1)
+                own_col = owned[sid][:, x] > 0
+                rows = [r for r in clusters[c]
+                        if own_col[r] and 0 <= r < len(av_col)]
+                if rows and any(av_col[r] for r in rows):
+                    c = None
             follow_rows: list[int] | None = None
             just_refused = False
             obs_v: list[float] = []
@@ -828,6 +1131,30 @@ def track_panel(
                         f"no_jump: re-acquired after {lost_run[sid]} lost columns (u={x})"
                     )
                     lost_run[sid] = 0
+                elif (
+                    cfg.no_jump
+                    and use_color
+                    and lost_run[sid] >= _RESEED_AFTER
+                    and color_col is not None
+                    and owned_masks is not None
+                    and series_colors
+                    and series_colors.get(sid) is not None
+                    and layers.background_bgr is not None
+                ):
+                    reseeded = _maybe_reseed(
+                        sid, x, w, h, owned_idx[sid], clusters, centroids,
+                        owned_masks[sid], color_col, series_colors[sid],
+                        layers.background_bgr, cfg.reseed_tol,
+                        last_y, last_v, vel,
+                        (avoid_cols or {}).get(sid),
+                        clean_ahead.get(sid))
+                    if reseeded is not None:
+                        _, score = reseeded
+                        seqs_notes[sid].append(
+                            f"no_jump: re-seeded after {lost_run[sid]} lost "
+                            f"columns (u={x}, score={score:.1f})"
+                        )
+                        lost_run[sid] = 0
                 continue
             # Refine within this series' own evidence inside the shared cluster,
             # so nearby (but distinct) curves do not pull each other.
@@ -897,24 +1224,24 @@ def track_panel(
                 seqs_notes[sid].append(
                     f"no_jump: {long_kept} long steps kept for review")
             step_skip[sid] = step_idx
+    cover_cache: dict[int, list[list[int]]] = {}
+
+    def clusters_at(x: int) -> list[list[int]]:
+        if x not in cover_cache:
+            cover_cache[x] = _clusters(union[:, x], cfg.min_gap_px)
+        return cover_cache[x]
+
     if cfg.curve_continuous:
         for sid in series_ids:
             filled, gaps, refused = _fill_continuous(
-                seqs[sid], step_skip.get(sid, frozenset()))
+                seqs[sid], step_skip.get(sid, frozenset()), clusters_at)
             if filled:
                 seqs_notes[sid].append(
                     f"curve_continuous: {filled} samples interpolated across {gaps} gaps")
             if refused:
                 seqs_notes[sid].append(
-                    f"curve_continuous: {refused} steep bridges refused")
+                    f"curve_continuous: {refused} bridges refused")
     if cfg.assume_overlap:
-        cover_cache: dict[int, list[list[int]]] = {}
-
-        def clusters_at(x: int) -> list[list[int]]:
-            if x not in cover_cache:
-                cover_cache[x] = _clusters(union[:, x], cfg.min_gap_px)
-            return cover_cache[x]
-
         for sid in series_ids:
             backfilled = _backfill_occluded(seqs[sid], clusters_at)
             bridged = 0
@@ -978,6 +1305,88 @@ def _maybe_reacquire(
     last_v[sid] = level
     vel[sid] = 0.0
     return level
+
+
+def _maybe_reseed(
+    sid: str,
+    x: int,
+    width: int,
+    height: int,
+    owned_here: set[int],
+    clusters: list[list[int]],
+    centroids: list[float],
+    own_col: npt.NDArray,
+    col_pixels: npt.NDArray,
+    ref_bgr: tuple[int, int, int],
+    bg_bgr: tuple[int, int, int],
+    tol: float,
+    last_y: dict[str, float | None],
+    last_v: dict[str, float | None],
+    vel: dict[str, float],
+    avoid_col: npt.NDArray | None = None,
+    clean_ahead: npt.NDArray | None = None,
+) -> tuple[float, float] | None:
+    """Re-seed a long-lost track on its best confirmed owned cluster.
+
+    Colour (not proximity) picks the target: the stale prediction is
+    meaningless after ``_RESEED_AFTER`` lost columns, while the best
+    unmixing score still identifies the curve (true cores score ~0-15,
+    near-hue impostor edges 28+). Only clusters with a pixel within
+    ``tol`` qualify — the config default is core-grade (``_RESID_TOL``)
+    since the looser identity tolerance would admit sibling edges and
+    re-seed onto foreign ink — and the target must clear the frame
+    band (``_RESEED_EDGE_PX``), since frame furniture matches grey
+    templates and would hand the resumed track a frame ride.
+    ``avoid_col`` optionally marks foreign-claim rows: qualifying
+    tainted clusters rank ``_TAINT_PENALTY`` worse while a clean
+    cluster qualifies, so shared-hue impostor fringe (which unmixes
+    core-grade) loses to the series' own ink. ``clean_ahead``
+    optionally marks columns with qualifying clean ink strictly
+    ahead: a tainted winner waits while one is coming and commits
+    only when none is (overlay ink, plot end, or merged truth at a
+    convergence). Resumption restarts with zero velocity. Returns
+    (level, score), or None when nothing qualifies and the track
+    stays lost.
+    """
+    if not owned_here:
+        return None
+    if x < _RESEED_EDGE_PX or x > width - 1 - _RESEED_EDGE_PX:
+        return None
+    scores, _ = _segment_scores(
+        np.asarray(col_pixels, dtype=float), np.array(ref_bgr, dtype=float),
+        np.array(bg_bgr, dtype=float).reshape(1, 3))
+    av = np.asarray(avoid_col).reshape(-1) > 0 if avoid_col is not None else None
+    cands: list[tuple[float, bool, int]] = []
+    for c in owned_here:
+        rows = [r for r in clusters[c] if own_col[r]]
+        if not rows:
+            continue
+        dist = float(np.min(scores[rows]))
+        if dist > tol:
+            continue
+        tainted = bool(av is not None
+                       and any(av[r] for r in rows if 0 <= r < len(av)))
+        cands.append((dist, tainted, c))
+    if not cands:
+        return None
+    clean_ok = av is not None and any(not t for _, t, _ in cands)
+
+    def _rank(t: tuple[float, bool, int]) -> float:
+        return t[0] + (_TAINT_PENALTY if (clean_ok and t[1]) else 0.0)
+
+    dist, tainted_win, c = min(cands, key=_rank)
+    if tainted_win and clean_ahead is not None:
+        ahead = np.asarray(clean_ahead).reshape(-1)
+        if 0 <= x < len(ahead) and bool(ahead[x]):
+            return None
+    best = (dist, c)
+    level = float(centroids[best[1]])
+    if level < _RESEED_EDGE_PX or level > height - 1 - _RESEED_EDGE_PX:
+        return None
+    last_y[sid] = level
+    last_v[sid] = level
+    vel[sid] = 0.0
+    return level, best[0]
 
 
 def _remove_jumps(seq: list[SeriesSample], tol_px: float) -> int:
@@ -1109,8 +1518,33 @@ def _remove_steps(seq: list[SeriesSample], tol_px: float,
     return demoted, long_kept
 
 
+_FILL_MAX_GAP = 96
+"""Longest run ``curve_continuous`` may bridge.
+
+Per-column slope checks go blind on long gaps (any level change looks
+shallow per column), so length itself is capped: dash gaps and dropout
+fills measure in the tens of columns, while hundred-column bridges
+always join takes on different curves across empty space.
+"""
+
+_FILL_SLOPED_BLIND_MAX = 48
+"""Longest sloped bridge over columns without merged ink."""
+
+_FILL_FLAT_PX = 10.0
+"""Level agreement within which a blind bridge counts as flat."""
+
+_FILL_MIN_COVER = 0.6
+"""Merged-ink cover fraction along the bridge path that counts as seen.
+
+A sloped bridge over seen ink follows a dropout inside a rolloff; the
+same slope over empty space is a guess, and only short ones (steep
+rolloffs) or flat ones (dash gaps on a level line) are safe to draw.
+"""
+
+
 def _fill_continuous(seq: list[SeriesSample],
-                     skip: frozenset[int] | set[int] = frozenset()) -> tuple[int, int, int]:
+                     skip: frozenset[int] | set[int] = frozenset(),
+                     clusters_at=None) -> tuple[int, int, int]:
     """Linearly bridge interior non-OBSERVED runs flanked by OBSERVED samples.
 
     Filled samples become INTERPOLATED, never OBSERVED, so measurement stays
@@ -1118,13 +1552,17 @@ def _fill_continuous(seq: list[SeriesSample],
     trailing gaps stay MISSING: continuity cannot invent endpoints. Runs
     containing ``skip`` indices (identity breaks rejected by ``no_jump``
     step demotion) are left MISSING: bridging them would fabricate a ramp
-    across an ambiguous identity. A bridge steeper than ``_STEP_ISOLATION``
-    times the steepest flank slope (floored at ``_BRIDGE_FLOOR_PX`` per
-    column) is likewise refused: flat flanks promise a flat truth, so a
-    dropout re-emerging far away on another curve stays a hole instead of
-    becoming a drawn cliff — while a dropout inside a steep rolloff still
-    fills via flank support. Returns (filled samples, bridged gaps,
-    refused steep bridges).
+    across an ambiguous identity. Runs past ``_FILL_MAX_GAP`` are left
+    MISSING: the flanks sit on different curves. Over merged ink (cover
+    fraction from ``clusters_at`` past ``_FILL_MIN_COVER``) the flank
+    slope check decides; over empty space only flat (``_FILL_FLAT_PX``)
+    or short (``_FILL_SLOPED_BLIND_MAX``) bridges draw. A bridge steeper
+    than ``_STEP_ISOLATION`` times the steepest flank slope (floored at
+    ``_BRIDGE_FLOOR_PX`` per column) is likewise refused: flat flanks
+    promise a flat truth, so a dropout re-emerging far away on another
+    curve stays a hole instead of becoming a drawn cliff — while a dropout
+    inside a steep rolloff still fills via flank support. Returns (filled
+    samples, bridged gaps, refused bridges).
     """
     filled = gaps = refused = 0
     n = len(seq)
@@ -1138,22 +1576,39 @@ def _fill_continuous(seq: list[SeriesSample],
         while j < n and not obs[j]:
             j += 1
         if i > 0 and j < n and not any(t in skip for t in range(i, j)):
-            lo = abs(seq[i - 1].v - seq[i - 2].v) if i >= 2 and obs[i - 2] else 0.0
-            hi = abs(seq[j + 1].v - seq[j].v) if j + 1 < n and obs[j + 1] else 0.0
-            slope = abs(seq[j].v - seq[i - 1].v) / (j - i + 1)
-            if slope <= _STEP_ISOLATION * max(lo, hi, _BRIDGE_FLOOR_PX):
-                v0, v1 = seq[i - 1].v, seq[j].v
-                hw = max(seq[i - 1].half_width_px, seq[j].half_width_px)
+            length = j - i
+            v0, v1 = seq[i - 1].v, seq[j].v
+            blind = False
+            if clusters_at is not None:
                 span = j - i + 1
+                covered = 0
                 for t in range(i, j):
                     frac = (t - i + 1) / span
-                    seq[t].v = v0 + frac * (v1 - v0)
-                    seq[t].half_width_px = hw + 0.25 * min(t - i + 1, j - t)
-                    seq[t].status = SegmentStatus.INTERPOLATED
-                    filled += 1
-                gaps += 1
-            else:
+                    if _is_covered(clusters_at(t), v0 + frac * (v1 - v0),
+                                   _BRIDGE_COVER_TOL_PX):
+                        covered += 1
+                blind = covered / length < _FILL_MIN_COVER
+            if length > _FILL_MAX_GAP:
                 refused += 1
+            elif (blind and length > _FILL_SLOPED_BLIND_MAX
+                    and abs(v1 - v0) > _FILL_FLAT_PX):
+                refused += 1
+            else:
+                lo = abs(seq[i - 1].v - seq[i - 2].v) if i >= 2 and obs[i - 2] else 0.0
+                hi = abs(seq[j + 1].v - seq[j].v) if j + 1 < n and obs[j + 1] else 0.0
+                slope = abs(v1 - v0) / (j - i + 1)
+                if slope <= _STEP_ISOLATION * max(lo, hi, _BRIDGE_FLOOR_PX):
+                    hw = max(seq[i - 1].half_width_px, seq[j].half_width_px)
+                    span = j - i + 1
+                    for t in range(i, j):
+                        frac = (t - i + 1) / span
+                        seq[t].v = v0 + frac * (v1 - v0)
+                        seq[t].half_width_px = hw + 0.25 * min(t - i + 1, j - t)
+                        seq[t].status = SegmentStatus.INTERPOLATED
+                        filled += 1
+                    gaps += 1
+                else:
+                    refused += 1
         i = j
     return filled, gaps, refused
 
@@ -1420,6 +1875,207 @@ def _flag_duplicates(results: dict[str, SeriesResult]) -> None:
                 msg = f"possible duplicate of {sids[j]} (mean |dv|={err:.2f}px)"
                 results[sids[i]].review_reasons.append(msg)
                 results[sids[j]].review_reasons.append(f"possible duplicate of {sids[i]}")
+
+
+_MERGE_RANK = {
+    SegmentStatus.OBSERVED: 4,
+    SegmentStatus.INFERRED_OCCLUSION: 3,
+    SegmentStatus.INFERRED_DASH_GAP: 3,
+    SegmentStatus.INTERPOLATED: 2,
+    SegmentStatus.AMBIGUOUS: 1,
+    SegmentStatus.MISSING: 0,
+}
+"""Status priority for directional merge: measured beats inferred."""
+
+_NEEDS_BACKWARD_GAP = 12
+"""Backward pass runs only past this unexplained gap: short holes bridge
+exactly, while long losses (overlap, haze latch) may re-acquire from the
+right. Matches the tracker's own lost horizon."""
+
+_AGREE_TOL_PX = 8.0
+_AGREE_MIN_COLUMNS = 10
+_AGREE_MIN_FRACTION = 0.3
+"""Backward acceptance: on mutually observed columns the passes must
+agree within tolerance a substantial fraction of the time, or the
+backward track followed a different attractor (legend latch, haze)
+and is rejected wholesale."""
+
+_DENSITY_MARGIN = 3
+"""Neighbourhood-density tie-break margin: the sparser side wins ties
+only on a clear observed majority, so single-column density noise
+cannot flip adjacent columns opposite ways (sawtooth)."""
+
+
+def _needs_backward(tr: SeriesResult) -> bool:
+    """True when the forward track leaves a long unexplained gap.
+
+    Occluded runs need nothing (the same ink covers the backward pass),
+    but missing/interpolated/ambiguous runs may resolve from the other
+    side, where the prediction approaches the evidence instead of
+    drifting from a stale loss.
+    """
+    gap = 0
+    for s in tr.samples:
+        if s.status in (SegmentStatus.MISSING, SegmentStatus.INTERPOLATED,
+                        SegmentStatus.AMBIGUOUS):
+            gap += 1
+            if gap >= _NEEDS_BACKWARD_GAP:
+                return True
+        else:
+            gap = 0
+    return False
+
+
+def _flip_layers_horizontal(layers: EvidenceLayers, sid: str | None = None,
+                            ) -> EvidenceLayers:
+    """Mirror evidence left-right for a backward tracking pass."""
+    from dataclasses import replace
+    masks = {k: np.ascontiguousarray(np.fliplr(m))
+             for k, m in layers.curve_masks.items()
+             if sid is None or k == sid}
+    union = (np.ascontiguousarray(np.fliplr(layers.union_mask))
+             if layers.union_mask is not None else None)
+    return replace(layers, curve_masks=masks, union_mask=union,
+                   grid_mask=np.ascontiguousarray(np.fliplr(layers.grid_mask)),
+                   provenance=dict(layers.provenance))
+
+
+def _flip_series_back(res: SeriesResult, w: int) -> SeriesResult:
+    """Flip a backward track to forward column order."""
+    from dataclasses import replace
+    n = len(res.samples)
+    samples = [replace(s, u=(w - 1.0) - s.u) for s in reversed(res.samples)]
+    alts = [[replace(s, u=(w - 1.0) - s.u) for s in reversed(alt)]
+            for alt in res.alternatives]
+    return SeriesResult(
+        series_id=res.series_id, panel_id=res.panel_id, label=res.label,
+        axis_id=res.axis_id, samples=samples, alternatives=alts,
+        review_reasons=[r + " (reversed pass)" for r in res.review_reasons],
+        confirmed={n - 1 - i for i in res.confirmed},
+    )
+
+
+def merge_track_directions(fwd: dict[str, SeriesResult],
+                           bwd: dict[str, SeriesResult], w: int,
+                           ) -> dict[str, SeriesResult]:
+    """Merge forward and flipped-backward tracks column by column.
+
+    Curves have no direction: a forward loss (overlap, latch) often
+    re-acquires cleanly from the right. Per column the better sample
+    wins by status rank, then colour confirmation, then observed density
+    of its neighbourhood (an observation embedded in an observed run
+    beats an isolated one), else forward, so complete forward tracks
+    pass through byte-identical.
+    """
+    merged: dict[str, SeriesResult] = {}
+    for sid, ftr in fwd.items():
+        btr = bwd.get(sid)
+        if btr is None or len(btr.samples) != len(ftr.samples):
+            merged[sid] = ftr
+            continue
+        n = len(ftr.samples)
+        fobs = [i for i, s in enumerate(ftr.samples)
+                if s.status is SegmentStatus.OBSERVED]
+        bobs = [i for i, s in enumerate(btr.samples)
+                if s.status is SegmentStatus.OBSERVED]
+        fdense = [0] * n
+        bdense = [0] * n
+        for i in fobs:
+            for j in range(max(0, i - 5), min(n, i + 6)):
+                fdense[j] += 1
+        for i in bobs:
+            for j in range(max(0, i - 5), min(n, i + 6)):
+                bdense[j] += 1
+        samples: list[SeriesSample] = []
+        confirmed: set[int] = set()
+        n_bwd = 0
+        for i in range(n):
+            fs, bs = ftr.samples[i], btr.samples[i]
+            fr, br = _MERGE_RANK[fs.status], _MERGE_RANK[bs.status]
+            if br > fr:
+                pick, ci = bs, i in btr.confirmed
+                n_bwd += 1
+            elif fr > br:
+                pick, ci = fs, i in ftr.confirmed
+            elif (fs.status is SegmentStatus.OBSERVED
+                    and (i in btr.confirmed) != (i in ftr.confirmed)):
+                if i in btr.confirmed:
+                    pick, ci = bs, True
+                    n_bwd += 1
+                else:
+                    pick, ci = fs, True
+            elif bdense[i] >= fdense[i] + _DENSITY_MARGIN:
+                pick, ci = bs, i in btr.confirmed
+                n_bwd += 1
+            else:
+                pick, ci = fs, i in ftr.confirmed
+            samples.append(pick)
+            if ci:
+                confirmed.add(i)
+        reasons = list(ftr.review_reasons) + list(btr.review_reasons)
+        if n_bwd:
+            reasons.append(f"bidirectional merge: {n_bwd} of {n} samples "
+                           "from reversed pass")
+        merged[sid] = SeriesResult(
+            series_id=ftr.series_id, panel_id=ftr.panel_id, label=ftr.label,
+            axis_id=ftr.axis_id, samples=samples,
+            alternatives=list(ftr.alternatives) + list(btr.alternatives),
+            review_reasons=reasons, confirmed=confirmed)
+    return merged
+
+
+def track_sid_bidirectional(
+    gray: npt.NDArray,
+    layers: EvidenceLayers,
+    sid: str,
+    bg_value: float,
+    config: TrackConfig | None = None,
+    series_colors: dict[str, tuple[int, int, int]] | None = None,
+    color_img: npt.NDArray | None = None,
+    foreign_avoid: dict[str, npt.NDArray] | None = None,
+) -> dict[str, SeriesResult]:
+    """Track one series forward, plus backward past long forward gaps.
+
+    The backward pass mirrors every input, tracks, flips back, and merges
+    by status rank (see :func:`merge_track_directions`). Complete forward
+    tracks skip the second pass entirely.
+    """
+    fwd = track_panel(gray, layers, [sid], bg_value, config, series_colors,
+                      color_img, foreign_avoid)
+    if sid not in fwd or not _needs_backward(fwd[sid]):
+        return fwd
+    h, w = gray.shape[:2]
+    gray_f = np.ascontiguousarray(np.fliplr(gray))
+    color_f = (np.ascontiguousarray(np.fliplr(color_img))
+               if color_img is not None else None)
+    layers_f = _flip_layers_horizontal(layers, sid)
+    # The backward union must stay global: subsetting it to the series
+    # would blind coverage and seeding, so the full flipped union rides.
+    if layers.union_mask is None:
+        layers_f = _flip_layers_horizontal(layers, None)
+    if foreign_avoid is not None and sid in foreign_avoid:
+        avoid_f = {sid: np.ascontiguousarray(
+            np.fliplr(np.asarray(foreign_avoid[sid])))}
+    else:
+        avoid_f = None
+    bwd = track_panel(gray_f, layers_f, [sid], bg_value, config,
+                      series_colors, color_f, avoid_f)
+    if sid not in bwd:
+        return fwd
+    back = _flip_series_back(bwd[sid], w)
+    agree = mutual = 0
+    for fs, bs in zip(fwd[sid].samples, back.samples):
+        if (fs.status is SegmentStatus.OBSERVED
+                and bs.status is SegmentStatus.OBSERVED):
+            mutual += 1
+            if abs(fs.v - bs.v) <= _AGREE_TOL_PX:
+                agree += 1
+    if mutual >= _AGREE_MIN_COLUMNS and agree / mutual < _AGREE_MIN_FRACTION:
+        fwd[sid].review_reasons.append(
+            f"reversed pass diverged ({agree}/{mutual} mutually observed "
+            "columns agree); kept forward")
+        return fwd
+    return merge_track_directions(fwd, {sid: back}, w)
 
 
 def maybe_smooth(values: list[float], window: int) -> list[float]:

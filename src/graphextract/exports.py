@@ -206,6 +206,17 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
                   for s in sr.samples if _visible(s)]
         y_lo, y_hi = _domain(y_fit, [v for v in left_y if v]
                              or [v for v in obs_y if v])
+        if (r_fit is not None and r_fit.unit == "dB"
+                and r_fit.scale is not ScaleType.LOG10):
+            # The dB domain stretches to show the full directivity
+            # archetype on the right axis, like the source plots.
+            for edge in (-10.0, 40.0):
+                native = r_fit.a * edge + r_fit.b
+                try:
+                    at = y_fit.invert(native)
+                except (ValueError, ZeroDivisionError):
+                    continue
+                y_lo, y_hi = min(y_lo, at), max(y_hi, at)
         x_lo_t, x_hi_t = ((math.log10(x_lo), math.log10(x_hi)) if log_x
                           else (x_lo, x_hi))
         span_t = x_hi_t - x_lo_t or 1.0
@@ -317,12 +328,9 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
 
         if r_fit is not None:
             # Right-axis ticks live inside the frame's right edge: the
-            # legend occupies the outside margin. Ticks span the right
-            # values visible over the shared pixel range.
-            nat_lo = y_fit.a * y_lo + y_fit.b
-            nat_hi = y_fit.a * y_hi + y_fit.b
-            r_vis = [r_fit.invert(n) for n in (nat_lo, nat_hi)]
-            for t in _nice_ticks(min(r_vis), max(r_vis)):
+            # legend occupies the outside margin.
+            r_lo, r_hi = right_tick_span(r_fit, y_fit, y_lo, y_hi)
+            for t in _nice_ticks(r_lo, r_hi):
                 label = _tick_label(t)
                 (tw, th), _ = cv2.getTextSize(label, _FONT, tick_scale, tick_thick)
                 cv2.putText(bottom, label,
@@ -348,6 +356,22 @@ def _comparison_block(image: npt.NDArray, panel, image_id: str,
         cv2.line(head, (0, HEADER_H - 1), (w, HEADER_H - 1), _FRAME, 1)
         heads.append(head)
     return np.vstack([heads[0], crop, heads[1], bottom])
+
+
+def right_tick_span(r_fit, y_fit, y_lo: float, y_hi: float) -> tuple[float, float]:
+    """Right-axis tick span over the shared pixel range.
+
+    The span covers the right values visible over the left domain; a dB
+    right axis always covers the directivity archetype range too, so DI
+    curves read against -10..40 like the source plots even when the
+    observed span is narrower, while wider data extends past it.
+    """
+    nat_lo = y_fit.a * y_lo + y_fit.b
+    nat_hi = y_fit.a * y_hi + y_fit.b
+    r_vis = [r_fit.invert(n) for n in (nat_lo, nat_hi)]
+    if r_fit.unit == "dB":
+        r_vis = [min(r_vis + [-10.0]), max(r_vis + [40.0])]
+    return min(r_vis), max(r_vis)
 
 
 _CURVE_NAMES = {"hz": "freq", "db": "spl"}

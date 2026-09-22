@@ -1045,3 +1045,351 @@ def test_seed_fallback_prefers_substantial_coverage():
     seeds = _seed_columns(union, owned, ["t"], {"t": teal}, color,
                           (255, 255, 255), 3, 64)
     assert seeds["t"] == 10
+
+
+def _missing_gap_seq(left_v, gap_len, right_v, flank=4):
+    seq = _obs_seq([float(left_v)] * flank + [0.0] * gap_len + [float(right_v)] * flank)
+    for s in seq[flank:flank + gap_len]:
+        s.status = SegmentStatus.MISSING
+    return seq
+
+
+def test_fill_continuous_refuses_marathon_gaps():
+    from graphextract.tracking import _fill_continuous
+    # Sovox-PIR shape: flanks 430 columns apart on different curves. The
+    # per-column slope looks shallow, so length itself must refuse.
+    seq = _missing_gap_seq(635.0, 430, 278.0)
+    filled, gaps, refused = _fill_continuous(seq, clusters_at=lambda x: [])
+    assert (filled, gaps, refused) == (0, 0, 1)
+
+
+def test_fill_continuous_allows_flat_blind_dash_gaps():
+    from graphextract.tracking import _fill_continuous
+    # Topping-ERDI shape: an 85-column level run over empty space (dash
+    # gaps on a flat zero line). Flat flanks promise a flat truth.
+    seq = _missing_gap_seq(694.0, 85, 692.2)
+    filled, gaps, refused = _fill_continuous(seq, clusters_at=lambda x: [])
+    assert (filled, gaps, refused) == (85, 1, 0)
+
+
+def test_fill_continuous_refuses_sloped_blind_runs():
+    from graphextract.tracking import _fill_continuous
+    # BW-64 shape: 60px of rise over 64 empty columns is a guess, not a
+    # dropout, even though the length cap alone would allow it.
+    seq = _missing_gap_seq(1112.0, 64, 1052.0)
+    filled, gaps, refused = _fill_continuous(seq, clusters_at=lambda x: [])
+    assert (filled, gaps, refused) == (0, 0, 1)
+    # Short sloped blind runs still fill via flank support (steep rolloff).
+    seq = _missing_gap_seq(600.0, 30, 540.0)
+    filled, gaps, refused = _fill_continuous(seq, clusters_at=lambda x: [])
+    assert (filled, gaps, refused) == (30, 1, 0)
+
+
+def test_fill_continuous_allows_sloped_runs_over_ink():
+    from graphextract.tracking import _fill_continuous
+    # PMC10-4 shape: 78px of rise over 58 columns with merged ink under
+    # the whole path is a dropout inside a rolloff, not an identity jump.
+    seq = _missing_gap_seq(400.0, 58, 322.0)
+    v0, v1 = 400.0, 322.0
+
+    def along(x):
+        level = v0 + (v1 - v0) * (x - 4 + 1) / 59.0
+        return [[int(round(level))]]
+
+    filled, gaps, refused = _fill_continuous(seq, clusters_at=along)
+    assert (filled, gaps, refused) == (58, 1, 0)
+
+
+def test_seed_columns_skip_empty_window_to_first_run():
+    from graphextract.tracking import _seed_columns
+    # Backward-pass shape: an excluded edge strip leaves the whole scan
+    # window empty, with blips before the true run. The seed must be the
+    # run start, never column zero (which would grab the first blip).
+    teal = (125, 88, 36)
+    color = np.full((60, 320, 3), 255, np.uint8)
+    core = (0.5 * np.array(teal) + 0.5 * 255).astype(np.uint8)
+    color[40, 10] = core  # lone blip inside the window
+    color[40, 270:276] = core  # true run past the window
+    union = np.zeros((60, 320), bool)
+    union[40, 10] = True
+    union[40, 270:276] = True
+    owned = {"t": np.zeros((60, 320), bool)}
+    # Window blip is not owned (excluded fringe); the run is.
+    owned["t"][40, 270:276] = True
+    seeds = _seed_columns(union, owned, ["t"], {"t": teal}, color,
+                          (255, 255, 255), 3, 320)
+    assert seeds["t"] == 270
+
+
+def _commitment_column():
+    """Two core-grade owned clusters for one series: tainted (row 20)
+    hugging foreign claims, clean (row 40) clear of them."""
+    teal = (125, 88, 36)
+    color_col = np.full((60, 3), 255.0)
+    core = 0.5 * np.array(teal) + 0.5 * 255
+    color_col[20] = core
+    color_col[40] = core
+    clusters = [[20], [40]]
+    centroids = [20.0, 40.0]
+    owned_masks = {"t": np.zeros(60, bool)}
+    owned_masks["t"][[20, 40]] = True
+    avoid = np.zeros(60, np.uint8)
+    avoid[10:30] = 255
+    return (teal, color_col, clusters, centroids, owned_masks, avoid)
+
+
+def test_commitment_prefers_clean_over_tainted():
+    from graphextract.tracking import _joint_assignment
+    # Convergence shape: without motion history both clusters tie and
+    # colour ties too (shared hues unmix core-grade), so set order
+    # would pick the band. The taint penalty must elect the clean ink.
+    teal, color_col, clusters, centroids, owned_masks, avoid = (
+        _commitment_column())
+    got = _joint_assignment(
+        centroids, clusters, {"t": None}, {"t": {0, 1}}, ["t"], 2,
+        12.0, owned_masks, color_col, {"t": teal},
+        bg_bgr=(255, 255, 255), avoid_cols={"t": avoid})
+    assert got["t"] == 1
+
+
+def test_commitment_tainted_fallback_matches_unsteered():
+    from graphextract.tracking import _joint_assignment
+    # Overlay shape: every candidate hugs foreign claims, so the steer
+    # must behave exactly as without it (here the lower-cost cluster).
+    teal, color_col, clusters, centroids, owned_masks, _ = (
+        _commitment_column())
+    avoid = np.zeros(60, np.uint8)
+    avoid[10:50] = 255
+    kwargs = dict(centroids=centroids, clusters=clusters,
+                  predictions={"t": None}, owned={"t": {0, 1}},
+                  series_ids=["t"], beam_width=2,
+                  occlusion_penalty=12.0, owned_masks=owned_masks,
+                  color_col=color_col, series_colors={"t": teal},
+                  bg_bgr=(255, 255, 255))
+    base = _joint_assignment(**kwargs)
+    steered = _joint_assignment(**kwargs, avoid_cols={"t": avoid})
+    assert steered["t"] == base["t"]
+
+
+def test_commitment_penalty_ignores_committed_tracks():
+    from graphextract.tracking import _joint_assignment
+    # A live prediction pays no taint penalty: crossings keep today's
+    # motion-led behaviour even when a clean cluster shares the column.
+    teal, color_col, clusters, centroids, owned_masks, avoid = (
+        _commitment_column())
+    got = _joint_assignment(
+        centroids, clusters, {"t": 20.0}, {"t": {0, 1}}, ["t"], 2,
+        12.0, owned_masks, color_col, {"t": teal},
+        bg_bgr=(255, 255, 255), avoid_cols={"t": avoid})
+    assert got["t"] == 0
+
+
+def test_maybe_reseed_prefers_clean_qualifier():
+    from graphextract.tracking import _TAINT_PENALTY, _maybe_reseed, _segment_scores
+    # Ascilab-SPDI shape: the impostor unmixes core-grade (better raw
+    # score than the true dash), so colour alone re-seeds onto foreign
+    # ink; the taint penalty must flip the ranking to the clean dash.
+    teal = (125, 88, 36)
+    col_pixels = np.full((60, 3), 255.0)
+    col_pixels[20] = 0.7 * np.array(teal) + 0.3 * 255  # impostor, best raw
+    col_pixels[40] = 0.5 * np.array(teal) + 0.5 * 255 + (3, 0, 0)
+    scores, _ = _segment_scores(col_pixels, np.array(teal, dtype=float),
+                                np.full((1, 3), 255.0))
+    assert scores[20] < scores[40] < scores[20] + _TAINT_PENALTY <= 15.0
+    clusters = [[20], [40]]
+    centroids = [20.0, 40.0]
+    own_col = np.zeros(60, bool)
+    own_col[[20, 40]] = True
+    avoid = np.zeros(60, np.uint8)
+    avoid[10:30] = 255
+    last_y: dict = {"t": 200.0}
+    last_v: dict = {"t": 200.0}
+    vel: dict = {"t": 0.0}
+    plain = _maybe_reseed("t", 100, 320, 60, {0, 1}, clusters,
+                          centroids, own_col, col_pixels, teal,
+                          (255, 255, 255), 15.0, last_y, last_v, vel)
+    assert plain is not None and plain[0] == 20.0
+    last_y["t"] = last_v["t"] = 200.0
+    steered = _maybe_reseed("t", 100, 320, 60, {0, 1}, clusters,
+                            centroids, own_col, col_pixels, teal,
+                            (255, 255, 255), 15.0, last_y, last_v, vel,
+                            avoid)
+    assert steered is not None and steered[0] == 40.0
+
+
+def test_clean_commit_flags_mark_clean_columns():
+    from graphextract.tracking import _clean_commit_flags
+    # Column 10 carries a tainted core-grade cluster only; columns
+    # 40-44 a clean run; column 20 an isolated clean pixel (noise, no
+    # run); column 30 is empty; column 2 is clean but inside the edge
+    # strip reseeds cannot commit on.
+    teal = (125, 88, 36)
+    color = np.full((60, 64, 3), 255, np.uint8)
+    core = (0.7 * np.array(teal) + 0.3 * 255).astype(np.uint8)
+    for x in (10, 20, 2, 40, 41, 42, 43, 44):
+        color[40, x] = core
+    union = np.zeros((60, 64), bool)
+    for x in (10, 20, 2, 40, 41, 42, 43, 44):
+        union[40, x] = True
+    owned = union.copy()
+    avoid = np.zeros((60, 64), np.uint8)
+    avoid[30:50, 10] = 255
+    exc, qual = _clean_commit_flags(union, owned, color, teal,
+                                    (255, 255, 255), avoid, 3, 15.0)
+    assert not exc[10] and not qual[10]
+    assert not exc[20] and not qual[20]
+    assert exc[40:45].all() and qual[40:45].all()
+    assert not exc[30] and not qual[30]
+    assert not exc[2] and not qual[2]
+
+
+def test_seed_columns_clean_seed_override_pins_column():
+    from graphextract.tracking import _seed_columns
+    # The window's first excellent column is tainted; the caller pins
+    # the seed to the first clean-excellent column past it instead.
+    teal = (125, 88, 36)
+    color = np.full((60, 320, 3), 255, np.uint8)
+    core = (0.7 * np.array(teal) + 0.3 * 255).astype(np.uint8)
+    color[20, 40] = core
+    color[40, 100] = core
+    union = np.zeros((60, 320), bool)
+    union[20, 40] = True
+    union[40, 100] = True
+    owned = {"t": union.copy()}
+    base = _seed_columns(union, owned, ["t"], {"t": teal}, color,
+                         (255, 255, 255), 3, 320)
+    assert base["t"] == 40
+    pinned = _seed_columns(union, owned, ["t"], {"t": teal}, color,
+                           (255, 255, 255), 3, 320, {"t": 100})
+    assert pinned["t"] == 100
+
+
+def test_maybe_reseed_defers_tainted_while_clean_ahead():
+    from graphextract.tracking import _maybe_reseed
+    # Dash-gap shape: only tainted impostor ink qualifies here, so the
+    # re-seed waits while clean ink is coming and commits only when
+    # none is (overlay ink or merged truth at a convergence).
+    teal = (125, 88, 36)
+    col_pixels = np.full((60, 3), 255.0)
+    col_pixels[20] = 0.7 * np.array(teal) + 0.3 * 255
+    clusters = [[20]]
+    centroids = [20.0]
+    own_col = np.zeros(60, bool)
+    own_col[20] = True
+    avoid = np.zeros(60, np.uint8)
+    avoid[10:30] = 255
+    ahead = np.zeros(320, bool)
+    ahead[100] = True
+    last_y: dict = {"t": 200.0}
+    last_v: dict = {"t": 200.0}
+    vel: dict = {"t": 0.0}
+    assert _maybe_reseed("t", 100, 320, 60, {0}, clusters, centroids,
+                         own_col, col_pixels, teal, (255, 255, 255),
+                         15.0, last_y, last_v, vel, avoid, ahead) is None
+    last_y["t"] = last_v["t"] = 200.0
+    ahead[100] = False
+    got = _maybe_reseed("t", 100, 320, 60, {0}, clusters, centroids,
+                        own_col, col_pixels, teal, (255, 255, 255),
+                        15.0, last_y, last_v, vel, avoid, ahead)
+    assert got is not None and got[0] == 20.0
+
+
+def test_reacquire_snaps_nearest_within_reach():
+    from graphextract.tracking import _maybe_reacquire
+    # Recovery stays proximity-led: twin hues unmix in overlapping
+    # ranges, so colour cannot rank the snap without latching the
+    # darker twin; the consensus offset proof absorbs hop residue.
+    last_y: dict = {"t": 30.0}
+    last_v: dict = {"t": 30.0}
+    vel: dict = {"t": 0.0}
+    assert _maybe_reacquire("t", 30.0, {0, 1}, [20.0, 40.0],
+                            last_y, last_v, vel) == 20.0
+    assert _maybe_reacquire("t", 30.0, {1}, [20.0, 40.0],
+                            last_y, last_v, vel) == 40.0
+    assert _maybe_reacquire("t", 30.0, {0}, [200.0],
+                            last_y, last_v, vel) is None
+
+
+def test_maybe_reseed_snaps_to_best_confirmed_cluster():
+    import numpy as np
+
+    from graphextract.tracking import _maybe_reseed
+    teal = (125, 88, 36)
+    col = np.full((60, 3), 255.0)
+    col[10] = (0.9 * np.array(teal) + 0.1 * 255)  # near-hue impostor edge
+    col[40] = np.array(teal, dtype=float)  # true core, far away
+    clusters = [[10], [40]]
+    centroids = [10.0, 40.0]
+    own_col = np.zeros(60, bool)
+    own_col[[10, 40]] = True
+    last_y = {"t": 12.0}
+    last_v = {"t": 12.0}
+    vel = {"t": 0.0}
+    # Colour (not proximity) picks the target: the stale prediction sits
+    # on the impostor, but the true core unmixes better.
+    hit = _maybe_reseed("t", 30, 64, 60, {0, 1}, clusters, centroids,
+                        own_col, col, teal, (255, 255, 255), 15.0,
+                        last_y, last_v, vel)
+    assert hit is not None
+    level, score = hit
+    assert level == 40.0
+    assert score <= 15.0
+    assert last_y["t"] == 40.0 and last_v["t"] == 40.0 and vel["t"] == 0.0
+    # Nothing confirmed: the track stays lost.
+    last_y["t"] = 12.0
+    miss = _maybe_reseed("t", 30, 64, 60, {0}, clusters, centroids, own_col,
+                         col, (30, 200, 30), (255, 255, 255), 15.0,
+                         last_y, last_v, vel)
+    assert miss is None
+    assert last_y["t"] == 12.0
+    # Frame-band targets vetoed even when confirmed: frame furniture
+    # matches grey templates and would hand the track a frame ride.
+    frame_col = np.full((60, 3), 255.0)
+    frame_col[2] = np.array(teal, dtype=float)
+    fown = np.zeros(60, bool)
+    fown[2] = True
+    last_y["t"] = 50.0
+    assert _maybe_reseed("t", 30, 64, 60, {0}, [[2]], [2.0], fown,
+                         frame_col, teal, (255, 255, 255), 15.0,
+                         last_y, last_v, vel) is None
+    assert last_y["t"] == 50.0
+
+
+def test_seed_skips_frame_band_clusters():
+    """Identity never commits on frame furniture: a black top frame scores
+    perfectly on a black template, so uncommitted takes skip frame-band
+    clusters and the track rides its curve, not the frame."""
+    black = (11, 5, 14)
+    h, w = 120, 64
+    img = np.full((h, w, 3), 255, np.uint8)
+    cv2.line(img, (0, 1), (w - 1, 1), (0, 0, 0), 2)
+    cv2.line(img, (0, 60), (w - 1, 60), (16, 13, 17), 2)
+    mask = np.zeros((h, w), np.uint8)
+    mask[0:3, :] = 255  # top frame rows, owned ink
+    mask[59:62, :] = 255  # black curve
+    layers = EvidenceLayers(curve_masks={"t": mask},
+                            grid_mask=np.zeros((h, w), np.uint8),
+                            background_bgr=(255, 255, 255))
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    track = track_panel(gray, layers, ["t"], float(np.median(gray)),
+                        None, {"t": black}, img)["t"]
+    observed = [s for s in track.samples if s.status is SegmentStatus.OBSERVED]
+    assert observed, "curve never committed"
+    assert all(abs(s.v - 60.0) < 4.0 for s in observed), observed[:5]
+    # Slack frame: the interior starts above the frame, so the veto must
+    # measure frame rows instead of trusting a fixed edge band.
+    img2 = np.full((h, w, 3), 255, np.uint8)
+    cv2.line(img2, (0, 7), (w - 1, 7), (0, 0, 0), 2)
+    cv2.line(img2, (0, 60), (w - 1, 60), (16, 13, 17), 2)
+    mask2 = np.zeros((h, w), np.uint8)
+    mask2[6:9, :] = 255
+    mask2[59:62, :] = 255
+    layers2 = EvidenceLayers(curve_masks={"t": mask2},
+                             grid_mask=np.zeros((h, w), np.uint8),
+                             background_bgr=(255, 255, 255))
+    gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    track2 = track_panel(gray2, layers2, ["t"], float(np.median(gray2)),
+                         None, {"t": black}, img2)["t"]
+    observed2 = [s for s in track2.samples if s.status is SegmentStatus.OBSERVED]
+    assert observed2, "curve never committed past slack frame"
+    assert all(abs(s.v - 60.0) < 4.0 for s in observed2), observed2[:5]

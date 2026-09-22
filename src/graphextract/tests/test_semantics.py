@@ -13,6 +13,7 @@ from graphextract.semantics import (
     detect_legend,
     extract_legend_entries,
     seed_fallback_styles,
+    refine_seed_templates,
     snap_legend_seeds,
     styles_from_legend,
     validate_proposal,
@@ -384,3 +385,602 @@ def test_snap_legend_seeds_repoints_starved_only():
     assert by_id["legend_1"].bgr != (0, 0, 0)  # starved: snapped to navy
     assert by_id["legend_1"].label == "On Axis"
     assert by_id["legend_2"].bgr == (30, 120, 60)  # own ink: untouched
+
+
+def _paint_curve(img, paint, y0=100, amp=40, step=1, thick=2):
+    xs = np.arange(10, img.shape[1] - 10, step)
+    for xx in xs:
+        yy = int(y0 + amp * np.sin(xx / 30.0))
+        for t in range(thick):
+            img[yy + t, xx] = paint
+    return int(len(xs) * thick)
+
+
+def test_refine_seed_templates_adopts_paint_median():
+    """An off-swatch seed with solid core ink re-points at the measured
+    paint median, so unmixing scores truth near zero."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (36, 46, 182))
+    styles = [StyleSpec("legend_1", "Early Reflections", (32, 47, 214))]
+    fixed = refine_seed_templates(img, styles)
+    assert fixed[0].bgr == (36, 46, 182)
+    assert fixed[0].label == "Early Reflections"
+
+
+def test_refine_seed_templates_keeps_mixed_box():
+    """Two core-grade paints inside one tolerance box keep the key: the
+    median of a mixture is neither paint."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (80, 70, 145), y0=60, amp=10)
+    _paint_curve(img, (135, 120, 105), y0=140, amp=10)
+    styles = [StyleSpec("legend_1", "Early Reflections", (110, 100, 120))]
+    fixed = refine_seed_templates(img, styles)
+    assert fixed[0].bgr == (110, 100, 120)
+
+
+def test_refine_seed_templates_keeps_starved_and_discovered():
+    """Starved seeds and discovered curve_ seeds pass through untouched."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (36, 46, 182), step=40, thick=1)  # sparse: starved
+    styles = [StyleSpec("legend_1", "Early Reflections", (32, 47, 214)),
+              StyleSpec("curve_2", "curve_2", (36, 46, 182))]
+    fixed = refine_seed_templates(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (32, 47, 214)
+    assert by_id["curve_2"].bgr == (36, 46, 182)
+
+
+def _entry(text, xywh, kind="line", bgr=(10, 10, 10)):
+    from graphextract.semantics import LegendEntry
+    return LegendEntry(text=text, word_xywh=xywh, swatch_bgr=bgr,
+                       swatch_xywh=xywh, kind=kind)
+
+
+def test_misshapen_line_keys_drop_square_blobs():
+    from graphextract.semantics import _drop_misshapen_line_keys
+    # Neumann margin shape: rotated-title glyph fragments pair words with
+    # near-square grey blobs; true dashes are wide and thin.
+    thin = _entry("On Axis", (174, 98, 130, 10))
+    short = _entry("On-axis", (1579, 514, 7, 3))
+    blob = _entry("ee", (47, 784, 32, 20))
+    shard = _entry("Pessure", (99, 949, 48, 28))
+    box = _entry("Woofer", (10, 10, 14, 14), kind="box")
+    assert _drop_misshapen_line_keys([thin, short, blob, shard, box]) == [
+        thin, short, box]
+
+
+def test_misshapen_line_keys_rescue_icons():
+    from graphextract.semantics import _drop_misshapen_line_keys
+    # Harman-BW shape: icon-style keys are squarish but big and lead
+    # full-phrase labels.
+    icon = _entry("54: Total Sound Power", (560, 1551, 72, 57))
+    assert _drop_misshapen_line_keys([icon]) == [icon]
+
+
+def test_incoherent_keys_drop_unaligned_outlier():
+    from graphextract.semantics import _drop_incoherent_keys
+    # PMC shape: seven keys share one row band; the axis-title pairing a
+    # thousand pixels below shares neither row nor column.
+    row = [_entry(f"c{i}", (400 + i * 300, 171, 94, 9)) for i in range(7)]
+    outlier = _entry("Amplitude", (83, 1228, 35, 6))
+    assert _drop_incoherent_keys(row + [outlier]) == row
+    # Sovox shape: a vertical stack shares one column band.
+    stack = [_entry(f"c{i}", (1580, 418 + i * 32, 16, 3)) for i in range(7)]
+    assert _drop_incoherent_keys(stack) == stack
+    # Pairs and singletons cannot show incoherence.
+    assert _drop_incoherent_keys(row[:2]) == row[:2]
+
+
+def test_styles_from_legend_carries_key_boxes():
+    img, words = _legend_image()
+    entries = extract_legend_entries(img, words)
+    styles = styles_from_legend(entries)
+    assert len(styles) == 2
+    for style in styles:
+        assert style.key_xywh is not None
+        x, y, w, h = style.key_xywh
+        assert w > 0 and h > 0
+
+
+def test_misshapen_line_keys_rescue_grid_short_labels():
+    from graphextract.semantics import _drop_misshapen_line_keys
+    # Icon legend grid: short-label keys on kept row+column junctions are
+    # real entries; off-grid short labels and shards stay dropped.
+    row = [_entry("54: Total Sound Power", (560, 1551, 72, 57)),
+           _entry("57: Predicted In Room", (1230, 1551, 73, 57)),
+           _entry("53: First Reflections", (18, 1692, 72, 58))]
+    short = _entry("51: On Axis", (18, 1551, 72, 57))
+    offgrid = _entry("52: Glass", (900, 1300, 72, 57))
+    shard = _entry("os", (18, 1621, 72, 57))
+    assert _drop_misshapen_line_keys(row + [short, offgrid, shard]) == row + [short]
+
+
+def test_zigzag_samples_read_stroke_not_dark_frame():
+    import cv2
+    import numpy as np
+    from graphextract.ocr_adapters import OCRWord
+    from graphextract.semantics import _zigzag_samples
+    img = np.full((200, 400, 3), 255, np.uint8)
+    # Dark L frame with a red zigzag stroke inside (Harman-BW icons).
+    cv2.line(img, (20, 100), (20, 150), (40, 40, 40), 2)
+    cv2.line(img, (20, 100), (90, 100), (40, 40, 40), 2)
+    pts = np.array([[20, 138], [38, 116], [52, 138], [66, 116], [80, 138]])
+    cv2.polylines(img, [pts], False, (30, 30, 220), 2)
+    words = [OCRWord("Stroke", 110, 112, 90, 26, 0.9)]
+    samples = _zigzag_samples(img, words)
+    assert len(samples) == 1
+    b, g, r = samples[0].bgr
+    assert r > b + 40 and r > g + 40, samples[0].bgr  # red stroke, not frame
+    # Unsaturated zigzag keeps the legacy darkest-quartile colour.
+    img2 = np.full((200, 400, 3), 255, np.uint8)
+    cv2.line(img2, (20, 100), (20, 150), (200, 200, 200), 2)
+    cv2.line(img2, (20, 100), (90, 100), (200, 200, 200), 2)
+    cv2.polylines(img2, [pts], False, (60, 60, 60), 2)
+    samples2 = _zigzag_samples(img2, words)
+    assert len(samples2) == 1
+    assert max(samples2[0].bgr) < 110, samples2[0].bgr
+
+
+def test_zigzag_samples_survive_overlapping_misreads():
+    import cv2
+    import numpy as np
+    from graphextract.ocr_adapters import OCRWord
+    from graphextract.semantics import _zigzag_samples
+    img = np.full((200, 400, 3), 255, np.uint8)
+    cv2.line(img, (20, 100), (20, 150), (40, 40, 40), 2)
+    cv2.line(img, (20, 100), (90, 100), (40, 40, 40), 2)
+    pts = np.array([[20, 138], [38, 116], [52, 138], [66, 116], [80, 138]])
+    cv2.polylines(img, [pts], False, (30, 30, 220), 2)
+    label = [OCRWord("Stroke", 110, 112, 90, 26, 0.9)]
+    # Two overlapping icon-fragment misreads are one cluster: the key stays.
+    misreads = [OCRWord("ly", 19, 102, 71, 50, 0.59),
+                OCRWord("x51:", 19, 101, 100, 51, 0.23)]
+    assert len(_zigzag_samples(img, label + misreads)) == 1
+    # Two disjoint touching words are a text run: the key goes.
+    run = [OCRWord("Total", 30, 80, 40, 25, 0.9),
+           OCRWord("Power", 30, 148, 40, 25, 0.9)]
+    assert _zigzag_samples(img, run) == []
+
+
+def test_snap_wall_to_wall_grid_never_backs():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    # Dark solid gridlines, hue B: measured furniture rows exclude them
+    # with or without the mask, and the hue rule keeps the R seed from
+    # adopting their pool colour.
+    img[50:150:4, 10:390] = (140, 110, 120)
+    _paint_curve(img, (60, 40, 120))
+    grid = np.zeros((200, 400), np.uint8)
+    grid[50:150:4, 10:390] = 255
+    styles = [StyleSpec("legend_1", "Early Reflections", (140, 130, 150))]
+    kept = snap_legend_seeds(img, styles)
+    # Wall-to-wall gridlines are measured furniture rows, never backing
+    assert kept[0].bgr != (140, 130, 150)
+    fixed = snap_legend_seeds(img, styles, exclude_mask=grid)
+    assert fixed[0].bgr != (140, 130, 150)  # starved: snapped to paint
+    assert fixed[0].bgr[2] > fixed[0].bgr[0] + 30
+    assert fixed[0].bgr[2] > fixed[0].bgr[1] + 30
+
+
+def test_refine_excludes_grid_from_median():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import refine_seed_templates
+    img = np.full((200, 400, 3), 255, np.uint8)
+    img[50:150:4, 10:390] = (140, 110, 120)
+    _paint_curve(img, (125, 105, 140))
+    grid = np.zeros((200, 400), np.uint8)
+    grid[50:150:4, 10:390] = 255
+    styles = [StyleSpec("legend_1", "Window", (140, 130, 150))]
+    dragged = refine_seed_templates(img, styles)
+    assert dragged[0].bgr == (140, 110, 120)  # grid outvotes the paint
+    paint = refine_seed_templates(img, styles, exclude_mask=grid)
+    assert paint[0].bgr == (125, 105, 140)  # masked grid never votes
+
+
+def test_seed_support_rejects_edge_hugging_furniture():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import refine_seed_templates, snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    # Margin bars both edges: connected, unimodal, numerous, spanning
+    # the width yet concentrated in the edge bins.
+    img[:, 388:400] = (132, 118, 128)
+    img[:, 0:6] = (132, 118, 128)
+    _paint_curve(img, (30, 30, 220))
+    styles = [StyleSpec("legend_1", "Total Sound Power", (105, 89, 96))]
+    fixed = snap_legend_seeds(img, styles)
+    assert fixed[0].bgr != (105, 89, 96)  # starved despite the bars
+    kept = refine_seed_templates(img, styles)
+    assert kept[0].bgr == (105, 89, 96)  # furniture never votes
+
+
+def test_seed_backing_ignores_achromatic_dots():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import refine_seed_templates, snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    # Achromatic dotted grid spanning the plot: no mask, yet a chromatic
+    # seed finds no backing in it.
+    img[50:150:4, 10:390:4] = (150, 150, 150)
+    _paint_curve(img, (30, 30, 220))
+    styles = [StyleSpec("legend_1", "Early Reflections", (150, 150, 200))]
+    fixed = snap_legend_seeds(img, styles)
+    assert fixed[0].bgr[2] > fixed[0].bgr[0] + 40  # snapped to red
+    assert fixed[0].bgr[2] > fixed[0].bgr[1] + 40
+    kept = refine_seed_templates(img, styles)
+    assert kept[0].bgr == (150, 150, 200)  # dots never vote
+
+
+def test_snap_shares_pool_among_same_paint_siblings():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (30, 30, 220))
+    # Two washed red keys over one red curve: both adopt the pool red.
+    styles = [StyleSpec("legend_1", "On Axis", (112, 113, 142)),
+              StyleSpec("legend_2", "First Reflections", (109, 113, 137))]
+    fixed = snap_legend_seeds(img, styles)
+    assert fixed[0].bgr == fixed[1].bgr
+    assert fixed[0].bgr[2] > fixed[0].bgr[0] + 40
+
+
+def test_snap_recovers_dot_grid_fragmented_paint():
+    import numpy as np
+    from graphextract.evidence import StyleSpec
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (36, 46, 182))
+    # dotted-grid punches shred the stroke below any connectivity floor
+    for xx in range(10, 390, 9):
+        img[55:145, xx] = (255, 255, 255)
+    styles = [StyleSpec("legend_1", "Early Reflections", (112, 113, 142))]
+    fixed = snap_legend_seeds(img, styles)
+    assert fixed[0].bgr != (112, 113, 142)  # starved: pool core adopted
+    assert fixed[0].bgr[2] > fixed[0].bgr[0] + 40
+    assert fixed[0].bgr[2] > fixed[0].bgr[1] + 40
+
+
+def test_snap_keeps_curve_seed_amid_glyph_clutter():
+    """A spanning stroke backs its seed whatever clutter shares the box:
+    legend glyphs and a connected frame web inside the plot must not
+    starve it into adopting a foreign pool colour."""
+    from graphextract.semantics import snap_legend_seeds
+    rng = np.random.default_rng(7)
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (10, 10, 10))
+    img[0:2, :] = (10, 10, 10)  # connected frame web (all sides)
+    img[-2:, :] = (10, 10, 10)
+    img[:, 0:2] = (10, 10, 10)
+    img[:, -2:] = (10, 10, 10)
+    for _ in range(45):  # scattered glyph-like blobs across the plot
+        x, y = int(rng.integers(4, 390)), int(rng.integers(4, 186))
+        img[y:y + 8, x:x + 3] = (10, 10, 10)
+    styles = [StyleSpec("legend_1", "On Axis", (0, 0, 0))]
+    fixed = snap_legend_seeds(img, styles)
+    assert fixed[0].bgr == (0, 0, 0)
+
+
+def test_seed_curve_backed_rejects_halo_sheath_and_frame():
+    """A pale fringe sheath hugging a darker curve spans and counts
+    like paint but is all complement-adjacent and paler than the
+    hugged core, so it never backs; the hugged curve itself backs.
+    Frame furniture never backs either."""
+    from graphextract.semantics import (_core_voters, _ink_fraction,
+                                        _measure_frame_mask,
+                                        _seed_curve_backed)
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (140, 20, 20))
+    for xx in range(10, 390):  # mid-pale sheath hugging the dark stroke
+        yy = int(100 + 40 * np.sin(xx / 30.0))
+        img[yy - 1, xx] = (170, 100, 100)
+        img[yy + 2, xx] = (170, 100, 100)
+    px = img.astype(int)
+    bg = np.full(3, 255.0)
+    dark = _ink_fraction(img, bg)
+    ink = dark >= 0.5
+    frame = _measure_frame_mask(ink)
+    pale = (np.max(np.abs(px - np.array((170, 100, 100))), axis=2) <= 40) & ink
+    assert int(pale.sum()) > 300  # the sheath itself reaches the count floor
+    pale_v = _core_voters(img.astype(float), bg,
+                          np.array((170, 100, 100), dtype=float), pale)
+    core = (np.max(np.abs(px - np.array((140, 20, 20))), axis=2) <= 40) & ink
+    core_v = _core_voters(img.astype(float), bg,
+                          np.array((140, 20, 20), dtype=float), core)
+    assert not _seed_curve_backed(pale_v, pale, ink, dark, frame,
+                                  400, 200, 300)
+    assert _seed_curve_backed(core_v, core, ink, dark, frame,
+                              400, 200, 300)
+    img2 = np.full((200, 400, 3), 255, np.uint8)
+    img2[0:2, :] = (10, 10, 10)
+    img2[-2:, :] = (10, 10, 10)
+    img2[:, 0:2] = (10, 10, 10)
+    img2[:, -2:] = (10, 10, 10)
+    dark2 = _ink_fraction(img2, bg)
+    ink2 = dark2 >= 0.5
+    frame2 = _measure_frame_mask(ink2)
+    frame_v = _core_voters(img2.astype(float), bg,
+                           np.array((10, 10, 10), dtype=float), ink2)
+    assert not _seed_curve_backed(frame_v, ink2, ink2, dark2, frame2,
+                                  400, 200, 300)
+
+
+def test_seed_curve_backed_backs_dashes_rejects_dots():
+    """Long wandering dashes back a seed through the fallback (no one
+    component spans), while dotted-grid dots never reach the dash run
+    floor and flat rulers never reach the row-span floor."""
+    from graphextract.semantics import (_core_voters, _ink_fraction,
+                                        _measure_frame_mask,
+                                        _seed_curve_backed)
+    bg = np.full(3, 255.0)
+    img = np.full((200, 400, 3), 255, np.uint8)
+    for i, x0 in enumerate(range(10, 390, 30)):  # wandering 20px dashes
+        yy = int(100 + 30 * np.sin(i / 2.0))
+        img[yy:yy + 2, x0:x0 + 20] = (113, 113, 113)
+    px = img.astype(int)
+    dark = _ink_fraction(img, bg)
+    ink = dark >= 0.5
+    frame = _measure_frame_mask(ink)
+    dash = (np.max(np.abs(px - np.array((113, 113, 113))), axis=2) <= 40) & ink
+    dash_v = _core_voters(img.astype(float), bg,
+                          np.array((113, 113, 113), dtype=float), dash)
+    assert _seed_curve_backed(dash_v, dash, ink, dark, frame,
+                              400, 200, 300)
+    img3 = np.full((200, 400, 3), 255, np.uint8)
+    for x0 in range(10, 390, 30):  # flat ruler dashes
+        img3[100:102, x0:x0 + 20] = (113, 113, 113)
+    px3 = img3.astype(int)
+    dark3 = _ink_fraction(img3, bg)
+    ink3 = dark3 >= 0.5
+    frame3 = _measure_frame_mask(ink3)
+    ruler = ((np.max(np.abs(px3 - np.array((113, 113, 113))),
+                     axis=2) <= 40) & ink3)
+    ruler_v = _core_voters(img3.astype(float), bg,
+                           np.array((113, 113, 113), dtype=float), ruler)
+    assert int(ruler_v.sum()) > 300  # rulers reach the count floor
+    assert not _seed_curve_backed(ruler_v, ruler, ink3, dark3, frame3,
+                                  400, 200, 300)
+    img2 = np.full((200, 400, 3), 255, np.uint8)
+    for y in range(10, 190, 20):  # 3px dark dotted grid
+        for x in range(10, 390, 20):
+            img2[y:y + 3, x:x + 3] = (100, 100, 100)
+    px2 = img2.astype(int)
+    dark2 = _ink_fraction(img2, bg)
+    ink2 = dark2 >= 0.5
+    frame2 = _measure_frame_mask(ink2)
+    dots = (np.max(np.abs(px2 - np.array((100, 100, 100))), axis=2) <= 40) & ink2
+    assert int(dots.sum()) > 300  # the dots reach the count floor
+    dots_v = _core_voters(img2.astype(float), bg,
+                          np.array((100, 100, 100), dtype=float), dots)
+    assert not _seed_curve_backed(dots_v, dots, ink2, dark2, frame2,
+                                  400, 200, 300)
+
+
+def test_core_voters_excludes_off_direction_ink():
+    """Paint-strength voters exclude fringe and foreign paint caught in
+    a washed box: only full-strength ink along the seed direction
+    votes, so fringe boxes starve into adoption."""
+    from graphextract.semantics import _core_voters
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (40, 0, 244))
+    for xx in range(10, 390):  # pale fringe hugging the red stroke
+        yy = int(100 + 40 * np.sin(xx / 30.0))
+        img[yy - 1, xx] = (200, 170, 220)
+        img[yy + 2, xx] = (200, 170, 220)
+    bg = np.full(3, 255.0)
+    px = img.astype(int)
+    grey_box = ((np.max(np.abs(px - np.array((140, 140, 140))),
+                        axis=2) <= 60))
+    voters = _core_voters(img.astype(float), bg,
+                          np.array((140, 140, 140), dtype=float),
+                          grey_box)
+    assert int(voters.sum()) < 300  # fringe never reaches the floor
+    red_box = ((np.max(np.abs(px - np.array((40, 0, 244))),
+                       axis=2) <= 40))
+    red_voters = _core_voters(img.astype(float), bg,
+                              np.array((40, 0, 244), dtype=float),
+                              red_box)
+    assert int(red_voters.sum()) >= 300  # the paint itself votes
+
+
+def test_snap_starved_key_adopts_same_hue_backed_sibling():
+    """A washed key starved of its own ink adopts its backed same-hue
+    sibling's paint: the key is a washed sample of that family's paint,
+    and fencing plus the same-paint swap sort out the assignment."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (40, 0, 244))
+    styles = [StyleSpec("legend_1", "Early Reflections", (41, 0, 244)),
+              StyleSpec("legend_2", "Early Reflections DI", (32, 0, 189))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (41, 0, 244)
+    assert by_id["legend_2"].bgr == (41, 0, 244)
+
+
+def test_snap_sibling_prefers_labelled_over_textless():
+    """A nearer textless sibling (a positional guess, often fringe)
+    must not veto a farther labelled same-hue sibling's paint."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (200, 40, 40))
+    styles = [StyleSpec("legend_1", "Early Reflections", (200, 40, 40)),
+              StyleSpec("legend_2", "curve_2", (165, 25, 35)),
+              StyleSpec("legend_3", "Early Reflections DI", (107, 101, 90))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (200, 40, 40)
+    assert by_id["legend_3"].bgr == (200, 40, 40)
+
+
+def test_snap_starved_key_stands_against_other_hue_sibling():
+    """A starved key nearer a backed other-hue sibling is its own paint:
+    adopting the sibling would steal junk, so the key stands."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (40, 0, 244))
+    styles = [StyleSpec("legend_1", "Early Reflections", (41, 0, 244)),
+              StyleSpec("legend_2", "Sound Power DI", (140, 30, 90))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (41, 0, 244)
+    assert by_id["legend_2"].bgr == (140, 30, 90)
+
+
+def _eviction_image():
+    """Red plus olive curves; washed grey keys match neither paint."""
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (40, 0, 244))
+    _paint_curve(img, (60, 150, 80), y0=140, amp=20)
+    return img
+
+
+def test_snap_evicts_overclaimed_paint_twin_stays():
+    """Two dB keys over one red curve evict the greyer one to the
+    unclaimed olive paint; the DI twin never follows, since families
+    do not always share paint, and the backed key keeps red."""
+    from graphextract.semantics import snap_legend_seeds
+    img = _eviction_image()
+    styles = [StyleSpec("legend_1", "On Axis", (60, 20, 220)),
+              StyleSpec("legend_2", "First Reflections", (109, 113, 137)),
+              StyleSpec("legend_3", "First Reflections DI", (78, 85, 94))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (60, 20, 220)  # backed: keeps red
+    olive = by_id["legend_2"].bgr
+    assert olive[1] > olive[0] + 20 and olive[1] > olive[2] - 60
+    assert olive != by_id["legend_1"].bgr
+    assert by_id["legend_3"].bgr[2] > by_id["legend_3"].bgr[0] + 40
+
+
+def test_snap_eviction_keeps_confident_adopted_key():
+    """Past one dB key per paint, the more saturated adopted key keeps
+    the paint and the greyer one is evicted to the unclaimed paint."""
+    from graphextract.semantics import snap_legend_seeds
+    img = _eviction_image()
+    styles = [StyleSpec("legend_1", "On Axis", (60, 40, 180)),
+              StyleSpec("legend_2", "First Reflections", (109, 113, 137))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr[2] > by_id["legend_1"].bgr[0] + 40
+    assert by_id["legend_2"].bgr != by_id["legend_1"].bgr
+    assert by_id["legend_2"].bgr[1] > by_id["legend_2"].bgr[0]
+
+
+def test_snap_no_eviction_for_balanced_pairs():
+    """One dB key plus its DI twin per paint is the intended sharing:
+    an unclaimed pool paint does not pull them apart."""
+    from graphextract.semantics import snap_legend_seeds
+    img = _eviction_image()
+    styles = [StyleSpec("legend_1", "Early Reflections", (41, 0, 244)),
+              StyleSpec("legend_2", "Early Reflections DI", (32, 0, 189))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (41, 0, 244)
+    assert by_id["legend_2"].bgr == (41, 0, 244)
+
+
+def test_snap_di_key_takes_two_banded_twin_paint():
+    """A DI key takes its twin's paint when it inks two separated
+    bands, even over its own backing on a same-grey reference line:
+    the twin's paint is then shared with this family's DI curve."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (200, 40, 40), y0=60, amp=10)  # blue dB curve
+    _paint_curve(img, (200, 40, 40), y0=150, amp=10)  # blue DI curve
+    for x0 in range(10, 390, 30):  # grey zero-line dashes
+        img[180:182, x0:x0 + 20] = (113, 113, 113)
+    styles = [StyleSpec("legend_1", "Early Reflections", (200, 40, 40)),
+              StyleSpec("legend_2", "Early Reflections DI", (107, 101, 90))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (200, 40, 40)
+    assert by_id["legend_2"].bgr == (200, 40, 40)
+
+
+def test_two_banded_ignores_achromatic_impostor_rows():
+    """Achromatic tick digits inside a chromatic paint's tolerance box
+    never fake a second band: a chromatic paint needs chromatic ink in
+    both bands, so the DI key keeps its own black instead of taking a
+    twin's purple."""
+    from graphextract.semantics import _paint_two_banded, snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (62, 9, 54), y0=60, amp=10)  # purple dB curve
+    _paint_curve(img, (0, 0, 0), y0=150, amp=10)  # black DI curve
+    for x0 in range(10, 390, 15):  # dark tick digits, far band
+        img[150:170, x0:x0 + 8] = (40, 40, 40)
+    assert not _paint_two_banded(img, (62, 9, 54))
+    styles = [StyleSpec("legend_1", "Sound Power", (62, 9, 54)),
+              StyleSpec("legend_2", "Sound Power DI", (2, 2, 2))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (62, 9, 54)
+    assert by_id["legend_2"].bgr == (2, 2, 2)
+
+
+def test_two_banded_rejects_two_paints_in_one_box():
+    """Two different paints sharing one tolerance box (teal dB curve
+    upstairs, grey-green DI curve downstairs) are not one shared paint:
+    band medians must agree, so the verdict is False."""
+    from graphextract.semantics import _paint_two_banded
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (135, 170, 125), y0=60, amp=10)  # teal, upper
+    _paint_curve(img, (185, 180, 145), y0=150, amp=10)  # grey-green, lower
+    assert not _paint_two_banded(img, (160, 175, 135))
+    img2 = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img2, (200, 40, 40), y0=60, amp=10)
+    _paint_curve(img2, (200, 40, 40), y0=150, amp=10)
+    assert _paint_two_banded(img2, (200, 40, 40))
+
+
+def test_snap_di_key_keeps_own_with_single_band_twin():
+    """A single-band twin paint leaves the DI key's own colour alone:
+    families do not always share paint."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (60, 150, 80), y0=60, amp=10)  # olive dB curve
+    _paint_curve(img, (40, 0, 244), y0=100, amp=10)  # red dB curve
+    _paint_curve(img, (40, 0, 244), y0=170, amp=10)  # red DI curve
+    styles = [StyleSpec("legend_1", "First Reflections", (60, 150, 80)),
+              StyleSpec("legend_2", "First Reflections DI", (80, 40, 200))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (60, 150, 80)  # olive kept
+    assert by_id["legend_2"].bgr[2] > by_id["legend_2"].bgr[0] + 40
+
+
+def test_snap_flat_ruler_backs_only_offset_keys():
+    """A flat dashed ruler never backs a curve key (its curve wanders):
+    the key starves into adoption, while an offset-labeled key names
+    the ruler itself and keeps it."""
+    from graphextract.semantics import snap_legend_seeds
+    img = np.full((200, 400, 3), 255, np.uint8)
+    _paint_curve(img, (200, 40, 40))
+    for x0 in range(10, 390, 30):  # flat grey ruler dashes
+        img[170:172, x0:x0 + 20] = (113, 113, 113)
+    styles = [StyleSpec("legend_1", "Early Reflections", (200, 40, 40)),
+              StyleSpec("legend_2", "Early Reflections DI", (107, 101, 90)),
+              StyleSpec("legend_3", "DI offset", (113, 113, 113))]
+    fixed = snap_legend_seeds(img, styles)
+    by_id = {s.series_id: s for s in fixed}
+    assert by_id["legend_1"].bgr == (200, 40, 40)
+    assert by_id["legend_2"].bgr == (200, 40, 40)  # sibling blue adopted
+    assert by_id["legend_3"].bgr == (113, 113, 113)  # ruler kept
+
+
+def test_family_words_strips_numbers_and_di_markers():
+    """Row numbers and DI suffixes (including misreads) never
+    distinguish families; fused suffixes split first."""
+    from graphextract.semantics import _family_words
+    assert (_family_words("53: First Reflections")
+            == _family_words("56: First Reflections DI"))
+    assert (_family_words("54: Total Sound Power")
+            == _family_words("65: Total Sound Power Dl"))
+    assert (_family_words("377: Total Sound Power O1")
+            == _family_words("376: Total Sound Power"))
+    assert _family_words("Sound PowerDI") == frozenset({"sound", "power"})
+    assert (_family_words("51: On Axis")
+            != _family_words("53: First Reflections"))

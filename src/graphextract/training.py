@@ -538,7 +538,8 @@ def run_e3(n_panels: int = 4, seed: int = 0) -> dict:
         for sid in ("s0", "s1"):
             solo = EvidenceLayers(curve_masks={sid: layers.curve_masks[sid]},
                                   grid_mask=layers.grid_mask,
-                                  background_bgr=layers.background_bgr)
+                                  background_bgr=layers.background_bgr,
+                                  union_mask=layers.union_mask)
             indep[sid] = track_panel(gray, solo, [sid], bg)[sid]
         polys = {sid: (np.array([p[0] for p in truth.native_polylines[sid]]),
                        np.array([p[1] for p in truth.native_polylines[sid]]))
