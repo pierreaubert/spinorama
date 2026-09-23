@@ -663,14 +663,14 @@ speakers_info_s: SpeakerDatabase = {
         "price": "300",
         "amount": "each",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Sovox",
-                "format": "spl_hv_txt",
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "rew_text_dump",
                 "quality": "medium",
                 "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_evolution_pinnacle/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/sovox_minimax_3m",
                     "yt": "https://youtu.be/mpsg7coXals",
                 },
                 "review_published": "20260921",
@@ -685,6 +685,12 @@ speakers_info_s: SpeakerDatabase = {
                     },
                     "weight": 4.0,
                 },
+            },
+            "vendor": {
+                "origin": "Vendors-Sovox",
+                "format": "rew_text_dump",
+                "quality": "low",
+                "review_published": "20260921",
             },
         },
     },

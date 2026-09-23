@@ -715,12 +715,12 @@ origins_info = {
         "max dB": 10,
         "url": "https://www.sonbs.net",
     },
-    "Vendors-Sonox": {
+    "Vendors-Sovox": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
         "max dB": 10,
-        "url": "https://www.sonox.com",
+        "url": "https://www.sovox.com",
     },
     "Vendors-SunAudio": {
         "min hz": 20,

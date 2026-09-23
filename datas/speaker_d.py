@@ -2681,7 +2681,7 @@ speakers_info_d: SpeakerDatabase = {
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
-                "format": "spl_hv_txt",
+                "format": "rew_text_dump",
                 "quality": "medium",
                 "review_published": "20260921",
                 "reviews": {
