@@ -165,12 +165,15 @@ class ImageCensus:
 
 def census_image(img, image_id: str, ocr, truth: SourceTruth | None = None,
                  styles=None, anchor_source: str = "ocr_unverified",
-                 threshold_db: float = PAIR_RMS_THRESHOLD_DB) -> ImageCensus:
+                 threshold_db: float = PAIR_RMS_THRESHOLD_DB,
+                 jina_reader=None) -> ImageCensus:
     """One-image pairing census: detection + OCR readability + verdict if possible.
 
     Extraction runs only when both source truth and curve styles are supplied
     (single largest detected panel). Otherwise the census records why scoring
-    is blocked instead of inventing it.
+    is blocked instead of inventing it. When Tesseract yields no anchors and
+    ``jina_reader`` (a loaded JinaOCRReader) is supplied, the Jina-OCR
+    fallback is attempted; its anchors demand manual review.
     """
     from graphextract.ocr_adapters import anchors_from_ocr
     from graphextract.panels import detect_panels
@@ -205,6 +208,31 @@ def census_image(img, image_id: str, ocr, truth: SourceTruth | None = None,
             "x_scale": anchors.x_scale.value if anchors.x_scale else None,
             "x_unit": anchors.x_unit, "y_unit": anchors.y_unit,
             "unmatched": len(unmatched)})
+    if (
+        panels
+        and jina_reader is not None
+        and (anchors is None or (not anchors.x and not anchors.y_left
+                                 and not anchors.y_right))
+    ):
+        from graphextract.jina_fallback import maybe_jina_fallback
+
+        pg = max(panels, key=lambda p: p.interior_xywh[2] * p.interior_xywh[3])
+        x0, y0, pw, ph = pg.interior_xywh
+        ex0, ey0, pew, peh = pg.envelope_xywh
+        anchors, jina_status = maybe_jina_fallback(
+            img[ey0:ey0 + peh, ex0:ex0 + pew],
+            img[y0:y0 + ph, x0:x0 + pw],
+            image_id, jina_reader)
+        census.ocr.update({
+            "fallback": jina_status,
+            "anchor_source": anchors.source if anchors is not None else anchor_source,
+            "needs_review": jina_status.get("needs_review", False),
+        })
+        if anchors is not None:
+            census.ocr.update({
+                "nx_anchors": len(anchors.x), "ny_anchors": len(anchors.y_left),
+                "x_scale": anchors.x_scale.value if anchors.x_scale else None,
+                "x_unit": anchors.x_unit, "y_unit": anchors.y_unit})
     if truth is None or styles is None or anchors is None:
         census.source = {"status": NO_SOURCE,
                          "reason": "no SPL export covers these curves" if truth is None
