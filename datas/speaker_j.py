@@ -2111,6 +2111,25 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
+    "JBL 4369": {
+        "brand": "JBL",
+        "model": "4369",
+        "type": "passive",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "jbl": "https://global.jbl.com/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw5fe71f2e/pdfs/LS_JBL_4369_WhitePaper_revE_20260908.pdf",
+                },
+                "notes": "Digitized from the manufacturer white paper, revision E, Figure 18 (PDF page 13); not raw measurement data. "
+                "The four solid curves retain the published absolute SPL. Overlapping traces are interpolated. "
+                "DI and estimated in-room response are derived by the loader; the plotted DI +55 dB display offset is not imported.",
+            },
+        },
+    },
     "JBL 4429": {
         "brand": "JBL",
         "model": "4429",
